@@ -125,7 +125,7 @@ svg{flex:none}
 .sheet .hd .c small{display:block;color:var(--pale);font-weight:700;font-size:10px;letter-spacing:.02em}
 .sheet .hd .c b{display:block;color:#fff;font-size:var(--s-code);line-height:1.15}
 .sheet .phs{display:grid;gap:21px;margin-top:var(--gap);height:var(--phH);position:relative}
-.sheet .phs.one{grid-template-columns:1fr}.sheet .phs.two{grid-template-columns:1fr 1fr}
+.sheet .phs{grid-template-columns:repeat(var(--np,1),minmax(0,1fr))}
 .sheet .phbox{border:1px solid var(--line);background:#fff;display:grid;place-items:center;overflow:hidden;cursor:pointer;position:relative}
 .sheet .phbox img{max-width:100%;max-height:calc(var(--phH) - 14px);display:block}
 .sheet .phadd{border:2px dashed #C8D0DC;background:#F8FAFC;color:#6B7588;font:600 15px var(--ui);display:grid;place-items:center;gap:6px;cursor:pointer}
@@ -365,6 +365,7 @@ const I={
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
+const MAX_PHOTOS=4;
 const TABS=[['product','Product'],['photos','Photos'],['colours','Colours'],['details','Details'],['contact','Contact'],['style','Style']];
 const DEF_STYLE={font:'Arial',sz:{title:23,code:22,heading:11.5,thead:10,table:14,label:10.7,value:14,contactH:17,email:13.3},phH:233,lw:166,gap:20,blocks:{header:{w:100,h:0},photos:{w:100},colours:{w:100,h:0},details:{w:100,h:0},footer:{w:100,h:0}}};
 const BLOCK_NAMES={header:'Header',photos:'Photos',colours:'Colours table',details:'Details table',footer:'Footer'};
@@ -425,12 +426,12 @@ function fmtCss(f){let c='';if(f.color)c+=`color:${f.color};`;if(f.size)c+=`font
 const ed=(k,v,ph)=>`<span class="ed" contenteditable="true" spellcheck="false" data-edit="${k}" data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
 function styleVars(){const st=S.style;return `--f:'${st.font.replace(/'/g,'')}';--phH:${st.phH}px;--lw:${st.lw}px;--gap:${st.gap}px;`+Object.entries(st.sz).map(([k,v])=>`--s-${k}:${v}px`).join(';');}
 function sheetHTML(forExport){
-  const c=calc(), tv=themeVars(), sz=S.showSizes, B=S.style.blocks;
+  const c=calc(), tv=themeVars(), sz=S.showSizes, B=S.style.blocks, showCt=S.showColours!==false;
   const ph=S.photos, gT=fmtCss(effFmt(null,'table')), gH=fmtCss(effFmt(null,'thead'));
   const blk=(name,inner,extra='')=>`<div class="blk${selBlock===name&&!forExport?' selected':''}" data-block="${name}" style="width:${B[name].w}%;${extra}">${inner}${forExport||selBlock!==name?'':frame(name)}</div>`;
   let photos='';
-  if(ph.length) photos=blk('photos',`<div class="phs ${ph.length>1?'two':'one'}">${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${p.url}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
-  else if(!forExport) photos=blk('photos',`<div class="phs one"><div class="phadd" data-addphoto="1"><span>＋ Add product photos</span></div></div>`);
+  if(ph.length) photos=blk('photos',`<div class="phs" style="--np:${ph.length}">${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${p.url}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
+  else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos</span></div></div>`);
   const th=t=>`<th style="${gH}">${t}</th>`, td=v=>`<td style="${gT}">${v}</td>`;
   const head=sz?th('Colour')+S.sizes.map(s=>th(esc(s))).join('')+th('Boxes')+th('Total pcs'):th('Colour')+th('Pcs per box')+th('Boxes')+th('Total pcs');
   const body=c.rows.map((r,i)=>`<tr><td>${ed('colour:'+i+':name',r.name,'Colour')}</td>${sz?r.q.map(v=>td(v||'–')).join(''):td(S.perBox)}${td(r.boxes)}${td(r.tot)}</tr>`).join('');
@@ -440,7 +441,7 @@ function sheetHTML(forExport){
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
     ${blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}"><div class="t">${ed('title',S.title.toUpperCase(),'PRODUCT NAME')}</div><div class="c"><small>ITEM CODE</small><b>${ed('code',S.code.toUpperCase(),'CODE')}</b></div></div>`)}
     ${photos}
-    ${blk('colours',`<div class="sh">${ed('heading:colours',S.headings.colours.toUpperCase(),'HEADING')}</div><table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours'))}
+    ${showCt?blk('colours',`<div class="sh">${ed('heading:colours',S.headings.colours.toUpperCase(),'HEADING')}</div><table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours')):''}
     ${blk('details',`<div class="sh">${ed('heading:details',S.headings.details.toUpperCase(),'HEADING')}</div><div class="dtw" style="position:relative"><table class="dt"><tbody>${rows}</tbody></table>${forExport?'':'<span class="rz rz-x" data-rz="lw" style="left:var(--lw)" title="Drag to resize the label column"></span>'}</div>`,rh('details'))}
     ${blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}"><div class="h">${ed('heading:contact',S.headings.contact.toUpperCase(),'CONTACT US')}</div><div class="e">${ed('email',S.email,'email')}</div></div>`)}
   </div>`;
@@ -502,15 +503,17 @@ function renderPanel(){
     <p class="note">Tip: you can also click any text on the sheet and type to change it.</p>`;
   }
   else if(tab==='photos'){
-    h=`<h2>Photos</h2><p class="lead">Up to two photos. Backgrounds are removed on this device.</p>
+    h=`<h2>Photos</h2><p class="lead">Up to ${MAX_PHOTOS} photos, spaced evenly across the sheet. Backgrounds are removed on this device.</p>
     <div class="photos">${S.photos.map((p,i)=>`<div class="ph"><img src="${p.url}" alt="Photo ${i+1}"><div style="display:grid;gap:8px"><strong>Photo ${i+1}</strong><div class="b">
       <button class="btn sm" data-pedit="${p.id}">Edit</button><button class="btn sm" data-pmove="${i}" ${i===0?'disabled':''}>Move left</button><button class="btn sm danger" data-pdel="${p.id}">Remove</button></div></div></div>`).join('')}</div>
-    ${S.photos.length<2?`<button class="add" data-addphoto="1">${I.plus}Add photo</button>`:''}
+    ${S.photos.length<MAX_PHOTOS?`<button class="add" data-addphoto="1">${I.plus}Add photo</button>`:''}
     <p class="note">Hangers: thin hooks are removed automatically. If part of a hanger is left, open <b>Edit</b> and use <b>Erase</b> to brush it away.</p>`;
   }
   else if(tab==='colours'){
     const c=calc(), n=S.sizes.length;
     h=`<h2>Colours &amp; sizes</h2><p class="lead">Boxes per colour. Totals are worked out for you.</p>
+    <label class="check"><input type="checkbox" data-showct="1" ${S.showColours!==false?'checked':''}>Show this table on the sheet</label>
+    ${S.showColours===false?'<p class="note">The table is hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so ticking the box brings it back as it was.</p>':''}
     <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:'e.g. Grey'}))}${fld('Boxes',inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1}))}</div>
       ${S.mode==='manual'?`<div class="qty" style="--n:${n}">${S.sizes.map((s,j)=>`<label>${esc(s)||'?'}${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:s})}</label>`).join('')}</div>`:''}</div>
       <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`).join('')}</div>
@@ -567,6 +570,7 @@ $('#panel').addEventListener('input',e=>{const ly=e.target.dataset.lay;if(ly){S.
   const k=e.target.dataset.k;if(!k)return;setKey(k,e.target.value);renderSheet();touch();
   if(tab==='colours'&&/^(ratio|perBox|size)/.test(k)) softRefreshColours();});
 $('#panel').addEventListener('change',e=>{const t=e.target;if(t.dataset.show){S.showSizes=t.checked;renderSheet();touch();}
+  if(t.dataset.showct){S.showColours=t.checked;if(!t.checked&&selBlock==='colours')selBlock=null;renderPanel();renderSheet();touch();}
   if(t.dataset.k&&tab==='colours'&&STRUCT.test(t.dataset.k)) renderPanel(); if(t.dataset.k==='price:unit'){setKey('price:unit',t.value);renderSheet();touch();}});
 function softRefreshColours(){const c=calc();const pane=$('#panel .pane');const note=[...pane.querySelectorAll('.note,.warn')];
   const n=pane.querySelector('.sizes .note');if(n)n.textContent='Each box: '+S.sizes.map((s,j)=>`${+c.per[j].toFixed(1)} ${s}`).join(', ')+'.';
@@ -761,7 +765,7 @@ function autoCrop(st){const{W,H,alpha}=st;let x0=W,y0=H,x1=0,y1=0;for(let j=0;j<
 
 /* ---------- photo editor ---------- */
 const dlg=$('#editor'); let E=null, tool='crop', brush=.03, target=null;
-function pickPhoto(replaceId){target=replaceId||null;$('#file').click();}
+function pickPhoto(replaceId){if(!replaceId&&S.photos.length>=MAX_PHOTOS){toast(`Up to ${MAX_PHOTOS} photos. Remove one to add another.`);return;}target=replaceId||null;$('#file').click();}
 $('#file').addEventListener('change',async()=>{const f=$('#file').files[0];$('#file').value='';if(!f)return;
   const url=URL.createObjectURL(f);const img=new Image();img.onload=()=>startEdit(img,null,url);img.onerror=()=>toast('That file could not be opened. Try a JPG or PNG.');img.src=url;});
 async function startEdit(img,photoId,url){
@@ -875,14 +879,15 @@ async function buildDocx(){
   // photos
   if(S.photos.length){
     const imgs=await Promise.all(S.photos.map(async p=>{const b=await (await fetch(p.url)).arrayBuffer();const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=p.url;});return{b,w:im.naturalWidth,h:im.naturalHeight};}));
-    const two=imgs.length>1, pw=scale(two?[5100,312,5100]:[FULL],B.photos.w), maxH=S.style.phH-14;
+    const n=imgs.length,SP=312,iw=(FULL-SP*(n-1))/n, pw=scale(imgs.flatMap((_,i)=>i?[SP,iw]:[iw]),B.photos.w), maxH=S.style.phH-14;
     const pcell=(im,w)=>{const maxW=(w-200)/15;let hh=maxH,ww=hh*im.w/im.h;if(ww>maxW){ww=maxW;hh=ww*im.h/im.w;}
       return cell(w,[para(new ImageRun({data:im.b,transformation:{width:Math.round(ww),height:Math.round(hh)}}),AlignmentType.CENTER)],{fill:'FFFFFF',b:{top:ln(L,6),bottom:ln(L,6),left:ln(L,6),right:ln(L,6)},m:[60,60,60,60]});};
-    const cells=two?[pcell(imgs[0],pw[0]),cell(pw[1],[para(run('',20))],{m:[90,40,90,40]}),pcell(imgs[1],pw[2])]:[pcell(imgs[0],pw[0])];
+    const cells=pw.map((w,i)=>i%2?cell(w,[para(run('',20))],{m:[90,40,90,40]}):pcell(imgs[i/2],w));
     out.push(table(pw,[new TableRow({height:{value:S.style.phH*15,rule:HeightRule.EXACT},children:cells})]));
     out.push(gap(G*6));
   }
   // colours table
+  if(S.showColours!==false){
   out.push(heading('heading:colours',S.headings.colours,B.colours.w));
   const c=calc(), sz=S.showSizes;
   const hdr=sz?['Colour',...S.sizes,'Boxes','Total pcs']:['Colour','Pcs per box','Boxes','Total pcs'];
@@ -895,6 +900,7 @@ async function buildDocx(){
   c.rows.forEach((r,i)=>rows.push(trow(sz?[r.name,...r.q.map(v=>v?String(v):'–'),String(r.boxes),String(r.tot)]:[r.name,String(S.perBox),String(r.boxes),String(r.tot)],{key:'colour:'+i+':name'})));
   rows.push(trow(sz?['TOTAL',...c.T.q.map(String),String(c.T.boxes),String(c.T.tot)]:['TOTAL','',String(c.T.boxes),String(c.T.tot)],{t:1}));
   out.push(table(cw,rows));out.push(gap(G*7));
+  }
   // details table
   out.push(heading('heading:details',S.headings.details,B.details.w));
   const dw=scale([Math.round(S.style.lw*15),FULL-Math.round(S.style.lw*15)],B.details.w);
