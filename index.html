@@ -85,7 +85,16 @@ svg{flex:none}
 .add{height:46px;border:1.5px dashed var(--line2);border-radius:10px;background:transparent;color:var(--accent);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border-color .15s,background .15s}
 .add:hover{border-color:var(--accent);background:var(--accent-soft)}
 .add svg{width:18px;height:18px}
-.check{display:flex;align-items:center;gap:10px;font-size:14.5px;cursor:pointer}
+.opts{display:grid;gap:8px}
+.opt{display:grid;gap:7px;text-align:left;padding:10px 12px;border:1.5px solid var(--line2);border-radius:10px;background:var(--panel);cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--faint)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt b{font-size:14.5px;display:flex;align-items:center;gap:8px}
+.opt b::before{content:"";width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);flex:none;box-sizing:border-box}
+.opt[aria-pressed="true"] b::before{border:4px solid var(--accent);background:var(--panel)}
+.opt .cols{display:flex;flex-wrap:wrap;gap:3px}
+.opt .cols i{font:600 10.5px/1 var(--ui);font-style:normal;text-transform:uppercase;letter-spacing:.02em;color:var(--muted);background:var(--raise);border:1px solid var(--line);border-radius:5px;padding:4px 6px}
+.check{display:inline-flex;width:max-content;max-width:100%;align-items:center;gap:10px;font-size:14.5px;cursor:pointer}
 .check input{width:20px;height:20px;accent-color:var(--accent)}
 .badge{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 .note{font-size:13.5px;color:var(--muted);margin:0}
@@ -515,8 +524,12 @@ function renderPanel(){
   else if(tab==='colours'){
     const c=calc(), n=S.sizes.length;
     h=`<h2>Colours &amp; sizes</h2><p class="lead">Boxes per colour. Totals are worked out for you.</p>
-    <label class="check"><input type="checkbox" data-showct="1" ${S.showColours!==false?'checked':''}>Show this table on the sheet</label>
-    ${S.showColours===false?'<p class="note">The table is hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so ticking the box brings it back as it was.</p>':''}
+    <div class="group"><h3>Table on the sheet</h3>
+      <div class="seg" role="group" aria-label="Show the table on the sheet"><button type="button" data-ctshow="1" aria-pressed="${S.showColours!==false}">Show table</button><button type="button" data-ctshow="0" aria-pressed="${S.showColours===false}">Hide table</button></div>
+      ${S.showColours===false?'<p class="note">Hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so <b>Show table</b> brings it back as it was.</p>'
+      :`<span class="note" style="font-weight:600;color:var(--ink)">Columns</span><div class="opts" role="group" aria-label="Table columns">${[['sizes','One column per size',['Colour',...S.sizes.map(x=>x||'?'),'Boxes','Total pcs']],['box','Pieces per box',['Colour','Pcs per box','Boxes','Total pcs']]].map(([v,l,cols])=>
+        `<button type="button" class="opt" data-ctcols="${v}" aria-pressed="${(v==='sizes')===!!S.showSizes}"><b>${l}</b><span class="cols">${cols.map(x=>`<i>${esc(x)}</i>`).join('')}</span></button>`).join('')}</div>`}
+    </div>
     <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:'e.g. Grey'}))}${fld('Boxes',inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1}))}</div>
       ${S.mode==='manual'?`<div class="qty" style="--n:${n}">${S.sizes.map((s,j)=>`<label>${esc(s)||'?'}${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:s})}</label>`).join('')}</div>`:''}</div>
       <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`).join('')}</div>
@@ -529,7 +542,6 @@ function renderPanel(){
         <p class="note">Each box: ${S.sizes.map((s,j)=>`${+c.per[j].toFixed(1)} ${esc(s)}`).join(', ')}.</p>${c.uneven?`<p class="warn">${S.perBox} pieces don't split evenly at this ratio. Numbers are rounded.</p>`:''}`:''}
       </div>
       <button class="add" data-sadd="1">${I.plus}Add size</button>
-      <label class="check"><input type="checkbox" data-show="1" ${S.showSizes?'checked':''}>Show each size in the table</label>
     </div>`;
   }
   else if(tab==='details'){
@@ -572,8 +584,7 @@ const STRUCT=/^(size|ratio|perBox|colour:\d+:boxes)/;
 $('#panel').addEventListener('input',e=>{const ly=e.target.dataset.lay;if(ly){S.style[ly]=+e.target.value;e.target.closest('.rng').querySelector('.top2 span:last-child').textContent=S.style[ly]+' px';renderSheet();touch();return;}
   const k=e.target.dataset.k;if(!k)return;setKey(k,e.target.value);renderSheet();touch();
   if(tab==='colours'&&/^(ratio|perBox|size)/.test(k)) softRefreshColours();});
-$('#panel').addEventListener('change',e=>{const t=e.target;if(t.dataset.show){S.showSizes=t.checked;renderSheet();touch();}
-  if(t.dataset.showct){S.showColours=t.checked;if(!t.checked&&selBlock==='colours')selBlock=null;renderPanel();renderSheet();touch();}
+$('#panel').addEventListener('change',e=>{const t=e.target;
   if(t.dataset.k&&tab==='colours'&&STRUCT.test(t.dataset.k)) renderPanel(); if(t.dataset.k==='price:unit'){setKey('price:unit',t.value);renderSheet();touch();}});
 function softRefreshColours(){const c=calc();const pane=$('#panel .pane');const note=[...pane.querySelectorAll('.note,.warn')];
   const n=pane.querySelector('.sizes .note');if(n)n.textContent='Each box: '+S.sizes.map((s,j)=>`${+c.per[j].toFixed(1)} ${s}`).join(', ')+'.';
@@ -584,6 +595,8 @@ $('#panel').addEventListener('click',e=>{
   if(d.pedit){openEditorFor(d.pedit);return;}
   if(d.pdel){S.photos=S.photos.filter(p=>p.id!==d.pdel);editStates.delete(d.pdel);}
   else if(d.pmove){const i=+d.pmove;[S.photos[i-1],S.photos[i]]=[S.photos[i],S.photos[i-1]];}
+  else if(d.ctshow){S.showColours=d.ctshow==='1';if(!S.showColours&&selBlock==='colours')selBlock=null;}
+  else if(d.ctcols){S.showSizes=d.ctcols==='sizes';}
   else if(d.cadd){S.colours.push({name:'',boxes:1,qty:S.sizes.map(()=>0)});}
   else if(d.cdel){S.colours.splice(+d.cdel,1);}
   else if(d.cmove){const[i,dir]=d.cmove.split(':').map(Number);const j=i+dir;[S.colours[i],S.colours[j]]=[S.colours[j],S.colours[i]];}
