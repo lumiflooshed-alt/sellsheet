@@ -63,6 +63,7 @@ svg{flex:none}
 .pane h2{margin:0;font-size:20px;letter-spacing:-.015em}
 .pane .lead{margin:-10px 0 0;color:var(--muted);font-size:14.5px}
 .field{display:grid;gap:6px;min-width:0}
+.hint{font-size:12.5px;color:var(--faint);line-height:1.35}
 .field>span,.lbl{font-size:13.5px;font-weight:600;color:var(--muted)}
 .in{height:46px;border:1px solid var(--line2);border-radius:10px;background:var(--panel);padding:0 12px;width:100%;min-width:0;transition:border-color .15s,box-shadow .15s}
 .in:hover{border-color:var(--faint)}
@@ -392,12 +393,20 @@ const PRESETS=[['Navy','#1F2A44','#4F8FD6'],['Forest','#1E3A2F','#4FA37A'],['Cha
 
 /* ---------- state ---------- */
 function blankSheet(){return{id:uid(),updated:Date.now(),title:'',code:'',photos:[],sizes:['S','M','L','XL'],ratio:[1,2,2,1],perBox:24,mode:'ratio',showSizes:true,
-  colours:[{name:'',boxes:1,qty:[0,0,0,0]}],price:{amount:'',unit:'piece'},
+  colours:[{name:'',boxes:1,qty:[0,0,0,0]},{name:'',boxes:1,qty:[0,0,0,0]},{name:'',boxes:1,qty:[0,0,0,0]}],price:{amount:'',unit:'piece'},
   rows:[{id:uid(),label:'Price',auto:'price',value:''},{id:uid(),label:'Brand',value:''},{id:uid(),label:'Sizes',auto:'sizes',value:''},{id:uid(),label:'Packing',auto:'packing',value:''},
-        {id:uid(),label:'Style features',value:''},{id:uid(),label:'Style code',value:''},{id:uid(),label:'Location',value:'FOB: Toronto'}],
-  headings:{colours:'Available colours & sizes',details:'Product details',contact:'Contact us'},email:'sales@deals4ever.ca',theme:{primary:'#1F2A44',accent:'#4F8FD6'},style:JSON.parse(JSON.stringify(DEF_STYLE)),fmt:{},gfmt:{}};}
-function exampleSheet(){const s=blankSheet();Object.assign(s,{title:'Mens Nike Hoodie',code:'MNK1FOVP',colours:[{name:'Grey',boxes:3,qty:[0,0,0,0]},{name:'Navy',boxes:1,qty:[0,0,0,0]},{name:'Black',boxes:1,qty:[0,0,0,0]}],price:{amount:'19',unit:'piece'}});
-  s.rows[1].value='Nike';s.rows[4].value='Mens fleece hoodie';s.rows[5].value='HKR-0010';return s;}
+        {id:uid(),label:'Style features',value:''},{id:uid(),label:'Style code',value:''},{id:uid(),label:'Location',value:''}],
+  headings:{colours:'Available colours & sizes',details:'Product details',contact:'Contact us'},email:'',theme:{primary:'#1F2A44',accent:'#4F8FD6'},style:JSON.parse(JSON.stringify(DEF_STYLE)),fmt:{},gfmt:{}};}
+// Template guidance: grey example text on the sheet (never printed) and a short explanation in the panel.
+const COLOUR_EX=['e.g. Black','e.g. Grey','e.g. Navy','e.g. White','e.g. Red'];
+const ROW_HELP={price:['Set the price on the Product tab','Filled in from the price on the Product tab.'],
+  sizes:['Add sizes on the Colours tab','Listed from the sizes on the Colours tab.'],
+  packing:['Set pieces per box on the Product tab','Worked out from pieces per box.'],
+  brand:['e.g. Your brand','The brand or label on the product.'],
+  'style features':['e.g. Soft fleece, front pocket, ribbed cuffs','A few key selling points, separated by commas.'],
+  'style code':['e.g. ABC-1234','Your own or the supplier’s style number.'],
+  location:['e.g. FOB: Your city','Where the goods ship from, or the shipping terms.']};
+const rowHelp=r=>ROW_HELP[r.auto||'']||ROW_HELP[(r.label||'').trim().toLowerCase()]||['Add a value',''];
 let S=null, sheets=[], tab='product';
 const editStates=new Map(); // photo id -> in-memory editing data (not saved)
 
@@ -443,19 +452,19 @@ function sheetHTML(forExport){
   const blk=(name,inner,extra='')=>`<div class="blk${selBlock===name&&!forExport?' selected':''}" data-block="${name}" style="width:${B[name].w}%;${extra}">${inner}${forExport||selBlock!==name?'':frame(name)}</div>`;
   let photos='';
   if(ph.length) photos=blk('photos',`<div class="phs" style="--np:${ph.length}">${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${p.url}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
-  else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos</span></div></div>`);
+  else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos<small style="display:block;font-weight:500;font-size:13px;margin-top:4px;opacity:.8">Up to ${MAX_PHOTOS} · backgrounds are removed automatically</small></span></div></div>`);
   const th=t=>`<th style="${gH}">${t}</th>`, td=v=>`<td style="${gT}">${v}</td>`;
   const head=sz?th('Colour')+S.sizes.map(s=>th(esc(s))).join('')+th('Boxes')+th('Total pcs'):th('Colour')+th('Pcs per box')+th('Boxes')+th('Total pcs');
-  const body=c.rows.map((r,i)=>`<tr><td>${ed('colour:'+i+':name',r.name,'Colour')}</td>${sz?r.q.map(v=>td(v||'–')).join(''):td(S.perBox)}${td(r.boxes)}${td(r.tot)}</tr>`).join('');
+  const body=c.rows.map((r,i)=>`<tr><td>${ed('colour:'+i+':name',r.name,COLOUR_EX[i%COLOUR_EX.length])}</td>${sz?r.q.map(v=>td(v||'–')).join(''):td(S.perBox)}${td(r.boxes)}${td(r.tot)}</tr>`).join('');
   const tot=`<tr class="tot">${td('TOTAL')}${sz?c.T.q.map(v=>td(v)).join(''):td('')}${td(c.T.boxes)}${td(c.T.tot)}</tr>`;
-  const rows=S.rows.map(r=>`<tr class="${r.auto==='price'?'price':''}"><td>${ed('row:'+r.id+':label',r.label,'Label')}</td><td>${ed('row:'+r.id+':value',rowVal(r),'Add a value')}</td></tr>`).join('');
+  const rows=S.rows.map(r=>`<tr class="${r.auto==='price'?'price':''}"><td>${ed('row:'+r.id+':label',r.label,'Label')}</td><td>${ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
   const rh=n=>B[n].h?`--rh:${B[n].h}px;`:'';
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
     ${blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}"><div class="t">${ed('title',S.title.toUpperCase(),'PRODUCT NAME')}</div><div class="c"><small>ITEM CODE</small><b>${ed('code',S.code.toUpperCase(),'CODE')}</b></div></div>`)}
     ${photos}
     ${showCt?blk('colours',`<div class="sh">${ed('heading:colours',S.headings.colours.toUpperCase(),'HEADING')}</div><table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours')):''}
     ${blk('details',`<div class="sh">${ed('heading:details',S.headings.details.toUpperCase(),'HEADING')}</div><div class="dtw" style="position:relative"><table class="dt"><tbody>${rows}</tbody></table>${forExport?'':'<span class="rz rz-x" data-rz="lw" style="left:var(--lw)" title="Drag to resize the label column"></span>'}</div>`,rh('details'))}
-    ${blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}"><div class="h">${ed('heading:contact',S.headings.contact.toUpperCase(),'CONTACT US')}</div><div class="e">${ed('email',S.email,'email')}</div></div>`)}
+    ${blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}"><div class="h">${ed('heading:contact',S.headings.contact.toUpperCase(),'CONTACT US')}</div><div class="e">${ed('email',S.email,'sales@yourcompany.com')}</div></div>`)}
   </div>`;
 }
 const frame=n=>`<div class="frame" aria-hidden="true"><span class="flbl">${BLOCK_NAMES[n]}</span>${['w','e','s','sw','se'].map(d=>`<span class="bh bh-${d}" data-bh="${d}"></span>`).join('')}</div>`;
@@ -502,16 +511,17 @@ function moveInd(){const r=$('#rail'),t=r.querySelector(`[data-tab="${tab}"]`),i
 window.addEventListener('resize',moveInd);
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;renderRail();renderPanel();});
 const inp=(k,v,o={})=>`<input class="in${o.num?' num':''}" ${o.type?`type="${o.type}"`:''} ${o.mode?`inputmode="${o.mode}"`:''} data-k="${k}" value="${esc(v)}" placeholder="${esc(o.ph||'')}" ${o.id?`id="${o.id}"`:''} aria-label="${esc(o.label||'')}">`;
-const fld=(label,html)=>`<label class="field"><span>${label}</span>${html}</label>`;
+const fld=(label,html,hint)=>`<label class="field"><span>${label}</span>${html}${hint?`<small class="hint">${hint}</small>`:''}</label>`;
 function renderPanel(){
   const P=$('#panel'); let h='';
   if(tab==='product'){
     h=`<h2>Product</h2><p class="lead">The basics at the top of the sheet.</p>
-    ${fld('Product name',inp('title',S.title,{ph:'e.g. Mens Nike Hoodie',id:'f-title'}))}
-    ${fld('Item code',inp('code',S.code,{ph:'e.g. MNK1FOVP',id:'f-code'}))}
-    <div class="group"><h3>Price</h3><div class="row2">${fld('Amount ($)',inp('price:amount',S.price.amount,{ph:'19',mode:'decimal',id:'f-price'}))}
+    ${fld('Product name',inp('title',S.title,{ph:'e.g. Mens Fleece Hoodie',id:'f-title'}),'The big title in the header bar.')}
+    ${fld('Item code',inp('code',S.code,{ph:'e.g. ABC-1234',id:'f-code'}),'Shown top-right so buyers can quote it when ordering.')}
+    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Goes into the Price row of the Product details table.</p><div class="row2">${fld('Amount ($)',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
       <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit"><option value="piece"${S.price.unit==='piece'?' selected':''}>piece</option><option value="box"${S.price.unit==='box'?' selected':''}>box</option></select></label></div></div>
-    ${fld('Pieces per box',inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'}))}
+    ${fld('Pieces per box',inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'}),'How many pieces come in one box. Used for the table totals and the Packing row.')}
+    <p class="note">Grey text on the sheet is only an example. It disappears when you type, and never shows in downloads.</p>
     <p class="note">Tip: you can also click any text on the sheet and type to change it.</p>`;
   }
   else if(tab==='photos'){
@@ -523,18 +533,19 @@ function renderPanel(){
   }
   else if(tab==='colours'){
     const c=calc(), n=S.sizes.length;
-    h=`<h2>Colours &amp; sizes</h2><p class="lead">Boxes per colour. Totals are worked out for you.</p>
+    h=`<h2>Colours &amp; sizes</h2><p class="lead">List each colour you have and how many boxes of it. Totals are worked out for you.</p>
     <div class="group"><h3>Table on the sheet</h3>
       <div class="seg" role="group" aria-label="Show the table on the sheet"><button type="button" data-ctshow="1" aria-pressed="${S.showColours!==false}">Show table</button><button type="button" data-ctshow="0" aria-pressed="${S.showColours===false}">Hide table</button></div>
       ${S.showColours===false?'<p class="note">Hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so <b>Show table</b> brings it back as it was.</p>'
       :`<span class="note" style="font-weight:600;color:var(--ink)">Columns</span><div class="opts" role="group" aria-label="Table columns">${[['sizes','One column per size',['Colour',...S.sizes.map(x=>x||'?'),'Boxes','Total pcs']],['box','Pieces per box',['Colour','Pcs per box','Boxes','Total pcs']]].map(([v,l,cols])=>
         `<button type="button" class="opt" data-ctcols="${v}" aria-pressed="${(v==='sizes')===!!S.showSizes}"><b>${l}</b><span class="cols">${cols.map(x=>`<i>${esc(x)}</i>`).join('')}</span></button>`).join('')}</div>`}
     </div>
-    <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:'e.g. Grey'}))}${fld('Boxes',inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1}))}</div>
+    <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${fld('Boxes',inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1}))}</div>
       ${S.mode==='manual'?`<div class="qty" style="--n:${n}">${S.sizes.map((s,j)=>`<label>${esc(s)||'?'}${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:s})}</label>`).join('')}</div>`:''}</div>
       <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`).join('')}</div>
     <button class="add" data-cadd="1">${I.plus}Add colour</button>
     <div class="group"><h3>Sizes</h3>
+      <p class="hint" style="margin:0">How the pieces in each box split across sizes. For example, a ratio of 1-2-2-1 puts twice as many M and L as S and XL in every box.</p>
       <div class="seg" role="group" aria-label="How sizes are packed"><button type="button" data-mode="ratio" aria-pressed="${S.mode==='ratio'}">Same ratio every box</button><button type="button" data-mode="manual" aria-pressed="${S.mode==='manual'}">I'll type amounts</button></div>
       <div class="sizes" style="--n:${n}"><div class="hdr">${S.sizes.map(()=>'<span>Size</span>').join('')}<span></span></div>
         <div class="r">${S.sizes.map((s,j)=>inp(`size:${j}`,s,{num:1,label:'Size name'})).join('')}<button class="tiny x" data-sdel="1" aria-label="Remove last size" ${n<=1?'disabled':''}>${I.x}</button></div>
@@ -545,10 +556,11 @@ function renderPanel(){
     </div>`;
   }
   else if(tab==='details'){
-    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them.</p>
+    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them. Leave a row empty or remove it if you don't need it.</p>
     <div class="list">${S.rows.map((r,i)=>`<div class="item"><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:'Label',label:'Row label'})}
       ${r.auto?`<div class="in" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--raise)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rowVal(r))||'<span style=color:var(--faint)>Filled in automatically</span>'}</span><button class="btn sm ghost" data-unauto="${r.id}">Edit</button></div>`
-        :inp(`row:${r.id}:value`,r.value,{ph:'Value',label:'Row value'})}
+        :inp(`row:${r.id}:value`,r.value,{ph:rowHelp(r)[0],label:'Row value'})}
+      ${rowHelp(r)[1]?`<small class="hint">${rowHelp(r)[1]}</small>`:''}
       ${r.wasAuto&&!r.auto?`<button class="btn sm ghost" style="justify-self:start" data-reauto="${r.id}">Fill automatically again</button>`:''}</div>
       <div class="acts"><button class="tiny" data-rmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny" data-rmove="${i}:1" aria-label="Move down" ${i===S.rows.length-1?'disabled':''}>${I.down}</button><button class="tiny x" data-rdel="${r.id}" aria-label="Remove row">${I.x}</button></div></div>`).join('')}</div>
     <button class="add" data-radd="1">${I.plus}Add row</button>`;
@@ -556,8 +568,8 @@ function renderPanel(){
   else if(tab==='contact'){
     h=`<h2>Contact</h2><p class="lead">The footer of the sheet.</p>
     ${fld('Footer heading',inp('heading:contact',S.headings.contact,{id:'f-ch'}))}
-    ${fld('Email',inp('email',S.email,{type:'email',id:'f-email'}))}
-    <div class="group"><h3>Section headings</h3>${fld('Table heading',inp('heading:colours',S.headings.colours))}${fld('Details heading',inp('heading:details',S.headings.details))}</div>`;
+    ${fld('Email',inp('email',S.email,{type:'email',ph:'sales@yourcompany.com',id:'f-email'}),'Where buyers send orders. New sheets reuse the email from the sheet you are on.')}
+    <div class="group"><h3>Section headings</h3><p class="hint" style="margin:0">The small titles above each table.</p>${fld('Table heading',inp('heading:colours',S.headings.colours))}${fld('Details heading',inp('heading:details',S.headings.details))}</div>`;
   }
   else if(tab==='style'){
     h=`<h2>Colour scheme</h2><p class="lead">Pick a preset or choose your own colours.</p>
@@ -944,7 +956,9 @@ async function buildDocx(){
   const all=await dbAll();
   if(all===null){$('#status').innerHTML='<i style="background:var(--warn)"></i>Not saved on this device';}
   sheets=(all||[]).sort((a,b)=>b.updated-a.updated).map(ensureStyle);
-  if(!sheets.length){const ex=exampleSheet();sheets=[ex];dbPut(ex);}
+  const old=sheets.length===1&&sheets[0];
+  if(old&&old.title==='Mens Nike Hoodie'&&old.code==='MNK1FOVP'&&!old.photos.length&&old.rows[1]?.value==='Nike'){const t=blankSheet();for(const k of['title','code','colours','price','rows','sizes','ratio','perBox','mode'])old[k]=t[k];dbPut(old);}
+  if(!sheets.length){const ex=blankSheet();sheets=[ex];dbPut(ex);}
   S=sheets.find(s=>s.id===lsGet('ss-last'))||sheets[0];loadFont(S.style.font);
   refreshPicker();renderPanel();renderSheet();fit();moveInd();
   setTimeout(()=>$('#app').classList.remove('intro'),1200);
