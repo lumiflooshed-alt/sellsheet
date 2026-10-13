@@ -315,6 +315,14 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .opt2 input{grid-row:span 2;width:18px;height:18px;accent-color:var(--accent);margin:0}.opt2 small{color:var(--muted);font-size:12px}
 .opt2:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
 @media (max-width:760px){.ml-main{display:block;overflow:auto}.ml-cust{border-right:0;border-bottom:1px solid var(--line)}.cu-list{max-height:260px;flex:none}.ml-form{overflow:visible}}
+#setupDlg{width:min(640px,calc(100vw - 24px))}
+.su-wrap{display:grid;grid-template-rows:auto minmax(0,1fr) auto;max-height:calc(100vh - 24px)}
+.su-body{padding:16px 20px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow:auto}.su-body p{margin:0;line-height:1.5}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center}.kv span{grid-column:1/-1;font-size:13.5px;color:var(--muted)}
+.kv code{font:500 13px var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-wrap:anywhere}
+.cu-mails{grid-column:1/-1;display:grid;gap:4px;padding:6px 0 2px 28px;border-top:1px dashed var(--line2);margin-top:2px}
+.cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
+.cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
 .acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
 .acct-menu p{margin:0 0 4px;font-size:14px;line-height:1.45}
@@ -350,7 +358,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     </div>
     <div class="spacer"></div>
     <button class="btn icon ghost" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
-    <button class="btn ghost acct" id="acctBtn" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
+    <button class="btn ghost acct" id="acctBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
     <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
     <button class="btn dl-word" id="dlWord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Word</span></button>
     <button class="btn primary" id="dlPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download PDF</button>
@@ -469,6 +477,22 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-bot"><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
   </div>
 </dialog>
+<dialog id="setupDlg" aria-label="Set up sign-in">
+  <div class="su-wrap">
+    <div class="ml-top"><h2>Set up sign-in</h2><button class="btn icon sm ghost" id="suClose" type="button" aria-label="Close">✕</button></div>
+    <div class="su-body">
+      <p>Signing in with Google or Microsoft needs a free <b>Client ID</b>, made once in your own account (about 10 minutes each). The full steps are in <a href="https://github.com/lumiflooshed-alt/sellsheet/blob/main/SETUP-EMAIL.md" target="_blank" rel="noopener">SETUP-EMAIL.md</a>.</p>
+      <div class="group"><h3>Your site's address (you'll paste these during setup)</h3>
+        <div class="kv"><span>Google: <b>Authorized JavaScript origin</b></span><code id="suOrigin"></code><button class="btn sm" type="button" data-copy="suOrigin">Copy</button></div>
+        <div class="kv"><span>Microsoft: <b>Single-page application redirect URI</b></span><code id="suRedirect"></code><button class="btn sm" type="button" data-copy="suRedirect">Copy</button></div>
+      </div>
+      <label class="field"><span>Google Client ID</span><input class="in" id="suGoogle" type="text" spellcheck="false" autocomplete="off" placeholder="1234567890-abc123.apps.googleusercontent.com"><small class="hint" id="suGoogleHint"></small></label>
+      <label class="field"><span>Microsoft Application (client) ID</span><input class="in" id="suMs" type="text" spellcheck="false" autocomplete="off" placeholder="11111111-2222-3333-4444-555555555555"><small class="hint" id="suMsHint"></small></label>
+      <p class="note">Saved in this browser so you can sign in straight away. To switch sign-in on for every device and everyone using the site, send the IDs to Claude (they're not passwords), or paste them into <code>index.html</code> as SETUP-EMAIL.md explains.</p>
+    </div>
+    <div class="ml-bot"><span class="note" id="suStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="suCancel" type="button">Cancel</button><button class="btn primary" id="suSave" type="button">Save</button></div></div>
+  </div>
+</dialog>
 <div class="toast" id="toast" role="status"></div>
 <div class="ctx hide" id="ctx" role="menu" aria-label="Text formatting"></div>
 
@@ -477,7 +501,9 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 'use strict';
 // Optional sign-in (Gmail / Outlook) for emailing sell sheets and syncing customers.
 // Paste the Client IDs from SETUP-EMAIL.md here; leave '' to keep that option switched off.
-const EMAIL_SETUP={google:'',microsoft:''};
+const EMAIL_SETUP={google:'180128706409-k1bv00h2mvb5mlmk141ftcojgb01g02t.apps.googleusercontent.com',microsoft:''};
+const EMAIL_CODE={...EMAIL_SETUP}; // IDs pasted in "Set up sign-in" fill any left empty here, for this browser only
+try{const o=JSON.parse(localStorage.getItem('ss-email-setup')||'{}')||{};for(const k of['google','microsoft'])if(!EMAIL_SETUP[k]&&typeof o[k]==='string')EMAIL_SETUP[k]=o[k].trim();}catch(_){}
 // The Microsoft sign-in pop-up returns to this page; it only needs to hand the code back to the opener.
 if(window.name==='ss-login'&&window.opener&&/[?&](code|error)=/.test(location.search)){document.body.innerHTML='<p style="font:16px system-ui,sans-serif;padding:48px;text-align:center">Signing in…</p>';return;}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -1289,27 +1315,34 @@ const cuKey=()=>{const a=authGet();return a?`ss-customers:${a.prov}:${ck(a.email
 function cuLoad(){try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
   CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim()));CU.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){CU.list=[];CU.deleted=[];}}
 const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted}));scheduleSync();};
+const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_RE.test(a)):[];
+// which of a customer's addresses get emails (main address unless chosen otherwise)
+const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.filter(a=>c.use.some(x=>ck(x)===ck(a))):[];return u.length?u:[c.email];};
 const cuGroups=()=>[...new Set(CU.list.map(c=>(c.group||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-const cuShown=()=>{const q=CU.q.toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!q||[c.name,c.company,c.email,c.group].some(v=>(v||'').toLowerCase().includes(q))));};
+const cuShown=()=>{const q=CU.q.toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!q||[c.name,c.company,c.email,c.group,...altOf(c)].some(v=>(v||'').toLowerCase().includes(q))));};
 function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';
   $('#cuGroups').innerHTML=g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'';
   const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email));
   $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
-      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}</small></label>
-      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="Edit ${esc(c.name||c.email)}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span></div>`).join('')
+      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}${altOf(c).length?` · +${altOf(c).length} more`:''}</small></label>
+      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="Edit ${esc(c.name||c.email)}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${CU.sel.has(ck(c.email))&&altOf(c).length?`<div class="cu-mails" role="group" aria-label="Addresses to send to">${[c.email,...altOf(c)].map((a,i)=>`<label><input type="checkbox" data-use="${esc(ck(c.email))}" value="${esc(a)}" ${useOf(c).includes(a)?'checked':''}><span>${esc(a)}</span>${i?'':'<em>main</em>'}</label>`).join('')}</div>`:''}</div>`).join('')
     :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import a CSV file from Gmail or Outlook contacts.'}</div>`;
   renderChips();renderSync();}
 function cuFormOpen(c){CU.edit=c?ck(c.email):'new';const f=$('#cuForm');f.hidden=false;const gl=cuGroups();
   f.innerHTML=`<strong style="font-size:14px">${c?'Edit customer':'New customer'}</strong>
     <input class="in" id="cuName" placeholder="Name, e.g. Sarah Lee" value="${esc(c?.name||'')}" aria-label="Name">
     <input class="in" id="cuCo" placeholder="Company (optional)" value="${esc(c?.company||'')}" aria-label="Company">
-    <input class="in" id="cuMail" type="email" placeholder="Email address" value="${esc(c?.email||'')}" aria-label="Email address">
+    <input class="in" id="cuMail" type="email" placeholder="Main email address" value="${esc(c?.email||'')}" aria-label="Main email address">
+    <input class="in" id="cuAlt" type="text" placeholder="Other emails (optional), separated by commas" value="${esc(c?altOf(c).join(', '):'')}" aria-label="Other email addresses">
     <input class="in" id="cuGrp" placeholder="Group (optional), e.g. Retailers" value="${esc(c?.group||'')}" list="cuGrpList" aria-label="Group"><datalist id="cuGrpList">${gl.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>
     <div class="bgrp"><button class="btn sm primary" type="button" id="cuSaveBtn">Save</button><button class="btn sm ghost" type="button" id="cuCancelBtn">Cancel</button></div>`;
   $('#cuName').focus();}
 function cuFormSave(){const v=id=>$('#'+id).value.trim(),email=v('cuMail');if(!EMAIL_RE.test(email)){toast('Enter a valid email address');$('#cuMail').focus();return;}
   const dup=CU.list.find(c=>ck(c.email)===ck(email)&&ck(c.email)!==CU.edit);if(dup){toast(`${email} is already saved`);return;}
-  const now=Date.now(),data={name:v('cuName'),company:v('cuCo'),email,group:v('cuGrp'),upd:now};
+  const altIn=splitAddr(v('cuAlt')),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length){toast('Check these addresses: '+badAlt.join(', '));$('#cuAlt').focus();return;}
+  const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),old=CU.edit==='new'?null:CU.list.find(c=>ck(c.email)===CU.edit);
+  const use=old?useOf({...old,email,alt}).filter(a=>[email,...alt].some(x=>ck(x)===ck(a))):[email];
+  const now=Date.now(),data={name:v('cuName'),company:v('cuCo'),email,alt,use:use.length?use:[email],group:v('cuGrp'),upd:now};
   if(CU.edit==='new'){CU.list.push(data);CU.sel.add(ck(email));}
   else{const c=CU.list.find(c=>ck(c.email)===CU.edit);if(c){if(ck(c.email)!==ck(email)){CU.deleted.push({email:ck(c.email),at:now});if(CU.sel.delete(ck(c.email)))CU.sel.add(ck(email));}Object.assign(c,data);}}
   CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));
@@ -1320,7 +1353,10 @@ $('#cuForm').addEventListener('click',e=>{if(e.target.id==='cuSaveBtn')cuFormSav
 $('#cuForm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();cuFormSave();}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cuFormClose();}});
 $('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;renderCust();});
 $('#cuGroups').addEventListener('click',e=>{const b=e.target.closest('[data-grp]');if(!b)return;CU.grp=b.dataset.grp;renderCust();});
-$('#cuList').addEventListener('change',e=>{const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderChips();});
+$('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
+  if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;const boxes=[...e.target.closest('.cu-mails').querySelectorAll('input')],on=boxes.filter(b=>b.checked).map(b=>b.value);
+    if(!on.length){e.target.checked=true;toast('Keep at least one address ticked');return;}c.use=on;c.upd=Date.now();cuSave();renderChips();return;}
+  const id=e.target.dataset.cu;if(!id)return;if(CU.list.find(c=>ck(c.email)===id&&altOf(c).length)){e.target.checked?CU.sel.add(id):CU.sel.delete(id);renderCust();return;}e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderChips();});
 $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
   if(ed)cuFormOpen(CU.list.find(c=>ck(c.email)===ed.dataset.cuedit));
   if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
@@ -1337,25 +1373,31 @@ function importCustomers(text){const rows=parseCSV(text.replace(/^﻿/,''));if(!
   const col=re=>h.findIndex(x=>re.test(x));
   const ci={email:col(/e-?mail( ?1)?( - value| address)?$|^e-?mail/),name:col(/^(full )?name$|^display name$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^tag|^labels?$|categor/)};
   let n=0;for(const r of hasHead?rows.slice(1):rows){const cell=i=>i>=0?(r[i]||'').trim():'';
-    let email=hasHead?cell(ci.email):'';if(!EMAIL_RE.test(email))email=(r.find(x=>EMAIL_RE.test(x.trim()))||'').trim();if(!EMAIL_RE.test(email)){const m=r.join(' ').match(/[^\s<>",;]+@[^\s<>",;]+\.[^\s<>",;]+/);email=m?m[0]:'';}
-    if(!EMAIL_RE.test(email))continue;
-    const others=r.map(x=>x.trim()).filter(x=>x&&x!==email);
+    const mails=[];const addM=v=>{for(const x of String(v||'').split(/:::|[;,]/)){const a=x.trim().replace(/^<|>$/g,'');if(EMAIL_RE.test(a)&&!mails.some(m=>ck(m)===ck(a)))mails.push(a);}};
+    if(hasHead){addM(cell(ci.email));h.forEach((x,i)=>{if(/e-?mail/.test(x)&&!/type|label|display|subject/.test(x))addM(cell(i));});}
+    r.forEach(x=>{if(EMAIL_RE.test(x.trim()))addM(x);});
+    if(!mails.length){const m=r.join(' ').match(/[^\s<>",;]+@[^\s<>",;]+\.[^\s<>",;]+/);if(m)addM(m[0]);}
+    if(!mails.length)continue;const email=mails[0],alt=mails.slice(1);
+    const others=r.map(x=>x.trim()).filter(x=>x&&!mails.some(m=>x.includes(m)));
     const name=hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'');
     const data={name:name.replace(/<.*>/,'').trim(),company:hasHead?cell(ci.company):(others[1]||''),email,group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim()};
-    data.upd=Date.now();const ex=CU.list.find(c=>ck(c.email)===ck(email));
-    if(ex){for(const k of['name','company','group'])if(!ex[k]&&data[k]){ex[k]=data[k];ex.upd=data.upd;}}else{CU.list.push(data);n++;}CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));}
+    data.upd=Date.now();data.alt=alt;data.use=[email];const ex=CU.list.find(c=>ck(c.email)===ck(email));
+    if(ex){for(const k of['name','company','group'])if(!ex[k]&&data[k]){ex[k]=data[k];ex.upd=data.upd;}
+      const add=alt.filter(a=>ck(a)!==ck(ex.email)&&!altOf(ex).some(x=>ck(x)===ck(a)));if(add.length){ex.alt=[...altOf(ex),...add];ex.upd=data.upd;}}
+    else{CU.list.push(data);n++;}CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));}
   cuSave();renderCust();return n;}
 $('#cuImport').onclick=()=>$('#cuFile').click();
 $('#cuFile').addEventListener('change',async()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(!f)return;try{const n=importCustomers(await f.text());toast(n?`Imported ${n} new customer${n>1?'s':''}`:'No new customers found in that file');}catch(e){toast('That file could not be read');}});
 $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export yet');return;}const q=v=>`"${String(v||'').replace(/"/g,'""')}"`;
-  save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Group',...CU.list.map(c=>[c.name,c.company,c.email,c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
+  save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Other emails,Group',...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
 
 /* recipients */
 function renderChips(){const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
-  $('#mlChips').innerHTML=sel.map(c=>`<span class="chip">${esc(c.name||c.company||c.email)}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
+  $('#mlChips').innerHTML=sel.map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
-function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const k=c.email.toLowerCase();if(!seen.has(k)){seen.add(k);out.push({email:c.email,name:c.name,company:c.company,cust:1});}}
-  for(const a of splitAddr($('#mlTo').value)){const k=a.toLowerCase();if(!seen.has(k)){seen.add(k);out.push({email:a});}}return out;}
+// one entry per person; a customer can have several chosen addresses
+function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1});}
+  for(const a of splitAddr($('#mlTo').value)){const k=ck(a);if(!seen.has(k)){seen.add(k);out.push({email:a,emails:[a]});}}return out;}
 function updMode(){const n=people().length,row=$('#mlModeRow');row.hidden=n<2;$$('#mlMode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===MAIL.mode));
   $('#mlModeHint').textContent=MAIL.mode==='each'?`${n} separate emails, each greeting the person by name. Nobody sees who else got it.`:'One email. Ticked customers go in Bcc so they can\'t see each other; typed addresses stay in To.';
   $('#mlSend').textContent=n>1&&MAIL.mode==='each'?`Send ${n} emails`:'Send';}
@@ -1374,11 +1416,11 @@ const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'
 function googleLogin(choose){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
   const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata';
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',
-    callback:async r=>{if(r.error){rej(new Error(r.error_description||r.error));return;}
+    callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
       let email='';try{email=(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+r.access_token}})).json()).email||'';}catch(_){}
       const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email};tokSet('google',t);res(t);},
-    error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'Sign-in was cancelled.'))});
+    error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'The sign-in window was closed. If Google showed an error such as "origin_mismatch" or "invalid_client", check the steps under "If sign-in doesn\'t work" in SETUP-EMAIL.md.'))});
   c.requestAccessToken();});}
 async function msLogin(choose){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
   try{const scope='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',rnd=n=>crypto.getRandomValues(new Uint8Array(n));
@@ -1404,11 +1446,11 @@ function signOut(){const a=authGet();if(a?.prov==='google'&&window.google?.accou
   authSet(null);CU.sel.clear();cuLoad();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
 function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=tokGet(p),el=$('#mlAcct');
   const other=authGet();if(!t&&other){el.innerHTML=`<span>Signed in with ${PROV_NAME[other.prov]} (${esc(other.email||'')}). Sending from ${PROV_NAME[p]} needs a ${p==='google'?'Google':'Microsoft'} sign-in, which switches accounts.</span>`+(EMAIL_SETUP[p]?`<button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`:'');return;}
-  if(!EMAIL_SETUP[p]){el.innerHTML=`<span>${PROV_NAME[p]} sending isn't switched on for this site yet (see SETUP-EMAIL.md). You can still use <b>Share instead…</b></span>`;return;}
+  if(!EMAIL_SETUP[p]){el.innerHTML=`<span>${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet.</span><button class="btn sm primary" type="button" id="mlSetup">Set up sign-in</button>`;return;}
   el.innerHTML=t?`<span>Signed in as <b>${esc(t.email||PROV_NAME[p]+' account')}</b></span><button class="lnk" type="button" id="mlSwitch">Switch account</button>`
     :`<span>Not signed in.</span><button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`;}
 $('#mlProv').addEventListener('click',e=>{const b=e.target.closest('[data-prov]');if(!b)return;MAIL.prov=b.dataset.prov;saveMail();renderAcct();if(MAIL.prov==='google')loadScript('gis').catch(()=>{});});
-$('#mlAcct').addEventListener('click',async e=>{const sw=e.target.id==='mlSwitch';if(!sw&&e.target.id!=='mlSignIn')return;
+$('#mlAcct').addEventListener('click',async e=>{if(e.target.id==='mlSetup'){openSetup();return;}const sw=e.target.id==='mlSwitch';if(!sw&&e.target.id!=='mlSignIn')return;
   try{await login(MAIL.prov,sw);renderAcct();toast('Signed in');}catch(err){mlStatus(err.message,true);}});
 const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
 
@@ -1416,7 +1458,7 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>({name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),group:String(c.group||''),upd:+c.upd||0})),
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),group:String(c.group||''),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at}))};}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
 const httpErr=(what,r)=>Object.assign(new Error(what+' '+r.status),{status:r.status});
@@ -1450,16 +1492,33 @@ function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
     :(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Saved privately in this browser. <b>Sign in</b> (optional) to keep them on every device.':'Saved privately in this browser. Other people who open the site can\'t see your customers.');}
 
 /* account button in the top bar (optional sign-in) */
-function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft);b.hidden=!on;if(!on)return;const a=authGet();
+function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft),a=authGet();
+  if(!on){$('#acctLbl').textContent='Sign in';b.title='Sign-in needs a one-time setup';$('#acctMenu').innerHTML=`<p><b>Sign-in isn't set up yet</b><br><span class="note">It needs a free Client ID from Google and/or Microsoft, made once in your own account. Everything else on the site works without signing in.</span></p><button class="btn sm primary" type="button" data-am="setup">Set up sign-in</button>`;return;}
   $('#acctLbl').textContent=a?(a.email||'Signed in'):'Sign in';b.title=a?`Signed in as ${a.email} (${PROV_NAME[a.prov]})`:'Sign in (optional) to keep your customers on every device';
   $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':lastSync?' (up to date)':''}.</span></p><button class="btn sm" type="button" data-am="out">Sign out</button>`
     :`<p><b>Sign in (optional)</b><br><span class="note">Keeps your customers on every device and lets you email sell sheets. Everything else works without signing in.</span></p>
-      ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}`;}
+      ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}
+      <button class="lnk" type="button" data-am="setup" style="justify-self:start">Sign-in setup${EMAIL_SETUP.google&&EMAIL_SETUP.microsoft?'':' (add '+(EMAIL_SETUP.google?'Microsoft':'Google')+')'}</button>`;}
 $('#acctBtn').onclick=e=>{e.stopPropagation();if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});renderTopAcct();$('#acctMenu').classList.toggle('hide');};
 document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn'))$('#acctMenu').classList.add('hide');});
 $('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[data-am]');if(!b)return;const v=b.dataset.am;
   if(v==='out'){signOut();$('#acctMenu').classList.add('hide');return;}
+  if(v==='setup'){$('#acctMenu').classList.add('hide');openSetup();return;}
   try{await login(v,true);MAIL.prov=v;saveMail();$('#acctMenu').classList.add('hide');toast('Signed in. Your customers will sync to this account.');}catch(err){toast(err.message);}});
+
+/* "Set up sign-in": paste the Client IDs (kept in this browser) */
+const setupDlg=$('#setupDlg'),ID_RE={google:/^[\w-]+\.apps\.googleusercontent\.com$/,microsoft:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i};
+function openSetup(){$('#suOrigin').textContent=location.origin;$('#suRedirect').textContent=redirectUri();
+  for(const[k,id,hint]of[['google','suGoogle','suGoogleHint'],['microsoft','suMs','suMsHint']]){const inp=$('#'+id);inp.value=EMAIL_SETUP[k]||'';inp.disabled=!!EMAIL_CODE[k];
+    $('#'+hint).textContent=EMAIL_CODE[k]?'Already switched on for everyone in the site\'s code.':'';}
+  $('#suStatus').textContent='';if(!setupDlg.open)setupDlg.showModal();}
+setupDlg.addEventListener('click',async e=>{const c=e.target.closest('[data-copy]');if(!c)return;try{await navigator.clipboard.writeText($('#'+c.dataset.copy).textContent);toast('Copied');}catch(_){toast('Select the text and copy it');}});
+$('#suSave').onclick=()=>{const v={google:$('#suGoogle').value.trim().replace(/\s+/g,''),microsoft:$('#suMs').value.trim().replace(/\s+/g,'')};
+  for(const k of['google','microsoft'])if(!EMAIL_CODE[k]&&v[k]&&!ID_RE[k].test(v[k])){const s=$('#suStatus');s.textContent=k==='google'?'That doesn\'t look like a Google Client ID. It ends in .apps.googleusercontent.com.':'That doesn\'t look like a Microsoft Application ID (it looks like 11111111-2222-3333-4444-555555555555).';s.style.color='var(--bad)';return;}
+  const keep={};for(const k of['google','microsoft'])if(!EMAIL_CODE[k]){keep[k]=v[k];EMAIL_SETUP[k]=v[k];}lsSet('ss-email-setup',JSON.stringify(keep));
+  setupDlg.close();renderTopAcct();if(mailDlg.open){renderAcct();renderSync();}if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
+  toast(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Sign-in is set up in this browser. Click "Sign in" to try it.':'Sign-in setup cleared');};
+$('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
 
 /* the email itself */
 const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
@@ -1514,11 +1573,11 @@ async function sendOne(p,tok,m){
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
 function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),bcc=splitAddr($('#mlBcc').value);
-  const bad=[...P.map(x=>x.email),...cc,...bcc].filter(a=>!EMAIL_RE.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
+  const bad=[...P.flatMap(x=>x.emails),...cc,...bcc].filter(a=>!EMAIL_RE.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
   if(!P.length&&!cc.length&&!bcc.length)throw new Error('Add at least one recipient: tick a customer or type an email address.');
-  if(P.length>1&&MAIL.mode==='each')return P.map(p=>({to:[p.email],cc,bcc,person:p}));
-  if(P.length>1){const to=P.filter(p=>!p.cust).map(p=>p.email),hid=P.filter(p=>p.cust).map(p=>p.email);return[{to:to.length?to:(meEmail?[meEmail]:[]),cc,bcc:[...bcc,...hid],person:null}];}
-  return[{to:P.map(p=>p.email),cc,bcc,person:P[0]||null}];}
+  if(P.length>1&&MAIL.mode==='each')return P.map(p=>({to:p.emails,cc,bcc,person:p}));
+  if(P.length>1){const to=P.filter(p=>!p.cust).flatMap(p=>p.emails),hid=P.filter(p=>p.cust).flatMap(p=>p.emails);return[{to:to.length?to:(meEmail?[meEmail]:[]),cc,bcc:[...bcc,...hid],person:null}];}
+  return[{to:P.flatMap(p=>p.emails),cc,bcc,person:P.length===1?P[0]:null}];}
 async function buildAttachments(kinds){const out=[];let cv=null;
   for(const k of kinds){mlStatus(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
     if((k==='pdf'||k==='jpg')&&!cv)cv=await sheetCanvas();
@@ -1527,7 +1586,7 @@ async function buildAttachments(kinds){const out=[];let cv=null;
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
 let sending=false;
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
-  if(!EMAIL_SETUP[p]){mlStatus(`${PROV_NAME[p]} sending isn't set up for this site yet. Use "Share instead…", or follow SETUP-EMAIL.md.`,true);return;}
+  if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
   let plan;try{plan=planMessages(tokGet(p)?.email);}catch(e){mlStatus(e.message,true);return;}
   const kinds=attKinds();if(!kinds.length&&!MAIL.summary){mlStatus('Choose at least one attachment, or include the product summary.',true);return;}
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
