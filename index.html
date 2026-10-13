@@ -280,6 +280,44 @@ dialog[open]{animation:pop .22s var(--ease)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:var(--panel);padding:12px 18px;border-radius:12px;font-weight:600;box-shadow:var(--shadow-lg);transition:opacity .2s,transform .25s var(--ease);z-index:50;pointer-events:none;max-width:calc(100vw - 32px)}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .hide,[hidden]{display:none!important}
+/* email dialog */
+#mailDlg{width:min(1120px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
+.ml-wrap{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:100%}
+.ml-top,.ml-bot{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ml-top h2{margin:0;font-size:18px;flex:1}
+.ml-bot{border-bottom:0;border-top:1px solid var(--line);justify-content:space-between}
+.ml-main{display:grid;grid-template-columns:minmax(260px,350px) 1fr;min-height:0}
+.ml-cust{border-right:1px solid var(--line);background:var(--raise);padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.ml-form{padding:16px 20px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start;overflow:auto;min-width:0}
+.ml-ch{display:flex;align-items:center;justify-content:space-between;gap:8px}.ml-ch h3{margin:0;font-size:15px}
+.lnk{border:0;background:none;color:var(--accent);font:600 13px var(--ui);cursor:pointer;padding:2px 4px}
+.cu-groups{display:flex;gap:6px;flex-wrap:wrap}.cu-groups:empty{display:none}
+.cu-groups button{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:4px 10px;font:600 12.5px var(--ui);cursor:pointer;color:var(--muted)}
+.cu-groups button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.cu-list{overflow:auto;display:grid;gap:6px;align-content:start;min-height:80px;flex:1 1 auto}
+.cu{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 8px 8px 10px}
+.cu.on{border-color:var(--accent);background:var(--accent-soft)}
+.cu input{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.cu .who{min-width:0;font-size:14px;line-height:1.3;cursor:pointer}.cu .who small{display:block;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cu .gp{font-size:11px;font-weight:700;color:var(--muted);background:var(--raise);border:1px solid var(--line);border-radius:5px;padding:1px 5px;margin-left:4px}
+.cu .acts{display:flex;gap:2px}
+.cu-empty{color:var(--muted);font-size:13.5px;padding:10px 4px}
+.cu-form{background:var(--panel);border:1px solid var(--accent);border-radius:10px;padding:10px;display:grid;gap:8px}
+.cu-form .in{height:38px}
+.ml-from{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ml-acct{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--accent-soft);color:var(--ink);border:1px solid var(--accent);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px;font-weight:600}
+.chip button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:2px 5px}
+textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:inherit}
+.att{display:flex;gap:8px;flex-wrap:wrap}
+.opt2{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center;border:1.5px solid var(--line2);border-radius:10px;padding:8px 12px;cursor:pointer;min-width:150px;background:var(--panel)}
+.opt2 input{grid-row:span 2;width:18px;height:18px;accent-color:var(--accent);margin:0}.opt2 small{color:var(--muted);font-size:12px}
+.opt2:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:760px){.ml-main{display:block;overflow:auto}.ml-cust{border-right:0;border-bottom:1px solid var(--line)}.cu-list{max-height:260px;flex:none}.ml-form{overflow:visible}}
+.acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
+.acct-menu p{margin:0 0 4px;font-size:14px;line-height:1.45}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* phones / small tablets */
 @media (max-width:900px){
@@ -312,6 +350,8 @@ dialog[open]{animation:pop .22s var(--ease)}
     </div>
     <div class="spacer"></div>
     <button class="btn icon ghost" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    <button class="btn ghost acct" id="acctBtn" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
+    <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
     <button class="btn dl-word" id="dlWord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Word</span></button>
     <button class="btn primary" id="dlPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download PDF</button>
   </header>
@@ -398,19 +438,56 @@ dialog[open]{animation:pop .22s var(--ease)}
   </div>
 </dialog>
 <input type="file" id="file" accept="image/*" hidden>
+<div class="acct-menu hide" id="acctMenu" role="dialog" aria-label="Account"></div>
+<dialog id="mailDlg" aria-label="Email sell sheet">
+  <div class="ml-wrap">
+    <div class="ml-top"><h2>Email sell sheet</h2><button class="btn icon sm ghost" id="mlClose" type="button" aria-label="Close">✕</button></div>
+    <div class="ml-main">
+      <section class="ml-cust" aria-label="Customers">
+        <div class="ml-ch"><h3>Customers</h3><span class="bgrp"><button class="lnk" id="cuAll" type="button">Select shown</button><button class="lnk" id="cuNone" type="button">Clear</button></span></div>
+        <input class="in" id="cuSearch" type="search" placeholder="Search name, company, email or group" aria-label="Search customers">
+        <div class="cu-groups" id="cuGroups"></div>
+        <div class="cu-form" id="cuForm" hidden></div>
+        <div class="cu-list" id="cuList"></div>
+        <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" title="Import a CSV file (for example exported from Gmail or Outlook contacts)">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".csv,.txt,text/csv,text/plain" hidden></div>
+        <p class="hint" style="margin:0" id="cuSync"></p>
+      </section>
+      <section class="ml-form" aria-label="Email">
+        <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span></div>
+        <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
+        <div class="row2"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
+        <div class="field" id="mlModeRow" hidden><span>Sending to several people</span><div class="seg" role="group" aria-label="How to send" id="mlMode"><button type="button" data-mode="each">A personal email each</button><button type="button" data-mode="bcc">One email, everyone in Bcc</button></div><small class="hint" id="mlModeHint"></small></div>
+        <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name, {company} their company and {product} this product. Your wording is remembered.</small></label>
+        <label class="check"><input type="checkbox" id="mlSummary">Show the product summary (photos and details) inside the email</label>
+        <div class="field"><span>Attach the sell sheet as</span><div class="att" id="mlAtt">
+          <label class="opt2"><input type="checkbox" value="pdf"><b>PDF</b><small>Best for everyone</small></label>
+          <label class="opt2"><input type="checkbox" value="docx"><b>Word</b><small>.docx, editable</small></label>
+          <label class="opt2"><input type="checkbox" value="jpg"><b>Image</b><small>.jpg, opens anywhere</small></label></div></div>
+      </section>
+    </div>
+    <div class="ml-bot"><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
+  </div>
+</dialog>
 <div class="toast" id="toast" role="status"></div>
 <div class="ctx hide" id="ctx" role="menu" aria-label="Text formatting"></div>
 
 <script>
 (()=>{
 'use strict';
+// Optional sign-in (Gmail / Outlook) for emailing sell sheets and syncing customers.
+// Paste the Client IDs from SETUP-EMAIL.md here; leave '' to keep that option switched off.
+const EMAIL_SETUP={google:'',microsoft:''};
+// The Microsoft sign-in pop-up returns to this page; it only needs to hand the code back to the opener.
+if(window.name==='ss-login'&&window.opener&&/[?&](code|error)=/.test(location.search)){document.body.innerHTML='<p style="font:16px system-ui,sans-serif;padding:48px;text-align:center">Signing in…</p>';return;}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const LIBS=Object.assign({
   ort:'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.3/dist/ort.min.js',
   jspdf:'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   h2c:'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
   docx:'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
-  jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+  jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  gis:'https://accounts.google.com/gsi/client'
 },window.__LIBS||{});
 const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
@@ -1062,17 +1139,22 @@ async function save(name,blob){if(!downloads){
   try{await downloads.save({filename:name,data:blob});toast('Saved '+name);}catch(e){toast(e&&e.code==='declined'?'Not saved.':'Could not save. Please try again.');}}
 const fileBase=()=>(S.code||S.title||'Sell sheet').replace(/[\\/:*?"<>|]+/g,'').trim()+' Sell Sheet';
 async function busy(btn,fn){const t=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin" style="width:18px;height:18px;border-width:3px"></span>Preparing…';try{await fn();}catch(e){console.error(e);toast('Something went wrong while making the file.');}finally{btn.disabled=false;btn.innerHTML=t;}}
-$('#dlPdf').onclick=()=>busy($('#dlPdf'),async()=>{
-  await Promise.all([loadScript('jspdf'),loadScript('h2c')]);
+async function sheetCanvas(){await loadScript('h2c');
   const host=document.createElement('div');host.className='exporting';host.style.cssText='position:fixed;left:-10000px;top:0;width:816px';host.innerHTML=sheetHTML(true);document.body.appendChild(host);
   const el=host.firstElementChild;el.style.boxShadow='none';el.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));
   await Promise.all([...el.querySelectorAll('img')].map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;})));
   try{await Promise.all([document.fonts.load(`700 20px "${S.style.font}"`),document.fonts.load(`400 14px "${S.style.font}"`)]);await document.fonts.ready;}catch(_){}
-  const cv=await html2canvas(el,{scale:2.5,backgroundColor:'#ffffff',logging:false,width:816,height:1056});host.remove();
-  const pdf=new jspdf.jsPDF({unit:'pt',format:'letter'});pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,612,792);cv.width=cv.height=0;
-  await save(fileBase()+'.pdf',embedPdf(pdf.output('arraybuffer')));});
+  try{return await html2canvas(el,{scale:2.5,backgroundColor:'#ffffff',logging:false,width:816,height:1056});}finally{host.remove();}}
+// kind: 'pdf' | 'docx' | 'jpg'. PDF and Word carry the sheet's data so they can be re-opened here.
+async function makeFile(kind,cv){
+  if(kind==='docx'){await Promise.all([loadScript('docx'),loadScript('jszip')]);return embedDocx(await buildDocx());}
+  const own=!cv;if(own)cv=await sheetCanvas();
+  try{if(kind==='jpg')return await new Promise(r=>cv.toBlob(r,'image/jpeg',.92));
+    await loadScript('jspdf');const pdf=new jspdf.jsPDF({unit:'pt',format:'letter'});pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,612,792);return embedPdf(pdf.output('arraybuffer'));}
+  finally{if(own)cv.width=cv.height=0;}}
+$('#dlPdf').onclick=()=>busy($('#dlPdf'),async()=>{await Promise.all([loadScript('jspdf'),loadScript('h2c')]);await save(fileBase()+'.pdf',await makeFile('pdf'));});
 for(const[id,libs]of[['dlPdf',['jspdf','h2c']],['dlWord',['docx','jszip']],['openSheet',['jszip']]])for(const ev of['pointerenter','focus'])$('#'+id).addEventListener(ev,()=>libs.forEach(k=>loadScript(k).catch(()=>{})),{once:true});
-$('#dlWord').onclick=()=>busy($('#dlWord'),async()=>{await Promise.all([loadScript('docx'),loadScript('jszip')]);await save(fileBase()+'.docx',await embedDocx(await buildDocx()));});
+$('#dlWord').onclick=()=>busy($('#dlWord'),async()=>{await save(fileBase()+'.docx',await makeFile('docx'));});
 
 /* ---------- re-opening downloads: each PDF / Word file carries a copy of its sheet ---------- */
 const MARK='SELLSHEET-DATA';
@@ -1191,6 +1273,294 @@ async function buildDocx(){
   return Packer.toBlob(doc);
 }
 
+/* ---------- email: customers, sign-in (Gmail / Outlook) and sending ---------- */
+// Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
+const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
+const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
+const MAIL=Object.assign({prov:'google',att:['pdf'],summary:true,mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,summary:MAIL.summary,mode:MAIL.mode}));
+const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
+const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
+
+/* customers: kept in this browser; when signed in, also synced to a private app folder in the person's Google Drive / OneDrive */
+const CU={list:[],deleted:[],sel:new Set(),q:'',grp:'',edit:null};
+const ck=e=>String(e||'').trim().toLowerCase();
+const cuKey=()=>{const a=authGet();return a?`ss-customers:${a.prov}:${ck(a.email)}`:'ss-customers';};
+function cuLoad(){try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
+  CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim()));CU.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){CU.list=[];CU.deleted=[];}}
+const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted}));scheduleSync();};
+const cuGroups=()=>[...new Set(CU.list.map(c=>(c.group||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+const cuShown=()=>{const q=CU.q.toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!q||[c.name,c.company,c.email,c.group].some(v=>(v||'').toLowerCase().includes(q))));};
+function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';
+  $('#cuGroups').innerHTML=g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'';
+  const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email));
+  $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
+      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}</small></label>
+      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="Edit ${esc(c.name||c.email)}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span></div>`).join('')
+    :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import a CSV file from Gmail or Outlook contacts.'}</div>`;
+  renderChips();renderSync();}
+function cuFormOpen(c){CU.edit=c?ck(c.email):'new';const f=$('#cuForm');f.hidden=false;const gl=cuGroups();
+  f.innerHTML=`<strong style="font-size:14px">${c?'Edit customer':'New customer'}</strong>
+    <input class="in" id="cuName" placeholder="Name, e.g. Sarah Lee" value="${esc(c?.name||'')}" aria-label="Name">
+    <input class="in" id="cuCo" placeholder="Company (optional)" value="${esc(c?.company||'')}" aria-label="Company">
+    <input class="in" id="cuMail" type="email" placeholder="Email address" value="${esc(c?.email||'')}" aria-label="Email address">
+    <input class="in" id="cuGrp" placeholder="Group (optional), e.g. Retailers" value="${esc(c?.group||'')}" list="cuGrpList" aria-label="Group"><datalist id="cuGrpList">${gl.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>
+    <div class="bgrp"><button class="btn sm primary" type="button" id="cuSaveBtn">Save</button><button class="btn sm ghost" type="button" id="cuCancelBtn">Cancel</button></div>`;
+  $('#cuName').focus();}
+function cuFormSave(){const v=id=>$('#'+id).value.trim(),email=v('cuMail');if(!EMAIL_RE.test(email)){toast('Enter a valid email address');$('#cuMail').focus();return;}
+  const dup=CU.list.find(c=>ck(c.email)===ck(email)&&ck(c.email)!==CU.edit);if(dup){toast(`${email} is already saved`);return;}
+  const now=Date.now(),data={name:v('cuName'),company:v('cuCo'),email,group:v('cuGrp'),upd:now};
+  if(CU.edit==='new'){CU.list.push(data);CU.sel.add(ck(email));}
+  else{const c=CU.list.find(c=>ck(c.email)===CU.edit);if(c){if(ck(c.email)!==ck(email)){CU.deleted.push({email:ck(c.email),at:now});if(CU.sel.delete(ck(c.email)))CU.sel.add(ck(email));}Object.assign(c,data);}}
+  CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));
+  cuSave();cuFormClose();renderCust();toast('Customer saved');}
+function cuFormClose(){CU.edit=null;$('#cuForm').hidden=true;$('#cuForm').innerHTML='';}
+$('#cuAdd').onclick=()=>cuFormOpen(null);
+$('#cuForm').addEventListener('click',e=>{if(e.target.id==='cuSaveBtn')cuFormSave();else if(e.target.id==='cuCancelBtn')cuFormClose();});
+$('#cuForm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();cuFormSave();}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cuFormClose();}});
+$('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;renderCust();});
+$('#cuGroups').addEventListener('click',e=>{const b=e.target.closest('[data-grp]');if(!b)return;CU.grp=b.dataset.grp;renderCust();});
+$('#cuList').addEventListener('change',e=>{const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderChips();});
+$('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
+  if(ed)cuFormOpen(CU.list.find(c=>ck(c.email)===ed.dataset.cuedit));
+  if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
+    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer deleted');}});
+$('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
+$('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
+// CSV: works with exports from Gmail / Outlook contacts or a simple name,company,email,group list
+function parseCSV(t){const rows=[];let row=[],f='',q=false;const d=(t.split('\n')[0].match(/;/g)||[]).length>(t.split('\n')[0].match(/,/g)||[]).length?';':t.split('\n')[0].includes('\t')?'\t':',';
+  for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
+    else if(ch==='"')q=true;else if(ch===d){row.push(f);f='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=ch;}
+  if(f||row.length){row.push(f);rows.push(row);}return rows.filter(r=>r.some(x=>x.trim()));}
+function importCustomers(text){const rows=parseCSV(text.replace(/^﻿/,''));if(!rows.length)return 0;
+  const h=rows[0].map(x=>x.trim().toLowerCase()),hasHead=h.some(x=>/e-?mail/.test(x));
+  const col=re=>h.findIndex(x=>re.test(x));
+  const ci={email:col(/e-?mail( ?1)?( - value| address)?$|^e-?mail/),name:col(/^(full )?name$|^display name$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^tag|^labels?$|categor/)};
+  let n=0;for(const r of hasHead?rows.slice(1):rows){const cell=i=>i>=0?(r[i]||'').trim():'';
+    let email=hasHead?cell(ci.email):'';if(!EMAIL_RE.test(email))email=(r.find(x=>EMAIL_RE.test(x.trim()))||'').trim();if(!EMAIL_RE.test(email)){const m=r.join(' ').match(/[^\s<>",;]+@[^\s<>",;]+\.[^\s<>",;]+/);email=m?m[0]:'';}
+    if(!EMAIL_RE.test(email))continue;
+    const others=r.map(x=>x.trim()).filter(x=>x&&x!==email);
+    const name=hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'');
+    const data={name:name.replace(/<.*>/,'').trim(),company:hasHead?cell(ci.company):(others[1]||''),email,group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim()};
+    data.upd=Date.now();const ex=CU.list.find(c=>ck(c.email)===ck(email));
+    if(ex){for(const k of['name','company','group'])if(!ex[k]&&data[k]){ex[k]=data[k];ex.upd=data.upd;}}else{CU.list.push(data);n++;}CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));}
+  cuSave();renderCust();return n;}
+$('#cuImport').onclick=()=>$('#cuFile').click();
+$('#cuFile').addEventListener('change',async()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(!f)return;try{const n=importCustomers(await f.text());toast(n?`Imported ${n} new customer${n>1?'s':''}`:'No new customers found in that file');}catch(e){toast('That file could not be read');}});
+$('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export yet');return;}const q=v=>`"${String(v||'').replace(/"/g,'""')}"`;
+  save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Group',...CU.list.map(c=>[c.name,c.company,c.email,c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
+
+/* recipients */
+function renderChips(){const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
+  $('#mlChips').innerHTML=sel.map(c=>`<span class="chip">${esc(c.name||c.company||c.email)}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
+$('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
+function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const k=c.email.toLowerCase();if(!seen.has(k)){seen.add(k);out.push({email:c.email,name:c.name,company:c.company,cust:1});}}
+  for(const a of splitAddr($('#mlTo').value)){const k=a.toLowerCase();if(!seen.has(k)){seen.add(k);out.push({email:a});}}return out;}
+function updMode(){const n=people().length,row=$('#mlModeRow');row.hidden=n<2;$$('#mlMode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===MAIL.mode));
+  $('#mlModeHint').textContent=MAIL.mode==='each'?`${n} separate emails, each greeting the person by name. Nobody sees who else got it.`:'One email. Ticked customers go in Bcc so they can\'t see each other; typed addresses stay in To.';
+  $('#mlSend').textContent=n>1&&MAIL.mode==='each'?`Send ${n} emails`:'Send';}
+$('#mlMode').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;MAIL.mode=b.dataset.mode;saveMail();updMode();});
+$('#mlTo').addEventListener('input',updMode);
+
+/* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up). Tokens last about an hour and stay in this tab only. */
+const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
+// one signed-in account at a time (provider, token, email); kept for this browser tab only
+const authGet=()=>{try{const t=JSON.parse(sessionStorage.getItem('ss-auth')||'null');return t&&t.exp>Date.now()+60e3?t:null;}catch(_){return null;}};
+const authSet=t=>{try{t?sessionStorage.setItem('ss-auth',JSON.stringify(t)):sessionStorage.removeItem('ss-auth');}catch(_){}};
+const tokGet=p=>{const a=authGet();return a&&a.prov===p?a:null;};
+const tokSet=(p,t)=>authSet(t?{...t,prov:p}:null);
+const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
+function googleLogin(choose){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
+  const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata';
+  const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',
+    callback:async r=>{if(r.error){rej(new Error(r.error_description||r.error));return;}
+      if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
+      let email='';try{email=(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+r.access_token}})).json()).email||'';}catch(_){}
+      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email};tokSet('google',t);res(t);},
+    error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'Sign-in was cancelled.'))});
+  c.requestAccessToken();});}
+async function msLogin(choose){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
+  try{const scope='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+    const verifier=b64url(rnd(48)),challenge=b64url(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),state=b64url(rnd(16));
+    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,prompt:choose?'select_account':'select_account'});
+    const code=await new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
+      let u;try{u=new URL(w.location.href);}catch(_){return;}if(u.origin!==location.origin)return;const sp=u.searchParams;if(!sp.get('code')&&!sp.get('error'))return;
+      clearInterval(iv);w.close();if(sp.get('state')!==state){rej(new Error('Sign-in failed. Please try again.'));return;}
+      sp.get('error')?rej(new Error(sp.get('error_description')||sp.get('error'))):res(sp.get('code'));},250);});
+    const r=await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope,code,redirect_uri:redirectUri(),grant_type:'authorization_code',code_verifier:verifier})});
+    const j=await r.json();if(!r.ok||!j.access_token)throw new Error(j.error_description||'Sign-in failed.');
+    let email='';try{const me=await (await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+j.access_token}})).json();email=me.mail||me.userPrincipalName||'';}catch(_){}
+    const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email};tokSet('microsoft',t);return t;}
+  catch(e){try{w.close();}catch(_){}throw e;}}
+async function login(p,choose){const before=cuKey();const t=await (p==='google'?googleLogin(choose):msLogin(choose));afterLogin(before);return t;}
+function afterLogin(prevKey){const a=authGet();if(!a)return;
+  // the first time an account signs in on this browser, copy the customers saved here into it
+  const flag='ss-merged:'+a.prov+':'+ck(a.email);if(prevKey==='ss-customers'&&!lsGet(flag)){try{const g=JSON.parse(lsGet('ss-customers')||'[]');const gl=Array.isArray(g)?g:g.customers||[];
+      if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[]},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[]});lsSet(k,JSON.stringify(m));}}catch(_){}lsSet(flag,'1');}
+  CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();}
+function signOut(){const a=authGet();if(a?.prov==='google'&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(a.token,()=>{});}catch(_){}
+  authSet(null);CU.sel.clear();cuLoad();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
+function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=tokGet(p),el=$('#mlAcct');
+  const other=authGet();if(!t&&other){el.innerHTML=`<span>Signed in with ${PROV_NAME[other.prov]} (${esc(other.email||'')}). Sending from ${PROV_NAME[p]} needs a ${p==='google'?'Google':'Microsoft'} sign-in, which switches accounts.</span>`+(EMAIL_SETUP[p]?`<button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`:'');return;}
+  if(!EMAIL_SETUP[p]){el.innerHTML=`<span>${PROV_NAME[p]} sending isn't switched on for this site yet (see SETUP-EMAIL.md). You can still use <b>Share instead…</b></span>`;return;}
+  el.innerHTML=t?`<span>Signed in as <b>${esc(t.email||PROV_NAME[p]+' account')}</b></span><button class="lnk" type="button" id="mlSwitch">Switch account</button>`
+    :`<span>Not signed in.</span><button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`;}
+$('#mlProv').addEventListener('click',e=>{const b=e.target.closest('[data-prov]');if(!b)return;MAIL.prov=b.dataset.prov;saveMail();renderAcct();if(MAIL.prov==='google')loadScript('gis').catch(()=>{});});
+$('#mlAcct').addEventListener('click',async e=>{const sw=e.target.id==='mlSwitch';if(!sw&&e.target.id!=='mlSignIn')return;
+  try{await login(MAIL.prov,sw);renderAcct();toast('Signed in');}catch(err){mlStatus(err.message,true);}});
+const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
+
+/* sync: merge by email; newest edit wins; deletions are remembered so they don't come back */
+function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
+  const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
+  const cutoff=Date.now()-180*864e5;
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>({name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),group:String(c.group||''),upd:+c.upd||0})),
+    deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at}))};}
+const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
+const httpErr=(what,r)=>Object.assign(new Error(what+' '+r.status),{status:r.status});
+async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
+  if(a.prov==='google'){
+    if(method==='GET'){const r=await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${encodeURIComponent(`name='${SYNC_FILE}'`)}&fields=files(id)`,{headers:H});if(!r.ok)throw httpErr('Drive',r);
+      const id=(await r.json()).files?.[0]?.id;if(!id)return{data:null};const f=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{headers:H});if(!f.ok)throw httpErr('Drive',f);return{id,data:await f.json().catch(()=>null)};}
+    if(body.id){const r=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${body.id}?uploadType=media`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw httpErr('Drive',r);return;}
+    const B='b'+uid()+uid(),mp=`--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name:SYNC_FILE,parents:['appDataFolder']})}\r\n--${B}\r\nContent-Type: application/json\r\n\r\n${body.json}\r\n--${B}--`;
+    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{...H,'Content-Type':`multipart/related; boundary=${B}`},body:mp});if(!r.ok)throw httpErr('Drive',r);return;}
+  const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
+  if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
+  const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw httpErr('OneDrive',r);}
+function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet();if(!a)return Promise.resolve();
+  syncing=(async()=>{renderSync();try{const key=cuKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
+      const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
+      const m=mergeCust(local,{customers:Array.isArray(rd.customers)?rd.customers:[],deleted:Array.isArray(rd.deleted)?rd.deleted:[]});
+      const msgL={text:lsGet('ss-mailmsg'),upd:+lsGet('ss-mailmsg-upd')||0},msgR=rd.mailMsg&&typeof rd.mailMsg.text==='string'?rd.mailMsg:{},msg=(+msgR.upd||0)>msgL.upd?msgR:msgL;
+      if(msg.text&&msg!==msgL){lsSet('ss-mailmsg',String(msg.text));lsSet('ss-mailmsg-upd',String(msg.upd));if(mailDlg.open&&document.activeElement!==$('#mlMsg'))$('#mlMsg').value=msg.text;}
+      lsSet(key,JSON.stringify(m));
+      if(JSON.stringify([m.customers,m.deleted,msg.text||null])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.mailMsg?.text||null]))
+        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
+      if(key===cuKey()){const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
+      lastSync=Date.now();syncErr='';}
+    catch(e){console.error(e);syncErr=e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401){authSet(null);CU.sel.clear();cuLoad();if(mailDlg.open){renderCust();renderAcct();}}}
+    finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
+function scheduleSync(){if(!authGet())return;clearTimeout(syncT);syncT=setTimeout(syncNow,1200);}
+function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
+  el.innerHTML=a?(syncErr==='denied'?`Couldn't save to your ${a.prov==='google'?'Google Drive':'OneDrive'} (permission was not given). Customers are saved in this browser.`
+      :syncErr?'Couldn\'t sync just now. Customers are saved in this browser and will sync next time.':`Synced to <b>${esc(a.email||'your account')}</b>${syncing?' · syncing…':lastSync?' · up to date':''}. Sign in on any device to get them back.`)
+    :(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Saved privately in this browser. <b>Sign in</b> (optional) to keep them on every device.':'Saved privately in this browser. Other people who open the site can\'t see your customers.');}
+
+/* account button in the top bar (optional sign-in) */
+function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft);b.hidden=!on;if(!on)return;const a=authGet();
+  $('#acctLbl').textContent=a?(a.email||'Signed in'):'Sign in';b.title=a?`Signed in as ${a.email} (${PROV_NAME[a.prov]})`:'Sign in (optional) to keep your customers on every device';
+  $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':lastSync?' (up to date)':''}.</span></p><button class="btn sm" type="button" data-am="out">Sign out</button>`
+    :`<p><b>Sign in (optional)</b><br><span class="note">Keeps your customers on every device and lets you email sell sheets. Everything else works without signing in.</span></p>
+      ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}`;}
+$('#acctBtn').onclick=e=>{e.stopPropagation();if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});renderTopAcct();$('#acctMenu').classList.toggle('hide');};
+document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn'))$('#acctMenu').classList.add('hide');});
+$('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[data-am]');if(!b)return;const v=b.dataset.am;
+  if(v==='out'){signOut();$('#acctMenu').classList.add('hide');return;}
+  try{await login(v,true);MAIL.prov=v;saveMail();$('#acctMenu').classList.add('hide');toast('Signed in. Your customers will sync to this account.');}catch(err){toast(err.message);}});
+
+/* the email itself */
+const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
+function fillTokens(text,p){const nm=(p?.name||'').trim(),first=((nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/)[0]||'').replace(/[^\p{L}\p{M}'’-]/gu,'');const v={name:first||(p?.company||''),company:p?.company||'',product:productLabel()};
+  return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
+async function emailPhotos(){const out=[];for(const [i,p] of S.photos.entries()){const img=new Image();img.src=p.url;await img.decode().catch(()=>{});if(!img.naturalWidth)continue;
+  const sc=Math.min(1,560/img.naturalWidth),c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+  out.push({cid:`photo${i+1}@sellsheet`,name:`photo${i+1}.jpg`,b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:c.width,h:c.height});}return out;}
+function emailHTML(msg,photos){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=esc(msg).replace(/\r?\n/g,'<br>');
+  let sum='';
+  if(MAIL.summary){const c=calc(),sz=S.showSizes,cell=(v,o='')=>`<td style="padding:7px 10px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222;${o}">${v}</td>`;
+    const th=v=>`<th style="padding:7px 10px;background:${tv.tint};border-top:3px solid ${tv.a};color:${tv.a};font:bold 11px ${F};text-transform:uppercase;text-align:center">${v}</th>`;
+    const pw=photos.length?Math.floor((544-(photos.length-1)*12)/photos.length):0;
+    sum+=`<tr><td style="padding:0 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-bottom:4px solid ${tv.a}"><tr>
+      <td style="padding:16px 20px;font:bold 20px ${F};color:#fff">${esc(S.title.toUpperCase())}</td>
+      <td align="right" style="padding:16px 20px;white-space:nowrap">${S.code?`<div style="font:bold 10px ${F};color:${tv.pale}">ITEM CODE</div><div style="font:bold 18px ${F};color:#fff">${esc(S.code.toUpperCase())}</div>`:''}</td></tr></table></td></tr>`;
+    if(photos.length)sum+=`<tr><td style="padding:16px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${photos.map((p,i)=>`${i?'<td width="12"></td>':''}<td align="center" valign="middle" style="border:1px solid ${tv.line};padding:6px;background:#fff"><img src="cid:${p.cid}" width="${Math.min(pw-14,p.w)}" alt="Product photo ${i+1}" style="display:block;max-width:100%;height:auto;border:0"></td>`).join('')}</tr></table></td></tr>`;
+    if(S.showColours!==false&&c.rows.length){const head=sz?['Colour',...S.sizes,'Boxes','Total pcs']:['Colour','Pcs per box','Boxes','Total pcs'];
+      sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.colours.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${head.map(h=>th(esc(h))).join('')}</tr>
+        ${c.rows.map(r=>`<tr>${cell(esc(r.name||'–'))}${(sz?r.q.map(v=>v||'–'):[S.perBox]).map(v=>cell(v,'text-align:center')).join('')}${cell(r.boxes,'text-align:center')}${cell(r.tot,'text-align:center')}</tr>`).join('')}
+        <tr>${cell('<b>TOTAL</b>',`background:${tv.tint};color:${tv.p}`)}${(sz?c.T.q:['']).map(v=>cell(`<b>${v}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)).join('')}${cell(`<b>${c.T.boxes}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}${cell(`<b>${c.T.tot}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}</tr></table></td></tr>`;}
+    const rows=S.rows.map(r=>[r.label,rowVal(r)]).filter(([l,v])=>String(v||'').trim());
+    if(rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+      ${rows.map(([l,v])=>`<tr><td width="34%" style="padding:8px 12px;background:${tv.tint};border-bottom:1px solid ${tv.line};font:bold 11px ${F};color:${tv.p};text-transform:uppercase">${esc(l)}</td><td style="padding:8px 12px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222">${esc(v)}</td></tr>`).join('')}</table></td></tr>`;
+    if(S.email)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff">${esc(S.headings.contact.toUpperCase())}<br><a href="mailto:${esc(S.email)}" style="color:${tv.pale};font:bold 13px ${F};text-decoration:none">${esc(S.email)}</a></td></tr></table></td></tr>`;}
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
+<tr><td style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
+function emailText(msg){let t=msg;if(MAIL.summary){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}if(S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;}return t;}
+const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
+const wrap76=s=>s.replace(/.{1,76}/g,'$&\r\n');
+const hdr=v=>String(v).replace(/[\r\n]+/g,' ');
+const encWord=v=>/^[\x20-\x7e]*$/.test(v)?hdr(v):'=?UTF-8?B?'+b64(hdr(v))+'?=';
+function mime(m){const B='ss'+uid()+uid(),R='rel'+uid(),A='alt'+uid(),L=[];
+  const h=(k,v)=>{if(v&&v.length)L.push(`${k}: ${Array.isArray(v)?v.map(hdr).join(', '):v}`);};
+  h('To',m.to);h('Cc',m.cc);h('Bcc',m.bcc);h('Subject',encWord(m.subject));L.push('MIME-Version: 1.0',`Content-Type: multipart/mixed; boundary="${B}"`,'',`--${B}`,`Content-Type: multipart/related; boundary="${R}"`,'',`--${R}`,`Content-Type: multipart/alternative; boundary="${A}"`,'',
+    `--${A}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.text)),`--${A}`,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.html)),`--${A}--`);
+  for(const p of m.inline)L.push(`--${R}`,'Content-Type: image/jpeg',`Content-ID: <${p.cid}>`,`Content-Disposition: inline; filename="${p.name}"`,'Content-Transfer-Encoding: base64','',wrap76(p.b64));
+  L.push(`--${R}--`);
+  for(const f of m.files){const ascii=f.name.replace(/[^\x20-\x7e]/g,'_').replace(/"/g,"'");L.push(`--${B}`,`Content-Type: ${f.type}; name="${ascii}"`,`Content-Disposition: attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(f.name)}`,'Content-Transfer-Encoding: base64','',wrap76(f.b64));}
+  L.push(`--${B}--`,'');return L.join('\r\n');}
+function graphMail(m){const r=a=>a.map(x=>({emailAddress:{address:x}}));
+  return{message:{subject:m.subject,body:{contentType:'HTML',content:m.html},toRecipients:r(m.to),ccRecipients:r(m.cc),bccRecipients:r(m.bcc),
+    attachments:[...m.files.map(f=>({'@odata.type':'#microsoft.graph.fileAttachment',name:f.name,contentType:f.type,contentBytes:f.b64})),
+      ...m.inline.map(p=>({'@odata.type':'#microsoft.graph.fileAttachment',name:p.name,contentType:'image/jpeg',contentBytes:p.b64,isInline:true,contentId:p.cid}))]},saveToSentItems:true};}
+async function sendOne(p,tok,m){
+  if(p==='google'){const r=await fetch('https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send?uploadType=media',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'message/rfc822'},body:mime(m)});
+    if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Gmail error '+r.status));e.status=r.status;throw e;}return;}
+  const body=JSON.stringify(graphMail(m));if(body.length>3.9e6){throw new Error('Too large for Outlook (4 MB limit). Untick an attachment or the product summary and try again.');}
+  const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
+  if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
+function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),bcc=splitAddr($('#mlBcc').value);
+  const bad=[...P.map(x=>x.email),...cc,...bcc].filter(a=>!EMAIL_RE.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
+  if(!P.length&&!cc.length&&!bcc.length)throw new Error('Add at least one recipient: tick a customer or type an email address.');
+  if(P.length>1&&MAIL.mode==='each')return P.map(p=>({to:[p.email],cc,bcc,person:p}));
+  if(P.length>1){const to=P.filter(p=>!p.cust).map(p=>p.email),hid=P.filter(p=>p.cust).map(p=>p.email);return[{to:to.length?to:(meEmail?[meEmail]:[]),cc,bcc:[...bcc,...hid],person:null}];}
+  return[{to:P.map(p=>p.email),cc,bcc,person:P[0]||null}];}
+async function buildAttachments(kinds){const out=[];let cv=null;
+  for(const k of kinds){mlStatus(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
+    if((k==='pdf'||k==='jpg')&&!cv)cv=await sheetCanvas();
+    const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
+  if(cv)cv.width=cv.height=0;return out;}
+const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
+let sending=false;
+$('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
+  if(!EMAIL_SETUP[p]){mlStatus(`${PROV_NAME[p]} sending isn't set up for this site yet. Use "Share instead…", or follow SETUP-EMAIL.md.`,true);return;}
+  let plan;try{plan=planMessages(tokGet(p)?.email);}catch(e){mlStatus(e.message,true);return;}
+  const kinds=attKinds();if(!kinds.length&&!MAIL.summary){mlStatus('Choose at least one attachment, or include the product summary.',true);return;}
+  const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
+  sending=true;$('#mlSend').disabled=true;
+  try{let tok=tokGet(p);if(!tok){mlStatus('Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
+    const files=await buildAttachments(kinds);mlStatus('Preparing email…');const inline=MAIL.summary?await emailPhotos():[];const tpl=$('#mlMsg').value;
+    let done=0;const fails=[];
+    for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
+      const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg),html:emailHTML(msg,inline),files,inline};
+      try{await sendOne(p,tok,full);done++;}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
+      if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
+    if(fails.length){mlStatus(`Sent ${done} of ${plan.length}. Not sent: ${fails.join(' · ')}`,true);}
+    else{mlStatus('');mailDlg.close();toast(plan.length>1?`Sent ${done} emails`:'Email sent');}}
+  catch(e){console.error(e);mlStatus(e.message||'Sending failed.',true);}
+  finally{sending=false;$('#mlSend').disabled=false;}};
+// Share: hands the files to the device's own email / share options (no sign-in needed)
+$('#mlShare').onclick=async()=>{const kinds=attKinds();if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
+  if(!navigator.canShare){mlStatus('Sharing files isn\'t supported in this browser. Try Chrome, Edge or Safari, or download the file and attach it yourself.',true);return;}
+  try{const files=(await buildAttachments(kinds)).map(f=>new File([f.blob],f.name,{type:f.type}));mlStatus('');
+    if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
+    await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
+  catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
+function openMail(){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
+  $('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;$('#mlSummary').checked=MAIL.summary!==false;
+  $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');cuFormClose();renderCust();renderAcct();
+  $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
+  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
+$('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
+$('#mlMsg').addEventListener('input',e=>{lsSet('ss-mailmsg',e.target.value);lsSet('ss-mailmsg-upd',String(Date.now()));scheduleSync();});
+$('#mlSummary').addEventListener('change',e=>{MAIL.summary=e.target.checked;saveMail();});
+$('#mlAtt').addEventListener('change',()=>{MAIL.att=attKinds();saveMail();});
+$('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
+
 /* ---------- boot ---------- */
 (async()=>{
   applyAppear();renderRail();
@@ -1201,7 +1571,7 @@ async function buildDocx(){
   if(old&&old.title==='Mens Nike Hoodie'&&old.code==='MNK1FOVP'&&!old.photos.length&&old.rows[1]?.value==='Nike'){const t=blankSheet();for(const k of['title','code','colours','price','rows','sizes','ratio','perBox','mode'])old[k]=t[k];dbPut(old);}
   if(!sheets.length){const ex=blankSheet();sheets=[ex];dbPut(ex);}
   S=sheets.find(s=>s.id===lsGet('ss-last'))||sheets[0];loadFont(S.style.font);
-  refreshPicker();renderPanel();renderSheet();fit();moveInd();
+  refreshPicker();renderPanel();renderSheet();fit();moveInd();renderTopAcct();if(authGet())syncNow();
   setTimeout(()=>$('#app').classList.remove('intro'),1200);
 })();
 })();
