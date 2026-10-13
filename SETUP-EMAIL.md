@@ -60,7 +60,15 @@ Work or school Microsoft 365 accounts: some organisations require an admin to ap
 
 ## 3. Put the IDs into the site
 
-Either send the two IDs to Claude, or do it yourself:
+**Quickest – paste them in the site (this browser only):**
+
+1. Open the site, click **Sign in** (top right), then **Set up sign-in**.
+2. Paste the Google Client ID and/or Microsoft Application ID, then click **Save**.
+3. Click **Sign in** again and pick Google or Microsoft.
+
+The **Set up sign-in** window also shows the exact site address to paste into Google and Microsoft. Use its **Copy** buttons.
+
+**For every device and everyone using the site:** send the IDs to Claude, or edit the code yourself:
 
 1. On GitHub, open `index.html` in this repository and click the pencil (**Edit**) icon.
 2. Search for this line:
@@ -78,6 +86,20 @@ Either send the two IDs to Claude, or do it yourself:
 4. Click **Commit changes**. The site updates within a minute or two.
 
 Client IDs are not passwords. They're meant to be public and only work from the site addresses you listed above.
+
+## If sign-in doesn't work
+
+| What you see | What to do |
+|---|---|
+| **Error 400: origin_mismatch** or **redirect_uri_mismatch** (Google) | In Google Cloud → **Clients** → your client → **Authorized JavaScript origins**, add the address shown in **Set up sign-in** (for example `https://lumiflooshed-alt.github.io`, without `/sellsheet/`). Save, then wait 5 minutes. |
+| **Error 401: invalid_client** (Google) | The Client ID was pasted wrongly. Copy it again from **Clients**. It ends in `.apps.googleusercontent.com`. |
+| **Access blocked / access_denied** (Google) | The app is in Testing and this Google address isn't a test user. Add it under **Audience → Test users**. |
+| **"Google hasn't verified this app"** | Normal while testing. Click **Continue**. |
+| **Gmail API has not been used in project…** | Enable the **Gmail API** (and **Google Drive API**) in **APIs & Services → Library**. |
+| **AADSTS50011 redirect URI mismatch** (Microsoft) | In Entra → your app → **Authentication** → **Single-page application**, add the redirect URI shown in **Set up sign-in** exactly, including the final `/`. |
+| **AADSTS9002326 / "cross-origin token redemption"** (Microsoft) | The redirect URI was added under **Web** instead of **Single-page application**. Move it to Single-page application. |
+| **Need admin approval** (Microsoft work account) | Ask your IT admin to click **Grant admin consent** under **API permissions**. |
+| **Nothing happens when clicking Sign in** | Allow pop-ups for the site in your browser and try again. |
 
 ## Good to know
 
