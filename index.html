@@ -288,6 +288,8 @@ dialog[open]{animation:pop .22s var(--ease)}
       <select class="sel" id="sheetSel" aria-label="Choose a sell sheet"></select>
       <button class="btn icon ghost" id="newSheet" title="New sell sheet" aria-label="New sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
       <button class="btn icon ghost" id="dupSheet" title="Copy this sheet" aria-label="Copy this sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      <button class="btn icon ghost" id="openSheet" title="Open a sell sheet (PDF or Word made here)" aria-label="Open a sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h13l3-8H7l-3 8"/></svg></button>
+      <input type="file" id="openFile" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
       <span class="status" id="status"><i></i>Saved on this device</span>
     </div>
     <div class="spacer"></div>
@@ -359,7 +361,8 @@ const LIBS=Object.assign({
   ort:'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.3/dist/ort.min.js',
   jspdf:'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   h2c:'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-  docx:'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js'
+  docx:'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
+  jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
 },window.__LIBS||{});
 const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
@@ -880,8 +883,58 @@ $('#dlPdf').onclick=()=>busy($('#dlPdf'),async()=>{
   try{await Promise.all([document.fonts.load(`700 20px "${S.style.font}"`),document.fonts.load(`400 14px "${S.style.font}"`)]);await document.fonts.ready;}catch(_){}
   const cv=await html2canvas(el,{scale:2.5,backgroundColor:'#ffffff',logging:false,width:816,height:1056});host.remove();
   const pdf=new jspdf.jsPDF({unit:'pt',format:'letter'});pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,612,792);cv.width=cv.height=0;
-  await save(fileBase()+'.pdf',pdf.output('blob'));});
-$('#dlWord').onclick=()=>busy($('#dlWord'),async()=>{await loadScript('docx');await save(fileBase()+'.docx',await buildDocx());});
+  await save(fileBase()+'.pdf',embedPdf(pdf.output('arraybuffer')));});
+$('#dlWord').onclick=()=>busy($('#dlWord'),async()=>{await Promise.all([loadScript('docx'),loadScript('jszip')]);await save(fileBase()+'.docx',await embedDocx(await buildDocx()));});
+
+/* ---------- re-opening downloads: each PDF / Word file carries a copy of its sheet ---------- */
+const MARK='SELLSHEET-DATA';
+const sheetData=()=>JSON.stringify({app:'sellsheet',v:1,sheet:S});
+const b64=str=>{const u=new TextEncoder().encode(str);let o='';for(let i=0;i<u.length;i+=0x8000)o+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(o);};
+const unb64=t=>{const bin=atob(t),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u);};
+// PDF: the data goes in comment lines after the file, then the end-of-file marker is repeated so readers still find it.
+function embedPdf(buf){const tail=new TextDecoder('latin1').decode(new Uint8Array(buf).slice(-200)),m=tail.match(/startxref\s+(\d+)/);
+  const lines=b64(sheetData()).match(/.{1,4000}/g)||[];
+  const extra=`\n%${MARK}-BEGIN\n${lines.map(l=>'%'+l).join('\n')}\n%${MARK}-END\n`+(m?`startxref\n${m[1]}\n%%EOF\n`:'');
+  return new Blob([buf,extra],{type:'application/pdf'});}
+// Word: the data is a small extra part inside the .docx package that Word ignores.
+async function embedDocx(blob){const z=await JSZip.loadAsync(blob);z.file('sellsheet/data.json',sheetData());
+  const ct=await z.file('[Content_Types].xml').async('string');
+  if(!/Extension="json"/.test(ct))z.file('[Content_Types].xml',ct.replace(/(<Types[^>]*>)/,'$1<Default Extension="json" ContentType="application/json"/>'));
+  return z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}
+async function readSheetFile(f){const buf=await f.arrayBuffer(),head=new TextDecoder('latin1').decode(new Uint8Array(buf,0,Math.min(5,buf.byteLength)));
+  let json=null;
+  if(head.startsWith('%PDF')){const t=new TextDecoder('latin1').decode(buf),a=t.lastIndexOf('%'+MARK+'-BEGIN'),b=t.lastIndexOf('%'+MARK+'-END');
+    if(a>=0&&b>a)json=unb64(t.slice(a,b).split('\n').slice(1).map(l=>l.replace(/^%/,'').trim()).join(''));}
+  else if(head.startsWith('PK')){await loadScript('jszip');const z=await JSZip.loadAsync(buf),e=z.file('sellsheet/data.json');if(e)json=await e.async('string');}
+  else throw new Error('type');
+  if(!json)throw new Error('nodata');
+  const d=JSON.parse(json);if(!d||d.app!=='sellsheet'||!d.sheet)throw new Error('nodata');return cleanSheet(d.sheet);}
+// Rebuild an opened sheet field by field so only expected, well-formed values come in.
+function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v.slice(0,n):'',num=(v,d,mn,mx)=>{v=+v;return isFinite(v)?Math.min(mx,Math.max(mn,v)):d;},
+    hex=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v)?v:null,arr=v=>Array.isArray(v)?v:[],obj=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{},
+    fontOk=v=>FONTS.some(([n])=>n===v)?v:null,id=v=>typeof v==='string'&&/^[a-z0-9]{1,12}$/i.test(v)?v:uid(),autoOk=v=>['price','sizes','packing'].includes(v)?v:null;
+  t.title=str(r.title,200);t.code=str(r.code,100);t.email=str(r.email,200);
+  t.price={amount:str(r.price?.amount,40),unit:r.price?.unit==='box'?'box':'piece'};
+  const sz=arr(r.sizes).slice(0,20).map(x=>str(x,20));if(sz.length){t.sizes=sz;t.ratio=sz.map((_,j)=>num(arr(r.ratio)[j],1,0,9999));}
+  t.perBox=num(r.perBox,24,0,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;
+  const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999))}));if(co.length)t.colours=co;
+  const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto)}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
+  const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
+  t.theme={primary:hex(r.theme?.primary)||t.theme.primary,accent:hex(r.theme?.accent)||t.theme.accent};
+  t.photos=arr(r.photos).slice(0,MAX_PHOTOS).filter(p=>typeof p?.url==='string'&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(p.url)).map(p=>({id:uid(),url:p.url}));
+  const st=obj(r.style),so=t.style;so.font=fontOk(st.font)||so.font;so.phH=num(st.phH,so.phH,100,460);so.lw=num(st.lw,so.lw,60,400);so.gap=num(st.gap,so.gap,0,60);
+  for(const k in so.sz)so.sz[k]=num(obj(st.sz)[k],so.sz[k],6,60);
+  for(const k in so.blocks){const b=obj(obj(st.blocks)[k]);so.blocks[k].w=num(b.w,so.blocks[k].w,30,100);if('h'in so.blocks[k])so.blocks[k].h=num(b.h,0,0,460);}
+  const cf=f=>{f=obj(f);const o={};if(hex(f.color))o.color=f.color;if(f.size!=null&&isFinite(+f.size))o.size=num(f.size,14,6,60);for(const k of['bold','italic','underline'])if(typeof f[k]==='boolean')o[k]=f[k];
+    if(fontOk(f.font))o.font=f.font;if(['left','center','right'].includes(f.align))o.align=f.align;return o;};
+  for(const [src,dst] of[[r.fmt,t.fmt],[r.gfmt,t.gfmt]])for(const [k,v] of Object.entries(obj(src)).slice(0,500))if(/^[\w:.-]{1,60}$/.test(k))dst[k]=cf(v);
+  t.updated=Date.now();return t;}
+async function openSheetFile(f){try{const s=await readSheetFile(f);loadFont(s.style.font);sheets.unshift(s);await switchTo(s);touch();toast(`Opened “${sheetName(s)}”`);}
+  catch(e){console.error(e);toast(e.message==='type'?'Choose a PDF or Word file made with Sell Sheet Studio.':e.message==='nodata'?'That file has no sheet data. Only files downloaded from this site after Open was added can be re-opened.':'That file could not be opened.');}}
+$('#openSheet').onclick=()=>$('#openFile').click();
+$('#openFile').addEventListener('change',()=>{const f=$('#openFile').files[0];$('#openFile').value='';if(f)openSheetFile(f);});
+window.addEventListener('dragover',e=>{if([...(e.dataTransfer?.items||[])].some(i=>i.kind==='file'))e.preventDefault();});
+window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(/\.(pdf|docx)$/i.test(f.name))openSheetFile(f);else toast('To add a photo, use Add photo. To open a sheet, drop a PDF or Word file made here.');});
 async function buildDocx(){
   const D=window.docx,{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ShadingType,BorderStyle,AlignmentType,VerticalAlign,HeightRule,ImageRun,TableLayoutType}=D;
   const tv=themeVars(),h6=x=>x.replace('#','').toUpperCase(),P=h6(tv.p),A=h6(tv.a),T=h6(tv.tint),L=h6(tv.line),PA=h6(tv.pale),INK='222222';
