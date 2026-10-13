@@ -1461,17 +1461,17 @@ function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),..
   return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),group:String(c.group||''),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at}))};}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
-const httpErr=(what,r)=>Object.assign(new Error(what+' '+r.status),{status:r.status});
+const httpErr=async(what,r)=>{let j={};try{j=await r.json();}catch(_){}return Object.assign(new Error(j.error?.message||what+' '+r.status),{status:r.status,off:/has not been used|is disabled|accessNotConfigured|SERVICE_DISABLED/i.test(JSON.stringify(j))});};
 async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   if(a.prov==='google'){
-    if(method==='GET'){const r=await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${encodeURIComponent(`name='${SYNC_FILE}'`)}&fields=files(id)`,{headers:H});if(!r.ok)throw httpErr('Drive',r);
-      const id=(await r.json()).files?.[0]?.id;if(!id)return{data:null};const f=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{headers:H});if(!f.ok)throw httpErr('Drive',f);return{id,data:await f.json().catch(()=>null)};}
-    if(body.id){const r=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${body.id}?uploadType=media`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw httpErr('Drive',r);return;}
+    if(method==='GET'){const r=await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${encodeURIComponent(`name='${SYNC_FILE}'`)}&fields=files(id)`,{headers:H});if(!r.ok)throw await httpErr('Drive',r);
+      const id=(await r.json()).files?.[0]?.id;if(!id)return{data:null};const f=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{headers:H});if(!f.ok)throw await httpErr('Drive',f);return{id,data:await f.json().catch(()=>null)};}
+    if(body.id){const r=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${body.id}?uploadType=media`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('Drive',r);return;}
     const B='b'+uid()+uid(),mp=`--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name:SYNC_FILE,parents:['appDataFolder']})}\r\n--${B}\r\nContent-Type: application/json\r\n\r\n${body.json}\r\n--${B}--`;
-    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{...H,'Content-Type':`multipart/related; boundary=${B}`},body:mp});if(!r.ok)throw httpErr('Drive',r);return;}
+    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{...H,'Content-Type':`multipart/related; boundary=${B}`},body:mp});if(!r.ok)throw await httpErr('Drive',r);return;}
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
-  if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
-  const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw httpErr('OneDrive',r);}
+  if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
+  const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
 function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet();if(!a)return Promise.resolve();
   syncing=(async()=>{renderSync();try{const key=cuKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
@@ -1483,11 +1483,12 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet
         await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
       if(key===cuKey()){const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
-    catch(e){console.error(e);syncErr=e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401){authSet(null);CU.sel.clear();cuLoad();if(mailDlg.open){renderCust();renderAcct();}}}
+    catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401){authSet(null);CU.sel.clear();cuLoad();if(mailDlg.open){renderCust();renderAcct();}}}
     finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
 function scheduleSync(){if(!authGet())return;clearTimeout(syncT);syncT=setTimeout(syncNow,1200);}
 function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
-  el.innerHTML=a?(syncErr==='denied'?`Couldn't save to your ${a.prov==='google'?'Google Drive':'OneDrive'} (permission was not given). Customers are saved in this browser.`
+  el.innerHTML=a?(syncErr==='off'?`Customers can't sync yet: the ${a.prov==='google'?'Google Drive API':'OneDrive access'} is switched off. In console.cloud.google.com open APIs &amp; Services → Library → Google Drive API → <b>Enable</b>. Customers are saved in this browser meanwhile.`
+      :syncErr==='denied'?`Couldn't save to your ${a.prov==='google'?'Google Drive':'OneDrive'} (permission was not given). Customers are saved in this browser.`
       :syncErr?'Couldn\'t sync just now. Customers are saved in this browser and will sync next time.':`Synced to <b>${esc(a.email||'your account')}</b>${syncing?' · syncing…':lastSync?' · up to date':''}. Sign in on any device to get them back.`)
     :(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Saved privately in this browser. <b>Sign in</b> (optional) to keep them on every device.':'Saved privately in this browser. Other people who open the site can\'t see your customers.');}
 
@@ -1567,8 +1568,16 @@ function graphMail(m){const r=a=>a.map(x=>({emailAddress:{address:x}}));
     attachments:[...m.files.map(f=>({'@odata.type':'#microsoft.graph.fileAttachment',name:f.name,contentType:f.type,contentBytes:f.b64})),
       ...m.inline.map(p=>({'@odata.type':'#microsoft.graph.fileAttachment',name:p.name,contentType:'image/jpeg',contentBytes:p.b64,isInline:true,contentId:p.cid}))]},saveToSentItems:true};}
 async function sendOne(p,tok,m){
-  if(p==='google'){const r=await fetch('https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send?uploadType=media',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'message/rfc822'},body:mime(m)});
-    if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Gmail error '+r.status));e.status=r.status;throw e;}return;}
+  if(p==='google'){
+    // Gmail's JSON endpoint: unlike the /upload endpoint, its error replies carry CORS headers, so the real reason reaches the page
+    const raw=btoa(mime(m)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    if(raw.length>4.5e6)throw new Error('Too large to send through Gmail from the browser. Untick an attachment (Image or Word) and try again.');
+    let r;try{r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body:JSON.stringify({raw})});}
+    catch(_){throw new Error('Could not reach Gmail. Check your internet connection, and turn off ad-blockers or privacy extensions for this site, then try again.');}
+    if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',why=(j.error?.errors||[]).map(x=>x.reason).join(' ')+' '+(j.error?.details||[]).map(x=>x.reason||'').join(' ');
+      const e=new Error(/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg+why)?'The Gmail API is switched off in your Google Cloud project. Open console.cloud.google.com → APIs & Services → Library → Gmail API → Enable, wait a minute, then send again.'
+        :/insufficient|scope/i.test(msg+why)?'Google didn\'t give permission to send email. Sign out (top right), sign in again and tick "Send email on your behalf".'
+        :r.status===401?'Your Google sign-in expired. Click Send again to sign in.':(msg||('Gmail error '+r.status)));e.status=r.status===401?401:r.status;throw e;}return;}
   const body=JSON.stringify(graphMail(m));if(body.length>3.9e6){throw new Error('Too large for Outlook (4 MB limit). Untick an attachment or the product summary and try again.');}
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
