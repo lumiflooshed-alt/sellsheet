@@ -501,7 +501,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 'use strict';
 // Optional sign-in (Gmail / Outlook) for emailing sell sheets and syncing customers.
 // Paste the Client IDs from SETUP-EMAIL.md here; leave '' to keep that option switched off.
-const EMAIL_SETUP={google:'',microsoft:''};
+const EMAIL_SETUP={google:'180128706409-k1bv00h2mvb5mlmk141ftcojgb01g02t.apps.googleusercontent.com',microsoft:''};
 const EMAIL_CODE={...EMAIL_SETUP}; // IDs pasted in "Set up sign-in" fill any left empty here, for this browser only
 try{const o=JSON.parse(localStorage.getItem('ss-email-setup')||'{}')||{};for(const k of['google','microsoft'])if(!EMAIL_SETUP[k]&&typeof o[k]==='string')EMAIL_SETUP[k]=o[k].trim();}catch(_){}
 // The Microsoft sign-in pop-up returns to this page; it only needs to hand the code back to the opener.
