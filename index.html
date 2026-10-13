@@ -450,7 +450,7 @@ function blankSheet(){return{id:uid(),updated:Date.now(),title:'',code:'',photos
   headings:{colours:'Available colours & sizes',details:'Product details',contact:'Contact us'},email:'',theme:{primary:'#1F2A44',accent:'#4F8FD6'},style:JSON.parse(JSON.stringify(DEF_STYLE)),fmt:{},gfmt:{}};}
 // Template guidance: grey example text on the sheet (never printed) and a short explanation in the panel.
 const COLOUR_EX=['e.g. Black','e.g. Grey','e.g. Navy','e.g. White','e.g. Red'];
-const ROW_HELP={price:['Set the price on the Product tab','Filled in from the price on the Product tab.'],
+const ROW_HELP={price:['Set the price on the Details tab','Filled in from the price above.'],
   sizes:['Add sizes on the Colours tab','Listed from the sizes on the Colours tab.'],
   packing:['Set pieces per box on the Product tab','Worked out from pieces per box.'],
   brand:['e.g. Your brand','The brand or label on the product.'],
@@ -569,8 +569,6 @@ function renderPanel(){
     h=`<h2>Product</h2><p class="lead">The basics at the top of the sheet.</p>
     ${fld('Product name',inp('title',S.title,{ph:'e.g. Mens Fleece Hoodie',id:'f-title'}),'The big title in the header bar.')}
     ${fld('Item code',inp('code',S.code,{ph:'e.g. ABC-1234',id:'f-code'}),'Shown top-right so buyers can quote it when ordering.')}
-    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Goes into the Price row of the Product details table.</p><div class="row2">${fld('Amount ($)',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
-      <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit"><option value="piece"${S.price.unit==='piece'?' selected':''}>piece</option><option value="box"${S.price.unit==='box'?' selected':''}>box</option></select></label></div></div>
     ${fld('Pieces per box',inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'}),'How many pieces come in one box. Used for the table totals and the Packing row.')}
     <p class="note">Grey text on the sheet is only an example. It disappears when you type, and never shows in downloads.</p>
     <p class="note">Tip: you can also click any text on the sheet and type to change it.</p>`;
@@ -608,6 +606,8 @@ function renderPanel(){
   }
   else if(tab==='details'){
     h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them. Leave a row empty or remove it if you don't need it.</p>
+    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Shown in the Price row below.</p><div class="row2">${fld('Amount ($)',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
+      <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit"><option value="piece"${S.price.unit==='piece'?' selected':''}>piece</option><option value="box"${S.price.unit==='box'?' selected':''}>box</option></select></label></div></div>
     <div class="list">${S.rows.map((r,i)=>`<div class="item"><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:'Label',label:'Row label'})}
       ${r.auto?`<div class="in" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--raise)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rowVal(r))||'<span style=color:var(--faint)>Filled in automatically</span>'}</span><button class="btn sm ghost" data-unauto="${r.id}">Edit</button></div>`
         :inp(`row:${r.id}:value`,r.value,{ph:rowHelp(r)[0],label:'Row value'})}
