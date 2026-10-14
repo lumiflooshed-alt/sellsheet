@@ -28,7 +28,35 @@ svg{flex:none}
 .app>.main{flex:1 1 auto}
 /* top bar */
 .top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);min-width:0;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap;border:0;background:none;color:var(--ink);font-family:inherit;cursor:pointer;padding:4px 10px 4px 4px;margin-left:-4px;border-radius:12px}
+.brand:hover,.brand:focus-visible{background:var(--raise);outline:none}.brand .brand-m{width:16px;height:16px;color:var(--muted)}
+.nav-dlg{margin:0;inset:0 auto 0 0;height:100%;max-height:100%;width:min(320px,88vw);border-radius:0 18px 18px 0}.nav-dlg[open]{animation:navin .24s var(--ease)}
+@keyframes navin{from{transform:translateX(-100%)}}
+.nav-wrap{display:grid;grid-template-rows:auto 1fr;height:100%}
+.nav-h{display:flex;align-items:center;gap:10px;padding:14px 14px 10px 16px;font-size:16px}.nav-h b{flex:1}
+.nav-list{display:grid;align-content:start;gap:2px;padding:6px 10px;overflow:auto}
+.nav-it{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:none;border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
+.nav-it span{display:grid;gap:1px;min-width:0}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
+#custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
+.cp-tools #cpQ{flex:1 1 280px;min-width:0;height:38px}.cp-tools .spacer{flex:1 1 0}
+.cp-main{display:grid;grid-template-columns:minmax(0,1fr) auto;min-height:0}
+.cp-tw{overflow:auto;min-height:0}
+.cp-t{border-collapse:separate;border-spacing:0;font-size:13.5px;min-width:100%}
+.cp-t th{position:sticky;top:0;z-index:1;background:var(--raise);text-align:left;font:700 12px var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.cp-t td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-t td.ml{white-space:pre-line;min-width:160px}.cp-t tbody tr{cursor:pointer}.cp-t tbody tr:hover td{background:var(--raise)}.cp-t tbody tr.on td{background:var(--accent-soft)}
+.cp-t th:first-child,.cp-t td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);width:34px;padding-right:4px}.cp-t th:first-child{z-index:2;background:var(--raise)}
+.cp-t input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.cp-t .nn{font-size:11px;font-weight:700;color:var(--bad);margin-left:4px}.cp-t .sub{display:block;color:var(--muted);font-size:12px}
+.cp-detail{width:min(380px,40vw);border-left:1px solid var(--line);overflow:auto;padding:14px 16px;display:grid;gap:10px;align-content:start;background:var(--panel)}
+.cp-detail h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}.cp-detail h3 span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.cp-detail label{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted)}.cp-detail .in{height:38px;font-size:14px}.cp-detail textarea.in{height:auto;min-height:38px;resize:vertical;padding-top:8px;line-height:1.35}
+.cp-detail .hd{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.04em;color:var(--faint);margin-top:6px}
+@media (max-width:900px){.cp-main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.cp-detail{width:auto;border-left:0;border-bottom:1px solid var(--line);max-height:55vh;order:-1}}
+#invDlg{width:min(620px,calc(100vw - 24px))}
+.inv-empty{display:grid;gap:10px;justify-items:start;padding:8px 2px;font-size:14.5px}.inv-empty>svg{width:44px;height:44px;color:var(--accent)}.inv-empty p,.inv-empty ul{margin:0}.inv-empty ul{padding-left:20px;display:grid;gap:4px}
+.src-menu{min-width:230px;right:auto}
 .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
 .sheetpick{display:flex;align-items:center;gap:6px;min-width:0;flex:1 1 260px}
 .sel{appearance:none;background:var(--raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A93A3' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--line);border-radius:10px;padding:0 34px 0 12px;height:42px;min-width:0;max-width:340px;width:100%;font-weight:600;cursor:pointer}
@@ -418,12 +446,12 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 
 <div class="app intro" id="app" data-view="edit">
   <header class="top">
-    <div class="brand"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span>Sell Sheet Studio</div>
+    <button class="brand" id="navBtn" type="button" aria-haspopup="dialog" aria-controls="navDlg" title="Menu: sent emails, customers, inventory"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="brand-t">Sell Sheet Studio</span><svg class="brand-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="sheetpick">
       <select class="sel" id="sheetSel" aria-label="Choose a sell sheet"></select>
       <button class="btn icon ghost" id="newSheet" title="New sell sheet" aria-label="New sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
       <button class="btn icon ghost" id="dupSheet" title="Copy this sheet" aria-label="Copy this sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
-      <button class="btn icon ghost" id="openSheet" title="Open a sell sheet (PDF or Word)" aria-label="Open a sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h13l3-8H7l-3 8"/></svg></button>
+      <button class="btn icon ghost" id="openSheet" title="Open a sell sheet (PDF or Word) from this computer or Google Drive" aria-label="Open a sell sheet" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h13l3-8H7l-3 8"/></svg></button>
       <input type="file" id="openFile" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" hidden>
       <span class="status" id="status"><i></i>Saved on this device</span>
     </div>
@@ -538,7 +566,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <div class="cu-groups" id="cuGroups"></div>
         <div class="cu-form" id="cuForm" hidden></div>
         <div class="cu-list" id="cuList"></div>
-        <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
+        <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
         <p class="hint" style="margin:0" id="cuSync"></p>
       </section>
       <section class="ml-form" aria-label="Email">
@@ -578,6 +606,52 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-bot"><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
   </div>
 </dialog>
+<dialog id="navDlg" class="nav-dlg" aria-label="Menu">
+  <div class="nav-wrap">
+    <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
+    <nav class="nav-list" aria-label="Pages">
+      <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
+      <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
+      <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span><b>Inventory</b><small>QuickBooks Online · not connected yet</small></span></button>
+      <span class="menu-h">Open a sell sheet</span>
+      <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
+      <button type="button" class="nav-it" data-nav="open-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11M2 14h20M16 3L10 14"/></svg><span><b>From Google Drive</b><small>PDF, Word or Google Docs</small></span></button>
+    </nav>
+  </div>
+</dialog>
+<dialog id="custDlg" aria-label="Customers">
+  <div class="lg-wrap">
+    <div class="ml-top"><h2>Customers</h2><span class="note" id="cpSum"></span><button class="btn icon sm ghost" id="cpClose" type="button" aria-label="Close">✕</button></div>
+    <div class="lg-filters cp-tools">
+      <input class="in" id="cpQ" type="search" placeholder="Search name, company, email, phone, address, notes…" aria-label="Search customers">
+      <div class="cu-groups" id="cpChips"></div>
+      <span class="spacer"></span>
+      <button class="btn sm" id="cpAdd" type="button">＋ Add customer</button>
+      <button class="btn sm ghost" id="cpImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file from this computer or Google Drive">Import</button>
+      <button class="btn sm ghost" id="cpExport" type="button">Export</button>
+    </div>
+    <div class="cp-main">
+      <div class="cp-tw"><table class="cp-t" id="cpTable"></table></div>
+      <aside class="cp-detail" id="cpDetail" hidden aria-label="Customer details"></aside>
+    </div>
+    <div class="ml-bot"><span class="note" id="cpNote"></span><div class="bgrp"><button class="btn sm" id="cpEmail" type="button" disabled>Email ticked customers</button><button class="btn sm ghost" id="cpDone" type="button">Close</button></div></div>
+  </div>
+</dialog>
+<dialog id="invDlg" aria-label="Inventory">
+  <div class="su-wrap">
+    <div class="ml-top"><h2>Inventory</h2><button class="btn icon sm ghost" id="invClose" type="button" aria-label="Close">✕</button></div>
+    <div class="su-body inv-body">
+      <div class="inv-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
+        <b>QuickBooks Online isn't connected yet</b>
+        <p>Once it's connected, this page will list your QuickBooks inventory items (name, SKU, price, quantity on hand). From here you'll be able to:</p>
+        <ul><li>start a sell sheet from an item, with its details filled in</li><li>link each sell sheet to its item by SKU</li><li>push the latest sell sheet picture to the item in QuickBooks whenever you change it</li></ul>
+        <p class="note">Connecting needs a one-time QuickBooks developer setup and a small helper on your Cloudflare site, because QuickBooks doesn't let web pages talk to it directly.</p>
+        <button class="btn" type="button" disabled>Connect QuickBooks (coming soon)</button></div>
+    </div>
+    <div class="ml-bot"><span></span><button class="btn sm ghost" id="invDone" type="button">Close</button></div>
+  </div>
+</dialog>
+<div class="menu src-menu hide" id="srcMenu" role="menu"></div>
 <dialog id="logDlg" aria-label="Sent sell sheets">
   <div class="lg-wrap">
     <div class="ml-top"><h2>Sent sell sheets</h2><span class="note" id="lgSum"></span><button class="btn icon sm ghost" id="lgClose" type="button" aria-label="Close">✕</button></div>
@@ -1502,7 +1576,7 @@ async function openSheetFile(f){toast('Opening '+f.name+'…',20000);
       notext:'This PDF is only a picture of the page, so there\'s no text to read. Open the Word version of the sell sheet instead, or a PDF downloaded from this site.',
       nodata:'That file couldn\'t be read as a sell sheet.',notsheet:`This doesn't look like a sell sheet. Couldn't find ${(e.extra||[]).join(', and ')}.`}[m];
     toast(msg||'That file couldn\'t be opened.',msg&&msg.length>60?9000:4000);}}
-$('#openSheet').onclick=()=>$('#openFile').click();
+$('#openSheet').onclick=e=>srcMenu(e.currentTarget,'Open a sell sheet',()=>$('#openFile').click(),async()=>{const f=await driveOpen('sheet');if(f)openSheetFile(f);});
 $('#openFile').addEventListener('change',()=>{const f=$('#openFile').files[0];$('#openFile').value='';if(f)openSheetFile(f);});
 window.addEventListener('dragover',e=>{if([...(e.dataTransfer?.items||[])].some(i=>i.kind==='file'))e.preventDefault();});
 window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(/\.(pdf|docx?)$/i.test(f.name))openSheetFile(f);else if(/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name))addPhotoFile(f);else toast('Drop a picture to add it as a photo, or a PDF or Word file to open a sell sheet.');});
@@ -1602,8 +1676,13 @@ const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_R
 // the one address a customer's email goes to (chosen from a dropdown when they have several; main address by default)
 const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.find(a=>c.use.some(x=>ck(x)===ck(a))):null;return[u||c.email];};
 const noName=c=>!String(c?.name||'').trim();
+// extra details from imported sheets (phone, address, notes…): {label: text}; several values are kept one per line
+const cleanInfo=o=>{const r={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const[k,v]of Object.entries(o).slice(0,40)){const kk=String(k).replace(/\s+/g,' ').trim().slice(0,60),vv=String(v??'').trim().slice(0,4000);if(kk&&vv)r[kk]=vv;}return r;};
+const infoOf=c=>cleanInfo(c?.info);
+function addInfo(to,from){for(const[k,v]of Object.entries(from||{})){const have=String(to[k]||'').split('\n').filter(Boolean);for(const x of String(v).split('\n'))if(x&&!have.includes(x))have.push(x);if(have.length)to[k]=have.slice(0,60).join('\n');}return to;}
+const infoKeys=()=>{const ks=[];for(const c of CU.list)for(const k of Object.keys(infoOf(c)))if(!ks.includes(k))ks.push(k);return ks;};
 const cuGroups=()=>[...new Set(CU.list.map(c=>(c.group||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!CU.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c)].some(v=>(v||'').toLowerCase().includes(q))));};
+const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!CU.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c),...Object.values(infoOf(c))].some(v=>(v||'').toLowerCase().includes(q))));};
 function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';const nn=CU.list.filter(noName).length;if(!nn)CU.nn=false;
   $('#cuGroups').innerHTML=(g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'')
     +(nn?`<button type="button" class="nn-chip" data-nn aria-pressed="${CU.nn}" title="Show only customers without a name, so you can add one">⚠ No name (${nn})</button>`:'');
@@ -1624,16 +1703,19 @@ function cuFormOpen(c){CU.edit=c?ck(c.email):'new';const f=$('#cuForm');f.hidden
     <input class="in" id="cuGrp" placeholder="Group (optional), e.g. Retailers" value="${esc(c?.group||'')}" list="cuGrpList" aria-label="Group"><datalist id="cuGrpList">${gl.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>
     <div class="bgrp"><button class="btn sm primary" type="button" id="cuSaveBtn">Save</button><button class="btn sm ghost" type="button" id="cuCancelBtn">Cancel</button></div>`;
   $('#cuName').focus();}
-function cuFormSave(){const v=id=>$('#'+id).value.trim(),email=v('cuMail');if(!EMAIL_RE.test(email)){toast('Enter a valid email address');$('#cuMail').focus();return;}
-  const dup=CU.list.find(c=>ck(c.email)===ck(email)&&ck(c.email)!==CU.edit);if(dup){toast(`${email} is already saved`);return;}
-  const altIn=splitAddr(v('cuAlt')),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length){toast('Check these addresses: '+badAlt.join(', '));$('#cuAlt').focus();return;}
-  const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),old=CU.edit==='new'?null:CU.list.find(c=>ck(c.email)===CU.edit);
-  const use=old?useOf({...old,email,alt}):[email];
-  const now=Date.now(),data={name:v('cuName'),company:v('cuCo'),email,alt,use:use.length?use:[email],group:v('cuGrp'),upd:now};
-  if(CU.edit==='new'){CU.list.push(data);CU.sel.add(ck(email));}
-  else{const c=CU.list.find(c=>ck(c.email)===CU.edit);if(c){if(ck(c.email)!==ck(email)){CU.deleted.push({email:ck(c.email),at:now});if(CU.sel.delete(ck(c.email)))CU.sel.add(ck(email));}Object.assign(c,data);}}
-  CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));
-  cuSave();cuFormClose();renderCust();toast('Customer saved');}
+// add or change a customer (edit = key of the one being changed, or 'new'); returns an error message, or '' when saved
+function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.test(email))return'Enter a valid email address';
+  const altIn=splitAddr(v.alt),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length)return'Check these addresses: '+badAlt.join(', ');
+  const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),mine=new Set([ck(email),...alt.map(ck)]);
+  const clash=CU.list.find(c=>(edit==='new'||ck(c.email)!==edit)&&[c.email,...altOf(c)].some(a=>mine.has(ck(a))));if(clash)return`${[clash.email,...altOf(clash)].find(a=>mine.has(ck(a)))} is already saved for ${clash.name||clash.company||clash.email}`;
+  const old=edit==='new'?null:CU.list.find(c=>ck(c.email)===edit),now=Date.now();
+  const data={name:String(v.name||'').trim(),company:String(v.company||'').trim(),email,alt,use:old?useOf({...old,email,alt}):[email],group:String(v.group||'').trim(),upd:now};if(v.info)data.info=cleanInfo(v.info);
+  if(!old){CU.list.push(data);CU.sel.add(ck(email));}
+  else{if(ck(old.email)!==ck(email)){CU.deleted.push({email:ck(old.email),at:now});if(CU.sel.delete(ck(old.email)))CU.sel.add(ck(email));}Object.assign(old,data);}
+  CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));cuSave();return'';}
+function cuFormSave(){const v=id=>$('#'+id).value.trim();const err=cuUpsert(CU.edit,{name:v('cuName'),company:v('cuCo'),email:v('cuMail'),alt:v('cuAlt'),group:v('cuGrp')});
+  if(err){toast(err);$(/address/.test(err)&&!/valid/.test(err)?'#cuAlt':'#cuMail').focus();return;}
+  cuFormClose();renderCust();toast('Customer saved');}
 function cuFormClose(){CU.edit=null;$('#cuForm').hidden=true;$('#cuForm').innerHTML='';}
 $('#cuAdd').onclick=()=>cuFormOpen(null);
 $('#cuForm').addEventListener('click',e=>{if(e.target.id==='cuSaveBtn')cuFormSave();else if(e.target.id==='cuCancelBtn')cuFormClose();});
@@ -1651,7 +1733,7 @@ $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedi
 $('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
 $('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
 // Import: Excel (.xlsx) or CSV, e.g. exports from Gmail / Outlook contacts or any sheet with Name, Company and Email columns.
-// Only name, company, email (and group, if there's a column for it) are kept.
+// Name, company, email and group become the customer; every other filled-in column (phone, address, notes…) is kept as a detail.
 function parseCSV(t){const rows=[];let row=[],f='',q=false;const d=(t.split('\n')[0].match(/;/g)||[]).length>(t.split('\n')[0].match(/,/g)||[]).length?';':t.split('\n')[0].includes('\t')?'\t':',';
   for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
     else if(ch==='"')q=true;else if(ch===d){row.push(f);f='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=ch;}
@@ -1682,6 +1764,10 @@ function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
   const ci={name:col(/^(full |customer |contact )?name$|^display name$|^contact( person)?$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),
     company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^labels?$|categor/)};
   const mailCols=h.map((x,i)=>/e-?mail/.test(x)&&!/type|label|display|subject|preferred|method/.test(x)?i:-1).filter(i=>i>=0);
+  const used=new Set([ci.name,ci.first,ci.last,ci.company,ci.group,...mailCols]),infoCols=hasHead?h.map((x,i)=>x&&!used.has(i)?i:-1).filter(i=>i>=0):[];
+  const label=i=>clean(rows[hi][i]).slice(0,60),dateCol=i=>/date|added|created|last contact|birthday/i.test(rows[hi][i]);
+  // Excel keeps dates as day numbers; show them as dates
+  const val=(i,v)=>{v=clean(v);if(dateCol(i)&&/^\d{5}(\.\d+)?$/.test(v)){const d=new Date(Math.round((+v-25569)*864e5));if(!isNaN(d))return d.toISOString().slice(0,10);}return v;};
   const recs=[];let noMail=0;const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
   for(const r of body){if(!r.some(x=>x.trim()))continue;const cell=i=>i>=0?clean(r[i]):'';
     const mails=[];const addM=v=>{for(const x of String(v||'').split(/:::|[;,\s/|]+/)){const a=x.trim().replace(/^<|>$/g,'').replace(/^mailto:/i,'');if(EMAIL_RE.test(a)&&!mails.some(m=>ck(m)===ck(a)))mails.push(a);}};
@@ -1689,7 +1775,8 @@ function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
     if(!mails.length){noMail++;continue;}
     const others=r.map(clean).filter(x=>x&&!mails.some(m=>x.includes(m)));
     const name=(hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'')).replace(/<.*>/,'').trim();
-    recs.push({name,company:hasHead?cell(ci.company):(others[1]||''),group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim(),mails});}
+    const info={};for(const i of infoCols){const v=val(i,r[i]);if(v)info[label(i)]=v;}
+    recs.push({info,name,company:hasHead?cell(ci.company):(others[1]||''),group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim(),mails});}
   // group rows: same email, or same name + company
   const par=recs.map((_,i)=>i),find=i=>par[i]===i?i:(par[i]=find(par[i])),join=(a,b)=>{a=find(a);b=find(b);if(a!==b)par[b]=a;},seenK=new Map();
   recs.forEach((r,i)=>{const keys=r.mails.map(m=>'@'+ck(m));if(r.name&&r.company)keys.push('#'+r.name.toLowerCase()+'|'+r.company.toLowerCase());for(const k of keys){if(seenK.has(k))join(seenK.get(k),i);else seenK.set(k,i);}});
@@ -1698,25 +1785,30 @@ function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
   const now=Date.now();let added=0,merged=0,combined=recs.length-groups.size;
   for(const rs of groups.values()){const mails=[];for(const r of rs)for(const m of r.mails)if(!mails.some(x=>ck(x)===ck(m)))mails.push(m);
     const pick=k=>(rs.find(r=>r[k])||{})[k]||'',data={name:pick('name'),company:(rs.find(r=>r.name&&r.company)||rs.find(r=>r.company)||{}).company||'',group:pick('group')};
+    const info={};for(const r of rs)addInfo(info,r.info);
     const ex=mails.map(m=>owner.get(ck(m))).find(Boolean);
     if(ex){let ch=false;for(const k of['name','company','group'])if(!clean(ex[k])&&data[k]){ex[k]=data[k];ch=true;}
+      const ei=infoOf(ex),fill=Object.entries(info).filter(([k])=>!ei[k]);if(fill.length){ex.info={...ei,...Object.fromEntries(fill)};ch=true;} // only fills empty details, never undoes your edits
       const add=mails.filter(a=>!owner.has(ck(a)));if(add.length){ex.alt=[...altOf(ex),...add];add.forEach(a=>owner.set(ck(a),ex));ch=true;}
       if(ch){ex.upd=now;merged++;}continue;}
-    const c={...data,email:mails[0],alt:mails.slice(1),use:[mails[0]],upd:now};CU.list.push(c);mails.forEach(a=>owner.set(ck(a),c));added++;
+    const c={...data,email:mails[0],alt:mails.slice(1),use:[mails[0]],info,upd:now};CU.list.push(c);mails.forEach(a=>owner.set(ck(a),c));added++;
     CU.deleted=CU.deleted.filter(d=>!mails.some(m=>ck(m)===d.email));}
   cuSave();renderCust();return{added,merged,combined,noMail,rows:recs.length+noMail};}
 const importCustomers=text=>importRows(parseCSV(text.replace(/^\uFEFF/,''))).added;
-$('#cuImport').onclick=()=>{loadScript('jszip').catch(()=>{});$('#cuFile').click();};
-$('#cuFile').addEventListener('change',async()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(!f)return;
+const custImportFrom=b=>srcMenu(b,'Import customers',()=>{loadScript('jszip').catch(()=>{});$('#cuFile').click();},async()=>{const f=await driveOpen('cust');if(f)importCustFile(f);});
+$('#cuImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.currentTarget);};
+$('#cuFile').addEventListener('change',()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(f)importCustFile(f);});
+async function importCustFile(f){
   try{if(/\.xls$/i.test(f.name)){toast('Old .xls files can\'t be read. In Excel use File → Save As → Excel Workbook (.xlsx), then import that.',6000);return;}
     const head=new Uint8Array(await f.slice(0,4).arrayBuffer()),isZip=head[0]===0x50&&head[1]===0x4B;
     const r=importRows(isZip?await readXlsx(f):parseCSV((await f.text()).replace(/^\uFEFF/,'')));
     const nn=CU.list.filter(noName).length;
     toast(r.added||r.merged?[`Imported ${r.added} new customer${r.added===1?'':'s'}`,r.merged?`updated ${r.merged}`:'',r.combined?`${r.combined} repeated row${r.combined===1?'':'s'} combined`:'',r.noMail?`${r.noMail} row${r.noMail===1?'':'s'} without an email skipped`:''].filter(Boolean).join(' · ')+(nn?`. ${nn} have no name: tap "⚠ No name" to fix them.`:'.')
       :r.rows?'No new customers: everyone in that file is already saved'+(r.noMail?` (${r.noMail} rows had no email)`:'')+'.':'No customers found in that file. It needs an Email column.',7000);}
-  catch(e){console.error(e);toast(e.message&&!/^[A-Z]\w+Error/.test(e.name)?e.message:'That file could not be read',5000);}});
+  catch(e){console.error(e);toast(e.message&&!/^[A-Z]\w+Error/.test(e.name)?e.message:'That file could not be read',5000);}
+  if(custDlg.open)renderCP();}
 $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export yet');return;}const q=v=>`"${String(v||'').replace(/"/g,'""')}"`;
-  save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Other emails,Group',...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
+  const ks=infoKeys();save('Customers.csv',new Blob(['\uFEFF'+[['Name','Company','Email','Other emails','Group',...ks].map(q).join(','),...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group,...ks.map(k=>infoOf(c)[k]||'')].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
 
 /* recipients */
 function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
@@ -1809,7 +1901,7 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),group:String(c.group||''),upd:+c.upd||0};}),
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),group:String(c.group||''),info:cleanInfo(c.info),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at}))};}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
 const httpErr=async(what,r)=>{let j={};try{j=await r.json();}catch(_){}return Object.assign(new Error(j.error?.message||what+' '+r.status),{status:r.status,off:/has not been used|is disabled|accessNotConfigured|SERVICE_DISABLED/i.test(JSON.stringify(j))});};
@@ -2244,6 +2336,99 @@ async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
 $('#mlPrevWho').addEventListener('change',buildPreview);
 $('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c){cuFormOpen(c);$('#cuForm').scrollIntoView({block:'nearest'});}});
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
+
+/* ---------- where to open from: this computer or Google Drive ---------- */
+// small menu under a button; lives inside the button's window (if any) so it shows above it
+function srcMenu(btn,title,onPc,onDrive){const m=$('#srcMenu'),host=btn.closest('dialog')||document.body;
+  if(!m.classList.contains('hide')&&m.dataset.for===btn.id){m.classList.add('hide');return;}
+  host.appendChild(m);m.dataset.for=btn.id;m.innerHTML=`<span class="menu-h">${esc(title)}</span><button type="button" role="menuitem" data-src="pc"><b>From this computer</b><small>Choose a file on this device</small></button><button type="button" role="menuitem" data-src="drive"><b>From Google Drive</b><small>${EMAIL_SETUP.google&&EMAIL_SETUP.googleApiKey?'Pick a file in your Drive':'Needs Google sign-in setup with an API key'}</small></button>`;
+  m.classList.remove('hide');const r=btn.getBoundingClientRect(),hr=host===document.body?{left:0,top:0,width:innerWidth,height:innerHeight}:host.getBoundingClientRect(),mh=m.offsetHeight,mw=m.offsetWidth;
+  m.style.position=host===document.body?'fixed':'absolute';m.style.right='auto';m.style.left=Math.max(8,Math.min(r.left-hr.left,hr.width-mw-8))+'px';
+  m.style.top=(r.bottom-hr.top+6+mh>hr.height-8?Math.max(8,r.top-hr.top-mh-6):r.bottom-hr.top+6)+'px';
+  m.onclick=e=>{const b=e.target.closest('[data-src]');if(!b)return;m.classList.add('hide');(b.dataset.src==='pc'?onPc:onDrive)();};m.querySelector('button').focus();}
+document.addEventListener('pointerdown',e=>{const m=$('#srcMenu');if(!m.classList.contains('hide')&&!e.target.closest('#srcMenu')&&e.target.closest('button')?.id!==m.dataset.for)m.classList.add('hide');},true);
+document.addEventListener('keydown',e=>{const m=$('#srcMenu');if(e.key==='Escape'&&!m.classList.contains('hide')){e.preventDefault();e.stopPropagation();m.classList.add('hide');}},true);
+const DRIVE_OPEN={
+  sheet:{title:'Open a sell sheet',mimes:['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/msword','application/vnd.google-apps.document'],what:'a PDF, Word or Google Docs file'},
+  cust:{title:'Import customers',mimes:['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv','text/plain','application/vnd.google-apps.spreadsheet'],what:'an Excel, CSV or Google Sheets file'}};
+// Google Docs / Sheets are downloaded as Word / Excel
+const DRIVE_EXPORT={'application/vnd.google-apps.document':['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],'application/vnd.google-apps.spreadsheet':['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xlsx']};
+async function pickFile(t,o){await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s file picker could not load.'))}));
+  const P=google.picker,view=(label,f)=>{let v=new P.DocsView(P.ViewId.DOCS).setIncludeFolders(true).setSelectFolderEnabled(false).setMimeTypes(o.mimes.join(','));if(P.DocsViewMode&&v.setMode)v=v.setMode(P.DocsViewMode.LIST);v=f(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
+  return new Promise(res=>{new P.PickerBuilder().setTitle(o.title+' from Google Drive')
+    .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('All files',v=>v)).enableFeature(P.Feature.SUPPORT_DRIVES)
+    .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
+    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name,mimeType:f.mimeType||''}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
+// pick a file in Drive and download it; returns a File (or null if cancelled)
+async function driveOpen(kind){const o=DRIVE_OPEN[kind];
+  if(!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey){toast(EMAIL_SETUP.google?'Opening from Google Drive needs a Google API key. Add it under Sign in → Sign-in setup (see SETUP-EMAIL.md).':'Opening from Google Drive needs Google sign-in, which isn\'t set up yet. Click Sign in → Set up sign-in.',6000);return null;}
+  const open=[...document.querySelectorAll('dialog[open]')].filter(d=>d.id!=='navDlg');open.forEach(d=>d.close()); // Google's picker can't show above an open window
+  try{const t=await driveToken();const f=await pickFile(t,o);if(!f)return null;
+    const ex=DRIVE_EXPORT[f.mimeType];if(f.mimeType&&!ex&&!o.mimes.includes(f.mimeType))throw new Error(`“${f.name}” isn't ${o.what}.`);
+    toast(`Downloading ${f.name}…`,20000);
+    const url=ex?`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}/export?mimeType=${encodeURIComponent(ex[0])}`:`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&supportsAllDrives=true`;
+    let r;try{r=await fetch(url,{headers:{Authorization:'Bearer '+t.token}});}catch(_){throw new Error('Could not reach Google Drive. Check your connection and any ad-blockers, then try again.');}
+    if(!r.ok){const e=await httpErr('Drive',r);if(r.status===401){tokSet('google',null);e.message='Your Google sign-in expired. Try again.';}else if(e.off)e.message='The Google Drive API is switched off in your Google Cloud project. Enable it, then try again.';throw e;}
+    const blob=await r.blob(),name=ex&&!f.name.toLowerCase().endsWith(ex[1])?f.name+ex[1]:f.name;
+    return new File([blob],name,{type:ex?ex[0]:(f.mimeType||blob.type)});}
+  catch(e){console.error(e);toast(e.message||'Could not open that file from Google Drive.',6000);return null;}
+  finally{open.forEach(d=>{if(!d.open)d.showModal();});if(custDlg.open)renderCP();}}
+
+/* ---------- sidebar (the logo, top left) ---------- */
+const navDlg=$('#navDlg'),custDlg=$('#custDlg'),invDlg=$('#invDlg');
+function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=CU.list.filter(noName).length;
+  $('#navSent').textContent=th.length?`${th.length} sent${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
+  $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
+  if(!navDlg.open)navDlg.showModal();}
+$('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
+navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
+  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='inv')invDlg.showModal();else if(v==='open-pc')$('#openFile').click();
+  else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
+$('#invClose').onclick=$('#invDone').onclick=()=>invDlg.close();
+
+/* ---------- Customers page: the whole list with every detail from the imported sheet ---------- */
+const CP={q:'',nn:false,open:null,sure:false};
+function openCP(){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.open=null;$('#cpQ').value=CP.q;renderCP();if(!custDlg.open)custDlg.showModal();if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}
+const cpShown=()=>{const q=CP.q.trim().toLowerCase();return CU.list.filter(c=>(!CP.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c),...Object.values(infoOf(c))].some(v=>String(v||'').toLowerCase().includes(q))))
+  .sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));};
+function renderCP(){const ks=infoKeys(),shown=cpShown(),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;
+  $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
+  $('#cpChips').innerHTML=nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'';
+  const k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length;
+  $('#cpTable').innerHTML=CU.list.length?`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown" ${shown.length&&shown.every(c=>CU.sel.has(ck(c.email)))?'checked':''}></th><th>Name</th><th>Company</th><th>Email</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
+    <tbody>${shown.map(c=>{const inf=infoOf(c);return`<tr data-cp="${k(c)}"${CP.open===ck(c.email)?' class="on"':''}><td><input type="checkbox" data-cptick="${k(c)}" ${CU.sel.has(ck(c.email))?'checked':''} aria-label="Tick ${esc(c.name||c.company||c.email)}"></td>
+      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}</td><td>${esc(c.company)}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
+      ${ks.map(x=>`<td class="${String(inf[x]||'').includes('\n')?'ml':''}" title="${esc(inf[x]||'')}">${esc(inf[x]||'')}</td>`).join('')}</tr>`;}).join('')}</tbody>`
+    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>Add customer</b>.</td></tr></tbody>';
+  if(CU.list.length&&!shown.length)$('#cpTable').insertAdjacentHTML('beforeend',`<tbody><tr><td></td><td colspan="${3+ks.length}" class="cu-empty">No customers match.</td></tr></tbody>`);
+  $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Tick customers to email them.');
+  $('#cpEmail').disabled=!ticked;$('#cpEmail').textContent=ticked?`Email ${ticked} ticked customer${ticked>1?'s':''}`:'Email ticked customers';renderCPDetail();}
+function renderCPDetail(){const d=$('#cpDetail'),c=CP.open==='new'?{name:'',company:'',email:'',alt:[],group:'',info:{}}:CU.list.find(x=>ck(x.email)===CP.open);
+  if(!CP.open||!c){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;CP.sure=false;if(d.dataset.for!==CP.open){d.scrollTop=0;d.dataset.for=CP.open;}const ks=[...new Set([...infoKeys(),...Object.keys(infoOf(c))])],inf=infoOf(c);
+  const f=(id,lab,v,ph='')=>`<label>${lab}<input class="in" id="${id}" value="${esc(v||'')}" placeholder="${esc(ph)}"></label>`;
+  d.innerHTML=`<h3><span>${CP.open==='new'?'New customer':esc(c.name||c.company||c.email)}</span><button class="btn icon sm ghost" type="button" id="cpdClose" aria-label="Close details">✕</button></h3>
+    ${f('cpdName','Name',c.name,'e.g. Sarah Lee')}${noName(c)&&CP.open!=='new'?'<small style="color:var(--bad);margin-top:-6px">No name yet: emails to this customer start “Hi,”.</small>':''}
+    ${f('cpdCo','Company',c.company)}${f('cpdMail','Main email',c.email)}${f('cpdAlt','Other emails (comma separated)',altOf(c).join(', '))}${f('cpdGrp','Group',c.group,'optional')}
+    ${ks.length?'<span class="hd">Details</span>':''}${ks.map((x,i)=>`<label>${esc(x)}<textarea class="in" rows="${Math.min(6,Math.max(1,String(inf[x]||'').split('\n').length))}" data-cpinfo="${esc(x)}">${esc(inf[x]||'')}</textarea></label>`).join('')}
+    <div class="bgrp"><button class="btn sm primary" type="button" id="cpdSave">Save</button>${CP.open==='new'?'':'<button class="btn sm ghost" type="button" id="cpdDel">Delete</button>'}</div>`;}
+custDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);renderCP();return;}
+  if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));renderCP();}});
+custDlg.addEventListener('click',e=>{const t=e.target;
+  if(t.closest('[data-cpnn]')){CP.nn=!CP.nn;renderCP();return;}
+  const row=t.closest('tr[data-cp]');if(row&&!t.closest('input')){CP.open=CP.open===row.dataset.cp?null:row.dataset.cp;renderCP();return;}
+  if(t.id==='cpdClose'){CP.open=null;renderCP();return;}
+  if(t.id==='cpdSave'){const v=id=>$('#'+id).value,info={};$$('#cpDetail [data-cpinfo]').forEach(x=>{info[x.dataset.cpinfo]=x.value;});
+    const err=cuUpsert(CP.open,{name:v('cpdName'),company:v('cpdCo'),email:v('cpdMail'),alt:v('cpdAlt'),group:v('cpdGrp'),info});if(err){toast(err);return;}
+    CP.open=ck(v('cpdMail').trim());renderCP();toast('Customer saved');return;}
+  if(t.id==='cpdDel'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.sure){CP.sure=true;t.textContent='Click again to delete';return;}
+    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();CP.open=null;renderCP();toast('Customer deleted');}});
+$('#cpQ').addEventListener('input',e=>{CP.q=e.target.value;renderCP();});
+$('#cpAdd').onclick=()=>{CP.open='new';renderCP();$('#cpdName').focus();};
+$('#cpImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.currentTarget);};
+$('#cpExport').onclick=()=>$('#cuExport').click();
+$('#cpEmail').onclick=()=>{custDlg.close();openMail();};
+$('#cpClose').onclick=$('#cpDone').onclick=()=>custDlg.close();
 
 /* ---------- boot ---------- */
 (async()=>{
