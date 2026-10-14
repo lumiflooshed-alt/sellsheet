@@ -279,6 +279,7 @@ dialog[open]{animation:pop .22s var(--ease)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:var(--panel);padding:12px 18px;border-radius:12px;font-weight:600;box-shadow:var(--shadow-lg);transition:opacity .2s,transform .25s var(--ease);z-index:50;pointer-events:none;max-width:calc(100vw - 32px)}
 .toast.on{opacity:1;transform:translateX(-50%)}
+.toast[popover]{top:auto;right:auto;margin:0;border:0;overflow:visible;width:max-content;height:auto;inset-inline-start:50%;bottom:24px}
 .hide,[hidden]{display:none!important}
 /* email dialog */
 #mailDlg{width:min(1560px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
@@ -374,6 +375,13 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .ml-meta{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px}.ml-meta b{color:var(--muted);font-weight:600}.ml-meta span{overflow-wrap:anywhere}
 #mlPrevFrame{width:100%;height:520px;border:1px solid var(--line);border-radius:10px;background:#f4f5f4}
 .dv-folder{display:flex;gap:8px;align-items:center}.dv-folder select{flex:1;min-width:0}
+.dv-form{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}.dv-form[hidden],.dv-done[hidden]{display:none}
+.dv-target{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:14px}
+.dv-done{display:grid;justify-items:center;text-align:center;gap:10px;padding:18px 4px 6px}
+.dv-done .big{width:58px;height:58px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:700;animation:pop .3s var(--spring)}
+.dv-done h3{margin:0;font-size:19px}.dv-done p{margin:0;color:var(--muted)}
+.dv-files{display:grid;gap:8px;width:100%;margin-top:6px}.dv-file{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:left}
+.dv-file b{overflow-wrap:anywhere}.dv-file small{display:block;color:var(--muted)}.dv-file a{flex:none;font-weight:600;color:var(--accent);text-decoration:none}.dv-file a:hover{text-decoration:underline}
 .acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
 .acct-menu p{margin:0 0 4px;font-size:14px;line-height:1.45}
@@ -578,16 +586,20 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
   <div class="su-wrap">
     <div class="ml-top"><h2>Save to Google Drive</h2><button class="btn icon sm ghost" id="dvClose" type="button" aria-label="Close">✕</button></div>
     <div class="su-body">
+      <div class="dv-done" id="dvDone" hidden role="status"></div>
+      <div class="dv-form" id="dvForm">
       <div class="ml-acct" id="dvAcct"></div>
       <label class="field"><span>File name</span><input class="in" id="dvName" type="text"></label>
       <div class="field"><span>Save as</span><div class="att" id="dvAtt">
         <label class="opt2"><input type="checkbox" value="pdf"><b>PDF</b><small>Best for sharing</small></label>
         <label class="opt2"><input type="checkbox" value="docx"><b>Word</b><small>.docx, editable</small></label>
         <label class="opt2"><input type="checkbox" value="jpg"><b>Image</b><small>.jpg</small></label></div></div>
-      <div class="field"><span>Folder</span><div class="dv-folder"><select class="in" id="dvFolder" aria-label="Folder"></select><button class="btn sm" type="button" id="dvPick">Choose folder…</button></div><small class="hint" id="dvHint"></small></div>
-      <label class="check"><input type="checkbox" id="dvReplace">Replace a file with the same name in that folder (Drive keeps the old one in its version history)</label>
+      <div class="field" id="dvWhereF"><span>Folder</span><div class="dv-folder"><select class="in" id="dvFolder" aria-label="Folder"></select><button class="btn sm" type="button" id="dvPick">Browse Drive…</button></div><small class="hint" id="dvHint"></small></div>
+      <div class="dv-target" id="dvTarget" hidden></div>
+      <label class="check" id="dvReplaceL"><input type="checkbox" id="dvReplace">Replace a file with the same name in that folder (Drive keeps the old one in its version history)</label>
+      </div>
     </div>
-    <div class="ml-bot"><span class="note" id="dvStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="dvCancel" type="button">Close</button><button class="btn primary" id="dvSave" type="button">Save to Drive</button></div></div>
+    <div class="ml-bot"><span class="note" id="dvStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="dvCancel" type="button">Close</button><button class="btn sm" id="dvAgain" type="button" hidden>Save again</button><button class="btn primary" id="dvSave" type="button">Save to Drive</button></div></div>
   </div>
 </dialog>
 <dialog id="setupDlg" aria-label="Set up sign-in">
@@ -607,7 +619,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-bot"><span class="note" id="suStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="suCancel" type="button">Cancel</button><button class="btn primary" id="suSave" type="button">Save</button></div></div>
   </div>
 </dialog>
-<div class="toast" id="toast" role="status"></div>
+<div class="toast" id="toast" role="status" popover="manual"></div>
 <div class="ctx hide" id="ctx" role="menu" aria-label="Text formatting"></div>
 
 <script>
@@ -635,7 +647,10 @@ const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
-const toast=(t,ms=2600)=>{const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),ms);};
+// notices sit in the browser's top layer, so they also show above an open window (Email, Sent, Drive…)
+const toast=(t,ms=2600)=>{const el=$('#toast');el.textContent=t;clearTimeout(toast.t);clearTimeout(toast.h);
+  if(el.showPopover){try{el.hidePopover();}catch(_){}try{el.showPopover();}catch(_){}}
+  requestAnimationFrame(()=>el.classList.add('on'));toast.t=setTimeout(()=>{el.classList.remove('on');toast.h=setTimeout(()=>{if(!el.classList.contains('on')&&el.hidePopover)try{el.hidePopover();}catch(_){}},400);},ms);};
 const I={paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>',
   product:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>',
   photos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>',
@@ -1875,10 +1890,20 @@ function renderDrive(){const t=tokGet('google'),a=authGet(),el=$('#dvAcct');
   $('#dvFolder').innerHTML=`<option value="app">Sell Sheets folder (created for you)</option><option value="root">My Drive (top level)</option>${recent.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}`;
   $('#dvFolder').value=[...$('#dvFolder').options].some(o=>o.value===last)?last:'app';
   $('#dvPick').disabled=!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey;
-  $('#dvHint').textContent=EMAIL_SETUP.googleApiKey?'Choose folder… opens Google\'s folder picker (your folders and shared drives).':'To pick any other folder, add a Google API key in Sign-in setup (see SETUP-EMAIL.md). Until then, use the Sell Sheets folder or My Drive.';}
-function openDrive(){$('#dvName').value=fileBase();$$('#dvAtt input').forEach(i=>i.checked=DV.att.includes(i.value));$('#dvReplace').checked=DV.replace!==false;dvStatus('');renderDrive();
-  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});if(EMAIL_SETUP.googleApiKey)loadScript('gapi').catch(()=>{});if(!driveDlg.open)driveDlg.showModal();}
+  $('#dvHint').textContent=EMAIL_SETUP.googleApiKey?'Browse Drive… shows your folders and files. Pick a folder to save into, or an existing PDF, Word or JPG to replace it.':'To browse your Drive, add a Google API key in Sign-in setup (see SETUP-EMAIL.md). Until then, use the Sell Sheets folder or My Drive.';}
+// a picked Drive file to overwrite (set from Browse Drive…, cleared when the window opens fresh)
+let dvTarget=null;const DRIVE_KIND={'application/pdf':'pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'docx','image/jpeg':'jpg'};
+function renderTarget(){const on=!!dvTarget;$('#dvTarget').hidden=!on;$('#dvWhereF').hidden=on;$('#dvReplaceL').hidden=on;$('#dvName').disabled=on;
+  $$('#dvAtt input').forEach(i=>{i.disabled=on&&i.value!==dvTarget.kind;if(on)i.checked=i.value===dvTarget.kind;});
+  if(on)$('#dvTarget').innerHTML=`<span>Replacing <b>${esc(dvTarget.name)}</b> with this sell sheet. Drive keeps the old version in its history.</span><button class="lnk" type="button" id="dvUntarget">Save to a folder instead</button>`;
+  else $$('#dvAtt input').forEach(i=>i.checked=DV.att.includes(i.value));}
+function showDone(on){$('#dvDone').hidden=!on;$('#dvForm').hidden=on;$('#dvSave').hidden=on;$('#dvAgain').hidden=!on;$('#dvCancel').textContent=on?'Done':'Close';}
+function openDrive(keep){if(!keep){dvTarget=null;showDone(false);}$('#dvName').value=fileBase();$$('#dvAtt input').forEach(i=>i.checked=DV.att.includes(i.value));$('#dvReplace').checked=DV.replace!==false;dvStatus('');renderDrive();
+  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});if(EMAIL_SETUP.googleApiKey)loadScript('gapi').catch(()=>{});
+  renderTarget();if(!driveDlg.open)driveDlg.showModal();}
 $('#dvClose').onclick=$('#dvCancel').onclick=()=>driveDlg.close();
+$('#dvAgain').onclick=()=>{showDone(false);dvStatus('');};
+$('#dvTarget').addEventListener('click',e=>{if(e.target.id==='dvUntarget'){dvTarget=null;renderTarget();dvStatus('');}});
 $('#dvAcct').addEventListener('click',e=>{if(e.target.id==='dvSetup'){driveDlg.close();openSetup();}});
 $('#dvAtt').addEventListener('change',()=>{DV.att=$$('#dvAtt input:checked').map(i=>i.value);saveDV();});
 $('#dvReplace').addEventListener('change',e=>{DV.replace=e.target.checked;saveDV();});
@@ -1904,28 +1929,39 @@ async function driveUpload(t,folderId,name,type,blob,replace){const all='support
   return driveFetch(t,`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&${all}&${fields}`,{method:'POST',headers:{'Content-Type':`multipart/related; boundary=${B}`},body});}
 // Google's own folder picker (needs an API key). Our dialog is hidden while it shows, since the picker can't sit above a modal.
 async function pickFolder(t){await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
-  const P=google.picker,view=d=>{const v=new P.DocsView(P.ViewId.FOLDERS).setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(FOLDER_MIME);return d?v.setEnableDrives(true):v;};
-  return new Promise(res=>{new P.PickerBuilder().setTitle('Choose where to save the sell sheet').addView(view(false)).addView(view(true)).enableFeature(P.Feature.SUPPORT_DRIVES)
+  const P=google.picker,view=(label,f)=>{let v=new P.DocsView(P.ViewId.DOCS).setIncludeFolders(true).setSelectFolderEnabled(true);if(P.DocsViewMode&&v.setMode)v=v.setMode(P.DocsViewMode.LIST);v=f(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
+  return new Promise(res=>{new P.PickerBuilder().setTitle('Pick a folder to save into, or a sell sheet file to replace')
+    .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('All files',v=>v)).enableFeature(P.Feature.SUPPORT_DRIVES)
     .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
-    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
+    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name,mimeType:f.mimeType||'',url:f.url||''}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
 $('#dvPick').onclick=async()=>{dvStatus('');let t;try{t=await driveToken();}catch(e){dvStatus(e.message,true);return;}
   driveDlg.close();let f=null;try{f=await pickFolder(t);}catch(e){openDrive();dvStatus(e.message,true);return;}
-  openDrive();if(!f)return;const k=dvKey(),list=(DV.recent[k]||[]).filter(x=>x.id!==f.id);DV.recent[k]=[f,...list].slice(0,6);DV.last[k]=f.id;saveDV();renderDrive();dvStatus(`Folder chosen: ${f.name}`);};
+  openDrive(true);if(!f)return;
+  if(f.mimeType&&f.mimeType!==FOLDER_MIME){const kind=DRIVE_KIND[f.mimeType];
+    if(!kind){dvStatus(`“${f.name}” can't be replaced with a sell sheet. Pick a folder, or a PDF, Word or JPG file.`,true);return;}
+    dvTarget={id:f.id,name:f.name,kind,mime:f.mimeType};renderTarget();dvStatus('');return;}
+  dvTarget=null;const k=dvKey(),list=(DV.recent[k]||[]).filter(x=>x.id!==f.id);DV.recent[k]=[{id:f.id,name:f.name},...list].slice(0,6);DV.last[k]=f.id;saveDV();renderDrive();renderTarget();dvStatus(`Folder chosen: ${f.name}`);};
 let drSaving=false;
 $('#dvSave').onclick=async()=>{if(drSaving)return;dvStatus('');
   if(!EMAIL_SETUP.google){dvStatus('Google sign-in isn\'t set up yet. Click "Set up sign-in".',true);return;}
-  const kinds=$$('#dvAtt input:checked').map(i=>i.value);if(!kinds.length){dvStatus('Choose at least one file type.',true);return;}
+  const kinds=dvTarget?[dvTarget.kind]:$$('#dvAtt input:checked').map(i=>i.value);if(!kinds.length){dvStatus('Choose at least one file type.',true);return;}
   const base=$('#dvName').value.trim().replace(/[\\/:*?"<>|]+/g,'').replace(/\.(pdf|docx|jpg)$/i,'')||fileBase();
-  drSaving=true;$('#dvSave').disabled=true;
-  try{const t=await driveToken();let fv=$('#dvFolder').value,fname=$('#dvFolder').selectedOptions[0]?.textContent||'';
+  drSaving=true;const btn=$('#dvSave'),label=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin" style="width:18px;height:18px;border-width:3px"></span>Saving…';
+  try{const t=await driveToken();
+    if(dvTarget){const tg=dvTarget,[f]=await buildAttachments(kinds,dvStatus);dvStatus(`Replacing ${tg.name}…`);
+      const r=await driveFetch(t,`https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(tg.id)}?uploadType=media&supportsAllDrives=true&fields=id,name,webViewLink`,{method:'PATCH',headers:{'Content-Type':f.type},body:f.blob});
+      doneView('Replaced in Google Drive',`The old version is kept in Drive's version history.`,[{...r,replaced:true}]);return;}
+    let fv=$('#dvFolder').value,fname=$('#dvFolder').selectedOptions[0]?.textContent||'';
     if(fv==='app'){dvStatus('Finding the Sell Sheets folder…');const f=await appFolder(t);fv=f.id;fname='Sell Sheets';}else if(fv==='root')fname='My Drive';
     const files=await buildAttachments(kinds,dvStatus);const done=[];
     for(const f of files){dvStatus(`Saving ${f.name.split('.').pop().toUpperCase()} to ${fname}…`);done.push(await driveUpload(t,fv,base+MAIL_TYPES[kinds[files.indexOf(f)]][1],f.type,f.blob,$('#dvReplace').checked));}
     DV.last[dvKey()]=$('#dvFolder').value;saveDV();
-    const s=$('#dvStatus');s.style.color='';s.innerHTML=`✓ Saved to <b>${esc(fname)}</b>${done.some(d=>d.replaced)?' (replaced the older copy)':''}: `+done.map(d=>d.webViewLink?`<a href="${esc(d.webViewLink)}" target="_blank" rel="noopener">${esc(d.name)}</a>`:esc(d.name)).join(', ');
-    toast('Saved to Google Drive');}
+    doneView('Saved to Google Drive',`In <b>${esc(fname)}</b>${done.some(d=>d.replaced)?' (older copies with the same name were replaced; Drive keeps them in version history)':''}.`,done);}
   catch(e){console.error(e);dvStatus(e.message||'Saving to Drive failed.',true);}
-  finally{drSaving=false;$('#dvSave').disabled=false;}};
+  finally{drSaving=false;btn.disabled=false;btn.innerHTML=label;}};
+function doneView(title,sub,files){dvStatus('');$('#dvDone').innerHTML=`<div class="big" aria-hidden="true">✓</div><h3>${esc(title)}</h3><p>${sub}</p>
+    <div class="dv-files">${files.map(d=>`<div class="dv-file"><span><b>${esc(d.name)}</b><small>${d.replaced?'Replaced':'New file'} · ${esc(new Date().toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}))}</small></span>${d.webViewLink?`<a href="${esc(d.webViewLink)}" target="_blank" rel="noopener">Open in Drive ↗</a>`:''}</div>`).join('')}</div>`;
+  showDone(true);toast(title);}
 
 /* the email itself */
 const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
