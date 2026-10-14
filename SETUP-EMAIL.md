@@ -22,9 +22,10 @@ Your site addresses (add every one you use):
 
 1. Go to <https://console.cloud.google.com> and sign in.
 2. At the top, click the project picker, then **New project**. Name it `Sell Sheet Studio` and click **Create**. Make sure it's selected.
-3. Open **APIs & Services → Library**. Search for and **Enable** both:
+3. Open **APIs & Services → Library**. Search for and **Enable** each of:
    - **Gmail API**
    - **Google Drive API**
+   - **Google Picker API** (only needed to choose any Drive folder when saving; see 1b)
 4. Open **Google Auth Platform** (or **APIs & Services → OAuth consent screen**) and click **Get started**:
    - App name: `Sell Sheet Studio`. User support email: your email.
    - **Audience**:
@@ -40,6 +41,23 @@ Your site addresses (add every one you use):
    - Enter origins only, with no `/sellsheet/` at the end. Leave **Authorized redirect URIs** empty.
    - Click **Create**.
 7. Copy the **Client ID**. It looks like `1234567890-abc123.apps.googleusercontent.com`.
+
+## 1b. Optional: a Google API key, to pick any Drive folder
+
+**Save to Drive** works without this. Files go to a **Sell Sheets** folder created for you, or to the top of **My Drive**.
+To choose any folder (including shared drives) in Google's own folder picker, add a free API key:
+
+1. In the same Google Cloud project, make sure **Google Picker API** is enabled (step 3 above).
+2. Open **APIs & Services → Credentials → Create credentials → API key**. Copy the key (it starts with `AIza`).
+3. Click the new key to edit it:
+   - **Application restrictions:** choose **Websites**. Add `https://lumiflooshed-alt.github.io/*`, and your Cloudflare address too, e.g. `https://YOUR-NAME.pages.dev/*`.
+   - **API restrictions:** choose **Restrict key** and tick only **Google Picker API**.
+   - Click **Save**.
+4. Paste the key into the site under **Sign in → Sign-in setup → Google API key**, or send it to Claude.
+
+The key only lets your site addresses open Google's picker. Your files are still protected by your sign-in.
+Saving to Drive asks for one more Google permission, "files you use with this app". With it, the site can only see
+files it saves and folders you pick, never the rest of your Drive.
 
 ## 2. Microsoft (Outlook.com, Hotmail and Microsoft 365)
 
@@ -96,6 +114,7 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 | **Access blocked / access_denied** (Google) | The app is in Testing and this Google address isn't a test user. Add it under **Audience → Test users**. |
 | **"Google hasn't verified this app"** | Normal while testing. Click **Continue**. |
 | **Gmail API has not been used in project…** | Enable the **Gmail API** (and **Google Drive API**) in **APIs & Services → Library**. |
+| **The folder picker shows an error or "API key not valid"** | Enable **Google Picker API**, and check the API key's website restrictions include your site address with `/*` at the end. |
 | **AADSTS50011 redirect URI mismatch** (Microsoft) | In Entra → your app → **Authentication** → **Single-page application**, add the redirect URI shown in **Set up sign-in** exactly, including the final `/`. |
 | **AADSTS9002326 / "cross-origin token redemption"** (Microsoft) | The redirect URI was added under **Web** instead of **Single-page application**. Move it to Single-page application. |
 | **Need admin approval** (Microsoft work account) | Ask your IT admin to click **Grant admin consent** under **API permissions**. |
