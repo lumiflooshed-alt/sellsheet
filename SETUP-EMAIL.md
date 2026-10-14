@@ -59,6 +59,11 @@ The key only lets your site addresses open Google's picker. Your files are still
 Saving to Drive asks for one more Google permission, "files you use with this app". With it, the site can only see
 files it saves and folders you pick, never the rest of your Drive.
 
+In the picker (**Save → Google Drive → Browse Drive…**) you see your folders and files:
+
+- **Pick a folder** to save into it.
+- **Pick an existing PDF, Word or JPG file** to replace it with the current sheet. Drive keeps the old one in its version history.
+
 ## 2. Microsoft (Outlook.com, Hotmail and Microsoft 365)
 
 1. Go to <https://entra.microsoft.com> (or <https://portal.azure.com>) and sign in with your Microsoft account.
