@@ -239,7 +239,7 @@ dialog::backdrop{background:rgba(10,14,22,.55);backdrop-filter:blur(3px)}
 dialog[open]{animation:pop .22s var(--ease)}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
 #editor{height:min(920px,calc(100vh - 24px));width:min(1180px,calc(100vw - 24px))}
-.ed-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}
+.ed-wrap{display:grid;grid-template-rows:auto auto minmax(min(280px,50vh),1fr) auto;height:100%;overflow:auto}
 .ed-top,.ed-bot,.ed-opts{display:flex;align-items:center;gap:10px 14px;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .ed-opts{background:var(--raise);min-height:58px}
 .ed-bot{border-bottom:0;border-top:1px solid var(--line);justify-content:space-between}
@@ -350,9 +350,13 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .lg-row[data-color]{border-left:6px solid var(--tag)}
 .lg-pick{display:flex;flex-direction:column;align-items:center;gap:8px}
 .lg-dot{width:18px;height:18px;border-radius:50%;border:2px dashed var(--line2);background:transparent;cursor:pointer;padding:0}.lg-row[data-color] .lg-dot{border:2px solid var(--panel);background:var(--tag);box-shadow:0 0 0 1px var(--tag)}
-.lg-pal{position:absolute;z-index:60;display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:8px}
-.lg-pal button{width:26px;height:26px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line2);cursor:pointer;padding:0;color:var(--muted);font-size:12px}
-.lg-pal button[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}.lg-pal .none{background:var(--raise)}
+.lg-pal{position:absolute;z-index:60;display:grid;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:10px;max-width:calc(100% - 16px)}
+.lg-pal .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.lg-pal .sw{width:26px;height:26px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line2);cursor:pointer;padding:0;color:var(--muted);font-size:12px;flex:none}
+.lg-pal .sw[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}.lg-pal .none{background:var(--raise)}
+.lg-pal .lbl{font-size:12px;color:var(--muted);font-weight:600}
+.lg-pal input[type=color]{width:34px;height:30px;padding:2px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);cursor:pointer;flex:none}
+.lg-pal #lgHex{width:96px;height:30px;font-family:ui-monospace,Menlo,Consolas,monospace;text-transform:uppercase}.lg-pal #lgHex[aria-invalid=true]{border-color:var(--bad)}
 .flag{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--warn);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}
 .lg-empty{color:var(--muted);padding:30px 10px;text-align:center;line-height:1.5}
 .sent-btn{position:relative}.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--warn);color:#fff;font:700 11.5px/20px var(--ui);font-style:normal;padding:0 5px;text-align:center}
@@ -440,10 +444,10 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <div class="stagewrap"><div class="sizer" id="sizer"><div class="paper" id="paper"></div></div></div>
       <div class="fbar hide" id="fbar" role="toolbar" aria-label="Text size"><span class="nm" id="fbName"></span><button class="btn icon ghost" type="button" id="fbDn" aria-label="Smaller text">A−</button><span class="v" id="fbV"></span><button class="btn icon ghost" type="button" id="fbUp" aria-label="Bigger text">A+</button></div>
       <div class="pill">
-        <button class="btn icon ghost" id="zOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+        <button class="btn icon ghost" id="zOut" aria-label="Zoom out" title="Zoom out (Ctrl −)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
         <span class="z" id="zLbl">100%</span>
-        <button class="btn icon ghost" id="zIn" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
-        <button class="btn ghost sm" id="zFit">Fit</button>
+        <button class="btn icon ghost" id="zIn" aria-label="Zoom in" title="Zoom in (Ctrl +)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="btn ghost sm" id="zFit" title="Fit the whole page (Ctrl 0)">Fit</button>
       </div>
     </section>
   </div>
@@ -464,10 +468,10 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <button class="btn icon sm" id="redo" type="button" aria-label="Redo" title="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg></button>
       </div>
       <div class="bgrp" role="group" aria-label="Zoom">
-        <button class="btn icon sm" id="zEdOut" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+        <button class="btn icon sm" id="zEdOut" type="button" aria-label="Zoom out" title="Zoom out (Ctrl −)">−</button>
         <span class="lvl" id="zEd">100%</span>
-        <button class="btn icon sm" id="zEdIn" type="button" aria-label="Zoom in" title="Zoom in">+</button>
-        <button class="btn sm" id="zEdFit" type="button" title="Fit the whole photo in view">Fit</button>
+        <button class="btn icon sm" id="zEdIn" type="button" aria-label="Zoom in" title="Zoom in (Ctrl +)">+</button>
+        <button class="btn sm" id="zEdFit" type="button" title="Fit the whole photo in view (Ctrl 0)">Fit</button>
       </div>
     </div>
     <div class="ed-opts">
@@ -762,14 +766,30 @@ function renderSheet(){
   let ob=$('#overflow'); if(over&&!ob){ob=document.createElement('div');ob.id='overflow';ob.className='overflow';ob.textContent='Content runs past one page';$('#canvas').appendChild(ob);} else if(!over&&ob) ob.remove();
 }
 
-/* ---------- zoom ---------- */
+/* ---------- zoom (the sheet preview; the photo editor has its own) ---------- */
 let zoom=1, fitMode=true;
-function applyZoom(){const p=$('#paper');p.style.transform=`scale(${zoom})`;$('#sizer').style.width=816*zoom+'px';$('#sizer').style.height=1056*zoom+'px';$('#zLbl').textContent=Math.round(zoom*100)+'%';}
-function fit(){const cv=$('#canvas');const w=cv.clientWidth-56;if(w<=0)return;zoom=Math.max(.3,Math.min(1.25,w/816));applyZoom();}
-$('#zIn').onclick=()=>{fitMode=false;zoom=Math.min(2,+(zoom+.1).toFixed(2));applyZoom();};
-$('#zOut').onclick=()=>{fitMode=false;zoom=Math.max(.3,+(zoom-.1).toFixed(2));applyZoom();};
-$('#zFit').onclick=()=>{fitMode=true;fit();};
+// cx/cy: a screen point that stays put while zooming (pointer for Ctrl+scroll); default is the middle of the view
+function setPageZoom(z,cx,cy){const cv=$('#canvas'),sz=$('#sizer'),r0=sz.getBoundingClientRect();
+  if(cx==null){const c=cv.getBoundingClientRect();cx=c.left+c.width/2;cy=c.top+c.height/2;}
+  const ix=r0.width?(cx-r0.left)/r0.width:.5,iy=r0.height?(cy-r0.top)/r0.height:0;
+  zoom=Math.min(2,Math.max(.2,+z.toFixed(3)));applyPageZoom();
+  if(!fitMode){const r1=sz.getBoundingClientRect();cv.scrollLeft+=r1.left+ix*r1.width-cx;cv.scrollTop+=r1.top+iy*r1.height-cy;}}
+function applyPageZoom(){const p=$('#paper');p.style.transform=`scale(${zoom})`;$('#sizer').style.width=816*zoom+'px';$('#sizer').style.height=1056*zoom+'px';$('#zLbl').textContent=Math.round(zoom*100)+'%';}
+// the whole page (width and height) in view, above the zoom bar
+function fit(){const cv=$('#canvas'),cs=getComputedStyle(cv.querySelector('.stagewrap'));
+  const w=cv.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),h=cv.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);if(w<=0||h<=0)return;
+  zoom=Math.max(.2,Math.min(1.5,w/816,h/1056));applyPageZoom();cv.scrollTop=0;cv.scrollLeft=0;}
+const ZP=[.25,.33,.5,.67,.75,.8,.9,1,1.1,1.25,1.5,1.75,2];
+const pageZoomStep=(dir,cx,cy)=>{fitMode=false;setPageZoom(dir>0?(ZP.find(s=>s>zoom+.01)??2):([...ZP].reverse().find(s=>s<zoom-.01)??.2),cx,cy);};
+const pageFit=()=>{fitMode=true;fit();};
+$('#zIn').onclick=()=>pageZoomStep(1);
+$('#zOut').onclick=()=>pageZoomStep(-1);
+$('#zFit').onclick=pageFit;
 new ResizeObserver(()=>{if(fitMode)fit();}).observe($('#canvas'));
+// Ctrl/⌘ + plus, minus and 0 zoom the sheet (not the whole site) while no window is open; Ctrl/⌘+scroll zooms at the pointer
+document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey)||e.altKey||document.querySelector('dialog[open]')||$('#canvas').offsetParent===null)return;
+  const k=e.key;if(k==='='||k==='+'){e.preventDefault();pageZoomStep(1);}else if(k==='-'||k==='_'){e.preventDefault();pageZoomStep(-1);}else if(k==='0'){e.preventDefault();pageFit();}});
+$('#canvas').addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();fitMode=false;setPageZoom(zoom*Math.exp(-e.deltaY*.0025),e.clientX,e.clientY);},{passive:false});
 
 /* ---------- keys ---------- */
 function setKey(k,v){
@@ -1089,6 +1109,7 @@ function autoCrop(st){const{W,H,alpha}=st;let x0=W,y0=H,x1=0,y1=0;for(let y=0,j=
 // adj (brightness/contrast/saturation), crop, zoom and the undo/redo history.
 const dlg=$('#editor'); let E=null, tool='crop', target=null;
 const MOD=/Mac|iP(hone|ad|od)/.test(navigator.platform||navigator.userAgent)?'⌘':'Ctrl';
+if(MOD!=='Ctrl')$$('#zIn,#zOut,#zFit,#zEdIn,#zEdOut,#zEdFit').forEach(b=>b.title=b.title.replace('Ctrl',MOD));
 const BR=Object.assign({size:0,shape:'round',hard:70,op:100,color:'#C2413B'},(()=>{try{return JSON.parse(lsGet('ss-brush')||'{}');}catch(_){return{};}})());
 const saveBrush=()=>lsSet('ss-brush',JSON.stringify(BR));
 const SWATCHES=['#000000','#FFFFFF','#7F7F7F','#C2413B','#E0A030','#F2D541','#0E993F','#2F6FEB','#7C4DFF','#8B5A2B'];
@@ -1242,7 +1263,8 @@ const ZSTEPS=[.25,.33,.5,.67,.75,1,1.25,1.5,2,3,4,6,8];
 const zoomStep=(dir,cx,cy)=>{if(!E)return;const z=E.zoom;applyZoom(dir>0?(ZSTEPS.find(s=>s>z+.01)??8):([...ZSTEPS].reverse().find(s=>s<z-.01)??.25),cx,cy);};
 $('#zEdIn').onclick=()=>zoomStep(1);$('#zEdOut').onclick=()=>zoomStep(-1);$('#zEdFit').onclick=()=>applyZoom(1);
 $('#edBody').addEventListener('wheel',e=>{if(!E||!(e.ctrlKey||e.metaKey))return;e.preventDefault();applyZoom(E.zoom*Math.exp(-e.deltaY*.0025),e.clientX,e.clientY);},{passive:false});
-window.addEventListener('resize',()=>{if(dlg.open&&E&&E.cv)applyZoom();});
+// keep the zoom relative to "fit" whenever the photo area changes size (window resize, toolbars wrapping)
+new ResizeObserver(()=>{if(dlg.open&&E&&E.cv)applyZoom();}).observe($('#edBody'));
 
 $('#edCancel').onclick=()=>dlg.close();
 dlg.addEventListener('close',()=>{if(stroke)finishStroke(false);if(E&&!E.photoId)E=null;});
@@ -1657,48 +1679,66 @@ function updMode(){const n=people().length,row=$('#mlModeRow');row.hidden=n<2;$$
 $('#mlMode').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;MAIL.mode=b.dataset.mode;saveMail();schedPreview();updMode();});
 $('#mlTo').addEventListener('input',updMode);
 
-/* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up). Tokens last about an hour and stay in this tab only. */
+/* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up).
+   The signed-in account ({prov,email}) is remembered in this browser until Sign out. Access tokens last about an hour;
+   they're kept per provider and renewed when needed: Microsoft silently with its refresh token, Google with a pop-up
+   that closes by itself (no clicks) once permission has been given. */
 const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
-// one signed-in account at a time (provider, token, email); kept for this browser tab only
-const authGet=()=>{try{const t=JSON.parse(sessionStorage.getItem('ss-auth')||'null');return t&&t.exp>Date.now()+60e3?t:null;}catch(_){return null;}};
-const authSet=t=>{try{t?sessionStorage.setItem('ss-auth',JSON.stringify(t)):sessionStorage.removeItem('ss-auth');}catch(_){}};
-const tokGet=p=>{const a=authGet();return a&&a.prov===p?a:null;};
-const tokSet=(p,t)=>authSet(t?{...t,prov:p}:null);
+const lsJ=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}},lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
+const authGet=()=>{const a=lsJ('ss-acct');return a&&a.prov?a:null;};
+const authSet=a=>a?lsSet('ss-acct',JSON.stringify({prov:a.prov,email:a.email||''})):lsDel('ss-acct');
+const toksAll=()=>lsJ('ss-toks')||{};
+const tokGet=p=>{const t=toksAll()[p];return t&&t.token&&t.exp>Date.now()+60e3?t:null;};
+// tokSet(p,null) only drops the access token; the email (used as a sign-in hint) and any refresh token are kept
+const tokSet=(p,t)=>{const m=toksAll();m[p]=t||(m[p]?{...m[p],token:'',exp:0}:undefined);if(!m[p])delete m[p];lsSet('ss-toks',JSON.stringify(m));};
+const meFor=p=>{const a=authGet();return a&&a.prov===p?a.email:toksAll()[p]?.email||'';};
+(()=>{try{const o=JSON.parse(sessionStorage.getItem('ss-auth')||'null');sessionStorage.removeItem('ss-auth');
+  if(o&&o.prov&&!authGet()){authSet(o);if(o.exp>Date.now()+60e3)tokSet(o.prov,{token:o.token,exp:o.exp,email:o.email,scope:o.scope});}}catch(_){}})();
+const MS_SCOPE='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',MS_TOKEN='https://login.microsoftonline.com/common/oauth2/v2.0/token';
+async function msRefresh(){const o=toksAll().microsoft;if(!o?.rt||!EMAIL_SETUP.microsoft)return null;
+  try{const r=await fetch(MS_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope:MS_SCOPE,grant_type:'refresh_token',refresh_token:o.rt})});
+    const j=await r.json().catch(()=>({}));if(!r.ok||!j.access_token){tokSet('microsoft',{...o,token:'',exp:0,rt:''});return null;}
+    const t={...o,token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,rt:j.refresh_token||o.rt};tokSet('microsoft',t);return t;}catch(_){return null;}}
+// a working token without showing anything, or null
+async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh():null);}
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
-function googleLogin(choose){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
+function googleLogin(choose,hint){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
   const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
-  const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',
+  const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
       let email='';try{email=(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+r.access_token}})).json()).email||'';}catch(_){}
-      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email,scope:r.scope||scope};tokSet('google',t);res(t);},
+      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email:email||hint||'',scope:r.scope||scope};tokSet('google',t);res(t);},
     error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'The sign-in window was closed. If Google showed an error such as "origin_mismatch" or "invalid_client", check the steps under "If sign-in doesn\'t work" in SETUP-EMAIL.md.'))});
   c.requestAccessToken();});}
-async function msLogin(choose){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
-  try{const scope='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+async function msLogin(choose,hint){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
+  try{const scope=MS_SCOPE,rnd=n=>crypto.getRandomValues(new Uint8Array(n));
     const verifier=b64url(rnd(48)),challenge=b64url(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),state=b64url(rnd(16));
-    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,prompt:choose?'select_account':'select_account'});
+    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,...(!choose&&hint?{login_hint:hint}:{prompt:'select_account'})});
     const code=await new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
       let u;try{u=new URL(w.location.href);}catch(_){return;}if(u.origin!==location.origin)return;const sp=u.searchParams;if(!sp.get('code')&&!sp.get('error'))return;
       clearInterval(iv);w.close();if(sp.get('state')!==state){rej(new Error('Sign-in failed. Please try again.'));return;}
       sp.get('error')?rej(new Error(sp.get('error_description')||sp.get('error'))):res(sp.get('code'));},250);});
-    const r=await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    const r=await fetch(MS_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope,code,redirect_uri:redirectUri(),grant_type:'authorization_code',code_verifier:verifier})});
     const j=await r.json();if(!r.ok||!j.access_token)throw new Error(j.error_description||'Sign-in failed.');
     let email='';try{const me=await (await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+j.access_token}})).json();email=me.mail||me.userPrincipalName||'';}catch(_){}
-    const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email};tokSet('microsoft',t);return t;}
+    const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:email||hint||'',rt:j.refresh_token||''};tokSet('microsoft',t);return t;}
   catch(e){try{w.close();}catch(_){}throw e;}}
-async function login(p,choose){const before=cuKey();const t=await (p==='google'?googleLogin(choose):msLogin(choose));afterLogin(before);return t;}
+// signs in as the site's account (customers and sent log sync to it). Reuses or renews the current sign-in first, unless fresh.
+async function login(p,choose,fresh){const before=cuKey(),hint=choose?'':meFor(p);
+  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint):msLogin(choose,hint));
+  authSet({prov:p,email:t.email});afterLogin(before);return t;}
 function afterLogin(prevKey){const a=authGet();if(!a)return;
   // the first time an account signs in on this browser, copy the customers saved here into it
   const flag='ss-merged:'+a.prov+':'+ck(a.email);if(prevKey==='ss-customers'&&!lsGet(flag)){try{const g=JSON.parse(lsGet('ss-customers')||'[]');const gl=Array.isArray(g)?g:g.customers||[];
       if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[]},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[]});lsSet(k,JSON.stringify(m));}
       const gLog=JSON.parse(lsGet('ss-log')||'{}')||{};if((gLog.entries||[]).length){const lk=lgKey(),cl=JSON.parse(lsGet(lk)||'{}')||{};lsSet(lk,JSON.stringify(mergeLog({entries:cl.entries||[],deleted:cl.deleted||[]},{entries:gLog.entries,deleted:[]})));}}catch(_){}lsSet(flag,'1');}
   lgLoad();renderBadge();CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();}
-function signOut(){const a=authGet();if(a?.prov==='google'&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(a.token,()=>{});}catch(_){}
-  authSet(null);CU.sel.clear();cuLoad();lgLoad();renderBadge();if(logDlg.open)renderLog();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
-function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=tokGet(p),el=$('#mlAcct');
+function signOut(){const g=toksAll().google;if(g?.token&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(g.token,()=>{});}catch(_){}
+  authSet(null);lsDel('ss-toks');CU.sel.clear();cuLoad();lgLoad();renderBadge();if(logDlg.open)renderLog();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
+function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=authGet()?.prov===p?authGet():null,el=$('#mlAcct');
   const other=authGet();if(!t&&other){el.innerHTML=`<span>Signed in with ${PROV_NAME[other.prov]} (${esc(other.email||'')}). Sending from ${PROV_NAME[p]} needs a ${p==='google'?'Google':'Microsoft'} sign-in, which switches accounts.</span>`+(EMAIL_SETUP[p]?`<button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`:'');return;}
   if(!EMAIL_SETUP[p]){el.innerHTML=`<span>${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet.</span><button class="btn sm primary" type="button" id="mlSetup">Set up sign-in</button>`;return;}
   el.innerHTML=t?`<span>Signed in as <b>${esc(t.email||PROV_NAME[p]+' account')}</b></span><button class="lnk" type="button" id="mlSwitch">Switch account</button>`
@@ -1726,8 +1766,8 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
-function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet();if(!a)return Promise.resolve();
-  syncing=(async()=>{renderSync();try{const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
+function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
+  syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
@@ -1740,7 +1780,7 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
-    catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401){authSet(null);CU.sel.clear();cuLoad();lgLoad();renderBadge();if(mailDlg.open){renderCust();renderAcct();}}}
+    catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401)tokSet(acct.prov,null);}
     finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
 function scheduleSync(){if(!authGet())return;clearTimeout(syncT);syncT=setTimeout(syncNow,1200);}
 function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
@@ -1753,7 +1793,7 @@ function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
 function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft),a=authGet();
   if(!on){$('#acctLbl').textContent='Sign in';b.title='Sign-in needs a one-time setup';$('#acctMenu').innerHTML=`<p><b>Sign-in isn't set up yet</b><br><span class="note">It needs a free Client ID from Google and/or Microsoft, made once in your own account. Everything else on the site works without signing in.</span></p><button class="btn sm primary" type="button" data-am="setup">Set up sign-in</button>`;return;}
   $('#acctLbl').textContent=a?(a.email||'Signed in'):'Sign in';b.title=a?`Signed in as ${a.email} (${PROV_NAME[a.prov]})`:'Sign in (optional) to keep your customers on every device';
-  $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':lastSync?' (up to date)':''}.</span></p><button class="btn sm" type="button" data-am="out">Sign out</button>`
+  $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':tokGet(a.prov)?(lastSync?' (up to date)':''):'. The site reconnects by itself when you send an email or save to Drive'}.</span></p>${!tokGet(a.prov)&&!syncing?'<button class="btn sm" type="button" data-am="re">Sync now</button>':''}<button class="btn sm" type="button" data-am="out">Sign out</button>`
     :`<p><b>Sign in (optional)</b><br><span class="note">Keeps your customers on every device and lets you email sell sheets. Everything else works without signing in.</span></p>
       ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}
       <button class="lnk" type="button" data-am="setup" style="justify-self:start">Sign-in setup${EMAIL_SETUP.google&&EMAIL_SETUP.microsoft?'':' (add '+(EMAIL_SETUP.google?'Microsoft':'Google')+')'}</button>`;}
@@ -1762,6 +1802,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn')
 $('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[data-am]');if(!b)return;const v=b.dataset.am;
   if(v==='out'){signOut();$('#acctMenu').classList.add('hide');return;}
   if(v==='setup'){$('#acctMenu').classList.add('hide');openSetup();return;}
+  if(v==='re'){const a=authGet();if(!a)return;$('#acctMenu').classList.add('hide');try{await login(a.prov,false);toast('Reconnected. Syncing…');}catch(err){toast(err.message);}return;}
   try{await login(v,true);MAIL.prov=v;saveMail();$('#acctMenu').classList.add('hide');toast('Signed in. Your customers will sync to this account.');}catch(err){toast(err.message);}});
 
 /* "Set up sign-in": paste the Client IDs (kept in this browser) */
@@ -1782,6 +1823,10 @@ $('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
    One entry per recipient. Kept in this browser, and synced with the customers when signed in. */
 const logDlg=$('#logDlg'),LG={list:[],deleted:[],sel:new Set()},FOLLOW_DAYS=7;
 const COLORS=[['red','Red','#DC2626'],['orange','Orange','#EA7317'],['yellow','Yellow','#EAB308'],['green','Green','#16A34A'],['blue','Blue','#2563EB'],['purple','Purple','#9333EA'],['grey','Grey','#6B7280']],COLOR_HEX=Object.fromEntries(COLORS.map(c=>[c[0],c[2]]));
+// a colour tag is a preset name above or any custom '#RRGGBB'
+const normHex=v=>{v=String(v||'').trim().replace(/^#?/,'#');if(/^#[0-9a-f]{3}$/i.test(v))v='#'+[...v.slice(1)].map(c=>c+c).join('');return /^#[0-9a-f]{6}$/i.test(v)?v.toUpperCase():'';};
+const tagHex=c=>COLOR_HEX[c]||normHex(c),tagName=c=>(COLORS.find(x=>x[0]===c)||[])[1]||normHex(c);
+const lgRecent=()=>{const r=lsJ('ss-lgcolors');return Array.isArray(r)?r.map(normHex).filter(Boolean).slice(0,8):[];};
 const STATUSES=[['none','No reply yet'],['replied','Replied'],['interested','Interested'],['ordered','Ordered'],['declined','Not interested']],ST_NAME=Object.fromEntries(STATUSES);
 const lgKey=()=>{const a=authGet();return a?`ss-log:${a.prov}:${ck(a.email)}`:'ss-log';};
 function lgLoad(){try{const d=JSON.parse(lsGet(lgKey())||'{}')||{};LG.list=Array.isArray(d.entries)?d.entries.filter(e=>e&&e.id&&e.at):[];LG.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){LG.list=[];LG.deleted=[];}}
@@ -1805,23 +1850,24 @@ function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
   return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),
-      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:'',upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
+      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
 function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
   return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):(e.status||'none')===lgF.status))
-    &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!e.color:e.color===lgF.color))&&all.some(inRange)
+    &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
     &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
 function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
   $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
   const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
   $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
-  $('#lgColor').innerHTML=`<option value="">All colours</option>${COLORS.map(([v,n])=>`<option value="${v}">● ${n}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=lgF.color;
+  const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
+  $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;
   const shown=lgShown();LG.sel=new Set([...LG.sel].filter(id=>shown.some(t=>t.root.id===id)));
   const sentAs=e=>`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
-  $('#lgList').innerHTML=shown.length?shown.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${e.color?` style="--tag:${COLOR_HEX[e.color]}" data-color="${e.color}"`:''}>
-      <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${e.color?COLORS.find(c=>c[0]===e.color)[1]:'none'}" aria-label="Colour code this email"></button></span>
+  $('#lgList').innerHTML=shown.length?shown.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+      <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
       <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
       <div class="c">${esc(fmtWhen(e.at))}<small>${esc(ago(e.at))}${e.from?' · from '+esc(e.from):''}</small></div>
@@ -1844,12 +1890,25 @@ $('#lgClear').onclick=()=>{Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to
 let lgSure={};
 // colour palette for one email (stored on the original; follow-ups share it)
 function openPalette(btn,en){let pal=$('#lgPal');if(!pal){pal=document.createElement('div');pal.id='lgPal';pal.className='lg-pal';pal.setAttribute('role','group');pal.setAttribute('aria-label','Colour');logDlg.appendChild(pal);}
-  pal.innerHTML=COLORS.map(([v,n,h])=>`<button type="button" data-pc="${v}" style="background:${h}" title="${n}" aria-label="${n}" aria-pressed="${en.color===v}"></button>`).join('')+`<button type="button" data-pc="" class="none" title="No colour" aria-label="No colour" aria-pressed="${!en.color}">✕</button>`;
-  const r=btn.getBoundingClientRect(),d=logDlg.getBoundingClientRect();pal.style.left=(r.left-d.left)+'px';pal.style.top=(r.bottom-d.top+6)+'px';pal.hidden=false;pal.dataset.id=en.id;pal.querySelector('[aria-pressed=true]')?.focus();}
+  const sw=(v,n,h)=>`<button class="sw" type="button" data-pc="${esc(v)}" style="background:${h}" title="${esc(n)}" aria-label="${esc(n)}" aria-pressed="${en.color===v}"></button>`,cur=normHex(en.color)||tagHex(en.color)||'#0E993F',rec=lgRecent();
+  pal.innerHTML=`<div class="row">${COLORS.map(([v,n,h])=>sw(v,n,h)).join('')}<button class="sw none" type="button" data-pc="" title="No colour" aria-label="No colour" aria-pressed="${!en.color}">✕</button></div>`
+    +(rec.length?`<div class="row"><span class="lbl">Recent</span>${rec.map(h=>sw(h,h,h)).join('')}</div>`:'')
+    +`<div class="row"><span class="lbl">Custom</span><input type="color" id="lgCol" value="${cur.toLowerCase()}" aria-label="Pick any colour"><input class="in" id="lgHex" value="${normHex(en.color)||''}" placeholder="${cur}" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex code, for example #0E993F"><button class="btn sm primary" type="button" data-pcapply>Apply</button></div>`;
+  const r=btn.getBoundingClientRect(),d=logDlg.getBoundingClientRect();pal.style.left=Math.max(8,Math.min(r.left-d.left,d.width-340))+'px';pal.style.top=(r.bottom-d.top+6)+'px';pal.hidden=false;pal.dataset.id=en.id;pal.querySelector('[aria-pressed=true]')?.focus();}
 logDlg.addEventListener('click',e=>{const pal=$('#lgPal');if(!pal||pal.hidden)return;const b=e.target.closest('[data-pc]');
-  if(b){const en=LG.list.find(x=>x.id===pal.dataset.id);if(en){en.color=b.dataset.pc;en.upd=Date.now();lgSave();}pal.hidden=true;renderLog();return;}
+  if(b){setTag(pal.dataset.id,b.dataset.pc);return;}
+  if(e.target.closest('[data-pcapply]')){applyHex();return;}
   if(!e.target.closest('#lgPal,[data-lcolor]'))pal.hidden=true;});
-logDlg.addEventListener('keydown',e=>{const pal=$('#lgPal');if(e.key==='Escape'&&pal&&!pal.hidden){e.preventDefault();pal.hidden=true;}}); // "click ✕ again" confirmation, kept outside the list so a background refresh doesn't reset it
+logDlg.addEventListener('keydown',e=>{const pal=$('#lgPal');if(e.key==='Escape'&&pal&&!pal.hidden){e.preventDefault();pal.hidden=true;}
+  if(e.key==='Enter'&&e.target.id==='lgHex'){e.preventDefault();applyHex();}});
+function setTag(id,c){const en=LG.list.find(x=>x.id===id);if(en){en.color=c;en.upd=Date.now();lgSave();}const pal=$('#lgPal');if(pal)pal.hidden=true;renderLog();}
+// custom colour: the picker and the hex box follow each other; Apply (or Enter) uses the hex box, or the picker if the box is empty
+function applyHex(){const pal=$('#lgPal'),box=$('#lgHex');const h=normHex(box.value)||(!box.value.trim()&&normHex($('#lgCol').value));
+  if(!h){box.setAttribute('aria-invalid','true');box.title='Use a hex code like #0E993F or #F80';box.focus();return;}
+  lsSet('ss-lgcolors',JSON.stringify([h,...lgRecent().filter(x=>x!==h)].slice(0,8)));setTag(pal.dataset.id,h);}
+logDlg.addEventListener('input',e=>{if(e.target.id==='lgCol'){const b=$('#lgHex');b.value=e.target.value.toUpperCase();b.removeAttribute('aria-invalid');}
+  else if(e.target.id==='lgHex'){const h=normHex(e.target.value);e.target.removeAttribute('aria-invalid');if(h)$('#lgCol').value=h.toLowerCase();}});
+// "click ✕ again" confirmation, kept outside the list so a background refresh doesn't reset it
 const lgEntry=el=>{const row=el.closest('[data-id]');return row&&LG.list.find(e=>e.id===row.dataset.id);};
 $('#lgList').addEventListener('change',e=>{const en=lgEntry(e.target);if(!en)return;const t=e.target;
   if(t.matches('[data-lsel]')){t.checked?LG.sel.add(en.id):LG.sel.delete(en.id);renderLog();return;}
@@ -1863,7 +1922,7 @@ $('#lgList').addEventListener('click',e=>{const en=lgEntry(e.target);if(!en)retu
     if(!(lgSure.id===en.id&&Date.now()<lgSure.until)){lgSure={id:en.id,until:Date.now()+3000};toast(gone.length>1?`Click ✕ again to delete this entry and its ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Click ✕ again to delete this entry');return;}lgSure={};
     const now=Date.now();LG.list=LG.list.filter(x=>!gone.includes(x));gone.forEach(x=>{LG.deleted.push({id:x.id,at:now});LG.sel.delete(x.id);});lgSave();renderLog();toast(gone.length>1?`Deleted with ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Entry deleted');}});
 $('#lgExport').onclick=()=>{const th=lgShown();if(!th.length){toast('Nothing to export');return;}const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
-  const line=(e,type,root)=>[fmtWhen(e.at),type,(COLORS.find(c=>c[0]===root.color)||[,''])[1],e.name,e.company,(e.emails.length?e.emails:[e.email]).join('; '),e.sheet,HOW_NAME[e.how],e.files.join(' '),e.from,ST_NAME[root.status||'none'],root.follow,type==='Original'?root.note:''].map(q).join(',');
+  const line=(e,type,root)=>[fmtWhen(e.at),type,tagName(root.color),e.name,e.company,(e.emails.length?e.emails:[e.email]).join('; '),e.sheet,HOW_NAME[e.how],e.files.join(' '),e.from,ST_NAME[root.status||'none'],root.follow,type==='Original'?root.note:''].map(q).join(',');
   save('Sent sell sheets.csv',new Blob(['\uFEFF'+['Date,Type,Colour,Customer,Company,Email,Sell sheet,Sent as,Files,From,Status,Follow-up date,Note',...th.flatMap(t=>[line(t.root,'Original',t.root),...t.fups.map((f,n)=>line(f,'Follow-up '+(n+1),t.root))])].join('\r\n')],{type:'text/csv'}));};
 // follow up: opens the Email window for the chosen entries' sell sheet, with those people already filled in
 $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.root.id)).map(t=>t.root);if(!picked.length)return;const ids=[...new Set(picked.map(e=>e.sheetId))];
@@ -1882,10 +1941,10 @@ const DV=Object.assign({att:['pdf'],replace:true,recent:{},last:{}},(()=>{try{re
 const saveDV=()=>lsSet('ss-drive',JSON.stringify(DV));
 const hasScope=(t,sc)=>String(t?.scope||'').split(/\s+/).includes(sc);
 const dvStatus=(m,bad)=>{const s=$('#dvStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
-const dvKey=()=>ck(tokGet('google')?.email||'');
-function renderDrive(){const t=tokGet('google'),a=authGet(),el=$('#dvAcct');
+const dvKey=()=>ck(meFor('google'));
+function renderDrive(){const g=meFor('google'),a=authGet(),el=$('#dvAcct');
   if(!EMAIL_SETUP.google){el.innerHTML='<span>Saving to Drive needs Google sign-in, which isn\'t set up yet.</span><button class="btn sm primary" type="button" id="dvSetup">Set up sign-in</button>';}
-  else el.innerHTML=t?`<span>Saving to the Google Drive of <b>${esc(t.email||'your account')}</b></span>`:a?`<span>Signed in with ${PROV_NAME[a.prov]}. Saving to Drive needs your Google account.</span>`:'<span>You\'ll be asked to sign in with Google when you save.</span>';
+  else el.innerHTML=g?`<span>Saving to the Google Drive of <b>${esc(g)}</b></span>`:a?`<span>Signed in with ${PROV_NAME[a.prov]}. Saving to Drive asks once for your Google account; you stay signed in with ${PROV_NAME[a.prov]}.</span>`:'<span>You\'ll be asked to sign in with Google the first time you save.</span>';
   const recent=(DV.recent[dvKey()]||[]),last=DV.last[dvKey()]||'app';
   $('#dvFolder').innerHTML=`<option value="app">Sell Sheets folder (created for you)</option><option value="root">My Drive (top level)</option>${recent.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}`;
   $('#dvFolder').value=[...$('#dvFolder').options].some(o=>o.value===last)?last:'app';
@@ -1909,8 +1968,9 @@ $('#dvAtt').addEventListener('change',()=>{DV.att=$$('#dvAtt input:checked').map
 $('#dvReplace').addEventListener('change',e=>{DV.replace=e.target.checked;saveDV();});
 $('#dvFolder').addEventListener('change',e=>{DV.last[dvKey()]=e.target.value;saveDV();});
 // a Google token that includes drive.file (asks again once if an older sign-in didn't include it)
+// signed in with Microsoft: a Google token just for Drive, without switching the site's account
 function driveToken(){const t=tokGet('google');if(t&&hasScope(t,DRIVE_FILE))return Promise.resolve(t);
-  return login('google',false).then(n=>{if(!hasScope(n,DRIVE_FILE))throw new Error('Google didn\'t give permission to save files. Try again and allow "See, edit, create and delete only the specific Google Drive files you use with this app".');renderDrive();return n;});}
+  const a=authGet();return (a&&a.prov!=='google'?googleLogin(false,meFor('google')):login('google',false,true)).then(n=>{if(!hasScope(n,DRIVE_FILE))throw new Error('Google didn\'t give permission to save files. Try again and allow "See, edit, create and delete only the specific Google Drive files you use with this app".');renderDrive();return n;});}
 async function driveFetch(t,url,opt={}){let r;try{r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+t.token,...(opt.headers||{})}});}
   catch(_){throw new Error('Could not reach Google Drive. Check your connection and any ad-blockers, then try again.');}
   if(!r.ok){const e=await httpErr('Drive',r);if(e.off)e.message='The Google Drive API is switched off. In console.cloud.google.com open APIs & Services → Library → Google Drive API → Enable, then try again.';
@@ -2051,11 +2111,11 @@ function checkHow(){return attachParts().length||embedParts().length?'':'Nothing
 let sending=false;
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
-  let plan;try{plan=planMessages(tokGet(p)?.email);}catch(e){mlStatus(e.message,true);return;}
+  let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   sending=true;$('#mlSend').disabled=true;
-  try{let tok=tokGet(p);if(!tok){mlStatus('Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
+  try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
     const files=kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
@@ -2098,7 +2158,7 @@ $('#mlMsg').addEventListener('input',updMsgPrev);$('#mlTo').addEventListener('in
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(){const seq=++prevSeq,me=tokGet(MAIL.prov)?.email||'';let plan;
+async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${m.person.name||m.person.company||m.person.email} <${m.to.join(', ')}>`:plan.length===1&&m.bcc.length&&MAIL.mode==='bcc'&&people().length>1?'One email to everyone (customers in Bcc)':m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
