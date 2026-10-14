@@ -324,6 +324,11 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
 .cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
 #driveDlg{width:min(620px,calc(100vw - 24px))}
+.ml-tabs{justify-self:start}.ml-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}.ml-pane[hidden]{display:none}
+.ml-msgprev{font-size:13px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:6px 10px;line-height:1.4}.ml-msgprev:empty{display:none}
+.ml-how .att .opt2{min-width:140px}
+.ml-meta{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px}.ml-meta b{color:var(--muted);font-weight:600}.ml-meta span{overflow-wrap:anywhere}
+#mlPrevFrame{width:100%;height:min(560px,60vh);border:1px solid var(--line);border-radius:10px;background:#f4f5f4}
 .dv-folder{display:flex;gap:8px;align-items:center}.dv-folder select{flex:1;min-width:0}
 .acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
@@ -464,17 +469,33 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <p class="hint" style="margin:0" id="cuSync"></p>
       </section>
       <section class="ml-form" aria-label="Email">
+        <div class="seg ml-tabs" role="group" aria-label="Write or preview" id="mlTabs"><button type="button" data-mt="write" aria-pressed="true">Write</button><button type="button" data-mt="preview" aria-pressed="false">Preview</button></div>
+        <div class="ml-pane" id="mlWrite">
         <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span></div>
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
         <div class="row2"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
         <div class="field" id="mlModeRow" hidden><span>Sending to several people</span><div class="seg" role="group" aria-label="How to send" id="mlMode"><button type="button" data-mode="each">A personal email each</button><button type="button" data-mode="bcc">One email, everyone in Bcc</button></div><small class="hint" id="mlModeHint"></small></div>
         <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
-        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name, {company} their company and {product} this product. Your wording is remembered.</small></label>
-        <label class="check"><input type="checkbox" id="mlSummary">Show the product summary (photos and details) inside the email</label>
-        <div class="field"><span>Attach the sell sheet as</span><div class="att" id="mlAtt">
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name, {company} their company and {product} this product. Your wording is remembered.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <div class="group ml-how"><h3>How to include the sell sheet</h3>
+          <div class="seg" role="group" aria-label="In the email or attached" id="mlDeliver"><button type="button" data-dl="embed">In the email</button><button type="button" data-dl="attach">As attachments</button><button type="button" data-dl="both">Both</button></div>
+          <div class="field" id="mlEmbedRow"><span>Show inside the email</span><div class="att" id="mlEmbed">
+            <label class="opt2"><input type="checkbox" value="sheet"><b>Sell sheet picture</b><small>The whole page, as it looks</small></label>
+            <label class="opt2"><input type="checkbox" value="photos"><b>Product photos</b><small>Side by side</small></label>
+            <label class="opt2"><input type="checkbox" value="table"><b>Colours &amp; sizes</b><small>As a table</small></label>
+            <label class="opt2"><input type="checkbox" value="details"><b>Product details</b><small>Price, brand, packing…</small></label>
+            <label class="opt2"><input type="checkbox" value="contact"><b>Contact footer</b><small>Your email address</small></label></div></div>
+          <div class="field" id="mlAttRow"><span>Attach as</span><div class="att" id="mlAtt">
           <label class="opt2"><input type="checkbox" value="pdf"><b>PDF</b><small>Best for everyone</small></label>
           <label class="opt2"><input type="checkbox" value="docx"><b>Word</b><small>.docx, editable</small></label>
           <label class="opt2"><input type="checkbox" value="jpg"><b>Image</b><small>.jpg, opens anywhere</small></label></div></div>
+        </div>
+        </div>
+        <div class="ml-pane" id="mlPrev" hidden>
+          <label class="field"><span>Preview the email for</span><select class="in" id="mlPrevWho"></select></label>
+          <div class="ml-meta" id="mlPrevMeta"></div>
+          <iframe id="mlPrevFrame" title="Email preview" sandbox="allow-same-origin allow-popups"></iframe>
+        </div>
       </section>
     </div>
     <div class="ml-bot"><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
@@ -1324,8 +1345,12 @@ async function buildDocx(){
 // Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
 const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
 const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
-const MAIL=Object.assign({prov:'google',att:['pdf'],summary:true,mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,summary:MAIL.summary,mode:MAIL.mode}));
+const MAIL=Object.assign({prov:'google',att:['pdf'],mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
+// deliver: 'embed' | 'attach' | 'both'. embed: parts shown inside the email. Older settings (one "summary" checkbox) carry over.
+if(!MAIL.deliver){const had=lsGet('ss-mail')!=null;MAIL.deliver=had&&MAIL.summary===false?'attach':'both';MAIL.embed=had&&MAIL.summary!==false?['photos','table','details','contact']:['sheet'];}
+if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,deliver:MAIL.deliver,embed:MAIL.embed}));
+const embedParts=()=>MAIL.deliver==='attach'?[]:MAIL.embed, attachParts=()=>MAIL.deliver==='embed'?[]:MAIL.att;
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
 
@@ -1413,7 +1438,7 @@ $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export ye
   save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Other emails,Group',...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
 
 /* recipients */
-function renderChips(){const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
+function renderChips(){setTimeout(updMsgPrev);const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
   $('#mlChips').innerHTML=sel.map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
 // one entry per person; a customer can have several chosen addresses
@@ -1614,32 +1639,44 @@ $('#dvSave').onclick=async()=>{if(drSaving)return;dvStatus('');
 const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
 function fillTokens(text,p){const nm=(p?.name||'').trim(),first=((nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/)[0]||'').replace(/[^\p{L}\p{M}'’-]/gu,'');const v={name:first||(p?.company||''),company:p?.company||'',product:productLabel()};
   return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
+// pictures shown inside the email, made once per opening of the Email window
+let inlineCache=null;
+function emailInline(parts){if(!inlineCache)inlineCache={};const want=k=>parts.includes(k);
+  const job=async()=>{const out=[];
+    if(want('sheet')){inlineCache.sheet=inlineCache.sheet||(async()=>{const cv=await sheetCanvas();const w=1200,c=document.createElement('canvas');c.width=w;c.height=Math.round(cv.height*w/cv.width);
+      const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(cv,0,0,c.width,c.height);cv.width=cv.height=0;return{cid:'sheet@sellsheet',name:'sell-sheet.jpg',b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:544,h:Math.round(544*c.height/c.width),sheet:1};})();out.push(await inlineCache.sheet);}
+    if(want('photos')){inlineCache.photos=inlineCache.photos||emailPhotos();out.push(...await inlineCache.photos);}
+    return out;};
+  return job();}
 async function emailPhotos(){const out=[];for(const [i,p] of S.photos.entries()){const img=new Image();img.src=p.url;await img.decode().catch(()=>{});if(!img.naturalWidth)continue;
   const sc=Math.min(1,560/img.naturalWidth),c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
   out.push({cid:`photo${i+1}@sellsheet`,name:`photo${i+1}.jpg`,b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:c.width,h:c.height});}return out;}
-function emailHTML(msg,photos){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=esc(msg).replace(/\r?\n/g,'<br>');
+function emailHTML(msg,inline,parts){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=esc(msg).replace(/\r?\n/g,'<br>'),has=k=>parts.includes(k);
+  const sheetImg=inline.find(p=>p.sheet),photos=has('photos')?inline.filter(p=>!p.sheet):[];
   let sum='';
-  if(MAIL.summary){const c=calc(),sz=S.showSizes,cell=(v,o='')=>`<td style="padding:7px 10px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222;${o}">${v}</td>`;
+  if(sheetImg)sum+=`<tr><td style="padding:0 28px 6px"><img src="cid:${sheetImg.cid}" width="544" alt="Sell sheet: ${esc(sheetName(S))}" style="display:block;width:100%;max-width:544px;height:auto;border:1px solid ${tv.line}"></td></tr>`;
+  if(['photos','table','details','contact'].some(has)){if(sheetImg)sum+='<tr><td style="height:14px"></td></tr>';const c=calc(),sz=S.showSizes,cell=(v,o='')=>`<td style="padding:7px 10px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222;${o}">${v}</td>`;
     const th=v=>`<th style="padding:7px 10px;background:${tv.tint};border-top:3px solid ${tv.a};color:${tv.a};font:bold 11px ${F};text-transform:uppercase;text-align:center">${v}</th>`;
     const pw=photos.length?Math.floor((544-(photos.length-1)*12)/photos.length):0;
     sum+=`<tr><td style="padding:0 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-bottom:4px solid ${tv.a}"><tr>
       <td style="padding:16px 20px;font:bold 20px ${F};color:#fff">${esc(S.title.toUpperCase())}</td>
       <td align="right" style="padding:16px 20px;white-space:nowrap">${S.code?`<div style="font:bold 10px ${F};color:${tv.pale}">ITEM CODE</div><div style="font:bold 18px ${F};color:#fff">${esc(S.code.toUpperCase())}</div>`:''}</td></tr></table></td></tr>`;
     if(photos.length)sum+=`<tr><td style="padding:16px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${photos.map((p,i)=>`${i?'<td width="12"></td>':''}<td align="center" valign="middle" style="border:1px solid ${tv.line};padding:6px;background:#fff"><img src="cid:${p.cid}" width="${Math.min(pw-14,p.w)}" alt="Product photo ${i+1}" style="display:block;max-width:100%;height:auto;border:0"></td>`).join('')}</tr></table></td></tr>`;
-    if(S.showColours!==false&&c.rows.length){const head=sz?['Colour',...S.sizes,'Boxes','Total pcs']:['Colour','Pcs per box','Boxes','Total pcs'];
+    if(has('table')&&S.showColours!==false&&c.rows.length){const head=sz?['Colour',...S.sizes,'Boxes','Total pcs']:['Colour','Pcs per box','Boxes','Total pcs'];
       sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.colours.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${head.map(h=>th(esc(h))).join('')}</tr>
         ${c.rows.map(r=>`<tr>${cell(esc(r.name||'–'))}${(sz?r.q.map(v=>v||'–'):[S.perBox]).map(v=>cell(v,'text-align:center')).join('')}${cell(r.boxes,'text-align:center')}${cell(r.tot,'text-align:center')}</tr>`).join('')}
         <tr>${cell('<b>TOTAL</b>',`background:${tv.tint};color:${tv.p}`)}${(sz?c.T.q:['']).map(v=>cell(`<b>${v}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)).join('')}${cell(`<b>${c.T.boxes}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}${cell(`<b>${c.T.tot}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}</tr></table></td></tr>`;}
     const rows=S.rows.map(r=>[r.label,rowVal(r)]).filter(([l,v])=>String(v||'').trim());
-    if(rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+    if(has('details')&&rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
       ${rows.map(([l,v])=>`<tr><td width="34%" style="padding:8px 12px;background:${tv.tint};border-bottom:1px solid ${tv.line};font:bold 11px ${F};color:${tv.p};text-transform:uppercase">${esc(l)}</td><td style="padding:8px 12px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222">${esc(v)}</td></tr>`).join('')}</table></td></tr>`;
-    if(S.email)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff">${esc(S.headings.contact.toUpperCase())}<br><a href="mailto:${esc(S.email)}" style="color:${tv.pale};font:bold 13px ${F};text-decoration:none">${esc(S.email)}</a></td></tr></table></td></tr>`;}
+    if(has('contact')&&S.email)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff">${esc(S.headings.contact.toUpperCase())}<br><a href="mailto:${esc(S.email)}" style="color:${tv.pale};font:bold 13px ${F};text-decoration:none">${esc(S.email)}</a></td></tr></table></td></tr>`;}
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
 <tr><td style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
-function emailText(msg){let t=msg;if(MAIL.summary){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}if(S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;}return t;}
+function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
+  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
 const wrap76=s=>s.replace(/.{1,76}/g,'$&\r\n');
 const hdr=v=>String(v).replace(/[\r\n]+/g,' ');
@@ -1682,18 +1719,21 @@ async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
     const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
+function checkHow(){const e=embedParts(),a=attachParts();
+  if(MAIL.deliver!=='attach'&&!e.length)return'Choose what to show inside the email, or switch to "As attachments".';
+  if(MAIL.deliver!=='embed'&&!a.length)return'Choose at least one attachment type, or switch to "In the email".';return'';}
 let sending=false;
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
   let plan;try{plan=planMessages(tokGet(p)?.email);}catch(e){mlStatus(e.message,true);return;}
-  const kinds=attKinds();if(!kinds.length&&!MAIL.summary){mlStatus('Choose at least one attachment, or include the product summary.',true);return;}
+  const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   sending=true;$('#mlSend').disabled=true;
   try{let tok=tokGet(p);if(!tok){mlStatus('Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
-    const files=await buildAttachments(kinds);mlStatus('Preparing email…');const inline=MAIL.summary?await emailPhotos():[];const tpl=$('#mlMsg').value;
+    const files=kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
-      const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg),html:emailHTML(msg,inline),files,inline};
+      const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
       try{await sendOne(p,tok,full);done++;}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     if(fails.length){mlStatus(`Sent ${done} of ${plan.length}. Not sent: ${fails.join(' · ')}`,true);}
@@ -1701,21 +1741,48 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   catch(e){console.error(e);mlStatus(e.message||'Sending failed.',true);}
   finally{sending=false;$('#mlSend').disabled=false;}};
 // Share: hands the files to the device's own email / share options (no sign-in needed)
-$('#mlShare').onclick=async()=>{const kinds=attKinds();if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
+$('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
   if(!navigator.canShare){mlStatus('Sharing files isn\'t supported in this browser. Try Chrome, Edge or Safari, or download the file and attach it yourself.',true);return;}
   try{const files=(await buildAttachments(kinds)).map(f=>new File([f.blob],f.name,{type:f.type}));mlStatus('');
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
 function openMail(){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
-  $('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;$('#mlSummary').checked=MAIL.summary!==false;
+  inlineCache=null;showTab('write');$('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');cuFormClose();renderCust();renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
 $('#mlMsg').addEventListener('input',e=>{lsSet('ss-mailmsg',e.target.value);lsSet('ss-mailmsg-upd',String(Date.now()));scheduleSync();});
-$('#mlSummary').addEventListener('change',e=>{MAIL.summary=e.target.checked;saveMail();});
 $('#mlAtt').addEventListener('change',()=>{MAIL.att=attKinds();saveMail();});
+function renderHow(){$$('#mlDeliver button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dl===MAIL.deliver));
+  $('#mlEmbedRow').hidden=MAIL.deliver==='attach';$('#mlAttRow').hidden=MAIL.deliver==='embed';
+  $$('#mlEmbed input').forEach(i=>i.checked=MAIL.embed.includes(i.value));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));}
+$('#mlDeliver').addEventListener('click',e=>{const b=e.target.closest('[data-dl]');if(!b)return;MAIL.deliver=b.dataset.dl;saveMail();renderHow();});
+$('#mlEmbed').addEventListener('change',()=>{MAIL.embed=$$('#mlEmbed input:checked').map(i=>i.value);saveMail();});
+// quick line under the message: what the first recipient will actually read
+function updMsgPrev(){const P=people(),p=P[0]||null,first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';
+  $('#mlMsgPrev').textContent=!first?'':p?`${p.name||p.company?`For ${p.name||p.company}`:`For ${p.email}`}: “${first}”${P.length>1?` (and ${P.length-1} more, each with their own name)`:''}`:`With no customer ticked, it reads: “${first}”`;}
+$('#mlMsg').addEventListener('input',updMsgPrev);$('#mlTo').addEventListener('input',updMsgPrev);
+// Preview tab: the real email for each recipient, names filled in
+function showTab(t){$$('#mlTabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mt===t));$('#mlWrite').hidden=t!=='write';$('#mlPrev').hidden=t!=='preview';if(t==='preview')buildPreview();}
+$('#mlTabs').addEventListener('click',e=>{const b=e.target.closest('[data-mt]');if(b)showTab(b.dataset.mt);});
+let prevPlan=[],prevSeq=0;
+async function buildPreview(){const seq=++prevSeq,me=tokGet(MAIL.prov)?.email||'';let plan;
+  try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
+  prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
+  sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${m.person.name||m.person.company||m.person.email} <${m.to.join(', ')}>`:plan.length===1&&m.bcc.length&&MAIL.mode==='bcc'&&people().length>1?'One email to everyone (customers in Bcc)':m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
+  if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
+  const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
+  const files=attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
+  const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';
+  $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
+    +row('Subject',esc(fillTokens($('#mlSubj').value,m.person)))+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'');
+  const fr=$('#mlPrevFrame');fr.srcdoc=emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos')).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');
+  const inline=parts.length?await emailInline(parts):[];if(seq!==prevSeq)return;
+  let html=emailHTML(msg,inline,parts);for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
+  fr.srcdoc=html.replace('<head>','<head><base target="_blank">');}
+$('#mlPrevWho').addEventListener('change',buildPreview);
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 
 /* ---------- boot ---------- */
