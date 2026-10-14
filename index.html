@@ -377,8 +377,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <select class="sel" id="sheetSel" aria-label="Choose a sell sheet"></select>
       <button class="btn icon ghost" id="newSheet" title="New sell sheet" aria-label="New sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
       <button class="btn icon ghost" id="dupSheet" title="Copy this sheet" aria-label="Copy this sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
-      <button class="btn icon ghost" id="openSheet" title="Open a sell sheet (PDF or Word made here)" aria-label="Open a sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h13l3-8H7l-3 8"/></svg></button>
-      <input type="file" id="openFile" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+      <button class="btn icon ghost" id="openSheet" title="Open a sell sheet (PDF or Word)" aria-label="Open a sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h13l3-8H7l-3 8"/></svg></button>
+      <input type="file" id="openFile" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" hidden>
       <span class="status" id="status"><i></i>Saved on this device</span>
     </div>
     <div class="spacer"></div>
@@ -589,7 +589,8 @@ const LIBS=Object.assign({
   docx:'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
   jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
   gis:'https://accounts.google.com/gsi/client',
-  gapi:'https://apis.google.com/js/api.js'
+  gapi:'https://apis.google.com/js/api.js',
+  pdfjs:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
 },window.__LIBS||{});
 const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
@@ -1273,14 +1274,100 @@ async function embedDocx(blob){const z=await JSZip.loadAsync(blob);z.file('sells
   const ct=await z.file('[Content_Types].xml').async('string');
   if(!/Extension="json"/.test(ct))z.file('[Content_Types].xml',ct.replace(/(<Types[^>]*>)/,'$1<Default Extension="json" ContentType="application/json"/>'));
   return z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}
-async function readSheetFile(f){const buf=await f.arrayBuffer(),head=new TextDecoder('latin1').decode(new Uint8Array(buf,0,Math.min(5,buf.byteLength)));
-  let json=null;
+// Opening a file: files saved here carry an exact copy of the sheet; anything else is read from its own tables / text.
+const fail=(code,extra)=>Object.assign(new Error(code),{extra});
+async function readSheetFile(f){const buf=await f.arrayBuffer(),u8=new Uint8Array(buf,0,Math.min(8,buf.byteLength)),head=new TextDecoder('latin1').decode(u8);
   if(head.startsWith('%PDF')){const t=new TextDecoder('latin1').decode(buf),a=t.lastIndexOf('%'+MARK+'-BEGIN'),b=t.lastIndexOf('%'+MARK+'-END');
-    if(a>=0&&b>a)json=unb64(t.slice(a,b).split('\n').slice(1).map(l=>l.replace(/^%/,'').trim()).join(''));}
-  else if(head.startsWith('PK')){await loadScript('jszip');const z=await JSZip.loadAsync(buf),e=z.file('sellsheet/data.json');if(e)json=await e.async('string');}
-  else throw new Error('type');
-  if(!json)throw new Error('nodata');
-  const d=JSON.parse(json);if(!d||d.app!=='sellsheet'||!d.sheet)throw new Error('nodata');return cleanSheet(d.sheet);}
+    if(a>=0&&b>a){try{return fromData(unb64(t.slice(a,b).split('\n').slice(1).map(l=>l.replace(/^%/,'').trim()).join('')));}catch(_){}}
+    return parseSheet(await pdfRows(buf),'PDF');}
+  if(head.startsWith('PK')){await loadScript('jszip');let z;try{z=await JSZip.loadAsync(buf);}catch(_){throw fail('damaged');}
+    const e=z.file('sellsheet/data.json');if(e){try{return fromData(await e.async('string'));}catch(_){}}
+    if(!z.file('word/document.xml'))throw fail('type');return parseSheet(await docxRows(z),'Word');}
+  if(u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)throw fail('olddoc');
+  throw fail('type');}
+function fromData(json){const d=JSON.parse(json);if(!d||d.app!=='sellsheet'||!d.sheet)throw fail('nodata');const s=cleanSheet(d.sheet);s._how='exact';return s;}
+// Word: walk paragraphs and tables in reading order -> rows of cell texts, plus pictures and the header colours
+async function docxRows(z){const xml=await z.file('word/document.xml').async('string'),doc=new DOMParser().parseFromString(xml,'application/xml');
+  if(doc.getElementsByTagName('parsererror').length)throw fail('damaged');
+  const W='http://schemas.openxmlformats.org/wordprocessingml/2006/main',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const rels={};const rx=await z.file('word/_rels/document.xml.rels')?.async('string');
+  if(rx)for(const r of new DOMParser().parseFromString(rx,'application/xml').getElementsByTagName('Relationship'))rels[r.getAttribute('Id')]=r.getAttribute('Target');
+  const kids=(n,name)=>[...n.childNodes].filter(c=>c.namespaceURI===W&&c.localName===name);
+  const text=n=>{let t='';const walk=x=>{for(const c of x.childNodes){if(c.namespaceURI===W){if(c.localName==='t')t+=c.textContent;else if(c.localName==='tab')t+=' ';else if(c.localName==='br'||c.localName==='cr')t+='\n';else if(c.localName==='p'&&t&&!t.endsWith('\n'))t+='\n';}if(c.childNodes?.length&&c.localName!=='t')walk(c);}};walk(n);return t.replace(/\n+$/,'');};
+  const blips=n=>[...n.getElementsByTagNameNS('*','blip')].map(b=>b.getAttributeNS(R,'embed')||b.getAttribute('r:embed')).filter(Boolean);
+  const rows=[],pics=[];let theme=null;
+  const body=doc.getElementsByTagNameNS(W,'body')[0];if(!body)throw fail('damaged');
+  for(const n of body.childNodes){if(n.namespaceURI!==W)continue;
+    if(n.localName==='p'){const t=text(n).trim();for(const id of blips(n))pics.push({id,at:rows.length});if(t)rows.push({cells:[t]});}
+    else if(n.localName==='tbl'){for(const tr of kids(n,'tr')){const tcs=kids(tr,'tc');
+        if(!theme&&tcs[0]){const fill=tcs[0].getElementsByTagNameNS(W,'shd')[0]?.getAttributeNS(W,'fill'),bc=[...tcs[0].getElementsByTagNameNS(W,'bottom')].map(b=>b.getAttributeNS(W,'color')).find(c=>/^[0-9a-f]{6}$/i.test(c||''));
+          if(/^[0-9a-f]{6}$/i.test(fill||'')&&!/^f{6}$/i.test(fill))theme={primary:'#'+fill,accent:bc&&!/^f{6}$/i.test(bc)?'#'+bc:null};}
+        for(const id of blips(tr))pics.push({id,at:rows.length});
+        const cells=tcs.map(tc=>text(tc).trim());if(cells.some(Boolean))rows.push({cells,tbl:1});}}}
+  const photos=[];for(const p of pics){const tg=rels[p.id];if(!tg||photos.length>=6)continue;const path=tg.startsWith('/')?tg.slice(1):'word/'+tg.replace(/^\.\//,''),e=z.file(path);
+    if(!e||!/\.(png|jpe?g|gif|bmp|webp)$/i.test(path))continue;const url=await toJpeg(new Blob([await e.async('uint8array')],{type:/png$/i.test(path)?'image/png':'image/jpeg'}));if(url)photos.push({url,at:p.at});}
+  return{rows,photos,theme};}
+async function toJpeg(blob){try{const bm=await createImageBitmap(blob);if(bm.width<80||bm.height<80)return null;const sc=Math.min(1,1400/Math.max(bm.width,bm.height)),c=document.createElement('canvas');
+  c.width=Math.round(bm.width*sc);c.height=Math.round(bm.height*sc);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.9);}catch(_){return null;}}
+// PDF: text lines grouped by height on the page, split into cells where there's a wide gap
+async function pdfRows(buf){await loadScript('pdfjs');const L=window.pdfjsLib;L.GlobalWorkerOptions.workerSrc=LIBS.pdfjs.replace(/pdf(\.min)?\.js$/,'pdf.worker$1.js');
+  let pdf;try{pdf=await L.getDocument({data:new Uint8Array(buf.slice(0)),isEvalSupported:false}).promise;}catch(e){throw fail(/password/i.test(e?.name+e?.message)?'locked':'damaged');}
+  const rows=[];let chars=0;
+  for(let n=1;n<=Math.min(pdf.numPages,3);n++){const pg=await pdf.getPage(n),tc=await pg.getTextContent();
+    const items=tc.items.filter(i=>i.str&&i.str.trim()).map(i=>({s:i.str,x:i.transform[4],y:i.transform[5],w:i.width,h:Math.hypot(i.transform[2],i.transform[3])||10}));chars+=items.reduce((a,i)=>a+i.s.trim().length,0);
+    items.sort((a,b)=>b.y-a.y||a.x-b.x);const lines=[];for(const it of items){const ln=lines.find(l=>Math.abs(l.y-it.y)<=Math.max(2,it.h*.35));ln?ln.items.push(it):lines.push({y:it.y,items:[it]});}
+    lines.sort((a,b)=>b.y-a.y);
+    for(const ln of lines){ln.items.sort((a,b)=>a.x-b.x);const cells=[];let cur=null,end=0;
+      for(const it of ln.items){const gap=it.x-end;if(cur&&gap<Math.max(6,it.h*.9)){cur.t+=(gap>it.h*.15&&!cur.t.endsWith(' ')?' ':'')+it.s;}else{cur={t:it.s};cells.push(cur);}end=it.x+it.w;}
+      rows.push({cells:cells.map(c=>c.t.replace(/\s+/g,' ').trim()).filter(Boolean),size:Math.max(...ln.items.map(i=>i.h))});}}
+  if(chars<15)throw fail('notext');return{rows,photos:[],theme:null};}
+// Turn rows into a sheet. Needs a title or item code, plus the colours & sizes table or a product details table.
+function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/\s+/g,' ').trim(),EM=/[^\s<>()",;:]+@[^\s<>()",;:]+\.[a-z]{2,}/i;
+  const nice=v=>{v=T(v);return v&&v===v.toUpperCase()&&/[A-Z]/.test(v)?v.charAt(0)+v.slice(1).toLowerCase():v;},cap=v=>{v=T(v);return v===v.toUpperCase()?v.toLowerCase().replace(/\b\p{L}/gu,c=>c.toUpperCase()):v;};
+  const num=v=>{const m=T(v).replace(/,/g,'').match(/^-?\d+(\.\d+)?$/);return m?+m[0]:(/^[–—-]?$/.test(T(v))?0:NaN);};
+  let title='',code='',hi=-1;
+  for(let i=0;i<rows.length&&hi<0;i++){const c=rows[i].cells;for(let k=0;k<c.length;k++){const m=c[k].match(/ITEM\s*(CODE|#|NO\.?|NUMBER)\s*:?/i);if(!m)continue;
+      hi=i;const after=T(c[k].slice(m.index+m[0].length)),before=T(c[k].slice(0,m.index)),codeCell=after?-1:T(c[k+1])?k+1:-1;
+      code=after||(codeCell>0?T(c[codeCell]):'');if(!code&&rows[i+1])code=T(rows[i+1].cells[0]);
+      title=T(c.filter((_,j)=>j!==k&&j!==codeCell).join(' '))||before;
+      if(!title&&i>0)title=T(rows[i-1].cells.join(' '));break;}}
+  // colours & sizes table: a header with "Colour" and "Boxes"/"Total"
+  let ci=-1,head=[];for(let i=0;i<rows.length;i++){const h=rows[i].cells.map(x=>T(x).toUpperCase());if(h.length>=3&&/^COLOU?RS?$/.test(h[0])&&h.some(x=>/^(BOXES|TOTAL( PCS| PIECES)?|PCS PER BOX)$/.test(x))){ci=i;head=h;break;}}
+  let colours=[],sizes=[],layout='',perBoxCol=null,ce=ci;
+  if(ci>=0){const bi=head.findIndex(x=>x==='BOXES'),pi=head.findIndex(x=>/PCS PER BOX|PIECES PER BOX/.test(x));layout=pi>0?'box':'sizes';
+    sizes=layout==='sizes'?rows[ci].cells.slice(1,bi>0?bi:head.length-1).map(T):[];
+    for(let i=ci+1;i<rows.length;i++){const c=rows[i].cells.map(T);if(/^TOTAL$/i.test(c[0])){ce=i;break;}const nums=c.slice(1).map(num);if(c.length<2||nums.some(isNaN)){ce=i-1;break;}
+      if(layout==='box'){perBoxCol=perBoxCol??nums[pi-1];colours.push({name:c[0]==='–'?'':c[0],boxes:nums[bi>0?bi-1:1]||0,qty:[]});}
+      else colours.push({name:c[0]==='–'?'':c[0],boxes:bi>0?nums[bi-1]||0:0,qty:sizes.map((_,j)=>nums[j]||0)});ce=i;}}
+  // product details: label | value rows (after the header and colours table)
+  const details=[];let di=-1,start=Math.max(hi,ce)+1;
+  for(let i=start;i<rows.length;i++){const c=rows[i].cells.map(T).filter(Boolean);if(c.length===2&&c[0].length<=40&&!EM.test(c[0])&&!/contact/i.test(c[0])){if(di<0)di=i;details.push([c[0],c[1]]);}
+    else if(details.length&&c.length===1&&EM.test(c[0]))break;}
+  // contact email and its heading
+  let email='',contactH='';for(let i=rows.length-1;i>=0&&!email;i--){const t=rows[i].cells.join('\n'),m=t.match(EM);if(m&&!details.some(d=>d[1].includes(m[0]))){email=m[0];const lines=t.split('\n').map(T).filter(x=>x&&!x.includes(m[0]));contactH=lines[0]||(rows[i-1]&&rows[i-1].cells.length===1&&!EM.test(rows[i-1].cells[0])?T(rows[i-1].cells[0]):'');}}
+  const single=i=>i>=0&&rows[i]&&rows[i].cells.filter(Boolean).length===1&&T(rows[i].cells[0]).length<60?T(rows[i].cells[0]):'';
+  // no "Item code" label: use the first short line above the tables as the product name
+  if(!title&&!code&&(colours.length||details.length>=2)){const lim=Math.min(...[ci,di].filter(x=>x>=0));const r=rows.slice(0,lim).find(r=>{const t=T(r.cells.join(' '));return t&&t.length<=80&&!EM.test(t);});if(r&&r!==rows[ci-1]&&r!==rows[di-1])title=T(r.cells.join(' '));}
+  const missing=[];if(!title&&!code)missing.push('the product name or item code');if(!colours.length&&details.length<2)missing.push('the colours & sizes table or the product details');
+  if(missing.length)throw fail('notsheet',missing);
+  // build the sheet
+  const t=blankSheet();t.title=cap(title);t.code=code;
+  if(colours.length){if(layout==='box'){t.showSizes=false;t.mode='ratio';t.colours=colours.map(c=>({name:c.name,boxes:c.boxes,qty:t.sizes.map(()=>0)}));if(perBoxCol>0)t.perBox=perBoxCol;}
+    else{t.sizes=sizes.length?sizes:t.sizes;t.showSizes=true;t.colours=colours;const per=colours.find(c=>c.boxes>0);
+      const ratio=per?per.qty.map(q=>q/per.boxes):null,same=ratio&&colours.every(c=>c.qty.every((q,j)=>Math.abs(q-ratio[j]*c.boxes)<1e-6));
+      if(same&&ratio.every(r=>Number.isInteger(r))){t.mode='ratio';t.ratio=ratio;t.perBox=ratio.reduce((a,b)=>a+b,0)||t.perBox;}else{t.mode='manual';t.ratio=sizes.map(()=>1);}}}
+  else t.showColours=false;
+  if(details.length){t.rows=details.map(([l,v])=>{const r={id:uid(),label:nice(l),value:v};
+      if(/^price$/i.test(l)){const m=v.replace(/,/g,'').match(/([\d.]+)\s*(?:\/|per|a)\s*(piece|pc|pcs|unit|box)/i);if(m){t.price={amount:m[1],unit:/box/i.test(m[2])?'box':'piece'};r.auto='price';r.value='';}}
+      else if(/^packing$/i.test(l)){const m=v.match(/(\d+)\s*(?:pcs?|pieces?)\s*(?:per|\/|a)\s*box/i);if(m){t.perBox=+m[1];r.auto='packing';r.value='';}}
+      else if(/^sizes?$/i.test(l)&&t.showSizes&&v.replace(/\s/g,'')===t.sizes.join(',')){r.auto='sizes';r.value='';}
+      return r;});}
+  const hc=single(ci-1),hd=single(di-1);if(hc&&hc!==T(title)&&!/item\s*code/i.test(hc))t.headings.colours=nice(hc);if(hd&&hd!==hc&&!/item\s*code/i.test(hd))t.headings.details=nice(hd);
+  if(email)t.email=email;if(contactH&&contactH.length<40)t.headings.contact=nice(contactH);
+  if(theme){t.theme.primary=theme.primary;if(theme.accent)t.theme.accent=theme.accent;}
+  const lim=ci>=0?ci:di>=0?di:Infinity;t.photos=photos.filter(p=>p.at<=lim).slice(0,MAX_PHOTOS).map(p=>({id:uid(),url:p.url}));
+  const s=cleanSheet(t);s._how=from;s._read=[t.title&&'name',code&&'item code',colours.length&&`${colours.length} colour${colours.length>1?'s':''}`,details.length&&`${details.length} detail${details.length>1?'s':''}`,s.photos.length&&`${s.photos.length} photo${s.photos.length>1?'s':''}`,email&&'contact email'].filter(Boolean);
+  return s;}
 // Rebuild an opened sheet field by field so only expected, well-formed values come in.
 function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v.slice(0,n):'',num=(v,d,mn,mx)=>{v=+v;return isFinite(v)?Math.min(mx,Math.max(mn,v)):d;},
     hex=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v)?v:null,arr=v=>Array.isArray(v)?v:[],obj=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{},
@@ -1301,12 +1388,18 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
     if(fontOk(f.font))o.font=f.font;if(['left','center','right'].includes(f.align))o.align=f.align;return o;};
   for(const [src,dst] of[[r.fmt,t.fmt],[r.gfmt,t.gfmt]])for(const [k,v] of Object.entries(obj(src)).slice(0,500))if(/^[\w:.-]{1,60}$/.test(k))dst[k]=cf(v);
   t.updated=Date.now();return t;}
-async function openSheetFile(f){try{const s=await readSheetFile(f);loadFont(s.style.font);sheets.unshift(s);await switchTo(s);touch();toast(`Opened “${sheetName(s)}”`);}
-  catch(e){console.error(e);toast(e.message==='type'?'Choose a PDF or Word file made with Sell Sheet Studio.':e.message==='nodata'?'That file has no sheet data. Only files downloaded from this site after Open was added can be re-opened.':'That file could not be opened.');}}
+async function openSheetFile(f){toast('Opening '+f.name+'…',20000);
+  try{const s=await readSheetFile(f),how=s._how,read=s._read;delete s._how;delete s._read;loadFont(s.style.font);sheets.unshift(s);await switchTo(s);touch();
+    toast(how==='exact'?`Opened “${sheetName(s)}”`:`Read from the ${how} file: ${read.join(', ')}. Check it over and add anything missing${how==='PDF'?' (photos can\'t be taken from a PDF)':''}.`,how==='exact'?2600:9000);}
+  catch(e){console.error(e);const m=e.message,msg={type:'That isn\'t a sell sheet file. Choose a PDF or Word (.docx) file.',olddoc:'This is an old Word .doc file. Open it in Word, choose File → Save As → Word Document (.docx), then open that here.',
+      damaged:'That file couldn\'t be read. It may be damaged, or not really a PDF or Word file.',locked:'That PDF is password-protected. Save an unlocked copy, then open it here.',
+      notext:'This PDF is only a picture of the page, so there\'s no text to read. Open the Word version of the sell sheet instead, or a PDF downloaded from this site.',
+      nodata:'That file couldn\'t be read as a sell sheet.',notsheet:`This doesn't look like a sell sheet. Couldn't find ${(e.extra||[]).join(', and ')}.`}[m];
+    toast(msg||'That file couldn\'t be opened.',msg&&msg.length>60?9000:4000);}}
 $('#openSheet').onclick=()=>$('#openFile').click();
 $('#openFile').addEventListener('change',()=>{const f=$('#openFile').files[0];$('#openFile').value='';if(f)openSheetFile(f);});
 window.addEventListener('dragover',e=>{if([...(e.dataTransfer?.items||[])].some(i=>i.kind==='file'))e.preventDefault();});
-window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(/\.(pdf|docx)$/i.test(f.name))openSheetFile(f);else toast('To add a photo, use Add photo. To open a sheet, drop a PDF or Word file made here.');});
+window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(/\.(pdf|docx?)$/i.test(f.name))openSheetFile(f);else toast('To add a photo, use Add photo. To open a sell sheet, drop a PDF or Word file.');});
 async function buildDocx(){
   const D=window.docx,{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ShadingType,BorderStyle,AlignmentType,VerticalAlign,HeightRule,ImageRun,TableLayoutType}=D;
   const tv=themeVars(),h6=x=>x.replace('#','').toUpperCase(),P=h6(tv.p),A=h6(tv.a),T=h6(tv.tint),L=h6(tv.line),PA=h6(tv.pale),INK='222222';
