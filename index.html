@@ -54,8 +54,6 @@ svg{flex:none}
 .cp-detail label{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted)}.cp-detail .in{height:38px;font-size:14px}.cp-detail textarea.in{height:auto;min-height:38px;resize:vertical;padding-top:8px;line-height:1.35}
 .cp-detail .hd{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.04em;color:var(--faint);margin-top:6px}
 @media (max-width:900px){.cp-main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.cp-detail{width:auto;border-left:0;border-bottom:1px solid var(--line);max-height:55vh;order:-1}}
-#invDlg{width:min(620px,calc(100vw - 24px))}
-.inv-empty{display:grid;gap:10px;justify-items:start;padding:8px 2px;font-size:14.5px}.inv-empty>svg{width:44px;height:44px;color:var(--accent)}.inv-empty p,.inv-empty ul{margin:0}.inv-empty ul{padding-left:20px;display:grid;gap:4px}
 .src-menu{min-width:230px;right:auto}
 .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
 .sheetpick{display:flex;align-items:center;gap:6px;min-width:0;flex:1 1 260px}
@@ -446,7 +444,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 
 <div class="app intro" id="app" data-view="edit">
   <header class="top">
-    <button class="brand" id="navBtn" type="button" aria-haspopup="dialog" aria-controls="navDlg" title="Menu: sent emails, customers, inventory"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="brand-t">Sell Sheet Studio</span><svg class="brand-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="brand" id="navBtn" type="button" aria-haspopup="dialog" aria-controls="navDlg" title="Menu: sent emails, customers, open a sell sheet"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="brand-t">Sell Sheet Studio</span><svg class="brand-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="sheetpick">
       <select class="sel" id="sheetSel" aria-label="Choose a sell sheet"></select>
       <button class="btn icon ghost" id="newSheet" title="New sell sheet" aria-label="New sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -612,7 +610,6 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
-      <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span><b>Inventory</b><small>QuickBooks Online · not connected yet</small></span></button>
       <span class="menu-h">Open a sell sheet</span>
       <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
       <button type="button" class="nav-it" data-nav="open-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11M2 14h20M16 3L10 14"/></svg><span><b>From Google Drive</b><small>PDF, Word or Google Docs</small></span></button>
@@ -635,20 +632,6 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <aside class="cp-detail" id="cpDetail" hidden aria-label="Customer details"></aside>
     </div>
     <div class="ml-bot"><span class="note" id="cpNote"></span><div class="bgrp"><button class="btn sm" id="cpEmail" type="button" disabled>Email ticked customers</button><button class="btn sm ghost" id="cpDone" type="button">Close</button></div></div>
-  </div>
-</dialog>
-<dialog id="invDlg" aria-label="Inventory">
-  <div class="su-wrap">
-    <div class="ml-top"><h2>Inventory</h2><button class="btn icon sm ghost" id="invClose" type="button" aria-label="Close">✕</button></div>
-    <div class="su-body inv-body">
-      <div class="inv-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
-        <b>QuickBooks Online isn't connected yet</b>
-        <p>Once it's connected, this page will list your QuickBooks inventory items (name, SKU, price, quantity on hand). From here you'll be able to:</p>
-        <ul><li>start a sell sheet from an item, with its details filled in</li><li>link each sell sheet to its item by SKU</li><li>push the latest sell sheet picture to the item in QuickBooks whenever you change it</li></ul>
-        <p class="note">Connecting needs a one-time QuickBooks developer setup and a small helper on your Cloudflare site, because QuickBooks doesn't let web pages talk to it directly.</p>
-        <button class="btn" type="button" disabled>Connect QuickBooks (coming soon)</button></div>
-    </div>
-    <div class="ml-bot"><span></span><button class="btn sm ghost" id="invDone" type="button">Close</button></div>
   </div>
 </dialog>
 <div class="menu src-menu hide" id="srcMenu" role="menu"></div>
@@ -2375,16 +2358,15 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
   finally{open.forEach(d=>{if(!d.open)d.showModal();});if(custDlg.open)renderCP();}}
 
 /* ---------- sidebar (the logo, top left) ---------- */
-const navDlg=$('#navDlg'),custDlg=$('#custDlg'),invDlg=$('#invDlg');
+const navDlg=$('#navDlg'),custDlg=$('#custDlg');
 function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=CU.list.filter(noName).length;
   $('#navSent').textContent=th.length?`${th.length} sent${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='inv')invDlg.showModal();else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
-$('#invClose').onclick=$('#invDone').onclick=()=>invDlg.close();
 
 /* ---------- Customers page: the whole list with every detail from the imported sheet ---------- */
 const CP={q:'',nn:false,open:null,sure:false};
