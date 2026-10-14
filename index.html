@@ -324,6 +324,10 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
 .cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
 #driveDlg{width:min(620px,calc(100vw - 24px))}
+.dl-menu{position:relative}.chev{width:14px!important;height:14px!important;margin-left:-2px}
+.menu{position:absolute;right:0;top:calc(100% + 6px);min-width:250px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:6px;display:grid;gap:2px;z-index:45;animation:fade .15s var(--ease)}
+.menu button{display:grid;gap:1px;text-align:left;border:0;background:none;border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.menu button:hover,.menu button:focus-visible{background:var(--raise);outline:none}.menu b{font-size:14.5px}.menu small{color:var(--muted);font-size:12.5px}
 #logDlg{width:min(1180px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
 .lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}
 .lg-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--raise)}
@@ -337,11 +341,14 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .lg-row .who{border:0;background:none;padding:0;font:600 14px var(--ui);color:var(--ink);cursor:pointer;text-align:left}.lg-row .who:hover{color:var(--accent)}
 .lg-row .in{height:36px;font-size:14px}.lg-row .note-in{grid-column:2/-1}
 .lg-st{border-radius:8px;font-weight:600}.lg-st[data-s=none]{background:var(--raise)}.lg-st[data-s=replied]{background:#E8F0FE;color:#1D4ED8}.lg-st[data-s=interested]{background:#FEF3C7;color:#92400E}.lg-st[data-s=ordered]{background:#DCFCE7;color:#166534}.lg-st[data-s=declined]{background:#F3F4F6;color:#4B5563}
+.lg-fups{grid-column:2/-1;display:grid;gap:6px;border-left:3px solid var(--line2);padding-left:12px;margin-top:2px}
+.lg-fu{display:grid;grid-template-columns:auto minmax(150px,1fr) minmax(150px,1.2fr) auto;gap:4px 12px;align-items:center;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.fu-tag{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.03em;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 7px;white-space:nowrap}
 .flag{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--warn);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}
 .lg-empty{color:var(--muted);padding:30px 10px;text-align:center;line-height:1.5}
 .sent-btn{position:relative}.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--warn);color:#fff;font:700 11.5px/20px var(--ui);font-style:normal;padding:0 5px;text-align:center}
 .cu .last{color:var(--accent)}
-@media (max-width:900px){.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
+@media (max-width:900px){.lg-fups{grid-column:1/-1}.lg-fu{grid-template-columns:auto 1fr auto}.lg-fu>.c:nth-of-type(2){grid-column:2/-1}.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
 .ml-tabs{justify-self:start}.ml-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}.ml-pane[hidden]{display:none}
 .ml-msgprev{font-size:13px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:6px 10px;line-height:1.4}.ml-msgprev:empty{display:none}
 .ml-how .att .opt2{min-width:140px}
@@ -387,8 +394,14 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <button class="btn dl-word sent-btn" id="sentBtn" type="button" title="Sell sheets you've emailed, and how customers responded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Sent</span><i class="badge" id="sentBadge" hidden></i></button>
     <button class="btn dl-word" id="driveBtn" type="button" title="Save to Google Drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11H2M16 3l-6 11M22 14H10l-4 7"/></svg><span>Drive</span></button>
     <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
-    <button class="btn dl-word" id="dlWord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Word</span></button>
-    <button class="btn primary" id="dlPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download PDF</button>
+    <div class="dl-menu">
+      <button class="btn primary" id="dlBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="dlMenu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Download</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="menu hide" id="dlMenu" role="menu" aria-label="Download as">
+        <button type="button" role="menuitem" id="dlPdf" data-dl="pdf"><b>PDF</b><small>Best for printing and sharing</small></button>
+        <button type="button" role="menuitem" id="dlWord" data-dl="docx"><b>Word (.docx)</b><small>Edit in Word or Google Docs</small></button>
+        <button type="button" role="menuitem" id="dlJpg" data-dl="jpg"><b>Image (.jpg)</b><small>For messages and social media</small></button>
+      </div>
+    </div>
   </header>
   <div class="mtoggle"><div class="seg" role="group" aria-label="View"><button type="button" data-view="edit" aria-pressed="true">Edit</button><button type="button" data-view="preview" aria-pressed="false">Preview</button></div></div>
   <div class="main">
@@ -886,7 +899,7 @@ paper.addEventListener('click',e=>{e.stopPropagation();if(e.target.closest('.bh,
   if(e.target.closest('.ed'))return;const b=e.target.closest('.blk');selectBlock(b?b.dataset.block:null);});
 $('#canvas').addEventListener('click',e=>{if(!e.target.closest('.sheet,.fbar,.pill'))selectBlock(null);});
 function selectBlock(n){if(selBlock===n)return;selBlock=n;renderSheet();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#ctx').classList.contains('hide')){closeCtx();return;}if(!dlg.open&&selBlock&&!editingSheet)selectBlock(null);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#ctx').classList.contains('hide')){closeCtx();return;}if(!dlMenu.classList.contains('hide')){dlOpen(false);return;}if(!dlg.open&&selBlock&&!editingSheet)selectBlock(null);}});
 
 /* ---------- drag section edges ---------- */
 const BH_LIM={header:[40,260],photos:[100,460],colours:[18,64],details:[18,64],footer:[36,220]};
@@ -1255,9 +1268,16 @@ async function makeFile(kind,cv){
   try{if(kind==='jpg')return await new Promise(r=>cv.toBlob(r,'image/jpeg',.92));
     await loadScript('jspdf');const pdf=new jspdf.jsPDF({unit:'pt',format:'letter'});pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,612,792);return embedPdf(pdf.output('arraybuffer'));}
   finally{if(own)cv.width=cv.height=0;}}
-$('#dlPdf').onclick=()=>busy($('#dlPdf'),async()=>{await Promise.all([loadScript('jspdf'),loadScript('h2c')]);await save(fileBase()+'.pdf',await makeFile('pdf'));});
-for(const[id,libs]of[['dlPdf',['jspdf','h2c']],['dlWord',['docx','jszip']],['openSheet',['jszip']]])for(const ev of['pointerenter','focus'])$('#'+id).addEventListener(ev,()=>libs.forEach(k=>loadScript(k).catch(()=>{})),{once:true});
-$('#dlWord').onclick=()=>busy($('#dlWord'),async()=>{await save(fileBase()+'.docx',await makeFile('docx'));});
+// Download menu: one button, pick the file type
+const dlMenu=$('#dlMenu'),dlBtn=$('#dlBtn');
+function dlOpen(on){dlMenu.classList.toggle('hide',!on);dlBtn.setAttribute('aria-expanded',on);if(on)dlMenu.querySelector('button').focus();}
+dlBtn.onclick=e=>{e.stopPropagation();dlOpen(dlMenu.classList.contains('hide'));};
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.dl-menu'))dlOpen(false);},true); // capture: the sheet stops ordinary clicks from bubbling
+dlMenu.addEventListener('keydown',e=>{const items=[...dlMenu.querySelectorAll('button')],i=items.indexOf(document.activeElement);
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();items[(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length].focus();}else if(e.key==='Escape'){e.preventDefault();dlOpen(false);dlBtn.focus();}});
+dlMenu.addEventListener('click',e=>{const b=e.target.closest('[data-dl]');if(!b)return;const k=b.dataset.dl;dlOpen(false);
+  busy(dlBtn,async()=>{await save(fileBase()+MAIL_TYPES[k][1],await makeFile(k));});});
+for(const[id,libs]of[['dlBtn',['jspdf','h2c','docx','jszip']],['openSheet',['jszip']]])for(const ev of['pointerenter','focus'])$('#'+id).addEventListener(ev,()=>libs.forEach(k=>loadScript(k).catch(()=>{})),{once:true});
 
 /* ---------- re-opening downloads: each PDF / Word file carries a copy of its sheet ---------- */
 const MARK='SELLSHEET-DATA';
@@ -1496,9 +1516,9 @@ const cuShown=()=>{const q=CU.q.toLowerCase();return CU.list.filter(c=>(!CU.grp|
 function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';
   $('#cuGroups').innerHTML=g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'';
   const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email));
-  const last=new Map();for(const e of LG.list)if(e.cust&&(!last.has(e.cust)||last.get(e.cust).at<e.at))last.set(e.cust,e);
+  const last=new Map();for(const t of threads()){const c=t.root.cust;if(c&&(!last.has(c)||last.get(c).last<t.last))last.set(c,t);}
   $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
-      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}${altOf(c).length?` · +${altOf(c).length} more`:''}${last.has(ck(c.email))?`<span class="last" style="display:block">Sent ${esc(ago(last.get(ck(c.email)).at))}: ${esc(last.get(ck(c.email)).sheet)} · ${esc(ST_NAME[last.get(ck(c.email)).status||'none'])}</span>`:''}</small></label>
+      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}${altOf(c).length?` · +${altOf(c).length} more`:''}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
       <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="Edit ${esc(c.name||c.email)}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${CU.sel.has(ck(c.email))&&altOf(c).length?`<div class="cu-mails" role="group" aria-label="Addresses to send to">${[c.email,...altOf(c)].map((a,i)=>`<label><input type="checkbox" data-use="${esc(ck(c.email))}" value="${esc(a)}" ${useOf(c).includes(a)?'checked':''}><span>${esc(a)}</span>${i?'':'<em>main</em>'}</label>`).join('')}</div>`:''}</div>`).join('')
     :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import a CSV file from Gmail or Outlook contacts.'}</div>`;
   renderChips();renderSync();}
@@ -1707,11 +1727,16 @@ const lgKey=()=>{const a=authGet();return a?`ss-log:${a.prov}:${ck(a.email)}`:'s
 function lgLoad(){try{const d=JSON.parse(lsGet(lgKey())||'{}')||{};LG.list=Array.isArray(d.entries)?d.entries.filter(e=>e&&e.id&&e.at):[];LG.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){LG.list=[];LG.deleted=[];}}
 const lgSave=()=>{lsSet(lgKey(),JSON.stringify({entries:LG.list,deleted:LG.deleted}));scheduleSync();renderBadge();};
 const dayStr=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;};
-const needsFollow=e=>{if(e.status==='ordered'||e.status==='declined')return false;if(e.follow)return e.follow<=dayStr(Date.now());return(e.status||'none')==='none'&&Date.now()-e.at>=FOLLOW_DAYS*864e5;};
+// A thread is the first send of a sell sheet to someone; later sends of the same sheet to them are its follow-ups.
+const recipKey=e=>e.cust||ck((e.emails&&e.emails[0])||e.email)||'id:'+e.id;
+function threads(){const g=new Map();for(const e of LG.list.slice().sort((a,b)=>a.at-b.at)){const k=e.sheetId+'|'+recipKey(e);if(g.has(k))g.get(k).fups.push(e);else g.set(k,{root:e,fups:[]});}
+  return[...g.values()].map(t=>({...t,last:Math.max(t.root.at,...t.fups.map(f=>f.at))}));}
+// response status lives on the original; any send (original or follow-up) restarts the wait
+const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined')return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
 const fmtWhen=t=>new Date(t).toLocaleString(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'});
 const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});};
 const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + attached'};
-function renderBadge(){const n=LG.list.filter(needsFollow).length,b=$('#sentBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#sentBtn').title=n?`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`:'Sell sheets you\'ve emailed, and how customers responded';}
+function renderBadge(){const n=threads().filter(needsFollow).length,b=$('#sentBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#sentBtn').title=n?`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`:'Sell sheets you\'ve emailed, and how customers responded';}
 // called after each successful email
 function logSent(m,prov,from,kinds,parts){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
   for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:S.id,sheet:sheetName(S),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
@@ -1723,24 +1748,29 @@ function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...
       how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:''};
-function lgShown(){const q=lgF.q.trim().toLowerCase();return LG.list.filter(e=>(!lgF.status||(lgF.status==='follow'?needsFollow(e):(e.status||'none')===lgF.status))
-    &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to)
-    &&(!q||[e.name,e.company,e.email,...e.emails,e.sheet,e.note,ST_NAME[e.status]].some(v=>String(v||'').toLowerCase().includes(q)))).sort((a,b)=>b.at-a.at);}
-function renderLog(){const all=LG.list,due=all.filter(needsFollow).length;
-  $('#lgSum').textContent=all.length?`${all.length} sent · ${due} need${due===1?'s':''} follow-up`:'';
+function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
+  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):(e.status||'none')===lgF.status))
+    &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&all.some(inRange)
+    &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
+function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
+  $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
   const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
   $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;
-  const shown=lgShown();LG.sel=new Set([...LG.sel].filter(id=>shown.some(e=>e.id===id)));
-  $('#lgList').innerHTML=shown.length?shown.map(e=>{const d=needsFollow(e);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}">
+  const shown=lgShown();LG.sel=new Set([...LG.sel].filter(id=>shown.some(t=>t.root.id===id)));
+  const sentAs=e=>`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
+  $('#lgList').innerHTML=shown.length?shown.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}">
       <input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select">
       <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
-      <div class="c">${esc(e.sheet)}<small>${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}</small></div>
+      <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
       <div class="c">${esc(fmtWhen(e.at))}<small>${esc(ago(e.at))}${e.from?' · from '+esc(e.from):''}</small></div>
       <select class="in lg-st" data-lst data-s="${e.status||'none'}" aria-label="Response">${STATUSES.map(([v,n])=>`<option value="${v}"${(e.status||'none')===v?' selected':''}>${n}</option>`).join('')}</select>
       <input class="in" type="date" data-lfollow value="${esc(e.follow)}" aria-label="Follow-up date" title="Follow-up date">
-      <button class="tiny x" type="button" data-ldel aria-label="Delete this entry">${I.x}</button>
-      <input class="in note-in" type="text" data-lnote value="${esc(e.note)}" placeholder="Add a note, e.g. wants 20 boxes of Navy" aria-label="Note"></div>`;}).join('')
+      <button class="tiny x" type="button" data-ldel aria-label="Delete this entry${t.fups.length?' and its follow-ups':''}">${I.x}</button>
+      <input class="in note-in" type="text" data-lnote value="${esc(e.note)}" placeholder="Add a note, e.g. wants 20 boxes of Navy" aria-label="Note">
+      ${t.fups.length?`<div class="lg-fups">${t.fups.map((f,n)=>`<div class="lg-fu" data-id="${esc(f.id)}"><span class="fu-tag">Follow-up${t.fups.length>1?' '+(n+1):''}</span>
+        <div class="c">${esc(fmtWhen(f.at))}<small>${esc(ago(f.at))}${f.from?' · from '+esc(f.from):''}</small></div><div class="c">${sentAs(f)||'&nbsp;'}<small>${esc((f.emails.length?f.emails:[f.email]).join(', '))}</small></div>
+        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;}).join('')
     :`<div class="lg-empty">${all.length?'Nothing matches these filters.':'Nothing sent yet. Every sell sheet you email from here is listed automatically, with the date, who it went to and how they responded.'}</div>`;
   $('#lgFollow').disabled=!LG.sel.size;$('#lgFollow').textContent=LG.sel.size?`Follow up selected (${LG.sel.size})`:'Follow up selected';
   const a=authGet();$('#lgNote').innerHTML=a?`Synced to <b>${esc(a.email||'your account')}</b>.`:'Saved in this browser. Sign in (optional) to keep it on every device.';renderBadge();}
@@ -1750,7 +1780,8 @@ $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
 $('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;renderLog();$('#lgQ').focus();});
 for(const[id,k]of[['lgStatus','status'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;renderLog();});
 $('#lgClear').onclick=()=>{Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to:''});$('#lgQ').value='';$('#lgFrom').value='';$('#lgTo').value='';renderLog();};
-const lgEntry=el=>{const row=el.closest('.lg-row');return row&&LG.list.find(e=>e.id===row.dataset.id);};
+let lgSure={}; // "click ✕ again" confirmation, kept outside the list so a background refresh doesn't reset it
+const lgEntry=el=>{const row=el.closest('[data-id]');return row&&LG.list.find(e=>e.id===row.dataset.id);};
 $('#lgList').addEventListener('change',e=>{const en=lgEntry(e.target);if(!en)return;const t=e.target;
   if(t.matches('[data-lsel]')){t.checked?LG.sel.add(en.id):LG.sel.delete(en.id);renderLog();return;}
   if(t.matches('[data-lst]'))en.status=t.value;else if(t.matches('[data-lfollow]'))en.follow=t.value;else if(t.matches('[data-lnote]'))en.note=t.value.trim();else return;
@@ -1758,12 +1789,14 @@ $('#lgList').addEventListener('change',e=>{const en=lgEntry(e.target);if(!en)ret
 $('#lgList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-lnote]')){e.preventDefault();e.target.blur();}});
 $('#lgList').addEventListener('click',e=>{const en=lgEntry(e.target);if(!en)return;
   if(e.target.closest('[data-lwho]')){lgF.q=en.email||en.name;$('#lgQ').value=lgF.q;renderLog();return;}
-  const del=e.target.closest('[data-ldel]');if(del){if(del.dataset.sure!=='1'){del.dataset.sure='1';toast('Click ✕ again to delete this entry');setTimeout(()=>{del.dataset.sure='';},3000);return;}
-    LG.list=LG.list.filter(x=>x!==en);LG.deleted.push({id:en.id,at:Date.now()});LG.sel.delete(en.id);lgSave();renderLog();toast('Entry deleted');}});
-$('#lgExport').onclick=()=>{const rows=lgShown();if(!rows.length){toast('Nothing to export');return;}const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
-  save('Sent sell sheets.csv',new Blob(['\uFEFF'+['Date,Customer,Company,Email,Sell sheet,Sent as,Files,From,Status,Follow-up,Note',...rows.map(e=>[fmtWhen(e.at),e.name,e.company,(e.emails.length?e.emails:[e.email]).join('; '),e.sheet,HOW_NAME[e.how],e.files.join(' '),e.from,ST_NAME[e.status||'none'],e.follow,e.note].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
+  const del=e.target.closest('[data-ldel]');if(del){const th=threads().find(t=>t.root.id===en.id),gone=th?[th.root,...th.fups]:[en];
+    if(!(lgSure.id===en.id&&Date.now()<lgSure.until)){lgSure={id:en.id,until:Date.now()+3000};toast(gone.length>1?`Click ✕ again to delete this entry and its ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Click ✕ again to delete this entry');return;}lgSure={};
+    const now=Date.now();LG.list=LG.list.filter(x=>!gone.includes(x));gone.forEach(x=>{LG.deleted.push({id:x.id,at:now});LG.sel.delete(x.id);});lgSave();renderLog();toast(gone.length>1?`Deleted with ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Entry deleted');}});
+$('#lgExport').onclick=()=>{const th=lgShown();if(!th.length){toast('Nothing to export');return;}const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const line=(e,type,root)=>[fmtWhen(e.at),type,e.name,e.company,(e.emails.length?e.emails:[e.email]).join('; '),e.sheet,HOW_NAME[e.how],e.files.join(' '),e.from,ST_NAME[root.status||'none'],root.follow,type==='Original'?root.note:''].map(q).join(',');
+  save('Sent sell sheets.csv',new Blob(['\uFEFF'+['Date,Type,Customer,Company,Email,Sell sheet,Sent as,Files,From,Status,Follow-up date,Note',...th.flatMap(t=>[line(t.root,'Original',t.root),...t.fups.map((f,n)=>line(f,'Follow-up '+(n+1),t.root))])].join('\r\n')],{type:'text/csv'}));};
 // follow up: opens the Email window for the chosen entries' sell sheet, with those people already filled in
-$('#lgFollow').onclick=async()=>{const picked=LG.list.filter(e=>LG.sel.has(e.id));if(!picked.length)return;const ids=[...new Set(picked.map(e=>e.sheetId))];
+$('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.root.id)).map(t=>t.root);if(!picked.length)return;const ids=[...new Set(picked.map(e=>e.sheetId))];
   if(ids.length>1){toast('Pick entries for one sell sheet at a time to follow up together');return;}
   if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}await switchTo(sh);}
   logDlg.close();openMail();cuLoad();CU.sel.clear();const typed=[];
