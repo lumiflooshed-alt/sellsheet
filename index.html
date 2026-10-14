@@ -324,6 +324,14 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center}.kv span{grid-column:1/-1;font-size:13.5px;color:var(--muted)}
 .kv code{font:500 13px var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-wrap:anywhere}
 .cu-mails{grid-column:1/-1;display:grid;gap:4px;padding:6px 0 2px 28px;border-top:1px dashed var(--line2);margin-top:2px}
+.cu-pick{grid-column:2/-1;height:32px;font-size:13px;padding:0 8px}
+.cu .nn,.ml-count .nn{font-size:11px;font-weight:700;color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent);border-radius:5px;padding:1px 6px;margin-left:4px;white-space:nowrap}
+.cu-groups .nn-chip{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}.cu-groups .nn-chip[aria-pressed="true"]{background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad);border-color:var(--bad)}
+.cu-count{color:var(--muted);font-size:12.5px;margin-top:-4px}.cu-count:empty{display:none}
+.ml-count{display:grid;gap:6px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.ml-count .big{font-size:15px}.ml-count .big b{font-size:22px;color:var(--accent);margin-right:4px}
+.ml-count .warn{color:var(--bad);display:grid;gap:4px}.ml-count .warn ul{margin:0;padding-left:18px;max-height:96px;overflow:auto}.ml-count .warn button{border:0;background:none;color:var(--accent);font:600 12.5px var(--ui);cursor:pointer;padding:0 4px}
+.lg-gh{position:sticky;top:-12px;z-index:2;display:flex;align-items:baseline;gap:8px;padding:10px 4px 4px;background:var(--panel);font-size:14px}.lg-gh span{color:var(--muted);font-size:12.5px}.lg-gh:first-child{padding-top:0}
 .cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
 .cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
 #driveDlg{width:min(620px,calc(100vw - 24px))}
@@ -334,7 +342,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 #logDlg{width:min(1180px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
 .lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}
 .lg-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--raise)}
-.lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}#lgStatus,#lgSheet,#lgColor{flex:0 1 190px;min-width:0}
+.lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}#lgStatus,#lgSheet,#lgColor,#lgGroup{flex:0 1 190px;min-width:0}
 .lg-date{display:grid;gap:2px;font-size:12px;font-weight:600;color:var(--muted)}.lg-date .in{width:150px}
 .lg-list{overflow:auto;padding:12px 16px;display:grid;gap:8px;align-content:start}
 .lg-row{display:grid;grid-template-columns:auto minmax(150px,1.3fr) minmax(130px,1fr) minmax(120px,.9fr) 160px 150px auto;gap:6px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
@@ -526,11 +534,11 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-main">
       <section class="ml-cust" aria-label="Customers">
         <div class="ml-ch"><h3>Customers</h3><span class="bgrp"><button class="lnk" id="cuAll" type="button">Select shown</button><button class="lnk" id="cuNone" type="button">Clear</button></span></div>
-        <input class="in" id="cuSearch" type="search" placeholder="Search name, company, email or group" aria-label="Search customers">
+        <input class="in" id="cuSearch" type="search" placeholder="Search customers: name, company or email" aria-label="Search customers"><small class="cu-count" id="cuCount"></small>
         <div class="cu-groups" id="cuGroups"></div>
         <div class="cu-form" id="cuForm" hidden></div>
         <div class="cu-list" id="cuList"></div>
-        <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" title="Import a CSV file (for example exported from Gmail or Outlook contacts)">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".csv,.txt,text/csv,text/plain" hidden></div>
+        <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
         <p class="hint" style="margin:0" id="cuSync"></p>
       </section>
       <section class="ml-form" aria-label="Email">
@@ -538,9 +546,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span></div>
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
         <div class="row2"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
-        <div class="field" id="mlModeRow" hidden><span>Sending to several people</span><div class="seg" role="group" aria-label="How to send" id="mlMode"><button type="button" data-mode="each">A personal email each</button><button type="button" data-mode="bcc">One email, everyone in Bcc</button></div><small class="hint" id="mlModeHint"></small></div>
         <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
-        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name, {company} their company and {product} this product. Your wording is remembered.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name (never their company), {company} their company and {product} this product. Customers without a name are flagged so you can add one. Your wording is remembered.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
         <div class="group ml-how"><h3>Include the sell sheet</h3>
           <div class="how-row">
             <div class="field"><span>Attach as</span>
@@ -561,7 +568,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         </div>
         </div>
         <div class="ml-pane" id="mlPrev">
-          <div class="prev-h"><h3>Preview</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for"></select></div>
+          <div class="ml-count" id="mlCount" role="status"></div>
+          <div class="prev-h"><h3>Preview</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for each customer"></select></div>
           <div class="ml-meta" id="mlPrevMeta"></div>
           <iframe id="mlPrevFrame" title="Email preview" sandbox="allow-same-origin allow-popups"></iframe>
         </div>
@@ -578,6 +586,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <select class="in" id="lgStatus" aria-label="Status"></select>
       <select class="in" id="lgColor" aria-label="Colour"></select>
       <select class="in" id="lgSheet" aria-label="Sell sheet"></select>
+      <select class="in" id="lgGroup" aria-label="Group by"><option value="date">Group by date sent</option><option value="sheet">Group by sell sheet</option></select>
       <label class="lg-date"><span>From</span><input class="in" type="date" id="lgFrom"></label>
       <label class="lg-date"><span>To</span><input class="in" type="date" id="lgTo"></label>
       <button class="lnk" type="button" id="lgClear">Clear filters</button>
@@ -1583,25 +1592,28 @@ const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
 
 /* customers: kept in this browser; when signed in, also synced to a private app folder in the person's Google Drive / OneDrive */
-const CU={list:[],deleted:[],sel:new Set(),q:'',grp:'',edit:null};
+const CU={list:[],deleted:[],sel:new Set(),q:'',grp:'',edit:null,nn:false};
 const ck=e=>String(e||'').trim().toLowerCase();
 const cuKey=()=>{const a=authGet();return a?`ss-customers:${a.prov}:${ck(a.email)}`:'ss-customers';};
 function cuLoad(){try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
   CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim()));CU.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){CU.list=[];CU.deleted=[];}}
 const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted}));scheduleSync();};
 const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_RE.test(a)):[];
-// which of a customer's addresses get emails (main address unless chosen otherwise)
-const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.filter(a=>c.use.some(x=>ck(x)===ck(a))):[];return u.length?u:[c.email];};
+// the one address a customer's email goes to (chosen from a dropdown when they have several; main address by default)
+const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.find(a=>c.use.some(x=>ck(x)===ck(a))):null;return[u||c.email];};
+const noName=c=>!String(c?.name||'').trim();
 const cuGroups=()=>[...new Set(CU.list.map(c=>(c.group||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-const cuShown=()=>{const q=CU.q.toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!q||[c.name,c.company,c.email,c.group,...altOf(c)].some(v=>(v||'').toLowerCase().includes(q))));};
-function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';
-  $('#cuGroups').innerHTML=g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'';
-  const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email));
+const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!CU.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c)].some(v=>(v||'').toLowerCase().includes(q))));};
+function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';const nn=CU.list.filter(noName).length;if(!nn)CU.nn=false;
+  $('#cuGroups').innerHTML=(g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'')
+    +(nn?`<button type="button" class="nn-chip" data-nn aria-pressed="${CU.nn}" title="Show only customers without a name, so you can add one">⚠ No name (${nn})</button>`:'');
+  const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));
+  $('#cuCount').textContent=CU.list.length?(shown.length===CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:`Showing ${shown.length} of ${CU.list.length}`)+(CU.sel.size?` · ${CU.sel.size} ticked`:''):'';
   const last=new Map();for(const t of threads()){const c=t.root.cust;if(c&&(!last.has(c)||last.get(c).last<t.last))last.set(c,t);}
   $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
-      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '))}${altOf(c).length?` · +${altOf(c).length} more`:''}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
-      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="Edit ${esc(c.name||c.email)}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${CU.sel.has(ck(c.email))&&altOf(c).length?`<div class="cu-mails" role="group" aria-label="Addresses to send to">${[c.email,...altOf(c)].map((a,i)=>`<label><input type="checkbox" data-use="${esc(ck(c.email))}" value="${esc(a)}" ${useOf(c).includes(a)?'checked':''}><span>${esc(a)}</span>${i?'':'<em>main</em>'}</label>`).join('')}</div>`:''}</div>`).join('')
-    :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import a CSV file from Gmail or Outlook contacts.'}</div>`;
+      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
+      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Edit'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`).join('')
+    :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import an Excel (.xlsx) or CSV file.'}</div>`;
   renderChips();renderSync();}
 function cuFormOpen(c){CU.edit=c?ck(c.email):'new';const f=$('#cuForm');f.hidden=false;const gl=cuGroups();
   f.innerHTML=`<strong style="font-size:14px">${c?'Edit customer':'New customer'}</strong>
@@ -1616,7 +1628,7 @@ function cuFormSave(){const v=id=>$('#'+id).value.trim(),email=v('cuMail');if(!E
   const dup=CU.list.find(c=>ck(c.email)===ck(email)&&ck(c.email)!==CU.edit);if(dup){toast(`${email} is already saved`);return;}
   const altIn=splitAddr(v('cuAlt')),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length){toast('Check these addresses: '+badAlt.join(', '));$('#cuAlt').focus();return;}
   const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),old=CU.edit==='new'?null:CU.list.find(c=>ck(c.email)===CU.edit);
-  const use=old?useOf({...old,email,alt}).filter(a=>[email,...alt].some(x=>ck(x)===ck(a))):[email];
+  const use=old?useOf({...old,email,alt}):[email];
   const now=Date.now(),data={name:v('cuName'),company:v('cuCo'),email,alt,use:use.length?use:[email],group:v('cuGrp'),upd:now};
   if(CU.edit==='new'){CU.list.push(data);CU.sel.add(ck(email));}
   else{const c=CU.list.find(c=>ck(c.email)===CU.edit);if(c){if(ck(c.email)!==ck(email)){CU.deleted.push({email:ck(c.email),at:now});if(CU.sel.delete(ck(c.email)))CU.sel.add(ck(email));}Object.assign(c,data);}}
@@ -1627,42 +1639,82 @@ $('#cuAdd').onclick=()=>cuFormOpen(null);
 $('#cuForm').addEventListener('click',e=>{if(e.target.id==='cuSaveBtn')cuFormSave();else if(e.target.id==='cuCancelBtn')cuFormClose();});
 $('#cuForm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();cuFormSave();}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cuFormClose();}});
 $('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;renderCust();});
-$('#cuGroups').addEventListener('click',e=>{const b=e.target.closest('[data-grp]');if(!b)return;CU.grp=b.dataset.grp;renderCust();});
+$('#cuGroups').addEventListener('click',e=>{if(e.target.closest('[data-nn]')){CU.nn=!CU.nn;renderCust();return;}const b=e.target.closest('[data-grp]');if(!b)return;CU.grp=b.dataset.grp;renderCust();});
 $('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
-  if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;const boxes=[...e.target.closest('.cu-mails').querySelectorAll('input')],on=boxes.filter(b=>b.checked).map(b=>b.value);
-    if(!on.length){e.target.checked=true;toast('Keep at least one address ticked');return;}c.use=on;c.upd=Date.now();cuSave();renderChips();return;}
-  const id=e.target.dataset.cu;if(!id)return;if(CU.list.find(c=>ck(c.email)===id&&altOf(c).length)){e.target.checked?CU.sel.add(id):CU.sel.delete(id);renderCust();return;}e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderChips();});
+  if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;c.use=[e.target.value];c.upd=Date.now();cuSave();renderChips();return;}
+  const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderCustCount();renderChips();});
+const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.replace(/ · \d+ ticked$/,'')+(CU.sel.size?` · ${CU.sel.size} ticked`:'');};
 $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
   if(ed)cuFormOpen(CU.list.find(c=>ck(c.email)===ed.dataset.cuedit));
   if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
     CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer deleted');}});
 $('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
 $('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
-// CSV: works with exports from Gmail / Outlook contacts or a simple name,company,email,group list
+// Import: Excel (.xlsx) or CSV, e.g. exports from Gmail / Outlook contacts or any sheet with Name, Company and Email columns.
+// Only name, company, email (and group, if there's a column for it) are kept.
 function parseCSV(t){const rows=[];let row=[],f='',q=false;const d=(t.split('\n')[0].match(/;/g)||[]).length>(t.split('\n')[0].match(/,/g)||[]).length?';':t.split('\n')[0].includes('\t')?'\t':',';
   for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
     else if(ch==='"')q=true;else if(ch===d){row.push(f);f='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=ch;}
   if(f||row.length){row.push(f);rows.push(row);}return rows.filter(r=>r.some(x=>x.trim()));}
-function importCustomers(text){const rows=parseCSV(text.replace(/^﻿/,''));if(!rows.length)return 0;
-  const h=rows[0].map(x=>x.trim().toLowerCase()),hasHead=h.some(x=>/e-?mail/.test(x));
+// .xlsx is a zip of XML files: read the first sheet that has an "email" column (formulas use their saved result)
+async function readXlsx(file){await loadScript('jszip');let zip;try{zip=await JSZip.loadAsync(file);}catch(_){throw new Error('That Excel file could not be opened.');}
+  const txt=async p=>{const f=zip.file(p);return f?f.async('string'):'';},xml=t=>new DOMParser().parseFromString(t||'<x/>','application/xml');
+  const tx=el=>[...el.getElementsByTagName('t')].filter(t=>t.parentNode.nodeName!=='rPh').map(t=>t.textContent).join('');
+  const ss=[...xml(await txt('xl/sharedStrings.xml')).getElementsByTagName('si')].map(tx);
+  const rels=[...xml(await txt('xl/_rels/workbook.xml.rels')).getElementsByTagName('Relationship')];
+  const path=id=>{const t=rels.find(r=>r.getAttribute('Id')===id)?.getAttribute('Target')||'';return t.startsWith('/')?t.slice(1):'xl/'+t.replace(/^\.\//,'');};
+  const sheets=[...xml(await txt('xl/workbook.xml')).getElementsByTagName('sheet')].map(x=>path(x.getAttribute('r:id')||x.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')));
+  const colN=ref=>{let n=0;for(const ch of ref.replace(/[^A-Z]/gi,'').toUpperCase())n=n*26+ch.charCodeAt(0)-64;return n-1;};
+  let first=null;
+  for(const sp of sheets){const rows=[];
+    for(const r of xml(await txt(sp)).getElementsByTagName('row')){const row=[];let i=0;
+      for(const c of r.getElementsByTagName('c')){const ref=c.getAttribute('r'),k=ref?colN(ref):i;i=k+1;const t=c.getAttribute('t'),v=c.getElementsByTagName('v')[0]?.textContent??'';
+        row[k]=t==='s'?(ss[+v]??''):t==='inlineStr'?tx(c):t==='b'?(v==='1'?'TRUE':'FALSE'):v;}
+      rows.push(Array.from(row,x=>x??''));}
+    if(!first&&rows.length)first=rows;if(rows.slice(0,10).some(r=>r.some(x=>/e-?mail/i.test(x))))return rows;}
+  return first||[];}
+// rows → customers. Rows sharing an email, or with the same name and company, become one customer (their emails go in a dropdown).
+// Emails already saved are never duplicated: new details fill gaps in the saved customer instead.
+function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
+  const isMailHead=x=>/^\s*e-?mail/i.test(x)||/e-?mail( address(es)?)?\s*$/i.test(x),hi=rows.slice(0,10).findIndex(r=>r.some(isMailHead));
+  const hasHead=hi>=0,h=hasHead?rows[hi].map(x=>x.trim().toLowerCase()):[],body=hasHead?rows.slice(hi+1):rows;
   const col=re=>h.findIndex(x=>re.test(x));
-  const ci={email:col(/e-?mail( ?1)?( - value| address)?$|^e-?mail/),name:col(/^(full )?name$|^display name$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^tag|^labels?$|categor/)};
-  let n=0;for(const r of hasHead?rows.slice(1):rows){const cell=i=>i>=0?(r[i]||'').trim():'';
-    const mails=[];const addM=v=>{for(const x of String(v||'').split(/:::|[;,]/)){const a=x.trim().replace(/^<|>$/g,'');if(EMAIL_RE.test(a)&&!mails.some(m=>ck(m)===ck(a)))mails.push(a);}};
-    if(hasHead){addM(cell(ci.email));h.forEach((x,i)=>{if(/e-?mail/.test(x)&&!/type|label|display|subject/.test(x))addM(cell(i));});}
-    r.forEach(x=>{if(EMAIL_RE.test(x.trim()))addM(x);});
-    if(!mails.length){const m=r.join(' ').match(/[^\s<>",;]+@[^\s<>",;]+\.[^\s<>",;]+/);if(m)addM(m[0]);}
-    if(!mails.length)continue;const email=mails[0],alt=mails.slice(1);
-    const others=r.map(x=>x.trim()).filter(x=>x&&!mails.some(m=>x.includes(m)));
-    const name=hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'');
-    const data={name:name.replace(/<.*>/,'').trim(),company:hasHead?cell(ci.company):(others[1]||''),email,group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim()};
-    data.upd=Date.now();data.alt=alt;data.use=[email];const ex=CU.list.find(c=>ck(c.email)===ck(email));
-    if(ex){for(const k of['name','company','group'])if(!ex[k]&&data[k]){ex[k]=data[k];ex.upd=data.upd;}
-      const add=alt.filter(a=>ck(a)!==ck(ex.email)&&!altOf(ex).some(x=>ck(x)===ck(a)));if(add.length){ex.alt=[...altOf(ex),...add];ex.upd=data.upd;}}
-    else{CU.list.push(data);n++;}CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));}
-  cuSave();renderCust();return n;}
-$('#cuImport').onclick=()=>$('#cuFile').click();
-$('#cuFile').addEventListener('change',async()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(!f)return;try{const n=importCustomers(await f.text());toast(n?`Imported ${n} new customer${n>1?'s':''}`:'No new customers found in that file');}catch(e){toast('That file could not be read');}});
+  const ci={name:col(/^(full |customer |contact )?name$|^display name$|^contact( person)?$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),
+    company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^labels?$|categor/)};
+  const mailCols=h.map((x,i)=>/e-?mail/.test(x)&&!/type|label|display|subject|preferred|method/.test(x)?i:-1).filter(i=>i>=0);
+  const recs=[];let noMail=0;const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
+  for(const r of body){if(!r.some(x=>x.trim()))continue;const cell=i=>i>=0?clean(r[i]):'';
+    const mails=[];const addM=v=>{for(const x of String(v||'').split(/:::|[;,\s/|]+/)){const a=x.trim().replace(/^<|>$/g,'').replace(/^mailto:/i,'');if(EMAIL_RE.test(a)&&!mails.some(m=>ck(m)===ck(a)))mails.push(a);}};
+    if(hasHead)mailCols.forEach(i=>addM(r[i]));else{r.forEach(x=>addM(x));if(!mails.length){const m=r.join(' ').match(/[^\s<>",;]+@[^\s<>",;]+\.[^\s<>",;]+/);if(m)addM(m[0]);}}
+    if(!mails.length){noMail++;continue;}
+    const others=r.map(clean).filter(x=>x&&!mails.some(m=>x.includes(m)));
+    const name=(hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'')).replace(/<.*>/,'').trim();
+    recs.push({name,company:hasHead?cell(ci.company):(others[1]||''),group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim(),mails});}
+  // group rows: same email, or same name + company
+  const par=recs.map((_,i)=>i),find=i=>par[i]===i?i:(par[i]=find(par[i])),join=(a,b)=>{a=find(a);b=find(b);if(a!==b)par[b]=a;},seenK=new Map();
+  recs.forEach((r,i)=>{const keys=r.mails.map(m=>'@'+ck(m));if(r.name&&r.company)keys.push('#'+r.name.toLowerCase()+'|'+r.company.toLowerCase());for(const k of keys){if(seenK.has(k))join(seenK.get(k),i);else seenK.set(k,i);}});
+  const groups=new Map();recs.forEach((r,i)=>{const g=find(i);if(!groups.has(g))groups.set(g,[]);groups.get(g).push(r);});
+  const owner=new Map();for(const c of CU.list)for(const a of[c.email,...altOf(c)])owner.set(ck(a),c);
+  const now=Date.now();let added=0,merged=0,combined=recs.length-groups.size;
+  for(const rs of groups.values()){const mails=[];for(const r of rs)for(const m of r.mails)if(!mails.some(x=>ck(x)===ck(m)))mails.push(m);
+    const pick=k=>(rs.find(r=>r[k])||{})[k]||'',data={name:pick('name'),company:(rs.find(r=>r.name&&r.company)||rs.find(r=>r.company)||{}).company||'',group:pick('group')};
+    const ex=mails.map(m=>owner.get(ck(m))).find(Boolean);
+    if(ex){let ch=false;for(const k of['name','company','group'])if(!clean(ex[k])&&data[k]){ex[k]=data[k];ch=true;}
+      const add=mails.filter(a=>!owner.has(ck(a)));if(add.length){ex.alt=[...altOf(ex),...add];add.forEach(a=>owner.set(ck(a),ex));ch=true;}
+      if(ch){ex.upd=now;merged++;}continue;}
+    const c={...data,email:mails[0],alt:mails.slice(1),use:[mails[0]],upd:now};CU.list.push(c);mails.forEach(a=>owner.set(ck(a),c));added++;
+    CU.deleted=CU.deleted.filter(d=>!mails.some(m=>ck(m)===d.email));}
+  cuSave();renderCust();return{added,merged,combined,noMail,rows:recs.length+noMail};}
+const importCustomers=text=>importRows(parseCSV(text.replace(/^\uFEFF/,''))).added;
+$('#cuImport').onclick=()=>{loadScript('jszip').catch(()=>{});$('#cuFile').click();};
+$('#cuFile').addEventListener('change',async()=>{const f=$('#cuFile').files[0];$('#cuFile').value='';if(!f)return;
+  try{if(/\.xls$/i.test(f.name)){toast('Old .xls files can\'t be read. In Excel use File → Save As → Excel Workbook (.xlsx), then import that.',6000);return;}
+    const head=new Uint8Array(await f.slice(0,4).arrayBuffer()),isZip=head[0]===0x50&&head[1]===0x4B;
+    const r=importRows(isZip?await readXlsx(f):parseCSV((await f.text()).replace(/^\uFEFF/,'')));
+    const nn=CU.list.filter(noName).length;
+    toast(r.added||r.merged?[`Imported ${r.added} new customer${r.added===1?'':'s'}`,r.merged?`updated ${r.merged}`:'',r.combined?`${r.combined} repeated row${r.combined===1?'':'s'} combined`:'',r.noMail?`${r.noMail} row${r.noMail===1?'':'s'} without an email skipped`:''].filter(Boolean).join(' · ')+(nn?`. ${nn} have no name: tap "⚠ No name" to fix them.`:'.')
+      :r.rows?'No new customers: everyone in that file is already saved'+(r.noMail?` (${r.noMail} rows had no email)`:'')+'.':'No customers found in that file. It needs an Email column.',7000);}
+  catch(e){console.error(e);toast(e.message&&!/^[A-Z]\w+Error/.test(e.name)?e.message:'That file could not be read',5000);}});
 $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export yet');return;}const q=v=>`"${String(v||'').replace(/"/g,'""')}"`;
   save('Customers.csv',new Blob(['﻿'+['Name,Company,Email,Other emails,Group',...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
 
@@ -1671,13 +1723,18 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.f
   $('#mlChips').innerHTML=sel.map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
 // one entry per person; a customer can have several chosen addresses
-function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1});}
+function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1,key:ck(c.email)});}
   for(const a of splitAddr($('#mlTo').value)){const k=ck(a);if(!seen.has(k)){seen.add(k);out.push({email:a,emails:[a]});}}return out;}
-function updMode(){const n=people().length,row=$('#mlModeRow');row.hidden=n<2;$$('#mlMode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===MAIL.mode));
-  $('#mlModeHint').textContent=MAIL.mode==='each'?`${n} separate emails, each greeting the person by name. Nobody sees who else got it.`:'One email. Ticked customers go in Bcc so they can\'t see each other; typed addresses stay in To.';
-  $('#mlSend').textContent=n>1&&MAIL.mode==='each'?`Send ${n} emails`:'Send';}
-$('#mlMode').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;MAIL.mode=b.dataset.mode;saveMail();schedPreview();updMode();});
-$('#mlTo').addEventListener('input',updMode);
+// every customer gets their own email; the side panel says how many, and who has no name yet
+let nnOk=false;
+function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!firstName(p));nnOk=false;
+  $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
+  $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
+    :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
+      +(splitAddr($('#mlCc').value).length||splitAddr($('#mlBcc').value).length?`<small>Cc/Bcc get a copy of every email${n>1?` (${n} each)`:''}.</small>`:'')
+      +(nn.length?`<div class="warn"><b>⚠ ${nn.length} ${nn.length>1?'have':'has'} no name, so the email starts “${esc(fillTokens(($('#mlMsg').value.split(/\r?\n/).find(l=>l.includes('{name}'))||'Hi {name},').trim(),null))}”:</b><ul>${nn.slice(0,50).map(p=>`<li>${esc(p.company||p.email)}${p.cust?` <button type="button" data-fixname="${esc(p.key)}">Add name</button>`:' <small>(typed address: save as a customer to add a name)</small>'}</li>`).join('')}${nn.length>50?`<li>and ${nn.length-50} more</li>`:''}</ul></div>`:'');}
+$('#mlCount').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c){cuFormOpen(c);$('#cuForm').scrollIntoView({block:'nearest'});}});
+for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMode);
 
 /* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up).
    The signed-in account ({prov,email}) is remembered in this browser until Sign out. Access tokens last about an hour;
@@ -1853,6 +1910,7 @@ function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...
       how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
+const lgGroupBy=()=>lsGet('ss-lggroup')==='sheet'?'sheet':'date';
 function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
   return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):(e.status||'none')===lgF.status))
     &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
@@ -1863,10 +1921,15 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
   const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
-  $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;
+  $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
   const shown=lgShown();LG.sel=new Set([...LG.sel].filter(id=>shown.some(t=>t.root.id===id)));
   const sentAs=e=>`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
-  $('#lgList').innerHTML=shown.length?shown.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+  // one listing per customer, under a heading per day (when first sent) or per sell sheet
+  const by=lgGroupBy(),groups=new Map();
+  for(const t of by==='date'?shown.slice().sort((a,b)=>dayStr(b.root.at).localeCompare(dayStr(a.root.at))||b.last-a.last):shown){const k=by==='date'?dayStr(t.root.at):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
+  const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+new Date(t).toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});};
+  const head=ts=>`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(by==='date'?dayName(ts[0].root.at):ts[0].root.sheet)}</b><span>${ts.length} customer${ts.length>1?'s':''}${by==='sheet'?` · last sent ${esc(ago(Math.max(...ts.map(t=>t.last))))}`:''}</span></div>`;
+  $('#lgList').innerHTML=shown.length?[...groups.values()].map(ts=>head(ts)+ts.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
       <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
       <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
@@ -1877,7 +1940,7 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
       <input class="in note-in" type="text" data-lnote value="${esc(e.note)}" placeholder="Add a note, e.g. wants 20 boxes of Navy" aria-label="Note">
       ${t.fups.length?`<div class="lg-fups">${t.fups.map((f,n)=>`<div class="lg-fu" data-id="${esc(f.id)}"><span class="fu-tag">Follow-up${t.fups.length>1?' '+(n+1):''}</span>
         <div class="c">${esc(fmtWhen(f.at))}<small>${esc(ago(f.at))}${f.from?' · from '+esc(f.from):''}</small></div><div class="c">${sentAs(f)||'&nbsp;'}<small>${esc((f.emails.length?f.emails:[f.email]).join(', '))}</small></div>
-        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;}).join('')
+        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;}).join('')).join('')
     :`<div class="lg-empty">${all.length?'Nothing matches these filters.':'Nothing sent yet. Every sell sheet you email from here is listed automatically, with the date, who it went to and how they responded.'}</div>`;
   $('#lgFollow').disabled=!LG.sel.size;$('#lgFollow').textContent=LG.sel.size?`Follow up selected (${LG.sel.size})`:'Follow up selected';
   const a=authGet();$('#lgNote').innerHTML=a?`Synced to <b>${esc(a.email||'your account')}</b>.`:'Saved in this browser. Sign in (optional) to keep it on every device.';renderBadge();}
@@ -1886,6 +1949,7 @@ $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.act
 $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
 $('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;renderLog();$('#lgQ').focus();});
 for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;renderLog();});
+$('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);renderLog();});
 $('#lgClear').onclick=()=>{Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to:'',color:''});$('#lgQ').value='';$('#lgFrom').value='';$('#lgTo').value='';renderLog();};
 let lgSure={};
 // colour palette for one email (stored on the original; follow-ups share it)
@@ -2025,7 +2089,10 @@ function doneView(title,sub,files){dvStatus('');$('#dvDone').innerHTML=`<div cla
 
 /* the email itself */
 const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
-function fillTokens(text,p){const nm=(p?.name||'').trim(),first=((nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/)[0]||'').replace(/[^\p{L}\p{M}'’-]/gu,'');const v={name:first||(p?.company||''),company:p?.company||'',product:productLabel()};
+// {name}: the customer's first name only (never the company). "LEE, SARAH" → Sarah; ALL-CAPS names are tidied; Mr/Mrs/Ms/Dr are skipped.
+function firstName(p){const nm=String(p?.name||'').trim(),w=(nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{M}'’-]/gu,'')).filter(Boolean);
+  let f=(w.length>1&&/^(mr|mrs|ms|miss|mx|dr|sir)$/i.test(w[0])?w[1]:w[0])||'';if(f&&f===f.toUpperCase()&&f!==f.toLowerCase())f=f.toLowerCase().replace(/(^|[-'’])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());return f;}
+function fillTokens(text,p){const v={name:firstName(p),company:p?.company||'',product:productLabel()};
   return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
 // pictures shown inside the email, made once per opening of the Email window
 let inlineCache=null;
@@ -2098,9 +2165,8 @@ async function sendOne(p,tok,m){
 function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),bcc=splitAddr($('#mlBcc').value);
   const bad=[...P.flatMap(x=>x.emails),...cc,...bcc].filter(a=>!EMAIL_RE.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
   if(!P.length&&!cc.length&&!bcc.length)throw new Error('Add at least one recipient: tick a customer or type an email address.');
-  if(P.length>1&&MAIL.mode==='each')return P.map(p=>({to:p.emails,cc,bcc,person:p,people:[p]}));
-  if(P.length>1){const to=P.filter(p=>!p.cust).flatMap(p=>p.emails),hid=P.filter(p=>p.cust).flatMap(p=>p.emails);return[{to:to.length?to:(meEmail?[meEmail]:[]),cc,bcc:[...bcc,...hid],person:null,people:P}];}
-  return[{to:P.flatMap(p=>p.emails),cc,bcc,person:P.length===1?P[0]:null,people:P}];}
+  if(P.length)return P.map(p=>({to:p.emails,cc,bcc,person:p,people:[p]}));
+  return[{to:[],cc,bcc,person:null,people:[]}];}
 async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
   for(const k of kinds){say(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
     if((k==='pdf'||k==='jpg')&&!cv)cv=await sheetCanvas();
@@ -2114,8 +2180,10 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
+  const nn=plan.filter(m=>m.person&&!firstName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
+  if(nn.length&&!nnOk){nnOk=true;mlStatus(`${nn.length} ${nn.length>1?'customers have':'customer has'} no name (see the list on the right). Add names, or click Send again to send anyway.`,true);return;}
   sending=true;$('#mlSend').disabled=true;
-  try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
+  try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();}
     const files=kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
@@ -2152,7 +2220,7 @@ $('#mlShow').addEventListener('change',()=>{MAIL.show=$$('#mlShow input:checked'
 // quick line under the message: what the first recipient will actually read
 function updMsgPrev(){const P=people(),p=P[0]||null,first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';
   $('#mlMsgPrev').textContent=!first?'':p?`${p.name||p.company?`For ${p.name||p.company}`:`For ${p.email}`}: “${first}”${P.length>1?` (and ${P.length-1} more, each with their own name)`:''}`:`With no customer ticked, it reads: “${first}”`;}
-$('#mlMsg').addEventListener('input',updMsgPrev);$('#mlTo').addEventListener('input',updMsgPrev);
+$('#mlMsg').addEventListener('input',()=>{updMsgPrev();updMode();});$('#mlTo').addEventListener('input',updMsgPrev);
 // Preview tab: the real email for each recipient, names filled in
 // live preview next to the form, refreshed shortly after each change
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
@@ -2161,18 +2229,20 @@ let prevPlan=[],prevSeq=0;
 async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
-  sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${m.person.name||m.person.company||m.person.email} <${m.to.join(', ')}>`:plan.length===1&&m.bcc.length&&MAIL.mode==='bcc'&&people().length>1?'One email to everyone (customers in Bcc)':m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
+  sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
   if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
   const files=attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
   const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';
   $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
-    +row('Subject',esc(fillTokens($('#mlSubj').value,m.person)))+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'');
+    +row('Subject',esc(fillTokens($('#mlSubj').value,m.person)))+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
+    +(m.person&&!firstName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
   const fr=$('#mlPrevFrame');fr.srcdoc=emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos')).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');
   const inline=parts.length?await emailInline(parts):[];if(seq!==prevSeq)return;
   let html=emailHTML(msg,inline,parts);for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
   fr.srcdoc=html.replace('<head>','<head><base target="_blank">');}
 $('#mlPrevWho').addEventListener('change',buildPreview);
+$('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c){cuFormOpen(c);$('#cuForm').scrollIntoView({block:'nearest'});}});
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 
 /* ---------- boot ---------- */
