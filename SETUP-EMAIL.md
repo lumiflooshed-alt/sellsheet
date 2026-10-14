@@ -42,10 +42,16 @@ Your site addresses (add every one you use):
    - Click **Create**.
 7. Copy the **Client ID**. It looks like `1234567890-abc123.apps.googleusercontent.com`.
 
-## 1b. Optional: a Google API key, to pick any Drive folder
+## 1b. Optional: a Google API key, to browse your Drive
 
 **Save to Drive** works without this. Files go to a **Sell Sheets** folder created for you, or to the top of **My Drive**.
-To choose any folder (including shared drives) in Google's own folder picker, add a free API key:
+Add a free API key to use Google's own Drive picker. With it you can:
+
+- choose any folder (including shared drives) when saving
+- **open** a sell sheet from Drive (PDF, Word or Google Docs)
+- **import customers** from Drive (Excel, CSV or Google Sheets)
+
+To add the key:
 
 1. In the same Google Cloud project, make sure **Google Picker API** is enabled (step 3 above).
 2. Open **APIs & Services → Credentials → Create credentials → API key**. Copy the key (it starts with `AIza`).
