@@ -323,6 +323,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .cu-mails{grid-column:1/-1;display:grid;gap:4px;padding:6px 0 2px 28px;border-top:1px dashed var(--line2);margin-top:2px}
 .cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
 .cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
+#driveDlg{width:min(620px,calc(100vw - 24px))}
+.dv-folder{display:flex;gap:8px;align-items:center}.dv-folder select{flex:1;min-width:0}
 .acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
 .acct-menu p{margin:0 0 4px;font-size:14px;line-height:1.45}
@@ -359,6 +361,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="spacer"></div>
     <button class="btn icon ghost" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="btn ghost acct" id="acctBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
+    <button class="btn dl-word" id="driveBtn" type="button" title="Save to Google Drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11H2M16 3l-6 11M22 14H10l-4 7"/></svg><span>Drive</span></button>
     <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
     <button class="btn dl-word" id="dlWord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Word</span></button>
     <button class="btn primary" id="dlPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download PDF</button>
@@ -477,6 +480,22 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-bot"><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
   </div>
 </dialog>
+<dialog id="driveDlg" aria-label="Save to Google Drive">
+  <div class="su-wrap">
+    <div class="ml-top"><h2>Save to Google Drive</h2><button class="btn icon sm ghost" id="dvClose" type="button" aria-label="Close">✕</button></div>
+    <div class="su-body">
+      <div class="ml-acct" id="dvAcct"></div>
+      <label class="field"><span>File name</span><input class="in" id="dvName" type="text"></label>
+      <div class="field"><span>Save as</span><div class="att" id="dvAtt">
+        <label class="opt2"><input type="checkbox" value="pdf"><b>PDF</b><small>Best for sharing</small></label>
+        <label class="opt2"><input type="checkbox" value="docx"><b>Word</b><small>.docx, editable</small></label>
+        <label class="opt2"><input type="checkbox" value="jpg"><b>Image</b><small>.jpg</small></label></div></div>
+      <div class="field"><span>Folder</span><div class="dv-folder"><select class="in" id="dvFolder" aria-label="Folder"></select><button class="btn sm" type="button" id="dvPick">Choose folder…</button></div><small class="hint" id="dvHint"></small></div>
+      <label class="check"><input type="checkbox" id="dvReplace">Replace a file with the same name in that folder (Drive keeps the old one in its version history)</label>
+    </div>
+    <div class="ml-bot"><span class="note" id="dvStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="dvCancel" type="button">Close</button><button class="btn primary" id="dvSave" type="button">Save to Drive</button></div></div>
+  </div>
+</dialog>
 <dialog id="setupDlg" aria-label="Set up sign-in">
   <div class="su-wrap">
     <div class="ml-top"><h2>Set up sign-in</h2><button class="btn icon sm ghost" id="suClose" type="button" aria-label="Close">✕</button></div>
@@ -487,6 +506,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <div class="kv"><span>Microsoft: <b>Single-page application redirect URI</b></span><code id="suRedirect"></code><button class="btn sm" type="button" data-copy="suRedirect">Copy</button></div>
       </div>
       <label class="field"><span>Google Client ID</span><input class="in" id="suGoogle" type="text" spellcheck="false" autocomplete="off" placeholder="1234567890-abc123.apps.googleusercontent.com"><small class="hint" id="suGoogleHint"></small></label>
+      <label class="field"><span>Google API key <small style="font-weight:500">(optional, lets you pick any Drive folder when saving)</small></span><input class="in" id="suKey" type="text" spellcheck="false" autocomplete="off" placeholder="AIzaSy…"><small class="hint" id="suKeyHint"></small></label>
       <label class="field"><span>Microsoft Application (client) ID</span><input class="in" id="suMs" type="text" spellcheck="false" autocomplete="off" placeholder="11111111-2222-3333-4444-555555555555"><small class="hint" id="suMsHint"></small></label>
       <p class="note">Saved in this browser so you can sign in straight away. To switch sign-in on for every device and everyone using the site, send the IDs to Claude (they're not passwords), or paste them into <code>index.html</code> as SETUP-EMAIL.md explains.</p>
     </div>
@@ -501,9 +521,9 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 'use strict';
 // Optional sign-in (Gmail / Outlook) for emailing sell sheets and syncing customers.
 // Paste the Client IDs from SETUP-EMAIL.md here; leave '' to keep that option switched off.
-const EMAIL_SETUP={google:'180128706409-k1bv00h2mvb5mlmk141ftcojgb01g02t.apps.googleusercontent.com',microsoft:''};
+const EMAIL_SETUP={google:'180128706409-k1bv00h2mvb5mlmk141ftcojgb01g02t.apps.googleusercontent.com',microsoft:'',googleApiKey:''};
 const EMAIL_CODE={...EMAIL_SETUP}; // IDs pasted in "Set up sign-in" fill any left empty here, for this browser only
-try{const o=JSON.parse(localStorage.getItem('ss-email-setup')||'{}')||{};for(const k of['google','microsoft'])if(!EMAIL_SETUP[k]&&typeof o[k]==='string')EMAIL_SETUP[k]=o[k].trim();}catch(_){}
+try{const o=JSON.parse(localStorage.getItem('ss-email-setup')||'{}')||{};for(const k of['google','microsoft','googleApiKey'])if(!EMAIL_SETUP[k]&&typeof o[k]==='string')EMAIL_SETUP[k]=o[k].trim();}catch(_){}
 // The Microsoft sign-in pop-up returns to this page; it only needs to hand the code back to the opener.
 if(window.name==='ss-login'&&window.opener&&/[?&](code|error)=/.test(location.search)){document.body.innerHTML='<p style="font:16px system-ui,sans-serif;padding:48px;text-align:center">Signing in…</p>';return;}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -513,7 +533,8 @@ const LIBS=Object.assign({
   h2c:'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
   docx:'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
   jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
-  gis:'https://accounts.google.com/gsi/client'
+  gis:'https://accounts.google.com/gsi/client',
+  gapi:'https://apis.google.com/js/api.js'
 },window.__LIBS||{});
 const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
@@ -1414,12 +1435,12 @@ const tokSet=(p,t)=>authSet(t?{...t,prov:p}:null);
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
 function googleLogin(choose){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
-  const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata';
+  const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
       let email='';try{email=(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+r.access_token}})).json()).email||'';}catch(_){}
-      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email};tokSet('google',t);res(t);},
+      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email,scope:r.scope||scope};tokSet('google',t);res(t);},
     error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'The sign-in window was closed. If Google showed an error such as "origin_mismatch" or "invalid_client", check the steps under "If sign-in doesn\'t work" in SETUP-EMAIL.md.'))});
   c.requestAccessToken();});}
 async function msLogin(choose){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
@@ -1508,18 +1529,86 @@ $('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[dat
   try{await login(v,true);MAIL.prov=v;saveMail();$('#acctMenu').classList.add('hide');toast('Signed in. Your customers will sync to this account.');}catch(err){toast(err.message);}});
 
 /* "Set up sign-in": paste the Client IDs (kept in this browser) */
-const setupDlg=$('#setupDlg'),ID_RE={google:/^[\w-]+\.apps\.googleusercontent\.com$/,microsoft:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i};
+const setupDlg=$('#setupDlg'),ID_RE={googleApiKey:/^AIza[0-9A-Za-z_-]{30,45}$/,google:/^[\w-]+\.apps\.googleusercontent\.com$/,microsoft:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i};
 function openSetup(){$('#suOrigin').textContent=location.origin;$('#suRedirect').textContent=redirectUri();
-  for(const[k,id,hint]of[['google','suGoogle','suGoogleHint'],['microsoft','suMs','suMsHint']]){const inp=$('#'+id);inp.value=EMAIL_SETUP[k]||'';inp.disabled=!!EMAIL_CODE[k];
+  for(const[k,id,hint]of[['google','suGoogle','suGoogleHint'],['googleApiKey','suKey','suKeyHint'],['microsoft','suMs','suMsHint']]){const inp=$('#'+id);inp.value=EMAIL_SETUP[k]||'';inp.disabled=!!EMAIL_CODE[k];
     $('#'+hint).textContent=EMAIL_CODE[k]?'Already switched on for everyone in the site\'s code.':'';}
   $('#suStatus').textContent='';if(!setupDlg.open)setupDlg.showModal();}
 setupDlg.addEventListener('click',async e=>{const c=e.target.closest('[data-copy]');if(!c)return;try{await navigator.clipboard.writeText($('#'+c.dataset.copy).textContent);toast('Copied');}catch(_){toast('Select the text and copy it');}});
-$('#suSave').onclick=()=>{const v={google:$('#suGoogle').value.trim().replace(/\s+/g,''),microsoft:$('#suMs').value.trim().replace(/\s+/g,'')};
-  for(const k of['google','microsoft'])if(!EMAIL_CODE[k]&&v[k]&&!ID_RE[k].test(v[k])){const s=$('#suStatus');s.textContent=k==='google'?'That doesn\'t look like a Google Client ID. It ends in .apps.googleusercontent.com.':'That doesn\'t look like a Microsoft Application ID (it looks like 11111111-2222-3333-4444-555555555555).';s.style.color='var(--bad)';return;}
-  const keep={};for(const k of['google','microsoft'])if(!EMAIL_CODE[k]){keep[k]=v[k];EMAIL_SETUP[k]=v[k];}lsSet('ss-email-setup',JSON.stringify(keep));
+$('#suSave').onclick=()=>{const v={google:$('#suGoogle').value.trim().replace(/\s+/g,''),googleApiKey:$('#suKey').value.trim().replace(/\s+/g,''),microsoft:$('#suMs').value.trim().replace(/\s+/g,'')};
+  for(const k of['google','googleApiKey','microsoft'])if(!EMAIL_CODE[k]&&v[k]&&!ID_RE[k].test(v[k])){const s=$('#suStatus');s.textContent=k==='googleApiKey'?'That doesn\'t look like a Google API key. It starts with AIza.':k==='google'?'That doesn\'t look like a Google Client ID. It ends in .apps.googleusercontent.com.':'That doesn\'t look like a Microsoft Application ID (it looks like 11111111-2222-3333-4444-555555555555).';s.style.color='var(--bad)';return;}
+  const keep={};for(const k of['google','googleApiKey','microsoft'])if(!EMAIL_CODE[k]){keep[k]=v[k];EMAIL_SETUP[k]=v[k];}lsSet('ss-email-setup',JSON.stringify(keep));
   setupDlg.close();renderTopAcct();if(mailDlg.open){renderAcct();renderSync();}if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   toast(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Sign-in is set up in this browser. Click "Sign in" to try it.':'Sign-in setup cleared');};
 $('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
+
+/* ---------- save to Google Drive ----------
+   Uses the drive.file permission: the site can only see files it saves and folders the person picks in Google's own picker. */
+const driveDlg=$('#driveDlg'),DRIVE_FILE='https://www.googleapis.com/auth/drive.file',FOLDER_MIME='application/vnd.google-apps.folder';
+const DV=Object.assign({att:['pdf'],replace:true,recent:{},last:{}},(()=>{try{return JSON.parse(lsGet('ss-drive')||'{}')||{};}catch(_){return{};}})());
+const saveDV=()=>lsSet('ss-drive',JSON.stringify(DV));
+const hasScope=(t,sc)=>String(t?.scope||'').split(/\s+/).includes(sc);
+const dvStatus=(m,bad)=>{const s=$('#dvStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
+const dvKey=()=>ck(tokGet('google')?.email||'');
+function renderDrive(){const t=tokGet('google'),a=authGet(),el=$('#dvAcct');
+  if(!EMAIL_SETUP.google){el.innerHTML='<span>Saving to Drive needs Google sign-in, which isn\'t set up yet.</span><button class="btn sm primary" type="button" id="dvSetup">Set up sign-in</button>';}
+  else el.innerHTML=t?`<span>Saving to the Google Drive of <b>${esc(t.email||'your account')}</b></span>`:a?`<span>Signed in with ${PROV_NAME[a.prov]}. Saving to Drive needs your Google account.</span>`:'<span>You\'ll be asked to sign in with Google when you save.</span>';
+  const recent=(DV.recent[dvKey()]||[]),last=DV.last[dvKey()]||'app';
+  $('#dvFolder').innerHTML=`<option value="app">Sell Sheets folder (created for you)</option><option value="root">My Drive (top level)</option>${recent.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}`;
+  $('#dvFolder').value=[...$('#dvFolder').options].some(o=>o.value===last)?last:'app';
+  $('#dvPick').disabled=!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey;
+  $('#dvHint').textContent=EMAIL_SETUP.googleApiKey?'Choose folder… opens Google\'s folder picker (your folders and shared drives).':'To pick any other folder, add a Google API key in Sign-in setup (see SETUP-EMAIL.md). Until then, use the Sell Sheets folder or My Drive.';}
+function openDrive(){$('#dvName').value=fileBase();$$('#dvAtt input').forEach(i=>i.checked=DV.att.includes(i.value));$('#dvReplace').checked=DV.replace!==false;dvStatus('');renderDrive();
+  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});if(EMAIL_SETUP.googleApiKey)loadScript('gapi').catch(()=>{});if(!driveDlg.open)driveDlg.showModal();}
+$('#driveBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openDrive();};
+$('#dvClose').onclick=$('#dvCancel').onclick=()=>driveDlg.close();
+$('#dvAcct').addEventListener('click',e=>{if(e.target.id==='dvSetup'){driveDlg.close();openSetup();}});
+$('#dvAtt').addEventListener('change',()=>{DV.att=$$('#dvAtt input:checked').map(i=>i.value);saveDV();});
+$('#dvReplace').addEventListener('change',e=>{DV.replace=e.target.checked;saveDV();});
+$('#dvFolder').addEventListener('change',e=>{DV.last[dvKey()]=e.target.value;saveDV();});
+// a Google token that includes drive.file (asks again once if an older sign-in didn't include it)
+function driveToken(){const t=tokGet('google');if(t&&hasScope(t,DRIVE_FILE))return Promise.resolve(t);
+  return login('google',false).then(n=>{if(!hasScope(n,DRIVE_FILE))throw new Error('Google didn\'t give permission to save files. Try again and allow "See, edit, create and delete only the specific Google Drive files you use with this app".');renderDrive();return n;});}
+async function driveFetch(t,url,opt={}){let r;try{r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+t.token,...(opt.headers||{})}});}
+  catch(_){throw new Error('Could not reach Google Drive. Check your connection and any ad-blockers, then try again.');}
+  if(!r.ok){const e=await httpErr('Drive',r);if(e.off)e.message='The Google Drive API is switched off. In console.cloud.google.com open APIs & Services → Library → Google Drive API → Enable, then try again.';
+    else if(r.status===401){tokSet('google',null);e.message='Your Google sign-in expired. Click Save to Drive again.';}throw e;}
+  return r.json();}
+async function appFolder(t){const q=encodeURIComponent(`name='Sell Sheets' and mimeType='${FOLDER_MIME}' and trashed=false`);
+  const f=(await driveFetch(t,`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name)`)).files?.[0];if(f)return f;
+  return driveFetch(t,'https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Sell Sheets',mimeType:FOLDER_MIME})});}
+const qs=v=>String(v).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+async function driveUpload(t,folderId,name,type,blob,replace){const all='supportsAllDrives=true',fields='fields=id,name,webViewLink';
+  if(replace){const q=encodeURIComponent(`name='${qs(name)}' and '${qs(folderId)}' in parents and trashed=false`);
+    const ex=(await driveFetch(t,`https://www.googleapis.com/drive/v3/files?q=${q}&${all}&includeItemsFromAllDrives=true&fields=files(id)`)).files?.[0];
+    if(ex)return{...(await driveFetch(t,`https://www.googleapis.com/upload/drive/v3/files/${ex.id}?uploadType=media&${all}&${fields}`,{method:'PATCH',headers:{'Content-Type':type},body:blob})),replaced:true};}
+  const B='dv'+uid()+uid();
+  const body=new Blob([`--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name,parents:[folderId],mimeType:type})}\r\n--${B}\r\nContent-Type: ${type}\r\n\r\n`,blob,`\r\n--${B}--`]);
+  return driveFetch(t,`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&${all}&${fields}`,{method:'POST',headers:{'Content-Type':`multipart/related; boundary=${B}`},body});}
+// Google's own folder picker (needs an API key). Our dialog is hidden while it shows, since the picker can't sit above a modal.
+async function pickFolder(t){await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
+  const P=google.picker,view=d=>{const v=new P.DocsView(P.ViewId.FOLDERS).setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(FOLDER_MIME);return d?v.setEnableDrives(true):v;};
+  return new Promise(res=>{new P.PickerBuilder().setTitle('Choose where to save the sell sheet').addView(view(false)).addView(view(true)).enableFeature(P.Feature.SUPPORT_DRIVES)
+    .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
+    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
+$('#dvPick').onclick=async()=>{dvStatus('');let t;try{t=await driveToken();}catch(e){dvStatus(e.message,true);return;}
+  driveDlg.close();let f=null;try{f=await pickFolder(t);}catch(e){openDrive();dvStatus(e.message,true);return;}
+  openDrive();if(!f)return;const k=dvKey(),list=(DV.recent[k]||[]).filter(x=>x.id!==f.id);DV.recent[k]=[f,...list].slice(0,6);DV.last[k]=f.id;saveDV();renderDrive();dvStatus(`Folder chosen: ${f.name}`);};
+let drSaving=false;
+$('#dvSave').onclick=async()=>{if(drSaving)return;dvStatus('');
+  if(!EMAIL_SETUP.google){dvStatus('Google sign-in isn\'t set up yet. Click "Set up sign-in".',true);return;}
+  const kinds=$$('#dvAtt input:checked').map(i=>i.value);if(!kinds.length){dvStatus('Choose at least one file type.',true);return;}
+  const base=$('#dvName').value.trim().replace(/[\\/:*?"<>|]+/g,'').replace(/\.(pdf|docx|jpg)$/i,'')||fileBase();
+  drSaving=true;$('#dvSave').disabled=true;
+  try{const t=await driveToken();let fv=$('#dvFolder').value,fname=$('#dvFolder').selectedOptions[0]?.textContent||'';
+    if(fv==='app'){dvStatus('Finding the Sell Sheets folder…');const f=await appFolder(t);fv=f.id;fname='Sell Sheets';}else if(fv==='root')fname='My Drive';
+    const files=await buildAttachments(kinds,dvStatus);const done=[];
+    for(const f of files){dvStatus(`Saving ${f.name.split('.').pop().toUpperCase()} to ${fname}…`);done.push(await driveUpload(t,fv,base+MAIL_TYPES[kinds[files.indexOf(f)]][1],f.type,f.blob,$('#dvReplace').checked));}
+    DV.last[dvKey()]=$('#dvFolder').value;saveDV();
+    const s=$('#dvStatus');s.style.color='';s.innerHTML=`✓ Saved to <b>${esc(fname)}</b>${done.some(d=>d.replaced)?' (replaced the older copy)':''}: `+done.map(d=>d.webViewLink?`<a href="${esc(d.webViewLink)}" target="_blank" rel="noopener">${esc(d.name)}</a>`:esc(d.name)).join(', ');
+    toast('Saved to Google Drive');}
+  catch(e){console.error(e);dvStatus(e.message||'Saving to Drive failed.',true);}
+  finally{drSaving=false;$('#dvSave').disabled=false;}};
 
 /* the email itself */
 const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
@@ -1587,8 +1676,8 @@ function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),b
   if(P.length>1&&MAIL.mode==='each')return P.map(p=>({to:p.emails,cc,bcc,person:p}));
   if(P.length>1){const to=P.filter(p=>!p.cust).flatMap(p=>p.emails),hid=P.filter(p=>p.cust).flatMap(p=>p.emails);return[{to:to.length?to:(meEmail?[meEmail]:[]),cc,bcc:[...bcc,...hid],person:null}];}
   return[{to:P.flatMap(p=>p.emails),cc,bcc,person:P.length===1?P[0]:null}];}
-async function buildAttachments(kinds){const out=[];let cv=null;
-  for(const k of kinds){mlStatus(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
+async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
+  for(const k of kinds){say(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
     if((k==='pdf'||k==='jpg')&&!cv)cv=await sheetCanvas();
     const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
