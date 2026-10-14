@@ -128,7 +128,10 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 ## Good to know
 
 - **Signing in is optional.** Without it, customers are saved in that browser, and **Share instead…** in the Email window still hands the files to your device's own email app.
-- **Sign-ins last about an hour**, and only in that browser tab. After that the site asks you to sign in again. Your customers are kept either way.
+- **You stay signed in on this browser until you click Sign out**, in every tab.
+  - Google only hands out one-hour passes. After an hour, the next email or Drive save briefly opens a Google window that closes by itself; you don't need to click anything.
+  - Microsoft passes renew silently in the background (for up to about a day of not using the site).
+- **Signed in with Outlook but saving to Google Drive?** The site asks for your Google account once, just for Drive. You stay signed in with Outlook, and your customers stay on that account.
 - **Sending limits:**
   - Gmail: about 500 emails a day, or 2,000 on Google Workspace.
   - Outlook: about 30 a minute. The site paces large sends automatically.

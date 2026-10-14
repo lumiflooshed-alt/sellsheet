@@ -1657,48 +1657,66 @@ function updMode(){const n=people().length,row=$('#mlModeRow');row.hidden=n<2;$$
 $('#mlMode').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;MAIL.mode=b.dataset.mode;saveMail();schedPreview();updMode();});
 $('#mlTo').addEventListener('input',updMode);
 
-/* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up). Tokens last about an hour and stay in this tab only. */
+/* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up).
+   The signed-in account ({prov,email}) is remembered in this browser until Sign out. Access tokens last about an hour;
+   they're kept per provider and renewed when needed: Microsoft silently with its refresh token, Google with a pop-up
+   that closes by itself (no clicks) once permission has been given. */
 const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
-// one signed-in account at a time (provider, token, email); kept for this browser tab only
-const authGet=()=>{try{const t=JSON.parse(sessionStorage.getItem('ss-auth')||'null');return t&&t.exp>Date.now()+60e3?t:null;}catch(_){return null;}};
-const authSet=t=>{try{t?sessionStorage.setItem('ss-auth',JSON.stringify(t)):sessionStorage.removeItem('ss-auth');}catch(_){}};
-const tokGet=p=>{const a=authGet();return a&&a.prov===p?a:null;};
-const tokSet=(p,t)=>authSet(t?{...t,prov:p}:null);
+const lsJ=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}},lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
+const authGet=()=>{const a=lsJ('ss-acct');return a&&a.prov?a:null;};
+const authSet=a=>a?lsSet('ss-acct',JSON.stringify({prov:a.prov,email:a.email||''})):lsDel('ss-acct');
+const toksAll=()=>lsJ('ss-toks')||{};
+const tokGet=p=>{const t=toksAll()[p];return t&&t.token&&t.exp>Date.now()+60e3?t:null;};
+// tokSet(p,null) only drops the access token; the email (used as a sign-in hint) and any refresh token are kept
+const tokSet=(p,t)=>{const m=toksAll();m[p]=t||(m[p]?{...m[p],token:'',exp:0}:undefined);if(!m[p])delete m[p];lsSet('ss-toks',JSON.stringify(m));};
+const meFor=p=>{const a=authGet();return a&&a.prov===p?a.email:toksAll()[p]?.email||'';};
+(()=>{try{const o=JSON.parse(sessionStorage.getItem('ss-auth')||'null');sessionStorage.removeItem('ss-auth');
+  if(o&&o.prov&&!authGet()){authSet(o);if(o.exp>Date.now()+60e3)tokSet(o.prov,{token:o.token,exp:o.exp,email:o.email,scope:o.scope});}}catch(_){}})();
+const MS_SCOPE='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',MS_TOKEN='https://login.microsoftonline.com/common/oauth2/v2.0/token';
+async function msRefresh(){const o=toksAll().microsoft;if(!o?.rt||!EMAIL_SETUP.microsoft)return null;
+  try{const r=await fetch(MS_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope:MS_SCOPE,grant_type:'refresh_token',refresh_token:o.rt})});
+    const j=await r.json().catch(()=>({}));if(!r.ok||!j.access_token){tokSet('microsoft',{...o,token:'',exp:0,rt:''});return null;}
+    const t={...o,token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,rt:j.refresh_token||o.rt};tokSet('microsoft',t);return t;}catch(_){return null;}}
+// a working token without showing anything, or null
+async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh():null);}
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
-function googleLogin(choose){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
+function googleLogin(choose,hint){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
   const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
-  const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',
+  const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
       let email='';try{email=(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+r.access_token}})).json()).email||'';}catch(_){}
-      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email,scope:r.scope||scope};tokSet('google',t);res(t);},
+      const t={token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email:email||hint||'',scope:r.scope||scope};tokSet('google',t);res(t);},
     error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'The sign-in window was closed. If Google showed an error such as "origin_mismatch" or "invalid_client", check the steps under "If sign-in doesn\'t work" in SETUP-EMAIL.md.'))});
   c.requestAccessToken();});}
-async function msLogin(choose){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
-  try{const scope='openid profile offline_access User.Read Mail.Send Files.ReadWrite.AppFolder',rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+async function msLogin(choose,hint){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
+  try{const scope=MS_SCOPE,rnd=n=>crypto.getRandomValues(new Uint8Array(n));
     const verifier=b64url(rnd(48)),challenge=b64url(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),state=b64url(rnd(16));
-    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,prompt:choose?'select_account':'select_account'});
+    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,...(!choose&&hint?{login_hint:hint}:{prompt:'select_account'})});
     const code=await new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
       let u;try{u=new URL(w.location.href);}catch(_){return;}if(u.origin!==location.origin)return;const sp=u.searchParams;if(!sp.get('code')&&!sp.get('error'))return;
       clearInterval(iv);w.close();if(sp.get('state')!==state){rej(new Error('Sign-in failed. Please try again.'));return;}
       sp.get('error')?rej(new Error(sp.get('error_description')||sp.get('error'))):res(sp.get('code'));},250);});
-    const r=await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    const r=await fetch(MS_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope,code,redirect_uri:redirectUri(),grant_type:'authorization_code',code_verifier:verifier})});
     const j=await r.json();if(!r.ok||!j.access_token)throw new Error(j.error_description||'Sign-in failed.');
     let email='';try{const me=await (await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+j.access_token}})).json();email=me.mail||me.userPrincipalName||'';}catch(_){}
-    const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email};tokSet('microsoft',t);return t;}
+    const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:email||hint||'',rt:j.refresh_token||''};tokSet('microsoft',t);return t;}
   catch(e){try{w.close();}catch(_){}throw e;}}
-async function login(p,choose){const before=cuKey();const t=await (p==='google'?googleLogin(choose):msLogin(choose));afterLogin(before);return t;}
+// signs in as the site's account (customers and sent log sync to it). Reuses or renews the current sign-in first, unless fresh.
+async function login(p,choose,fresh){const before=cuKey(),hint=choose?'':meFor(p);
+  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint):msLogin(choose,hint));
+  authSet({prov:p,email:t.email});afterLogin(before);return t;}
 function afterLogin(prevKey){const a=authGet();if(!a)return;
   // the first time an account signs in on this browser, copy the customers saved here into it
   const flag='ss-merged:'+a.prov+':'+ck(a.email);if(prevKey==='ss-customers'&&!lsGet(flag)){try{const g=JSON.parse(lsGet('ss-customers')||'[]');const gl=Array.isArray(g)?g:g.customers||[];
       if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[]},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[]});lsSet(k,JSON.stringify(m));}
       const gLog=JSON.parse(lsGet('ss-log')||'{}')||{};if((gLog.entries||[]).length){const lk=lgKey(),cl=JSON.parse(lsGet(lk)||'{}')||{};lsSet(lk,JSON.stringify(mergeLog({entries:cl.entries||[],deleted:cl.deleted||[]},{entries:gLog.entries,deleted:[]})));}}catch(_){}lsSet(flag,'1');}
   lgLoad();renderBadge();CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();}
-function signOut(){const a=authGet();if(a?.prov==='google'&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(a.token,()=>{});}catch(_){}
-  authSet(null);CU.sel.clear();cuLoad();lgLoad();renderBadge();if(logDlg.open)renderLog();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
-function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=tokGet(p),el=$('#mlAcct');
+function signOut(){const g=toksAll().google;if(g?.token&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(g.token,()=>{});}catch(_){}
+  authSet(null);lsDel('ss-toks');CU.sel.clear();cuLoad();lgLoad();renderBadge();if(logDlg.open)renderLog();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
+function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=authGet()?.prov===p?authGet():null,el=$('#mlAcct');
   const other=authGet();if(!t&&other){el.innerHTML=`<span>Signed in with ${PROV_NAME[other.prov]} (${esc(other.email||'')}). Sending from ${PROV_NAME[p]} needs a ${p==='google'?'Google':'Microsoft'} sign-in, which switches accounts.</span>`+(EMAIL_SETUP[p]?`<button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`:'');return;}
   if(!EMAIL_SETUP[p]){el.innerHTML=`<span>${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet.</span><button class="btn sm primary" type="button" id="mlSetup">Set up sign-in</button>`;return;}
   el.innerHTML=t?`<span>Signed in as <b>${esc(t.email||PROV_NAME[p]+' account')}</b></span><button class="lnk" type="button" id="mlSwitch">Switch account</button>`
@@ -1726,8 +1744,8 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
-function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet();if(!a)return Promise.resolve();
-  syncing=(async()=>{renderSync();try{const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
+function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
+  syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
@@ -1740,7 +1758,7 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const a=authGet
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
-    catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401){authSet(null);CU.sel.clear();cuLoad();lgLoad();renderBadge();if(mailDlg.open){renderCust();renderAcct();}}}
+    catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401)tokSet(acct.prov,null);}
     finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
 function scheduleSync(){if(!authGet())return;clearTimeout(syncT);syncT=setTimeout(syncNow,1200);}
 function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
@@ -1753,7 +1771,7 @@ function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
 function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft),a=authGet();
   if(!on){$('#acctLbl').textContent='Sign in';b.title='Sign-in needs a one-time setup';$('#acctMenu').innerHTML=`<p><b>Sign-in isn't set up yet</b><br><span class="note">It needs a free Client ID from Google and/or Microsoft, made once in your own account. Everything else on the site works without signing in.</span></p><button class="btn sm primary" type="button" data-am="setup">Set up sign-in</button>`;return;}
   $('#acctLbl').textContent=a?(a.email||'Signed in'):'Sign in';b.title=a?`Signed in as ${a.email} (${PROV_NAME[a.prov]})`:'Sign in (optional) to keep your customers on every device';
-  $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':lastSync?' (up to date)':''}.</span></p><button class="btn sm" type="button" data-am="out">Sign out</button>`
+  $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':tokGet(a.prov)?(lastSync?' (up to date)':''):'. The site reconnects by itself when you send an email or save to Drive'}.</span></p>${!tokGet(a.prov)&&!syncing?'<button class="btn sm" type="button" data-am="re">Sync now</button>':''}<button class="btn sm" type="button" data-am="out">Sign out</button>`
     :`<p><b>Sign in (optional)</b><br><span class="note">Keeps your customers on every device and lets you email sell sheets. Everything else works without signing in.</span></p>
       ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}
       <button class="lnk" type="button" data-am="setup" style="justify-self:start">Sign-in setup${EMAIL_SETUP.google&&EMAIL_SETUP.microsoft?'':' (add '+(EMAIL_SETUP.google?'Microsoft':'Google')+')'}</button>`;}
@@ -1762,6 +1780,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn')
 $('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[data-am]');if(!b)return;const v=b.dataset.am;
   if(v==='out'){signOut();$('#acctMenu').classList.add('hide');return;}
   if(v==='setup'){$('#acctMenu').classList.add('hide');openSetup();return;}
+  if(v==='re'){const a=authGet();if(!a)return;$('#acctMenu').classList.add('hide');try{await login(a.prov,false);toast('Reconnected. Syncing…');}catch(err){toast(err.message);}return;}
   try{await login(v,true);MAIL.prov=v;saveMail();$('#acctMenu').classList.add('hide');toast('Signed in. Your customers will sync to this account.');}catch(err){toast(err.message);}});
 
 /* "Set up sign-in": paste the Client IDs (kept in this browser) */
@@ -1882,10 +1901,10 @@ const DV=Object.assign({att:['pdf'],replace:true,recent:{},last:{}},(()=>{try{re
 const saveDV=()=>lsSet('ss-drive',JSON.stringify(DV));
 const hasScope=(t,sc)=>String(t?.scope||'').split(/\s+/).includes(sc);
 const dvStatus=(m,bad)=>{const s=$('#dvStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
-const dvKey=()=>ck(tokGet('google')?.email||'');
-function renderDrive(){const t=tokGet('google'),a=authGet(),el=$('#dvAcct');
+const dvKey=()=>ck(meFor('google'));
+function renderDrive(){const g=meFor('google'),a=authGet(),el=$('#dvAcct');
   if(!EMAIL_SETUP.google){el.innerHTML='<span>Saving to Drive needs Google sign-in, which isn\'t set up yet.</span><button class="btn sm primary" type="button" id="dvSetup">Set up sign-in</button>';}
-  else el.innerHTML=t?`<span>Saving to the Google Drive of <b>${esc(t.email||'your account')}</b></span>`:a?`<span>Signed in with ${PROV_NAME[a.prov]}. Saving to Drive needs your Google account.</span>`:'<span>You\'ll be asked to sign in with Google when you save.</span>';
+  else el.innerHTML=g?`<span>Saving to the Google Drive of <b>${esc(g)}</b></span>`:a?`<span>Signed in with ${PROV_NAME[a.prov]}. Saving to Drive asks once for your Google account; you stay signed in with ${PROV_NAME[a.prov]}.</span>`:'<span>You\'ll be asked to sign in with Google the first time you save.</span>';
   const recent=(DV.recent[dvKey()]||[]),last=DV.last[dvKey()]||'app';
   $('#dvFolder').innerHTML=`<option value="app">Sell Sheets folder (created for you)</option><option value="root">My Drive (top level)</option>${recent.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}`;
   $('#dvFolder').value=[...$('#dvFolder').options].some(o=>o.value===last)?last:'app';
@@ -1909,8 +1928,9 @@ $('#dvAtt').addEventListener('change',()=>{DV.att=$$('#dvAtt input:checked').map
 $('#dvReplace').addEventListener('change',e=>{DV.replace=e.target.checked;saveDV();});
 $('#dvFolder').addEventListener('change',e=>{DV.last[dvKey()]=e.target.value;saveDV();});
 // a Google token that includes drive.file (asks again once if an older sign-in didn't include it)
+// signed in with Microsoft: a Google token just for Drive, without switching the site's account
 function driveToken(){const t=tokGet('google');if(t&&hasScope(t,DRIVE_FILE))return Promise.resolve(t);
-  return login('google',false).then(n=>{if(!hasScope(n,DRIVE_FILE))throw new Error('Google didn\'t give permission to save files. Try again and allow "See, edit, create and delete only the specific Google Drive files you use with this app".');renderDrive();return n;});}
+  const a=authGet();return (a&&a.prov!=='google'?googleLogin(false,meFor('google')):login('google',false,true)).then(n=>{if(!hasScope(n,DRIVE_FILE))throw new Error('Google didn\'t give permission to save files. Try again and allow "See, edit, create and delete only the specific Google Drive files you use with this app".');renderDrive();return n;});}
 async function driveFetch(t,url,opt={}){let r;try{r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+t.token,...(opt.headers||{})}});}
   catch(_){throw new Error('Could not reach Google Drive. Check your connection and any ad-blockers, then try again.');}
   if(!r.ok){const e=await httpErr('Drive',r);if(e.off)e.message='The Google Drive API is switched off. In console.cloud.google.com open APIs & Services → Library → Google Drive API → Enable, then try again.';
@@ -2051,11 +2071,11 @@ function checkHow(){return attachParts().length||embedParts().length?'':'Nothing
 let sending=false;
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
-  let plan;try{plan=planMessages(tokGet(p)?.email);}catch(e){mlStatus(e.message,true);return;}
+  let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   sending=true;$('#mlSend').disabled=true;
-  try{let tok=tokGet(p);if(!tok){mlStatus('Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
+  try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();if(MAIL.mode==='bcc')plan=planMessages(tok.email);}
     const files=kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
@@ -2098,7 +2118,7 @@ $('#mlMsg').addEventListener('input',updMsgPrev);$('#mlTo').addEventListener('in
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(){const seq=++prevSeq,me=tokGet(MAIL.prov)?.email||'';let plan;
+async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${m.person.name||m.person.company||m.person.email} <${m.to.join(', ')}>`:plan.length===1&&m.bcc.length&&MAIL.mode==='bcc'&&people().length>1?'One email to everyone (customers in Bcc)':m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
