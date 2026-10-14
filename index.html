@@ -37,10 +37,10 @@ svg{flex:none}
 .nav-list{display:grid;align-content:start;gap:2px;padding:6px 10px;overflow:auto}
 .nav-it{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:none;border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink);font:inherit}
 .nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
-.nav-it span{display:grid;gap:1px;min-width:0}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
+.nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
 .cp-tools #cpQ{flex:1 1 280px;min-width:0;height:38px}.cp-tools .spacer{flex:1 1 0}
-.cp-main{display:grid;grid-template-columns:minmax(0,1fr) auto;min-height:0}
+.cp-main{display:grid;grid-template-columns:minmax(0,1fr);min-height:0}
 .cp-tw{overflow:auto;min-height:0}
 .cp-t{border-collapse:separate;border-spacing:0;font-size:13.5px;min-width:100%}
 .cp-t th{position:sticky;top:0;z-index:1;background:var(--raise);text-align:left;font:700 12px var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -49,12 +49,81 @@ svg{flex:none}
 .cp-t th:first-child,.cp-t td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);width:34px;padding-right:4px}.cp-t th:first-child{z-index:2;background:var(--raise)}
 .cp-t input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);margin:0}
 .cp-t .nn{font-size:11px;font-weight:700;color:var(--bad);margin-left:4px}.cp-t .sub{display:block;color:var(--muted);font-size:12px}
-.cp-detail{width:min(380px,40vw);border-left:1px solid var(--line);overflow:auto;padding:14px 16px;display:grid;gap:10px;align-content:start;background:var(--panel)}
-.cp-detail h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}.cp-detail h3 span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
-.cp-detail label{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted)}.cp-detail .in{height:38px;font-size:14px}.cp-detail textarea.in{height:auto;min-height:38px;resize:vertical;padding-top:8px;line-height:1.35}
-.cp-detail .hd{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.04em;color:var(--faint);margin-top:6px}
-@media (max-width:900px){.cp-main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.cp-detail{width:auto;border-left:0;border-bottom:1px solid var(--line);max-height:55vh;order:-1}}
+
 .src-menu{min-width:230px;right:auto}
+.gchip{display:inline-flex;align-items:center;gap:4px;font:600 11.5px var(--ui);color:var(--ink);background:color-mix(in srgb,var(--gc) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--gc) 55%,transparent);border-radius:999px;padding:1px 8px 1px 6px;margin-left:4px;white-space:nowrap;vertical-align:1px}
+.gchip:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gc);flex:none}
+.gchip button{border:0;background:none;padding:0 0 0 2px;margin:0;cursor:pointer;color:var(--muted);font:700 12px var(--ui);line-height:1}
+.cu-groups .gtog{display:inline-flex;align-items:center;gap:6px}.cu-groups .gtog i{width:9px;height:9px;border-radius:50%;background:var(--gc)}
+.cu-groups .gtog[aria-pressed="true"]{background:color-mix(in srgb,var(--gc) 16%,var(--panel));border-color:var(--gc);color:var(--ink)}
+.cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.menu.g-sug{position:fixed;right:auto;min-width:240px;max-height:300px;overflow:auto;z-index:70;animation:none}.g-sug button{display:flex;align-items:center;gap:8px;grid-template-columns:none}.g-sug button i{width:10px;height:10px;border-radius:50%;flex:none}
+.g-sug button span{flex:1}.g-sug button small{color:var(--muted)}.g-sug button[aria-selected="true"]{background:var(--raise)}.g-sug .on b:after{content:" ✓";color:var(--accent)}
+.cp-chips{flex-basis:100%}.cp-chips:empty{display:none}#cpColor{flex:0 1 170px;height:38px}
+.cp-t td.acts{white-space:nowrap;width:1%}.cp-t .ra{display:inline-flex;align-items:center;gap:2px}
+/* customer tab: Notion-style page */
+.cp-detail.is-np{display:block}
+.np{display:grid;grid-template-rows:minmax(0,1fr) auto;height:100%;position:relative;min-height:0}.np .np-close{position:absolute;top:10px;right:12px;z-index:3}
+.np .cpd-b.np-page{display:block;padding:0;overflow:auto}.np-inner{max-width:760px;margin:0 auto;padding:34px 40px 40px}
+.np-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}.np-tw{flex:1;min-width:0;display:grid;gap:4px}
+.np-icon{width:52px;height:52px;border-radius:14px;border:1.5px dashed var(--line2);background:var(--tag,transparent);display:grid;place-items:center;color:var(--faint);cursor:pointer;flex:none;padding:0}.np-icon svg{width:24px;height:24px}
+.np-icon.on{border:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--tag) 22%,transparent)}.np-icon:hover{filter:brightness(1.05);border-color:var(--accent)}
+.np-title{font:700 32px/1.15 var(--ui);letter-spacing:-.02em;border:0;background:none;color:var(--ink);padding:4px 0;width:100%;outline:none;border-radius:6px}.np-title::placeholder{color:var(--faint)}.np-title:hover,.np-title:focus{background:var(--raise)}.np-title:focus,.np-title:focus-visible{outline:none;box-shadow:none;border:0}
+.np-warn{color:var(--bad);font-size:13px}
+.np-props{display:grid;gap:2px}
+.np-prop{display:grid;grid-template-columns:170px minmax(0,1fr);align-items:start;min-height:36px;border-radius:6px;position:relative}.np-prop:hover{background:color-mix(in srgb,var(--raise) 70%,transparent)}
+.np-k{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;padding:8px 6px;min-width:0}.np-k svg{width:16px;height:16px;flex:none;opacity:.8}
+.np-v{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:3px 30px 3px 0;min-width:0}
+.np-in{border:1px solid transparent;background:none;border-radius:6px;padding:5px 8px;font:14px/1.45 var(--ui);color:var(--ink);width:100%;min-width:0;resize:none;outline:none}
+.np-in:hover{background:var(--panel);border-color:var(--line)}.np-in:focus{background:var(--panel);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.np-in::placeholder{color:var(--faint)}
+textarea.np-in{display:block;overflow:hidden}
+.np-x{position:absolute;right:4px;top:7px;border:0;background:none;color:var(--faint);cursor:pointer;border-radius:5px;width:22px;height:22px;opacity:0}.np-prop:hover .np-x,.np-mail:hover .np-x,.np-x:focus{opacity:1}.np-x:hover{background:var(--raise);color:var(--bad)}
+.np-send{display:inline-flex;align-items:center;gap:5px;font:600 11.5px var(--ui);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;cursor:pointer;white-space:nowrap}.np-send input{position:absolute;opacity:0;pointer-events:none}
+.np-send.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.np-add{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font:13px var(--ui);cursor:pointer;padding:5px 8px;border-radius:6px;justify-self:start}.np-add svg{width:14px;height:14px}.np-add:hover{background:var(--raise);color:var(--ink)}
+.np-grps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:100%;padding-left:6px}.np-grps .gchip{margin:0;font-size:12.5px;padding:3px 8px 3px 7px;cursor:pointer}.np-gin{flex:1 1 140px;width:auto}
+.np-colbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:none;border-radius:6px;padding:5px 8px;font:14px var(--ui);color:var(--ink);cursor:pointer}.np-colbtn:hover{border-color:var(--line);background:var(--panel)}.np-colbtn i{width:14px;height:14px;border-radius:50%}
+.np-empty{color:var(--faint);font-size:14px;margin:0}
+.np-multi{display:grid;gap:4px;width:100%}.np-main{display:flex;align-items:center;gap:6px;min-width:0}.np-main>.np-in{flex:1}
+.np-dd{display:inline-flex;align-items:center;gap:3px;flex:none;border:1px solid transparent;background:none;border-radius:999px;padding:2px 7px 2px 9px;font:600 11.5px var(--ui);color:var(--faint);cursor:pointer;white-space:nowrap}
+.np-dd svg{width:13px;height:13px;transition:transform .15s}.np-dd.open svg{transform:rotate(180deg)}.np-dd:hover,.np-dd.open{border-color:var(--line);background:var(--panel);color:var(--ink)}
+.np-dd.has{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.np-prop:not(:hover):not(:focus-within) .np-dd:not(.has):not(.open){opacity:0}
+.np-altlist{display:grid;gap:3px;margin:2px 0 6px 8px;padding:6px 0 4px 12px;border-left:2px solid var(--line2)}.np-alth{font:700 10.5px var(--ui);text-transform:uppercase;letter-spacing:.05em;color:var(--faint);padding:0 8px}
+.np-altrow{display:grid;grid-template-columns:minmax(0,1fr) auto 24px;gap:6px;align-items:center}.np-altrow.np-mailrow{grid-template-columns:minmax(0,1fr) auto auto 24px}.np-altrow .np-x{position:static}
+.np-mk{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:2px 8px;font:600 11.5px var(--ui);color:var(--muted);cursor:pointer;white-space:nowrap;opacity:0}.np-altrow:hover .np-mk,.np-mk:focus{opacity:1}.np-mk:hover{color:var(--ink);border-color:var(--line2)}
+.np-tsub{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:22px}.np-tsub .np-dd:not(.has){opacity:.75}
+.np-v>.np-rmprop{top:7px}.np-info .np-v{align-items:flex-start}
+.np-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 6px 2px;font-size:13px;color:var(--muted)}
+.np-quick button{display:inline-flex;align-items:center;gap:4px;border:1px dashed var(--line2);background:none;border-radius:999px;padding:3px 10px 3px 7px;font:600 12.5px var(--ui);color:var(--ink);cursor:pointer}.np-quick button svg{width:13px;height:13px;color:var(--accent)}.np-quick button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.np-newprop .np-k{padding:3px 6px}.np-newprop .np-k .np-in{padding:4px 6px;font-size:14px}.np-newprop{opacity:.75}.np-newprop:focus-within,.np-newprop:hover{opacity:1}
+.np-hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+.np-sec{margin-top:22px}.np-sec h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font:700 16px var(--ui)}.np-sec h4 svg{width:18px;height:18px;color:var(--muted)}
+.np-count{font:600 12px var(--ui);color:var(--muted);background:var(--raise);border-radius:999px;padding:1px 8px}
+.np-body{display:block;width:100%;font:15px/1.6 var(--ui);color:var(--ink);resize:none;overflow:hidden;outline:none;min-height:90px;padding:10px 12px;border:1px solid var(--line);background:var(--raise);border-radius:10px}
+.np-list{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden}.np-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 12px;font-size:14px;border-top:1px solid var(--line)}.np-row:first-child{border-top:0}
+.np-row span{color:var(--muted);font-size:13px}.np-row em{font-style:normal;font-size:12px;font-weight:600;background:var(--raise);border:1px solid var(--line);border-radius:999px;padding:1px 8px}.np-dot{width:9px;height:9px;border-radius:50%}
+.np-state{font-size:12.5px;color:var(--warn)}
+@media (max-width:760px){#custDlg .cp-detail{position:fixed;inset:0;width:100%;z-index:20}.np-inner{padding:22px 16px 30px}.np-prop{grid-template-columns:1fr}.np-k{padding-bottom:0}.np-v{padding-right:28px}.np-altrow.np-mailrow{grid-template-columns:minmax(0,1fr) auto 24px}.np-mailrow .np-mk{grid-column:1/-1;justify-self:start;grid-row:2}.np-mk{opacity:1}.np-title{font-size:26px}}
+.cp-t tr[data-color] td:first-child{box-shadow:inset 5px 0 0 var(--tag)}
+.cp-main{position:relative}
+.cp-detail{position:absolute;top:0;right:0;bottom:0;width:min(1000px,100%);z-index:6;border-left:1px solid var(--line);box-shadow:-18px 0 40px rgba(10,14,22,.2);background:var(--panel);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:0;gap:0;animation:cpin .2s var(--ease)}
+@keyframes cpin{from{transform:translateX(30px);opacity:0}}
+.cpd-h{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}.cpd-h h3{margin:0;font-size:19px;flex:1;min-width:0;display:grid}.cpd-h h3 small{font:400 13px var(--ui);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpd-dot{width:28px;height:28px;border-radius:50%;border:2px dashed var(--line2);background:var(--tag,transparent);cursor:pointer;flex:none;padding:0}.cpd-dot.on{border:3px solid var(--panel);box-shadow:0 0 0 1px var(--tag)}
+.cpd-b{overflow:auto;padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px 26px;align-content:start}
+.cpd-s{display:grid;gap:9px;align-content:start}.cpd-s h4{margin:0;font:700 11.5px var(--ui);text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+.cpd-b label{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted)}.cpd-b .in{height:38px;font-size:14px;color:var(--ink)}.cpd-b textarea.in{height:auto;min-height:38px;resize:vertical;padding-top:8px;line-height:1.4}
+.cpd-mail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;align-items:center}.cpd-mail input[type=radio]{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.cpd-grps{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.cpd-grps .gchip{margin:0;font-size:12.5px;padding:3px 8px 3px 7px;cursor:pointer}
+.cpd-info{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px;align-items:start}.cpd-info label{grid-column:1}.cpd-info .tiny{margin-top:22px}
+.cpd-hint{font-size:12px;color:var(--muted);font-weight:400}
+.cpd-act{display:grid;gap:6px;font-size:13px}.cpd-act div{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--raise)}.cpd-act small{display:block;color:var(--muted)}
+.cpd-f{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line)}.cpd-f .spacer{flex:1}
+.cp-dupe{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px;background:var(--raise)}.cp-dupe ul{margin:0;padding-left:18px;font-size:13px}
+.cp-grp{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:6px 0}.cp-grp .in{height:34px}
+.lg-pal .hex{width:96px;height:30px;font-family:ui-monospace,Menlo,Consolas,monospace;text-transform:uppercase}.lg-pal .hex[aria-invalid=true]{border-color:var(--bad)}
+@media (max-width:760px){.cpd-b{grid-template-columns:1fr}.cp-detail{width:100%}}
 .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
 .sheetpick{display:flex;align-items:center;gap:6px;min-width:0;flex:1 1 260px}
 .sel{appearance:none;background:var(--raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A93A3' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--line);border-radius:10px;padding:0 34px 0 12px;height:42px;min-width:0;max-width:340px;width:100%;font-weight:600;cursor:pointer}
@@ -560,9 +629,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="ml-main">
       <section class="ml-cust" aria-label="Customers">
         <div class="ml-ch"><h3>Customers</h3><span class="bgrp"><button class="lnk" id="cuAll" type="button">Select shown</button><button class="lnk" id="cuNone" type="button">Clear</button></span></div>
-        <input class="in" id="cuSearch" type="search" placeholder="Search customers: name, company or email" aria-label="Search customers"><small class="cu-count" id="cuCount"></small>
+        <input class="in" id="cuSearch" type="search" placeholder="Search customers, or pick a group" aria-label="Search customers or pick a group" autocomplete="off"><small class="cu-count" id="cuCount"></small>
         <div class="cu-groups" id="cuGroups"></div>
-        <div class="cu-form" id="cuForm" hidden></div>
         <div class="cu-list" id="cuList"></div>
         <div class="bgrp"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
         <p class="hint" style="margin:0" id="cuSync"></p>
@@ -610,6 +678,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
+      <button type="button" class="nav-it nav-sub" data-nav="cust-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span><b>New customer</b></span></button>
       <span class="menu-h">Open a sell sheet</span>
       <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
       <button type="button" class="nav-it" data-nav="open-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11M2 14h20M16 3L10 14"/></svg><span><b>From Google Drive</b><small>PDF, Word or Google Docs</small></span></button>
@@ -620,21 +689,25 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
   <div class="lg-wrap">
     <div class="ml-top"><h2>Customers</h2><span class="note" id="cpSum"></span><button class="btn icon sm ghost" id="cpClose" type="button" aria-label="Close">✕</button></div>
     <div class="lg-filters cp-tools">
-      <input class="in" id="cpQ" type="search" placeholder="Search name, company, email, phone, address, notes…" aria-label="Search customers">
-      <div class="cu-groups" id="cpChips"></div>
+      <input class="in" id="cpQ" type="search" placeholder="Search anything, or pick a group…" aria-label="Search customers or pick a group" autocomplete="off">
+      <select class="in" id="cpColor" aria-label="Colour"></select>
       <span class="spacer"></span>
-      <button class="btn sm" id="cpAdd" type="button">＋ Add customer</button>
+      <button class="btn sm ghost" id="cpGroups" type="button" title="Rename, recolour or delete groups">Groups</button>
+      <button class="btn sm ghost" id="cpDupes" type="button" hidden></button>
+      <button class="btn sm primary" id="cpAdd" type="button">＋ New customer</button>
       <button class="btn sm ghost" id="cpImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file from this computer or Google Drive">Import</button>
       <button class="btn sm ghost" id="cpExport" type="button">Export</button>
+      <div class="cu-groups cp-chips" id="cpChips"></div>
     </div>
     <div class="cp-main">
       <div class="cp-tw"><table class="cp-t" id="cpTable"></table></div>
       <aside class="cp-detail" id="cpDetail" hidden aria-label="Customer details"></aside>
     </div>
-    <div class="ml-bot"><span class="note" id="cpNote"></span><div class="bgrp"><button class="btn sm" id="cpEmail" type="button" disabled>Email ticked customers</button><button class="btn sm ghost" id="cpDone" type="button">Close</button></div></div>
+    <div class="ml-bot"><span class="note" id="cpNote"></span><div class="bgrp"><button class="btn sm ghost" id="cpTickGrp" type="button" disabled>Add ticked to group…</button><button class="btn sm ghost" id="cpTickDel" type="button" disabled>Delete ticked</button><button class="btn sm" id="cpEmail" type="button" disabled>Email ticked customers</button><button class="btn sm ghost" id="cpDone" type="button">Close</button></div></div>
   </div>
 </dialog>
 <div class="menu src-menu hide" id="srcMenu" role="menu"></div>
+<div class="menu g-sug hide" id="gSug" role="listbox" aria-label="Groups"></div>
 <dialog id="logDlg" aria-label="Sent sell sheets">
   <div class="lg-wrap">
     <div class="ml-top"><h2>Sent sell sheets</h2><span class="note" id="lgSum"></span><button class="btn icon sm ghost" id="lgClose" type="button" aria-label="Close">✕</button></div>
@@ -1649,12 +1722,46 @@ const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
 
 /* customers: kept in this browser; when signed in, also synced to a private app folder in the person's Google Drive / OneDrive */
-const CU={list:[],deleted:[],sel:new Set(),q:'',grp:'',edit:null,nn:false};
+const CU={list:[],deleted:[],sel:new Set(),q:'',gsel:new Set(),nn:false,gmeta:{}};
 const ck=e=>String(e||'').trim().toLowerCase();
 const cuKey=()=>{const a=authGet();return a?`ss-customers:${a.prov}:${ck(a.email)}`:'ss-customers';};
 function cuLoad(){try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
-  CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim()));CU.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){CU.list=[];CU.deleted=[];}}
-const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted}));scheduleSync();};
+  CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim())).map(c=>{const g=grpsOf(c);delete c.group;c.groups=g;return c;});
+  CU.deleted=Array.isArray(d.deleted)?d.deleted:[];CU.gmeta=!Array.isArray(d)&&d.groups&&typeof d.groups==='object'?d.groups:{};}catch(_){CU.list=[];CU.deleted=[];CU.gmeta={};}
+  const keep=new Set(allGroups().map(g=>gKey(g.name)));CU.gsel=new Set([...CU.gsel].filter(k=>keep.has(k)));}
+const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted,groups:CU.gmeta}));scheduleSync();};
+// groups: a customer can be in several; each group has a colour (kept with the customers and synced)
+const gKey=n=>String(n||'').replace(/\s+/g,' ').trim().toLowerCase();
+const grpsOf=c=>{const g=Array.isArray(c?.groups)?c.groups:(c?.group?String(c.group).split(/\s*[;,]\s*/):[]);const m=new Map();
+  for(const x of g){const t=String(x||'').replace(/\s+/g,' ').trim().slice(0,40);if(t&&!m.has(t.toLowerCase()))m.set(t.toLowerCase(),t);}return[...m.values()];};
+const GCOL=['#2563EB','#16A34A','#EA7317','#9333EA','#DC2626','#0891B2','#CA8A04','#DB2777','#4B5563'];
+const gColor=n=>{const m=CU.gmeta[gKey(n)];if(m&&!m.del&&tagHex(m.color))return tagHex(m.color);let h=0;for(const ch of gKey(n))h=(h*31+ch.charCodeAt(0))>>>0;return GCOL[h%GCOL.length];};
+function allGroups(){const m=new Map();for(const c of CU.list)for(const g of grpsOf(c)){const k=gKey(g);if(!m.has(k))m.set(k,{name:CU.gmeta[k]?.name||g,n:0});m.get(k).n++;}
+  for(const[k,v]of Object.entries(CU.gmeta))if(v&&!v.del&&v.name&&!m.has(k))m.set(k,{name:v.name,n:0});return[...m.values()].sort((a,b)=>a.name.localeCompare(b.name,undefined,{sensitivity:'base'}));}
+const gName=n=>CU.gmeta[gKey(n)]?.name||n;
+const gChip=(g,extra='')=>`<span class="gchip" style="--gc:${gColor(g)}">${esc(gName(g))}${extra}</span>`;
+function setGroupMeta(name,patch){const k=gKey(name);if(!k)return;CU.gmeta[k]={...(CU.gmeta[k]||{}),name:CU.gmeta[k]?.name||String(name).trim(),...patch,upd:Date.now()};if(!patch.del)delete CU.gmeta[k].del;}
+function renameGroup(from,to){to=String(to||'').replace(/\s+/g,' ').trim().slice(0,40);const kf=gKey(from),kt=gKey(to);if(!to||!kf)return;const now=Date.now();
+  for(const c of CU.list){const g=grpsOf(c);if(g.some(x=>gKey(x)===kf)){c.groups=grpsOf({groups:g.map(x=>gKey(x)===kf?to:x)});c.upd=now;}}
+  const col=CU.gmeta[kf]?.color;if(kf!==kt)setGroupMeta(from,{del:1});setGroupMeta(to,{name:to,...(col?{color:col}:{})});CU.gmeta[kt].name=to;
+  if(CU.gsel.delete(kf))CU.gsel.add(kt);cuSave();}
+function deleteGroup(name){const k=gKey(name),now=Date.now();for(const c of CU.list){const g=grpsOf(c);if(g.some(x=>gKey(x)===k)){c.groups=g.filter(x=>gKey(x)!==k);c.upd=now;}}setGroupMeta(name,{del:1});CU.gsel.delete(k);cuSave();}
+// duplicates: same name and company (ignoring case, spaces and punctuation)
+const nrm=v=>ck(v).replace(/[^\p{L}\p{N}]/gu,'');
+const dupKey=c=>{const n=ck(c.name).replace(/[^\p{L}\p{N}]/gu,''),co=ck(c.company).replace(/[^\p{L}\p{N}]/gu,'');return n&&co?n+'|'+co:'';};
+function findDupes(){const m=new Map();for(const c of CU.list){const k=dupKey(c);if(!k)continue;if(!m.has(k))m.set(k,[]);m.get(k).push(c);}return[...m.values()].filter(g=>g.length>1);}
+const richness=c=>(c.name?3:0)+(c.company?1:0)+altOf(c).length+Object.keys(infoOf(c)).length+(c.note?1:0)+grpsOf(c).length;
+// fold other customers into one: their emails become alternates; differing names/companies and details are kept as alternate options
+function mergeCustomers(main,others){const now=Date.now();
+  for(const o of others){if(o===main)continue;const inf=infoOf(main);
+    main.alt=[...altOf(main)];for(const a of[o.email,...altOf(o)])if(ck(a)!==ck(main.email)&&!main.alt.some(x=>ck(x)===ck(a)))main.alt.push(a);
+    if(o.name&&nrm(o.name)!==nrm(main.name)){if(!String(main.name||'').trim())main.name=o.name;else addInfo(inf,{'Other names':o.name});}
+    if(o.company&&nrm(o.company)!==nrm(main.company)){if(!String(main.company||'').trim())main.company=o.company;else addInfo(inf,{'Other companies':o.company});}
+    addInfo(inf,infoOf(o));main.info=inf;main.groups=grpsOf({groups:[...grpsOf(main),...grpsOf(o)]});
+    if(o.note&&!String(main.note||'').includes(o.note))main.note=[main.note,o.note].filter(Boolean).join('\n');if(!main.color&&o.color)main.color=o.color;
+    CU.list=CU.list.filter(x=>x!==o);CU.deleted.push({email:ck(o.email),at:now});if(CU.sel.delete(ck(o.email)))CU.sel.add(ck(main.email));}
+  main.upd=now;return main;}
+const mergeDupes=g=>mergeCustomers(g.slice().sort((a,b)=>richness(b)-richness(a))[0],g);
 const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_RE.test(a)):[];
 // the one address a customer's email goes to (chosen from a dropdown when they have several; main address by default)
 const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.find(a=>c.use.some(x=>ck(x)===ck(a))):null;return[u||c.email];};
@@ -1664,55 +1771,45 @@ const cleanInfo=o=>{const r={};if(o&&typeof o==='object'&&!Array.isArray(o))for(
 const infoOf=c=>cleanInfo(c?.info);
 function addInfo(to,from){for(const[k,v]of Object.entries(from||{})){const have=String(to[k]||'').split('\n').filter(Boolean);for(const x of String(v).split('\n'))if(x&&!have.includes(x))have.push(x);if(have.length)to[k]=have.slice(0,60).join('\n');}return to;}
 const infoKeys=()=>{const ks=[];for(const c of CU.list)for(const k of Object.keys(infoOf(c)))if(!ks.includes(k))ks.push(k);return ks;};
-const cuGroups=()=>[...new Set(CU.list.map(c=>(c.group||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.grp||(c.group||'').trim()===CU.grp)&&(!CU.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c),...Object.values(infoOf(c))].some(v=>(v||'').toLowerCase().includes(q))));};
-function renderCust(){const g=cuGroups();if(CU.grp&&!g.includes(CU.grp))CU.grp='';const nn=CU.list.filter(noName).length;if(!nn)CU.nn=false;
-  $('#cuGroups').innerHTML=(g.length?['',...g].map(x=>`<button type="button" data-grp="${esc(x)}" aria-pressed="${CU.grp===x}">${x?esc(x):'All'}</button>`).join(''):'')
+// search text matches any field; picked groups narrow to customers in any of them
+const custMatch=(c,q,gsel)=>(!gsel.size||grpsOf(c).some(g=>gsel.has(gKey(g))))&&(!q||[c.name,c.company,c.email,c.note,...grpsOf(c),...altOf(c),...Object.values(infoOf(c))].some(v=>String(v||'').toLowerCase().includes(q)));
+const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.nn||noName(c))&&custMatch(c,q,CU.gsel));};
+function renderCust(){const nn=CU.list.filter(noName).length;if(!nn)CU.nn=false;
+  $('#cuGroups').innerHTML=groupToggles(CU.gsel)
     +(nn?`<button type="button" class="nn-chip" data-nn aria-pressed="${CU.nn}" title="Show only customers without a name, so you can add one">⚠ No name (${nn})</button>`:'');
   const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));
   $('#cuCount').textContent=CU.list.length?(shown.length===CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:`Showing ${shown.length} of ${CU.list.length}`)+(CU.sel.size?` · ${CU.sel.size} ticked`:''):'';
   const last=new Map();for(const t of threads()){const c=t.root.cust;if(c&&(!last.has(c)||last.get(c).last<t.last))last.set(c,t);}
   $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
-      <label class="who" for="cu-${n}"><b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${c.group?`<span class="gp">${esc(c.group)}</span>`:''}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
-      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Edit'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`).join('')
+      <label class="who" for="cu-${n}">${tagHex(c.color)?`<i class="cdot" style="background:${tagHex(c.color)}"></i>`:''}<b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${grpsOf(c).map(g=>gChip(g)).join('')}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
+      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Open'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Open and edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`).join('')
     :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import an Excel (.xlsx) or CSV file.'}</div>`;
   renderChips();renderSync();}
-function cuFormOpen(c){CU.edit=c?ck(c.email):'new';const f=$('#cuForm');f.hidden=false;const gl=cuGroups();
-  f.innerHTML=`<strong style="font-size:14px">${c?'Edit customer':'New customer'}</strong>
-    <input class="in" id="cuName" placeholder="Name, e.g. Sarah Lee" value="${esc(c?.name||'')}" aria-label="Name">
-    <input class="in" id="cuCo" placeholder="Company (optional)" value="${esc(c?.company||'')}" aria-label="Company">
-    <input class="in" id="cuMail" type="email" placeholder="Main email address" value="${esc(c?.email||'')}" aria-label="Main email address">
-    <input class="in" id="cuAlt" type="text" placeholder="Other emails (optional), separated by commas" value="${esc(c?altOf(c).join(', '):'')}" aria-label="Other email addresses">
-    <input class="in" id="cuGrp" placeholder="Group (optional), e.g. Retailers" value="${esc(c?.group||'')}" list="cuGrpList" aria-label="Group"><datalist id="cuGrpList">${gl.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>
-    <div class="bgrp"><button class="btn sm primary" type="button" id="cuSaveBtn">Save</button><button class="btn sm ghost" type="button" id="cuCancelBtn">Cancel</button></div>`;
-  $('#cuName').focus();}
-// add or change a customer (edit = key of the one being changed, or 'new'); returns an error message, or '' when saved
 function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.test(email))return'Enter a valid email address';
   const altIn=splitAddr(v.alt),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length)return'Check these addresses: '+badAlt.join(', ');
   const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),mine=new Set([ck(email),...alt.map(ck)]);
   const clash=CU.list.find(c=>(edit==='new'||ck(c.email)!==edit)&&[c.email,...altOf(c)].some(a=>mine.has(ck(a))));if(clash)return`${[clash.email,...altOf(clash)].find(a=>mine.has(ck(a)))} is already saved for ${clash.name||clash.company||clash.email}`;
-  const old=edit==='new'?null:CU.list.find(c=>ck(c.email)===edit),now=Date.now();
-  const data={name:String(v.name||'').trim(),company:String(v.company||'').trim(),email,alt,use:old?useOf({...old,email,alt}):[email],group:String(v.group||'').trim(),upd:now};if(v.info)data.info=cleanInfo(v.info);
-  if(!old){CU.list.push(data);CU.sel.add(ck(email));}
+  const old=edit==='new'?null:CU.list.find(c=>ck(c.email)===edit),now=Date.now(),all=[email,...alt];
+  const data={email,alt,use:v.use&&all.some(a=>ck(a)===ck(v.use))?[all.find(a=>ck(a)===ck(v.use))]:old?useOf({...old,email,alt}):[email],upd:now};
+  for(const k of['name','company','note'])if(v[k]!==undefined||!old)data[k]=String(v[k]||'').trim();
+  if(v.groups!==undefined||!old)data.groups=grpsOf({groups:Array.isArray(v.groups)?v.groups:String(v.groups||'').split(/[;,]/)});
+  if(v.color!==undefined)data.color=v.color||'';if(v.info)data.info=cleanInfo(v.info);
+  for(const g of data.groups||[])if(CU.gmeta[gKey(g)]?.del)setGroupMeta(g,{});
+  if(!old){CU.list.push(data);if(mailDlg.open)CU.sel.add(ck(email));}
   else{if(ck(old.email)!==ck(email)){CU.deleted.push({email:ck(old.email),at:now});if(CU.sel.delete(ck(old.email)))CU.sel.add(ck(email));}Object.assign(old,data);}
   CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));cuSave();return'';}
-function cuFormSave(){const v=id=>$('#'+id).value.trim();const err=cuUpsert(CU.edit,{name:v('cuName'),company:v('cuCo'),email:v('cuMail'),alt:v('cuAlt'),group:v('cuGrp')});
-  if(err){toast(err);$(/address/.test(err)&&!/valid/.test(err)?'#cuAlt':'#cuMail').focus();return;}
-  cuFormClose();renderCust();toast('Customer saved');}
-function cuFormClose(){CU.edit=null;$('#cuForm').hidden=true;$('#cuForm').innerHTML='';}
-$('#cuAdd').onclick=()=>cuFormOpen(null);
-$('#cuForm').addEventListener('click',e=>{if(e.target.id==='cuSaveBtn')cuFormSave();else if(e.target.id==='cuCancelBtn')cuFormClose();});
-$('#cuForm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();cuFormSave();}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cuFormClose();}});
+$('#cuAdd').onclick=()=>openCustomer('new');
 $('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;renderCust();});
-$('#cuGroups').addEventListener('click',e=>{if(e.target.closest('[data-nn]')){CU.nn=!CU.nn;renderCust();return;}const b=e.target.closest('[data-grp]');if(!b)return;CU.grp=b.dataset.grp;renderCust();});
+$('#cuGroups').addEventListener('click',e=>{if(e.target.closest('[data-nn]')){CU.nn=!CU.nn;renderCust();return;}const b=e.target.closest('[data-gtog]');if(!b)return;const k=b.dataset.gtog;CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);renderCust();});
+groupSuggest($('#cuSearch'),{selected:()=>CU.gsel,pick:k=>{CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);CU.q='';renderCust();}});
 $('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
   if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;c.use=[e.target.value];c.upd=Date.now();cuSave();renderChips();return;}
   const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderCustCount();renderChips();});
 const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.replace(/ · \d+ ticked$/,'')+(CU.sel.size?` · ${CU.sel.size} ticked`:'');};
 $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
-  if(ed)cuFormOpen(CU.list.find(c=>ck(c.email)===ed.dataset.cuedit));
+  if(ed)openCustomer(ed.dataset.cuedit);
   if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
-    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer deleted');}});
+    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer removed');}});
 $('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
 $('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
 // Import: Excel (.xlsx) or CSV, e.g. exports from Gmail / Outlook contacts or any sheet with Name, Company and Email columns.
@@ -1746,8 +1843,8 @@ function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
   const col=re=>h.findIndex(x=>re.test(x));
   const ci={name:col(/^(full |customer |contact )?name$|^display name$|^contact( person)?$/),first:col(/^first name$|^given name$/),last:col(/^last name$|^family name$|^surname$/),
     company:col(/company|organi[sz]ation( 1)?( - name)?$|business/),group:col(/^group|^labels?$|categor/)};
-  const mailCols=h.map((x,i)=>/e-?mail/.test(x)&&!/type|label|display|subject|preferred|method/.test(x)?i:-1).filter(i=>i>=0);
-  const used=new Set([ci.name,ci.first,ci.last,ci.company,ci.group,...mailCols]),infoCols=hasHead?h.map((x,i)=>x&&!used.has(i)?i:-1).filter(i=>i>=0):[];
+  const mailCols=h.map((x,i)=>/e-?mail/.test(x)&&!/type|label|display|subject|preferred|method/.test(x)?i:-1).filter(i=>i>=0);ci.note=col(/^my note$/);ci.color=col(/^colou?r( tag)?$/);
+  const used=new Set([ci.name,ci.first,ci.last,ci.company,ci.group,ci.note,ci.color,...mailCols]),infoCols=hasHead?h.map((x,i)=>x&&!used.has(i)?i:-1).filter(i=>i>=0):[];
   const label=i=>clean(rows[hi][i]).slice(0,60),dateCol=i=>/date|added|created|last contact|birthday/i.test(rows[hi][i]);
   // Excel keeps dates as day numbers; show them as dates
   const val=(i,v)=>{v=clean(v);if(dateCol(i)&&/^\d{5}(\.\d+)?$/.test(v)){const d=new Date(Math.round((+v-25569)*864e5));if(!isNaN(d))return d.toISOString().slice(0,10);}return v;};
@@ -1759,22 +1856,28 @@ function importRows(rows){rows=rows.map(r=>r.map(x=>String(x??'')));
     const others=r.map(clean).filter(x=>x&&!mails.some(m=>x.includes(m)));
     const name=(hasHead?(cell(ci.name)||[cell(ci.first),cell(ci.last)].filter(Boolean).join(' ')):(others[0]||'')).replace(/<.*>/,'').trim();
     const info={};for(const i of infoCols){const v=val(i,r[i]);if(v)info[label(i)]=v;}
-    recs.push({info,name,company:hasHead?cell(ci.company):(others[1]||''),group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim(),mails});}
+    recs.push({note:cell(ci.note),color:(c=>COLOR_HEX[c.toLowerCase()]?c.toLowerCase():normHex(c))(cell(ci.color)),info,name,company:hasHead?cell(ci.company):(others[1]||''),group:(hasHead?cell(ci.group):(others[2]||'')).replace(/^\* ?myContacts ?(::: ?)?/i,'').split(':::')[0].trim(),mails});}
   // group rows: same email, or same name + company
   const par=recs.map((_,i)=>i),find=i=>par[i]===i?i:(par[i]=find(par[i])),join=(a,b)=>{a=find(a);b=find(b);if(a!==b)par[b]=a;},seenK=new Map();
-  recs.forEach((r,i)=>{const keys=r.mails.map(m=>'@'+ck(m));if(r.name&&r.company)keys.push('#'+r.name.toLowerCase()+'|'+r.company.toLowerCase());for(const k of keys){if(seenK.has(k))join(seenK.get(k),i);else seenK.set(k,i);}});
+  recs.forEach((r,i)=>{const keys=r.mails.map(m=>'@'+ck(m));if(dupKey(r))keys.push('#'+dupKey(r));for(const k of keys){if(seenK.has(k))join(seenK.get(k),i);else seenK.set(k,i);}});
   const groups=new Map();recs.forEach((r,i)=>{const g=find(i);if(!groups.has(g))groups.set(g,[]);groups.get(g).push(r);});
   const owner=new Map();for(const c of CU.list)for(const a of[c.email,...altOf(c)])owner.set(ck(a),c);
   const now=Date.now();let added=0,merged=0,combined=recs.length-groups.size;
   for(const rs of groups.values()){const mails=[];for(const r of rs)for(const m of r.mails)if(!mails.some(x=>ck(x)===ck(m)))mails.push(m);
-    const pick=k=>(rs.find(r=>r[k])||{})[k]||'',data={name:pick('name'),company:(rs.find(r=>r.name&&r.company)||rs.find(r=>r.company)||{}).company||'',group:pick('group')};
-    const info={};for(const r of rs)addInfo(info,r.info);
-    const ex=mails.map(m=>owner.get(ck(m))).find(Boolean);
-    if(ex){let ch=false;for(const k of['name','company','group'])if(!clean(ex[k])&&data[k]){ex[k]=data[k];ch=true;}
-      const ei=infoOf(ex),fill=Object.entries(info).filter(([k])=>!ei[k]);if(fill.length){ex.info={...ei,...Object.fromEntries(fill)};ch=true;} // only fills empty details, never undoes your edits
+    const pick=k=>(rs.find(r=>r[k])||{})[k]||'',data={name:pick('name'),company:(rs.find(r=>r.name&&r.company)||rs.find(r=>r.company)||{}).company||''};
+    const groups=grpsOf({groups:rs.flatMap(r=>String(r.group||'').split(/[;,]/))}),info={};for(const r of rs)addInfo(info,r.info);
+    // the same customer written differently: keep the other names / companies as alternates
+    const alts=(k,lab)=>{const o=[...new Map(rs.map(r=>r[k]).filter(x=>x&&nrm(x)!==nrm(data[k])).map(x=>[nrm(x),x])).values()];if(o.length)addInfo(info,{[lab]:o.join('\n')});};
+    alts('name','Other names');alts('company','Other companies');
+    const ex=mails.map(m=>owner.get(ck(m))).find(Boolean)||(dupKey(data)&&CU.list.find(c=>dupKey(c)===dupKey(data)));
+    if(ex){let ch=false;for(const k of['name','company'])if(!clean(ex[k])&&data[k]){ex[k]=data[k];ch=true;}
+      const ng=groups.filter(g=>!grpsOf(ex).some(x=>gKey(x)===gKey(g)));if(ng.length){ex.groups=[...grpsOf(ex),...ng];ch=true;}
+      const ei=infoOf(ex),before=JSON.stringify(ei);addInfo(ei,info);if(JSON.stringify(ei)!==before){ex.info=ei;ch=true;} // adds new values as alternates; never changes or removes yours
+      for(const[k,lab]of[['name','Other names'],['company','Other companies']])if(data[k]&&clean(ex[k])&&nrm(ex[k])!==nrm(data[k])){const i2=infoOf(ex),b2=JSON.stringify(i2);addInfo(i2,{[lab]:data[k]});if(JSON.stringify(i2)!==b2){ex.info=i2;ch=true;}}
       const add=mails.filter(a=>!owner.has(ck(a)));if(add.length){ex.alt=[...altOf(ex),...add];add.forEach(a=>owner.set(ck(a),ex));ch=true;}
       if(ch){ex.upd=now;merged++;}continue;}
-    const c={...data,email:mails[0],alt:mails.slice(1),use:[mails[0]],info,upd:now};CU.list.push(c);mails.forEach(a=>owner.set(ck(a),c));added++;
+    data.note=rs.map(r=>r.note).filter(Boolean).join('\n');data.color=pick('color');
+    const c={...data,groups,email:mails[0],alt:mails.slice(1),use:[mails[0]],info,upd:now};CU.list.push(c);mails.forEach(a=>owner.set(ck(a),c));added++;
     CU.deleted=CU.deleted.filter(d=>!mails.some(m=>ck(m)===d.email));}
   cuSave();renderCust();return{added,merged,combined,noMail,rows:recs.length+noMail};}
 const importCustomers=text=>importRows(parseCSV(text.replace(/^\uFEFF/,''))).added;
@@ -1791,7 +1894,7 @@ async function importCustFile(f){
   catch(e){console.error(e);toast(e.message&&!/^[A-Z]\w+Error/.test(e.name)?e.message:'That file could not be read',5000);}
   if(custDlg.open)renderCP();}
 $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export yet');return;}const q=v=>`"${String(v||'').replace(/"/g,'""')}"`;
-  const ks=infoKeys();save('Customers.csv',new Blob(['\uFEFF'+[['Name','Company','Email','Other emails','Group',...ks].map(q).join(','),...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),c.group,...ks.map(k=>infoOf(c)[k]||'')].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
+  const ks=infoKeys();save('Customers.csv',new Blob(['\uFEFF'+[['Name','Company','Email','Other emails','Groups','Colour','My note',...ks].map(q).join(','),...CU.list.map(c=>[c.name,c.company,c.email,altOf(c).join('; '),grpsOf(c).map(gName).join('; '),tagName(c.color)||'',c.note,...ks.map(k=>infoOf(c)[k]||'')].map(q).join(','))].join('\r\n')],{type:'text/csv'}));};
 
 /* recipients */
 function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
@@ -1808,7 +1911,7 @@ function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!firstName(p));nnO
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
       +(splitAddr($('#mlCc').value).length||splitAddr($('#mlBcc').value).length?`<small>Cc/Bcc get a copy of every email${n>1?` (${n} each)`:''}.</small>`:'')
       +(nn.length?`<div class="warn"><b>⚠ ${nn.length} ${nn.length>1?'have':'has'} no name, so the email starts “${esc(fillTokens(($('#mlMsg').value.split(/\r?\n/).find(l=>l.includes('{name}'))||'Hi {name},').trim(),null))}”:</b><ul>${nn.slice(0,50).map(p=>`<li>${esc(p.company||p.email)}${p.cust?` <button type="button" data-fixname="${esc(p.key)}">Add name</button>`:' <small>(typed address: save as a customer to add a name)</small>'}</li>`).join('')}${nn.length>50?`<li>and ${nn.length-50} more</li>`:''}</ul></div>`:'');}
-$('#mlCount').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c){cuFormOpen(c);$('#cuForm').scrollIntoView({block:'nearest'});}});
+$('#mlCount').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
 for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMode);
 
 /* sign-in: Google (Google Identity Services) and Microsoft (OAuth with PKCE in a pop-up).
@@ -1865,7 +1968,7 @@ async function login(p,choose,fresh){const before=cuKey(),hint=choose?'':meFor(p
 function afterLogin(prevKey){const a=authGet();if(!a)return;
   // the first time an account signs in on this browser, copy the customers saved here into it
   const flag='ss-merged:'+a.prov+':'+ck(a.email);if(prevKey==='ss-customers'&&!lsGet(flag)){try{const g=JSON.parse(lsGet('ss-customers')||'[]');const gl=Array.isArray(g)?g:g.customers||[];
-      if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[]},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[]});lsSet(k,JSON.stringify(m));}
+      if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[],groups:cur.groups},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[],groups:Array.isArray(g)?{}:g.groups});lsSet(k,JSON.stringify(m));}
       const gLog=JSON.parse(lsGet('ss-log')||'{}')||{};if((gLog.entries||[]).length){const lk=lgKey(),cl=JSON.parse(lsGet(lk)||'{}')||{};lsSet(lk,JSON.stringify(mergeLog({entries:cl.entries||[],deleted:cl.deleted||[]},{entries:gLog.entries,deleted:[]})));}}catch(_){}lsSet(flag,'1');}
   lgLoad();renderBadge();CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();}
 function signOut(){const g=toksAll().google;if(g?.token&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(g.token,()=>{});}catch(_){}
@@ -1884,8 +1987,11 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),group:String(c.group||''),info:cleanInfo(c.info),upd:+c.upd||0};}),
-    deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at}))};}
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),upd:+c.upd||0};}),
+    deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at})),groups:mergeGroupMeta(a.groups,b.groups)};}
+// group colours/names: newest change wins; deleted groups are remembered
+function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
+    if(!gm[kk]||(+v.upd||0)>(+gm[kk].upd||0))gm[kk]={name:String(v.name||k).slice(0,40),color:COLOR_HEX[v.color]?v.color:normHex(v.color),upd:+v.upd||0,...(v.del?{del:1}:{})};}return gm;}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
 const httpErr=async(what,r)=>{let j={};try{j=await r.json();}catch(_){}return Object.assign(new Error(j.error?.message||what+' '+r.status),{status:r.status,off:/has not been used|is disabled|accessNotConfigured|SERVICE_DISABLED/i.test(JSON.stringify(j))});};
 async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
@@ -1903,14 +2009,14 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
-      const m=mergeCust(local,{customers:Array.isArray(rd.customers)?rd.customers:[],deleted:Array.isArray(rd.deleted)?rd.deleted:[]});
+      const m=mergeCust(local,{customers:Array.isArray(rd.customers)?rd.customers:[],deleted:Array.isArray(rd.deleted)?rd.deleted:[],groups:rd.groups});
       const msgL={text:lsGet('ss-mailmsg'),upd:+lsGet('ss-mailmsg-upd')||0},msgR=rd.mailMsg&&typeof rd.mailMsg.text==='string'?rd.mailMsg:{},msg=(+msgR.upd||0)>msgL.upd?msgR:msgL;
       if(msg.text&&msg!==msgL){lsSet('ss-mailmsg',String(msg.text));lsSet('ss-mailmsg-upd',String(msg.upd));if(mailDlg.open&&document.activeElement!==$('#mlMsg'))$('#mlMsg').value=msg.text;}
       lsSet(key,JSON.stringify(m));
-      if(JSON.stringify([m.customers,m.deleted,msg.text||null,lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.mailMsg?.text||null,lr.entries||[],lr.deleted||[]]))
-        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,log:lm,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
+      if(JSON.stringify([m.customers,m.deleted,m.groups,msg.text||null,lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},rd.mailMsg?.text||null,lr.entries||[],lr.deleted||[]]))
+        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
-      if(key===cuKey()){const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
+      if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
     catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401)tokSet(acct.prov,null);}
     finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
@@ -2278,7 +2384,7 @@ $('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus(
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
 function openMail(){cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;$('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;renderHow();
-  $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');cuFormClose();renderCust();renderAcct();
+  $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust();renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
@@ -2317,7 +2423,7 @@ async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   let html=emailHTML(msg,inline,parts);for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
   fr.srcdoc=html.replace('<head>','<head><base target="_blank">');}
 $('#mlPrevWho').addEventListener('change',buildPreview);
-$('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c){cuFormOpen(c);$('#cuForm').scrollIntoView({block:'nearest'});}});
+$('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 
 /* ---------- where to open from: this computer or Google Drive ---------- */
@@ -2365,52 +2471,220 @@ function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollo
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
-/* ---------- Customers page: the whole list with every detail from the imported sheet ---------- */
-const CP={q:'',nn:false,open:null,sure:false};
-function openCP(){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.open=null;$('#cpQ').value=CP.q;renderCP();if(!custDlg.open)custDlg.showModal();if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}
-const cpShown=()=>{const q=CP.q.trim().toLowerCase();return CU.list.filter(c=>(!CP.nn||noName(c))&&(!q||[c.name,c.company,c.email,c.group,...altOf(c),...Object.values(infoOf(c))].some(v=>String(v||'').toLowerCase().includes(q))))
+/* ---------- small pop-ups shared by the customer screens ---------- */
+// a menu under a button, inside the button's window (if any) so it shows above it
+function popMenu(btn,html,onClick){const m=$('#srcMenu'),host=btn.closest('dialog')||document.body;
+  if(!m.classList.contains('hide')&&m.dataset.for===btn.id&&btn.id){m.classList.add('hide');return null;}
+  host.appendChild(m);m.dataset.for=btn.id||'';m.innerHTML=html;m.classList.remove('hide');
+  const r=btn.getBoundingClientRect(),hr=host===document.body?{left:0,top:0,width:innerWidth,height:innerHeight}:host.getBoundingClientRect(),mh=m.offsetHeight,mw=m.offsetWidth;
+  m.style.position=host===document.body?'fixed':'absolute';m.style.right='auto';m.style.left=Math.max(8,Math.min(r.left-hr.left,hr.width-mw-8))+'px';
+  m.style.top=(r.bottom-hr.top+6+mh>hr.height-8?Math.max(8,r.top-hr.top-mh-6):r.bottom-hr.top+6)+'px';m.onclick=e=>onClick(e,m);return m;}
+// colour picker (same presets, recent colours and hex codes as the Sent list)
+function colorPop(btn,cur,onPick){let p=$('#colPop');if(!p){p=document.createElement('div');p.id='colPop';p.className='lg-pal';p.setAttribute('role','group');p.setAttribute('aria-label','Colour');}
+  const host=btn.closest('dialog')||document.body;host.appendChild(p);
+  const sw=(v,n,h)=>`<button class="sw" type="button" data-cc="${esc(v)}" style="background:${h}" title="${esc(n)}" aria-label="${esc(n)}" aria-pressed="${cur===v}"></button>`,hex=normHex(cur)||tagHex(cur)||'#0E993F',rec=lgRecent();
+  p.innerHTML=`<div class="row">${COLORS.map(([v,n,h])=>sw(v,n,h)).join('')}<button class="sw none" type="button" data-cc="" title="No colour" aria-label="No colour" aria-pressed="${!cur}">✕</button></div>`
+    +(rec.length?`<div class="row"><span class="lbl">Recent</span>${rec.map(h=>sw(h,h,h)).join('')}</div>`:'')
+    +`<div class="row"><span class="lbl">Custom</span><input type="color" class="cpick" value="${hex.toLowerCase()}" aria-label="Pick any colour"><input class="in hex" value="${normHex(cur)||''}" placeholder="${hex}" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex code, for example #0E993F"><button class="btn sm primary" type="button" data-ccapply>Apply</button></div>`;
+  p.style.position=host===document.body?'fixed':'absolute';const r=btn.getBoundingClientRect(),hr=host===document.body?{left:0,top:0,width:innerWidth,height:innerHeight}:host.getBoundingClientRect();
+  p.hidden=false;const ph=p.offsetHeight;p.style.left=Math.max(8,Math.min(r.left-hr.left,hr.width-p.offsetWidth-8))+'px';p.style.top=(r.bottom-hr.top+6+ph>hr.height-8?Math.max(8,r.top-hr.top-ph-6):r.bottom-hr.top+6)+'px';
+  const done=v=>{p.hidden=true;onPick(v);},apply=()=>{const box=p.querySelector('.hex'),h=normHex(box.value)||(!box.value.trim()&&normHex(p.querySelector('.cpick').value));
+    if(!h){box.setAttribute('aria-invalid','true');box.title='Use a hex code like #0E993F or #F80';box.focus();return;}lsSet('ss-lgcolors',JSON.stringify([h,...lgRecent().filter(x=>x!==h)].slice(0,8)));done(h);};
+  p.onclick=e=>{const b=e.target.closest('[data-cc]');if(b){done(b.dataset.cc);return;}if(e.target.closest('[data-ccapply]'))apply();};
+  p.oninput=e=>{if(e.target.classList.contains('cpick')){const b=p.querySelector('.hex');b.value=e.target.value.toUpperCase();b.removeAttribute('aria-invalid');}else if(e.target.classList.contains('hex')){const h=normHex(e.target.value);e.target.removeAttribute('aria-invalid');if(h)p.querySelector('.cpick').value=h.toLowerCase();}};
+  p.onkeydown=e=>{if(e.key==='Enter'&&e.target.classList.contains('hex')){e.preventDefault();apply();}};
+  p.querySelector('[aria-pressed=true]')?.focus();}
+document.addEventListener('pointerdown',e=>{const p=$('#colPop');if(p&&!p.hidden&&!e.target.closest('#colPop'))p.hidden=true;},true);
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const p=$('#colPop'),g=$('#gSug');
+  if(p&&!p.hidden){e.preventDefault();e.stopPropagation();p.hidden=true;}else if(!g.classList.contains('hide')){e.preventDefault();e.stopPropagation();g.classList.add('hide');}},true);
+// group buttons used as filters (several can be on: shows customers in any of them)
+function groupToggles(sel){return allGroups().map(g=>`<button type="button" class="gtog" data-gtog="${esc(gKey(g.name))}" aria-pressed="${sel.has(gKey(g.name))}" style="--gc:${gColor(g.name)}"><i></i>${esc(g.name)} <small>${g.n}</small></button>`).join('');}
+// group suggestions under a search box. o.selected(): keys already chosen; o.pick(key, name); o.allowNew: Enter on typed text creates a group
+function groupSuggest(inp,o){const box=$('#gSug');let idx=-1,list=[];
+  const show=()=>{const q=gKey(inp.value),sel=o.selected();list=allGroups().filter(g=>(!q||gKey(g.name).includes(q))&&!(o.allowNew&&sel.has(gKey(g.name))));
+    const isNew=o.allowNew&&q&&!allGroups().some(g=>gKey(g.name)===q);
+    if(!list.length&&!isNew){box.classList.add('hide');return;}
+    const host=inp.closest('dialog')||document.body;if(box.parentNode!==host)host.appendChild(box);box.dataset.for=inp.id;box._owner=inp;
+    box.innerHTML=`<span class="menu-h">${o.allowNew?'Add to a group':'Filter by group'}</span>`+list.map((g,i)=>`<button type="button" role="option" data-gi="${i}" aria-selected="${i===idx}" class="${!o.allowNew&&sel.has(gKey(g.name))?'on':''}"><i style="background:${gColor(g.name)}"></i><span><b>${esc(g.name)}</b></span><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')
+      +(isNew?`<button type="button" role="option" data-gnew aria-selected="${idx===list.length}"><i style="background:${gColor(inp.value)}"></i><span><b>Create “${esc(inp.value.trim())}”</b></span><small>new group</small></button>`:'');
+    const r=inp.getBoundingClientRect();box.style.left=Math.min(r.left,innerWidth-Math.max(240,r.width)-8)+'px';box.style.top=(r.bottom+4)+'px';box.style.width=Math.max(240,r.width)+'px';box.classList.remove('hide');};
+  const choose=i=>{if(i<list.length){const g=list[i];o.pick(gKey(g.name),g.name);}else if(o.allowNew&&inp.value.trim())o.pick(gKey(inp.value),inp.value.trim().replace(/\s+/g,' ').slice(0,40));else return;inp.value='';idx=-1;if(o.allowNew&&box._owner?.isConnected)show();else box.classList.add('hide');};
+  inp.addEventListener('focus',()=>{idx=-1;show();});inp.addEventListener('input',()=>{idx=-1;show();});
+  inp.addEventListener('blur',()=>setTimeout(()=>{if(box._owner===inp&&document.activeElement!==inp)box.classList.add('hide');},150));
+  inp.addEventListener('keydown',e=>{const n=list.length+(o.allowNew&&inp.value.trim()&&!allGroups().some(g=>gKey(g.name)===gKey(inp.value))?1:0);
+    if(e.key==='ArrowDown'&&n){e.preventDefault();idx=(idx+1)%n;show();}else if(e.key==='ArrowUp'&&n){e.preventDefault();idx=(idx-1+n)%n;show();}
+    else if(e.key==='Enter'&&(idx>=0||o.allowNew&&inp.value.trim())){e.preventDefault();choose(idx>=0?idx:list.findIndex(g=>gKey(g.name)===gKey(inp.value))>=0?list.findIndex(g=>gKey(g.name)===gKey(inp.value)):list.length);}});
+  inp._gsChoose=choose;}
+$('#gSug').addEventListener('pointerdown',e=>e.preventDefault());
+document.addEventListener('pointerdown',e=>{const g=$('#gSug');if(!g.classList.contains('hide')&&!e.target.closest('#gSug')&&e.target!==g._owner)g.classList.add('hide');},true);
+$('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[data-gnew]');if(!b)return;const inp=$('#gSug')._owner;if(inp?._gsChoose)inp._gsChoose(b.dataset.gnew!==undefined?Infinity:+b.dataset.gi);});
+
+/* ---------- Customers page: every customer with every detail; opens each one in a large tab ---------- */
+const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
+function openCP(){if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();
+  if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}renderCP();}
+function openCustomer(key){openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;renderCP();if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
+const cpShown=()=>{const q=CP.q.trim().toLowerCase();return CU.list.filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel))
   .sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));};
-function renderCP(){const ks=infoKeys(),shown=cpShown(),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;
+function renderCP(){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==OTHER.company),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
+  const shown=cpShown(),dupes=findDupes();
   $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
-  $('#cpChips').innerHTML=nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'';
-  const k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length;
-  $('#cpTable').innerHTML=CU.list.length?`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown" ${shown.length&&shown.every(c=>CU.sel.has(ck(c.email)))?'checked':''}></th><th>Name</th><th>Company</th><th>Email</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
-    <tbody>${shown.map(c=>{const inf=infoOf(c);return`<tr data-cp="${k(c)}"${CP.open===ck(c.email)?' class="on"':''}><td><input type="checkbox" data-cptick="${k(c)}" ${CU.sel.has(ck(c.email))?'checked':''} aria-label="Tick ${esc(c.name||c.company||c.email)}"></td>
-      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}</td><td>${esc(c.company)}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
-      ${ks.map(x=>`<td class="${String(inf[x]||'').includes('\n')?'ml':''}" title="${esc(inf[x]||'')}">${esc(inf[x]||'')}</td>`).join('')}</tr>`;}).join('')}</tbody>`
-    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>Add customer</b>.</td></tr></tbody>';
-  if(CU.list.length&&!shown.length)$('#cpTable').insertAdjacentHTML('beforeend',`<tbody><tr><td></td><td colspan="${3+ks.length}" class="cu-empty">No customers match.</td></tr></tbody>`);
-  $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Tick customers to email them.');
-  $('#cpEmail').disabled=!ticked;$('#cpEmail').textContent=ticked?`Email ${ticked} ticked customer${ticked>1?'s':''}`:'Email ticked customers';renderCPDetail();}
-function renderCPDetail(){const d=$('#cpDetail'),c=CP.open==='new'?{name:'',company:'',email:'',alt:[],group:'',info:{}}:CU.list.find(x=>ck(x.email)===CP.open);
-  if(!CP.open||!c){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;CP.sure=false;if(d.dataset.for!==CP.open){d.scrollTop=0;d.dataset.for=CP.open;}const ks=[...new Set([...infoKeys(),...Object.keys(infoOf(c))])],inf=infoOf(c);
-  const f=(id,lab,v,ph='')=>`<label>${lab}<input class="in" id="${id}" value="${esc(v||'')}" placeholder="${esc(ph)}"></label>`;
-  d.innerHTML=`<h3><span>${CP.open==='new'?'New customer':esc(c.name||c.company||c.email)}</span><button class="btn icon sm ghost" type="button" id="cpdClose" aria-label="Close details">✕</button></h3>
-    ${f('cpdName','Name',c.name,'e.g. Sarah Lee')}${noName(c)&&CP.open!=='new'?'<small style="color:var(--bad);margin-top:-6px">No name yet: emails to this customer start “Hi,”.</small>':''}
-    ${f('cpdCo','Company',c.company)}${f('cpdMail','Main email',c.email)}${f('cpdAlt','Other emails (comma separated)',altOf(c).join(', '))}${f('cpdGrp','Group',c.group,'optional')}
-    ${ks.length?'<span class="hd">Details</span>':''}${ks.map((x,i)=>`<label>${esc(x)}<textarea class="in" rows="${Math.min(6,Math.max(1,String(inf[x]||'').split('\n').length))}" data-cpinfo="${esc(x)}">${esc(inf[x]||'')}</textarea></label>`).join('')}
-    <div class="bgrp"><button class="btn sm primary" type="button" id="cpdSave">Save</button>${CP.open==='new'?'':'<button class="btn sm ghost" type="button" id="cpdDel">Delete</button>'}</div>`;}
+  const cus=[...new Set(CU.list.map(c=>normHex(c.color)).filter(Boolean))].sort();
+  $('#cpColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;
+  $('#cpColor').value=[...$('#cpColor').options].some(o=>o.value===CP.color)?CP.color:'';
+  $('#cpChips').innerHTML=groupToggles(CP.gsel)+(nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'');
+  $('#cpDupes').hidden=!dupes.length;$('#cpDupes').textContent=`⚠ ${dupes.length} possible duplicate${dupes.length>1?'s':''}`;
+  const more=v=>{const n=lines(v).length;return n?`<span class="sub">+${n} other${n>1?'s':''}</span>`:'';},k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length,who=c=>esc(c.name||c.company||c.email);
+  $('#cpTable').innerHTML=CU.list.length?`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown" ${shown.length&&shown.every(c=>CU.sel.has(ck(c.email)))?'checked':''}></th><th>Name</th><th>Company</th><th>Email</th><th>Groups</th><th>My note</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
+    <tbody>${shown.map(c=>{const inf=infoOf(c),t=tagHex(c.color);return`<tr data-cp="${k(c)}"${t?` data-color style="--tag:${t}"`:''}${CP.open===ck(c.email)&&CP.mode==='cust'?' class="on"':''}>
+      <td class="acts"><span class="ra"><input type="checkbox" data-cptick="${k(c)}" ${CU.sel.has(ck(c.email))?'checked':''} aria-label="Tick ${who(c)}"><button class="tiny" type="button" data-cpopen="${k(c)}" title="Open and edit" aria-label="Open and edit ${who(c)}">✎</button><button class="tiny x" type="button" data-cpdel="${k(c)}" title="Remove" aria-label="Remove ${who(c)}">${I.x}</button></span></td>
+      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}${more(inf[OTHER.name])}</td><td>${esc(c.company)}${more(inf[OTHER.company])}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
+      <td>${grpsOf(c).map(g=>gChip(g)).join('')}</td><td title="${esc(c.note||'')}">${esc(String(c.note||'').split('\n')[0])}</td>
+      ${ks.map(x=>`<td title="${esc(inf[x]||'')}">${esc(lines(inf[x])[0]||'')}${more(lines(inf[x]).slice(1).join('\n'))}</td>`).join('')}</tr>`;}).join('')}</tbody>`
+    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>＋ New customer</b>.</td></tr></tbody>';
+  if(CU.list.length&&!shown.length)$('#cpTable').insertAdjacentHTML('beforeend',`<tbody><tr><td></td><td colspan="${5+ks.length}" class="cu-empty">No customers match.</td></tr></tbody>`);
+  $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Click a customer to open it. Tick customers to email, group or delete them.');
+  for(const id of['cpEmail','cpTickGrp','cpTickDel'])$('#'+id).disabled=!ticked;
+  $('#cpEmail').textContent=ticked?`Email ${ticked} ticked`:'Email ticked customers';$('#cpTickDel').textContent=CP.tickSure?`Delete ${ticked}? Click again`:'Delete ticked';
+  renderCPDetail();}
+// the large customer tab (also used for duplicates and the groups list)
+function renderCPDetail(){const d=$('#cpDetail');if(!CP.mode){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;d.classList.toggle('is-np',CP.mode==='cust');
+  const key=CP.mode+':'+(CP.open||''),same=d.dataset.for===key;if(!same){d.dataset.for=key;CP.closeSure=false;CP.delSure=false;}
+  const sc=same?d.querySelector('.cpd-b')?.scrollTop||0:0;d.innerHTML=CP.mode==='dupes'?dupesHTML():CP.mode==='groups'?groupsHTML():custHTML();if(!CP.mode){renderCPDetail();return;}const b=d.querySelector('.cpd-b');if(b)b.scrollTop=sc;d.querySelectorAll('.np-auto').forEach(npSize);
+  if(CP.mode==='cust'){const gi=$('#cpdGrpIn');if(gi)groupSuggest(gi,{allowNew:true,selected:()=>new Set(CP.W.groups.map(gKey)),pick:(k,name)=>{if(!CP.W.groups.some(g=>gKey(g)===k)){CP.W.groups.push(allGroups().find(g=>gKey(g.name)===k)?.name||name);CP.dirty=true;}renderCPDetail();$('#cpdGrpIn')?.focus();}});}}
+// working copy of the open customer. Every detail is a list of values: the first is the main one, the rest are alternates
+// (kept from duplicate rows or added by hand). Alternate names / companies are stored as the "Other names" / "Other companies" details.
+const OTHER={name:'Other names',company:'Other companies'},lines=v=>String(v||'').split('\n').map(x=>x.trim()).filter(Boolean);
+function workCopy(){if(CP.W)return CP.W;const c=CP.open==='new'?null:CU.list.find(x=>ck(x.email)===CP.open);if(CP.open!=='new'&&!c){CP.mode='';return null;}
+  const inf=infoOf(c),emails=c?[c.email,...altOf(c)]:[''],keys=Object.keys(inf).filter(k=>k!==OTHER.name&&k!==OTHER.company);
+  const vals={name:[c?.name||'',...lines(inf[OTHER.name])],company:[c?.company||'',...lines(inf[OTHER.company])]};for(const k of keys){const l=lines(inf[k]);vals['i:'+k]=l.length?l:[''];}
+  CP.W={vals,keys,emails,useIdx:c?Math.max(0,emails.findIndex(a=>ck(a)===ck(useOf(c)[0]))):0,exp:new Set(),
+    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||''};return CP.W;}
+function wInfo(W){const info={},uniq=a=>[...new Map(a.map(x=>x.trim()).filter(Boolean).map(x=>[nrm(x),x])).values()];
+  for(const k of W.keys){const l=uniq(W.vals['i:'+k]);if(l.length)info[k]=l.join('\n');}
+  for(const f of['name','company']){const main=nrm(W.vals[f][0]),l=uniq(W.vals[f].slice(1)).filter(x=>nrm(x)!==main);if(l.length)info[OTHER[f]]=l.join('\n');}return info;}
+// the customer page, laid out like a Notion page: big title, a list of properties, then the note as the page body
+const NP_IC={co:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',grp:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
+const npI=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NP_IC[k]}</svg>`;
+// the "▾ N more" button that opens a detail's alternates
+function npDD(f,n,label){const open=CP.W.exp.has(f);return`<button class="np-dd${open?' open':''}${n?' has':''}" type="button" data-cpd="dd" data-f="${esc(f)}" aria-expanded="${open}" title="${n?`Show the other ${esc(label)}`:`Add another ${esc(label)}`}">${n?`${n} more`:'Add other'}${npI('chev')}</button>`;}
+// one detail: its main value, and (when opened) a dropdown list of alternates
+function npMulti(f,label){const W=CP.W,v=W.vals[f],open=W.exp.has(f),lab=label.toLowerCase();
+  return`<div class="np-multi"><div class="np-main"><input class="np-in" data-alt="${esc(f)}|0" value="${esc(v[0])}" placeholder="Empty" aria-label="${esc(label)}">${npDD(f,v.length-1,lab)}</div>${open?npAltList(f,v,lab):''}</div>`;}
+function npAltList(f,v,lab){return`<div class="np-altlist" role="group" aria-label="Other ${esc(lab)}"><span class="np-alth">Other ${esc(lab)}</span>${v.slice(1).map((x,i)=>`<div class="np-altrow"><input class="np-in" data-alt="${esc(f)}|${i+1}" value="${esc(x)}" placeholder="Another ${esc(lab)}" aria-label="Other ${esc(lab)} ${i+1}"><button class="np-mk" type="button" data-cpd="mkmain" data-f="${esc(f)}" data-i="${i+1}" title="Use this as the main one">Make main</button><button class="np-x" type="button" data-cpd="rmalt" data-f="${esc(f)}" data-i="${i+1}" aria-label="Remove">✕</button></div>`).join('')}
+  <button class="np-add" type="button" data-cpd="addalt" data-f="${esc(f)}">${npI('add')}Add another</button></div>`;}
+function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
+  const sent=isNew?[]:threads().filter(th=>{const all=[th.root.email,...th.root.emails].map(ck);return th.root.cust===CP.open||W.emails.some(a=>all.includes(ck(a)));}).sort((a,b)=>b.last-a.last);
+  const prop=(ic,label,val,cls='')=>`<div class="np-prop ${cls}"><span class="np-k">${npI(ic)}${label}</span><div class="np-v">${val}</div></div>`;
+  const mailRow=(a,i)=>`<input class="np-in" type="email" data-wmail="${i}" value="${esc(a)}" placeholder="name@company.com" aria-label="${i?'Other email '+i:'Main email'}"><label class="np-send${i===W.useIdx?' on':''}" title="Send emails to this address"><input type="radio" name="cpdUse" data-wuse="${i}" ${i===W.useIdx?'checked':''}>${i===W.useIdx?'Sends here':'Send here'}</label>`;
+  const mails=`<div class="np-multi"><div class="np-main">${mailRow(W.emails[0],0)}${npDD('mail',W.emails.length-1,'emails')}</div>${open.has('mail')?`<div class="np-altlist" role="group" aria-label="Other emails"><span class="np-alth">Other emails</span>${W.emails.slice(1).map((a,j)=>`<div class="np-altrow np-mailrow">${mailRow(a,j+1)}<button class="np-mk" type="button" data-cpd="mkmail" data-i="${j+1}" title="Make this the main address">Make main</button><button class="np-x" type="button" data-cpd="rmmail" data-i="${j+1}" aria-label="Remove this email">✕</button></div>`).join('')}<button class="np-add" type="button" data-cpd="addmail">${npI('add')}Add another</button></div>`:''}</div>`;
+  const P={};
+  P.head=`<div class="np-head"><button class="np-icon${t?' on':''}" style="${t?`--tag:${t}`:''}" type="button" data-cpd="color" title="Colour tag: ${esc(tagName(W.color)||'none')}" aria-label="Colour tag">${t?'':npI('col')}</button>
+    <div class="np-tw"><input class="np-title" data-alt="name|0" value="${esc(W.vals.name[0])}" placeholder="${isNew?'New customer name':'No name yet'}" aria-label="Name">
+      <div class="np-tsub">${npDD('name',W.vals.name.length-1,'names')}${!W.vals.name[0].trim()&&!isNew?'<span class="np-warn">⚠ No name: emails to this customer start “Hi,”. Type a name above.</span>':''}</div>${open.has('name')?npAltList('name',W.vals.name,'names'):''}</div></div>`;
+  P.props=`<div class="np-props" id="np-props">
+    ${prop('co','Company',npMulti('company','Company'))}
+    ${prop('mail','Email',mails)}
+    ${prop('grp','Groups',`<div class="np-grps">${W.groups.map(g=>gChip(g,`<button type="button" data-cpd="rmgrp" data-g="${esc(g)}" aria-label="Remove from ${esc(g)}">✕</button>`).replace('<span class="gchip"',`<span class="gchip" data-gcol="${esc(g)}" title="Click to change the colour of ${esc(gName(g))}"`)).join('')}<input class="np-in np-gin" id="cpdGrpIn" placeholder="${W.groups.length?'Add…':'Add to a group…'}" autocomplete="off" aria-label="Add to a group"></div>`)}
+    ${prop('col','Colour',`<button class="np-colbtn" type="button" data-cpd="color">${t?`<i style="background:${t}"></i>${esc(tagName(W.color))}`:'<span class="np-empty">None</span>'}</button>`)}
+    ${W.keys.map(k=>prop('info',esc(k),npMulti('i:'+k,k)+`<button class="np-x np-rmprop" type="button" data-cpd="rminfo" data-k="${esc(k)}" title="Remove this detail" aria-label="Remove ${esc(k)}">✕</button>`,'np-info')).join('')}
+    ${(()=>{const have=new Set(W.keys),q=[...new Set(['Phone','Address','Website',...infoKeys()])].filter(k=>!have.has(k)&&k!==OTHER.name&&k!==OTHER.company).slice(0,8);
+      return q.length?`<div class="np-quick"><span>Quick add:</span>${q.map(k=>`<button type="button" data-cpd="qadd" data-k="${esc(k)}">${npI('add')}${esc(k)}</button>`).join('')}</div>`:'';})()}
+    <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().filter(x=>x!==OTHER.name&&x!==OTHER.company).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div></div>`;
+  P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
+  P.sent=`<div class="np-sec" id="np-sent"><h4>${npI('sent')}Sent to this customer${sent.length?` <span class="np-count">${sent.length}</span>`:''}</h4>${sent.length?`<div class="np-list">${sent.slice(0,20).map(th=>`<div class="np-row"><span class="np-dot" style="background:${tagHex(th.root.color)||'var(--line2)'}"></span><b>${esc(th.root.sheet)}</b><span>${esc(ago(th.root.at))}${th.fups.length?` · ${th.fups.length} follow-up${th.fups.length>1?'s':''}`:''}</span><em>${esc(ST_NAME[th.root.status||'none'])}</em></div>`).join('')}</div>`:'<p class="np-empty">Nothing sent yet.</p>'}</div>`;
+  P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
+    ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to remove':'Remove customer'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
+  return P;}
+function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
+  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
+// auto-height for the note
+const npSize=el=>{el.style.height='auto';el.style.height=el.scrollHeight+2+'px';};
+custDlg.addEventListener('input',e=>{if(e.target.classList.contains('np-auto'))npSize(e.target);const st=$('#cpdState');if(st&&CP.dirty)st.textContent='● Unsaved changes';});
+
+function dupesHTML(){const ds=findDupes();return`<div class="cpd-h"><h3>Possible duplicates<small>Same name and company. Merging keeps every email (as alternates), detail, group and note.</small></h3><button class="btn icon sm ghost" type="button" data-cpd="close" aria-label="Close">✕</button></div>
+  <div class="cpd-b" style="grid-template-columns:1fr">${ds.length?ds.map((g,i)=>`<div class="cp-dupe"><b>${esc(g[0].name)} · ${esc(g[0].company)}</b><ul>${g.map(c=>`<li>${esc([c.email,...altOf(c)].join(', '))}${Object.keys(infoOf(c)).length?` · ${Object.keys(infoOf(c)).length} details`:''}${grpsOf(c).map(x=>gChip(x)).join('')}</li>`).join('')}</ul><button class="btn sm" type="button" data-cpd="merge" data-i="${i}" style="justify-self:start">Merge into one customer</button></div>`).join(''):'<span class="cpd-hint">No duplicates left.</span>'}</div>
+  <div class="cpd-f">${ds.length>1?`<button class="btn sm primary" type="button" data-cpd="mergeall">Merge all ${ds.length}</button>`:''}<span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
+function groupsHTML(){const gs=allGroups();return`<div class="cpd-h"><h3>Groups<small>Click a colour to change it. Rename by editing the name. A customer can be in several groups.</small></h3><button class="btn icon sm ghost" type="button" data-cpd="close" aria-label="Close">✕</button></div>
+  <div class="cpd-b" style="grid-template-columns:1fr"><div>${gs.length?gs.map(g=>`<div class="cp-grp"><button class="cpd-dot on" style="--tag:${gColor(g.name)};width:24px;height:24px" type="button" data-cpd="gcol" data-g="${esc(g.name)}" aria-label="Colour of ${esc(g.name)}"></button><input class="in" data-grename="${esc(g.name)}" value="${esc(g.name)}" aria-label="Group name"><small>${g.n} customer${g.n===1?'':'s'}</small><button class="btn sm ghost" type="button" data-cpd="gshow" data-g="${esc(g.name)}">Show</button><button class="btn sm ghost" type="button" data-cpd="gdel" data-g="${esc(g.name)}">${CP.gdel===gKey(g.name)?'Click again to delete':'Delete'}</button></div>`).join(''):'<span class="cpd-hint">No groups yet. Open a customer and add them to a group, or tick customers and use “Add ticked to group…”.</span>'}</div>
+    <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button></div></div>
+  <div class="cpd-f"><span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
+function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
+  CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();return true;}
+function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
+  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W)});
+  if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
+function removeCustomers(list){const now=Date.now();for(const c of list){CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:now});}cuSave();if(mailDlg.open)renderCust();}
+custDlg.addEventListener('input',e=>{const t=e.target,W=CP.W;if(!W||CP.mode!=='cust')return;
+  if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;}
+  if(CP.closeSure){CP.closeSure=false;const b=$$('#cpDetail .cpd-f [data-cpd=close]')[0];if(b)b.textContent='Close';}});
 custDlg.addEventListener('change',e=>{const t=e.target;
-  if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);renderCP();return;}
-  if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));renderCP();}});
-custDlg.addEventListener('click',e=>{const t=e.target;
+  if(t.dataset.wuse!==undefined&&CP.W){CP.W.useIdx=+t.dataset.wuse;CP.dirty=true;return;}
+  if(t.dataset.grename!==undefined){const to=t.value.trim();if(to&&gKey(to)!==gKey(t.dataset.grename)&&allGroups().some(g=>gKey(g.name)===gKey(to))){toast(`There's already a group called ${to}`);t.value=t.dataset.grename;return;}
+    if(to){renameGroup(t.dataset.grename,to);renderCP();toast('Group renamed');}else t.value=t.dataset.grename;return;}
+  if(t.id==='cpColor'){CP.color=t.value;renderCP();return;}
+  if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);CP.tickSure=false;renderCP();return;}
+  if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));CP.tickSure=false;renderCP();}});
+custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),W=CP.W;
   if(t.closest('[data-cpnn]')){CP.nn=!CP.nn;renderCP();return;}
-  const row=t.closest('tr[data-cp]');if(row&&!t.closest('input')){CP.open=CP.open===row.dataset.cp?null:row.dataset.cp;renderCP();return;}
-  if(t.id==='cpdClose'){CP.open=null;renderCP();return;}
-  if(t.id==='cpdSave'){const v=id=>$('#'+id).value,info={};$$('#cpDetail [data-cpinfo]').forEach(x=>{info[x.dataset.cpinfo]=x.value;});
-    const err=cuUpsert(CP.open,{name:v('cpdName'),company:v('cpdCo'),email:v('cpdMail'),alt:v('cpdAlt'),group:v('cpdGrp'),info});if(err){toast(err);return;}
-    CP.open=ck(v('cpdMail').trim());renderCP();toast('Customer saved');return;}
-  if(t.id==='cpdDel'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.sure){CP.sure=true;t.textContent='Click again to delete';return;}
-    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();CP.open=null;renderCP();toast('Customer deleted');}});
+  const gt=t.closest('#cpChips [data-gtog]');if(gt){const k=gt.dataset.gtog;CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);renderCP();return;}
+  const op=t.closest('[data-cpopen]');if(op){openCustomer(op.dataset.cpopen);return;}
+  const dl=t.closest('[data-cpdel]');if(dl){const c=CU.list.find(x=>ck(x.email)===dl.dataset.cpdel);if(!c)return;
+    if(dl.dataset.sure!=='1'){dl.dataset.sure='1';dl.style.color='var(--bad)';toast(`Click ✕ again to remove ${c.name||c.company||c.email}`);setTimeout(()=>{if(dl.isConnected){dl.dataset.sure='';dl.style.color='';}},3000);return;}
+    removeCustomers([c]);if(CP.open===ck(c.email)){CP.mode='';CP.open=null;CP.W=null;}renderCP();toast('Customer removed');return;}
+  const row=t.closest('tr[data-cp]');if(row&&!t.closest('input,button')){openCustomer(row.dataset.cp);return;}
+  const gc=t.closest('[data-gcol]');if(gc&&!t.closest('button')){const g=gc.dataset.gcol;colorPop(gc,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
+  if(!a)return;const act=a.dataset.cpd;
+  if(act==='close'){closeCPDetail();return;}
+  if(act==='color'){colorPop(a,W?.color||'',v=>{W.color=v;CP.dirty=true;renderCPDetail();});return;}
+  if(act==='addmail'){W.emails.push('');W.exp.add('mail');renderCPDetail();$$('#cpDetail [data-wmail]').pop()?.focus();return;}
+  if(act==='dd'){const f=a.dataset.f;if(W.exp.has(f)){W.exp.delete(f);renderCPDetail();return;}W.exp.add(f);
+    const v=f==='mail'?W.emails:W.vals[f];if(v.length<2){v.push('');renderCPDetail();(f==='mail'?$$('#cpDetail [data-wmail]'):$$(`#cpDetail [data-alt^="${CSS.escape(f)}|"]`)).pop()?.focus();}else renderCPDetail();return;}
+  if(act==='addalt'){const f=a.dataset.f;W.vals[f].push('');renderCPDetail();$$(`#cpDetail [data-alt^="${CSS.escape(f)}|"]`).pop()?.focus();return;}
+  if(act==='rmalt'){W.vals[a.dataset.f].splice(+a.dataset.i,1);CP.dirty=true;renderCPDetail();return;}
+  if(act==='mkmain'){const v=W.vals[a.dataset.f],i=+a.dataset.i;[v[0],v[i]]=[v[i],v[0]];CP.dirty=true;renderCPDetail();return;}
+  if(act==='mkmail'){const use=W.emails[W.useIdx],i=+a.dataset.i;const [m]=W.emails.splice(i,1);W.emails.unshift(m);W.useIdx=Math.max(0,W.emails.indexOf(use));CP.dirty=true;renderCPDetail();return;}
+  if(act==='rmmail'){const i=+a.dataset.i;W.emails.splice(i,1);if(W.useIdx>=W.emails.length||W.useIdx===i)W.useIdx=0;else if(W.useIdx>i)W.useIdx--;CP.dirty=true;renderCPDetail();return;}
+  if(act==='rmgrp'){W.groups=W.groups.filter(g=>g!==a.dataset.g);CP.dirty=true;renderCPDetail();return;}
+  if(act==='qadd'){const k=a.dataset.k;if(!W.keys.includes(k)){W.keys.push(k);W.vals['i:'+k]=[''];}renderCPDetail();$(`#cpDetail [data-alt="${CSS.escape('i:'+k)}|0"]`)?.focus();return;}
+  if(act==='saveadd'){if(saveCustomer())openCustomer('new');return;}
+  if(act==='rminfo'){const k=a.dataset.k;W.keys=W.keys.filter(x=>x!==k);delete W.vals['i:'+k];CP.dirty=true;renderCPDetail();return;}
+  if(act==='save'){saveCustomer();return;}
+  if(act==='email'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;CU.sel.add(k);closeCPDetail(true);custDlg.close();if(mailDlg.open){renderCust();}else openMail();return;}
+  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);toast('Customer removed');return;}
+  if(act==='merge'||act==='mergeall'){const ds=findDupes(),pick=act==='merge'?[ds[+a.dataset.i]]:ds;let n=0;for(const g of pick)if(g){mergeDupes(g);n++;}cuSave();if(mailDlg.open)renderCust();renderCP();toast(`Merged ${n} duplicate${n===1?'':'s'}`);return;}
+  if(act==='gcol'){const g=a.dataset.g;colorPop(a,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
+  if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);return;}
+  if(act==='gdel'){const k=gKey(a.dataset.g);if(CP.gdel!==k){CP.gdel=k;renderCPDetail();return;}CP.gdel='';deleteGroup(a.dataset.g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');return;}
+  if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
+custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNewV'||e.target.id==='cpdNewK')){e.preventDefault();const W=CP.W,k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();
+    if(!k){$('#cpdNewK').focus();return;}if(!v){$('#cpdNewV').focus();return;}
+    const f=k===OTHER.name?'name':k===OTHER.company?'company':'i:'+k;if(f.startsWith('i:')&&!W.keys.includes(k)){W.keys.push(k);W.vals[f]=[v];}else{const l=W.vals[f];if(!l[0].trim())l[0]=v;else{l.push(v);W.exp.add(f);}}
+    CP.dirty=true;renderCPDetail();$('#cpdNewK')?.focus();}
+  else if(e.key==='Enter'&&e.target.id==='cpdNewGrp'){e.preventDefault();$('#cpDetail [data-cpd=gadd]').click();}});
+// Esc closes the customer tab first, then the page
+custDlg.addEventListener('cancel',e=>{if(CP.mode){e.preventDefault();closeCPDetail();}});
+custDlg.addEventListener('close',()=>{CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;$('#gSug').classList.add('hide');if(mailDlg.open)renderCust();});
 $('#cpQ').addEventListener('input',e=>{CP.q=e.target.value;renderCP();});
-$('#cpAdd').onclick=()=>{CP.open='new';renderCP();$('#cpdName').focus();};
+groupSuggest($('#cpQ'),{selected:()=>CP.gsel,pick:k=>{CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);CP.q='';renderCP();}});
+$('#cpAdd').onclick=()=>openCustomer('new');
+$('#cpDupes').onclick=()=>{CP.mode='dupes';CP.open=null;CP.W=null;renderCP();};
+$('#cpGroups').onclick=()=>{CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';renderCP();};
 $('#cpImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.currentTarget);};
 $('#cpExport').onclick=()=>$('#cuExport').click();
-$('#cpEmail').onclick=()=>{custDlg.close();openMail();};
-$('#cpClose').onclick=$('#cpDone').onclick=()=>custDlg.close();
+$('#cpEmail').onclick=()=>{custDlg.close();if(mailDlg.open)renderCust();else openMail();};
+$('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;if(!CP.tickSure){CP.tickSure=true;renderCP();return;}CP.tickSure=false;removeCustomers(list);renderCP();toast(`Removed ${list.length} customer${list.length>1?'s':''}`);};
+$('#cpTickGrp').onclick=e=>{const btn=e.currentTarget,gs=allGroups();
+  const m=popMenu(btn,`<span class="menu-h">Add ticked customers to</span>${gs.map(g=>`<button type="button" role="menuitem" data-tg="${esc(g.name)}"><b><span class="cdot" style="background:${gColor(g.name)}"></span>${esc(g.name)}</b><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')}<div style="display:flex;gap:6px;padding:6px 8px"><input class="in" id="tgNew" placeholder="New group" style="height:34px;flex:1" aria-label="New group name"><button class="btn sm" type="button" data-tgnew>Add</button></div>`,
+    (ev,menu)=>{const b=ev.target.closest('[data-tg],[data-tgnew]');if(!b)return;const name=b.dataset.tg||$('#tgNew').value.trim().replace(/\s+/g,' ').slice(0,40);if(!name)return;
+      const now=Date.now(),list=CU.list.filter(c=>CU.sel.has(ck(c.email)));for(const c of list){c.groups=grpsOf({groups:[...grpsOf(c),name]});c.upd=now;}if(CU.gmeta[gKey(name)]?.del)setGroupMeta(name,{});
+      cuSave();menu.classList.add('hide');renderCP();if(mailDlg.open)renderCust();toast(`Added ${list.length} customer${list.length>1?'s':''} to ${name}`);});
+  if(m)m.querySelector('#tgNew').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();m.querySelector('[data-tgnew]').click();}});};
+$('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())return;custDlg.close();};
 
 /* ---------- boot ---------- */
 (async()=>{
