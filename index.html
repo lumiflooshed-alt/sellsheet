@@ -37,7 +37,7 @@ svg{flex:none}
 .nav-list{display:grid;align-content:start;gap:2px;padding:6px 10px;overflow:auto}
 .nav-it{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:none;border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink);font:inherit}
 .nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
-.nav-it span{display:grid;gap:1px;min-width:0}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
+.nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
 .cp-tools #cpQ{flex:1 1 280px;min-width:0;height:38px}.cp-tools .spacer{flex:1 1 0}
 .cp-main{display:grid;grid-template-columns:minmax(0,1fr);min-height:0}
@@ -78,17 +78,25 @@ svg{flex:none}
 .np-in:hover{background:var(--panel);border-color:var(--line)}.np-in:focus{background:var(--panel);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.np-in::placeholder{color:var(--faint)}
 textarea.np-in{display:block;overflow:hidden}
 .np-x{position:absolute;right:4px;top:7px;border:0;background:none;color:var(--faint);cursor:pointer;border-radius:5px;width:22px;height:22px;opacity:0}.np-prop:hover .np-x,.np-mail:hover .np-x,.np-x:focus{opacity:1}.np-x:hover{background:var(--raise);color:var(--bad)}
-.np-mails{display:grid;gap:2px;width:100%}.np-mail{display:grid;grid-template-columns:minmax(0,1fr) auto 24px;align-items:center;gap:6px;position:relative}.np-mail .np-x{position:static}
 .np-send{display:inline-flex;align-items:center;gap:5px;font:600 11.5px var(--ui);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;cursor:pointer;white-space:nowrap}.np-send input{position:absolute;opacity:0;pointer-events:none}
 .np-send.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 .np-add{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font:13px var(--ui);cursor:pointer;padding:5px 8px;border-radius:6px;justify-self:start}.np-add svg{width:14px;height:14px}.np-add:hover{background:var(--raise);color:var(--ink)}
 .np-grps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:100%;padding-left:6px}.np-grps .gchip{margin:0;font-size:12.5px;padding:3px 8px 3px 7px;cursor:pointer}.np-gin{flex:1 1 140px;width:auto}
 .np-colbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:none;border-radius:6px;padding:5px 8px;font:14px var(--ui);color:var(--ink);cursor:pointer}.np-colbtn:hover{border-color:var(--line);background:var(--panel)}.np-colbtn i{width:14px;height:14px;border-radius:50%}
 .np-empty{color:var(--faint);font-size:14px;margin:0}
-.np-alts{font:600 11px var(--ui);color:var(--muted);background:var(--raise);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-left:8px}
-.np-info .np-v{flex-wrap:nowrap;align-items:flex-start}.np-info .np-alts{margin-top:7px;flex:none}
+.np-multi{display:grid;gap:4px;width:100%}.np-main{display:flex;align-items:center;gap:6px;min-width:0}.np-main>.np-in{flex:1}
+.np-dd{display:inline-flex;align-items:center;gap:3px;flex:none;border:1px solid transparent;background:none;border-radius:999px;padding:2px 7px 2px 9px;font:600 11.5px var(--ui);color:var(--faint);cursor:pointer;white-space:nowrap}
+.np-dd svg{width:13px;height:13px;transition:transform .15s}.np-dd.open svg{transform:rotate(180deg)}.np-dd:hover,.np-dd.open{border-color:var(--line);background:var(--panel);color:var(--ink)}
+.np-dd.has{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.np-prop:not(:hover):not(:focus-within) .np-dd:not(.has):not(.open){opacity:0}
+.np-altlist{display:grid;gap:3px;margin:2px 0 6px 8px;padding:6px 0 4px 12px;border-left:2px solid var(--line2)}.np-alth{font:700 10.5px var(--ui);text-transform:uppercase;letter-spacing:.05em;color:var(--faint);padding:0 8px}
+.np-altrow{display:grid;grid-template-columns:minmax(0,1fr) auto 24px;gap:6px;align-items:center}.np-altrow.np-mailrow{grid-template-columns:minmax(0,1fr) auto auto 24px}.np-altrow .np-x{position:static}
+.np-mk{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:2px 8px;font:600 11.5px var(--ui);color:var(--muted);cursor:pointer;white-space:nowrap;opacity:0}.np-altrow:hover .np-mk,.np-mk:focus{opacity:1}.np-mk:hover{color:var(--ink);border-color:var(--line2)}
+.np-tsub{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:22px}.np-tsub .np-dd:not(.has){opacity:.75}
+.np-v>.np-rmprop{top:7px}.np-info .np-v{align-items:flex-start}
+.np-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 6px 2px;font-size:13px;color:var(--muted)}
+.np-quick button{display:inline-flex;align-items:center;gap:4px;border:1px dashed var(--line2);background:none;border-radius:999px;padding:3px 10px 3px 7px;font:600 12.5px var(--ui);color:var(--ink);cursor:pointer}.np-quick button svg{width:13px;height:13px;color:var(--accent)}.np-quick button:hover{border-color:var(--accent);background:var(--accent-soft)}
 .np-newprop .np-k{padding:3px 6px}.np-newprop .np-k .np-in{padding:4px 6px;font-size:14px}.np-newprop{opacity:.75}.np-newprop:focus-within,.np-newprop:hover{opacity:1}
-.np-tip{font-size:12.5px;color:var(--muted);margin:6px 6px 0}
 .np-hr{border:0;border-top:1px solid var(--line);margin:22px 0}
 .np-sec{margin-top:22px}.np-sec h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font:700 16px var(--ui)}.np-sec h4 svg{width:18px;height:18px;color:var(--muted)}
 .np-count{font:600 12px var(--ui);color:var(--muted);background:var(--raise);border-radius:999px;padding:1px 8px}
@@ -96,14 +104,7 @@ textarea.np-in{display:block;overflow:hidden}
 .np-list{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden}.np-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 12px;font-size:14px;border-top:1px solid var(--line)}.np-row:first-child{border-top:0}
 .np-row span{color:var(--muted);font-size:13px}.np-row em{font-style:normal;font-size:12px;font-weight:600;background:var(--raise);border:1px solid var(--line);border-radius:999px;padding:1px 8px}.np-dot{width:9px;height:9px;border-radius:50%}
 .np-state{font-size:12.5px;color:var(--warn)}
-.np-b{grid-template-columns:220px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}.np-b .np-page{grid-column:2}.np-b .cpd-f{grid-column:1/-1}
-.np-toc{grid-row:1;border-right:1px solid var(--line);background:var(--raise);padding:22px 12px;display:grid;align-content:start;gap:2px;overflow:auto}.np-toc>b{font-size:14px;padding:0 10px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.np-toc a{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;color:var(--ink);text-decoration:none;font-size:14px}.np-toc a:hover{background:var(--panel)}.np-toc a svg{width:16px;height:16px;color:var(--muted)}
-.np-toc-g{display:flex;flex-wrap:wrap;gap:4px;padding:12px 6px 0}.np-toc-g .gchip{margin:0}
-.np-c{grid-template-rows:auto minmax(0,1fr) auto}.np-ch{padding:28px 40px 0;max-width:840px;width:100%;margin:0 auto}.np-c .np-head{margin-bottom:10px}
-.np-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}.np-tab{border:0;background:none;padding:9px 12px;font:600 14px var(--ui);color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}.np-tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
-.np-c .np-inner{padding-top:18px}.np-c .np-sec{margin-top:0}
-@media (max-width:760px){#custDlg .cp-detail{position:fixed;inset:0;width:100%;z-index:20}.np-inner{padding:22px 16px 30px}.np-prop{grid-template-columns:1fr}.np-k{padding-bottom:0}.np-v{padding-right:28px}.np-b{grid-template-columns:1fr}.np-toc{display:none}.np-b .np-page{grid-column:1}.np-ch{padding:20px 16px 0}.np-title{font-size:26px}}
+@media (max-width:760px){#custDlg .cp-detail{position:fixed;inset:0;width:100%;z-index:20}.np-inner{padding:22px 16px 30px}.np-prop{grid-template-columns:1fr}.np-k{padding-bottom:0}.np-v{padding-right:28px}.np-altrow.np-mailrow{grid-template-columns:minmax(0,1fr) auto 24px}.np-mailrow .np-mk{grid-column:1/-1;justify-self:start;grid-row:2}.np-mk{opacity:1}.np-title{font-size:26px}}
 .cp-t tr[data-color] td:first-child{box-shadow:inset 5px 0 0 var(--tag)}
 .cp-main{position:relative}
 .cp-detail{position:absolute;top:0;right:0;bottom:0;width:min(1000px,100%);z-index:6;border-left:1px solid var(--line);box-shadow:-18px 0 40px rgba(10,14,22,.2);background:var(--panel);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:0;gap:0;animation:cpin .2s var(--ease)}
@@ -677,6 +678,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
+      <button type="button" class="nav-it nav-sub" data-nav="cust-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span><b>New customer</b></span></button>
       <span class="menu-h">Open a sell sheet</span>
       <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
       <button type="button" class="nav-it" data-nav="open-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11M2 14h20M16 3L10 14"/></svg><span><b>From Google Drive</b><small>PDF, Word or Google Docs</small></span></button>
@@ -692,7 +694,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <span class="spacer"></span>
       <button class="btn sm ghost" id="cpGroups" type="button" title="Rename, recolour or delete groups">Groups</button>
       <button class="btn sm ghost" id="cpDupes" type="button" hidden></button>
-      <button class="btn sm" id="cpAdd" type="button">＋ Add customer</button>
+      <button class="btn sm primary" id="cpAdd" type="button">＋ New customer</button>
       <button class="btn sm ghost" id="cpImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file from this computer or Google Drive">Import</button>
       <button class="btn sm ghost" id="cpExport" type="button">Export</button>
       <div class="cu-groups cp-chips" id="cpChips"></div>
@@ -1807,7 +1809,7 @@ const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.rep
 $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
   if(ed)openCustomer(ed.dataset.cuedit);
   if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
-    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer deleted');}});
+    CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:Date.now()});cuSave();renderCust();toast('Customer removed');}});
 $('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
 $('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
 // Import: Excel (.xlsx) or CSV, e.g. exports from Gmail / Outlook contacts or any sheet with Name, Company and Email columns.
@@ -2469,7 +2471,7 @@ function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollo
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
@@ -2524,10 +2526,10 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
 function openCP(){if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}renderCP();}
-function openCustomer(key){openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;renderCP();if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-w=name]')?.focus();},60);}
+function openCustomer(key){openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;renderCP();if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
 const cpShown=()=>{const q=CP.q.trim().toLowerCase();return CU.list.filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel))
   .sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));};
-function renderCP(){const ks=infoKeys(),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
+function renderCP(){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==OTHER.company),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
   const shown=cpShown(),dupes=findDupes();
   $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
   const cus=[...new Set(CU.list.map(c=>normHex(c.color)).filter(Boolean))].sort();
@@ -2535,14 +2537,14 @@ function renderCP(){const ks=infoKeys(),nn=CU.list.filter(noName).length;if(!nn)
   $('#cpColor').value=[...$('#cpColor').options].some(o=>o.value===CP.color)?CP.color:'';
   $('#cpChips').innerHTML=groupToggles(CP.gsel)+(nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'');
   $('#cpDupes').hidden=!dupes.length;$('#cpDupes').textContent=`⚠ ${dupes.length} possible duplicate${dupes.length>1?'s':''}`;
-  const k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length,who=c=>esc(c.name||c.company||c.email);
+  const more=v=>{const n=lines(v).length;return n?`<span class="sub">+${n} other${n>1?'s':''}</span>`:'';},k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length,who=c=>esc(c.name||c.company||c.email);
   $('#cpTable').innerHTML=CU.list.length?`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown" ${shown.length&&shown.every(c=>CU.sel.has(ck(c.email)))?'checked':''}></th><th>Name</th><th>Company</th><th>Email</th><th>Groups</th><th>My note</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
     <tbody>${shown.map(c=>{const inf=infoOf(c),t=tagHex(c.color);return`<tr data-cp="${k(c)}"${t?` data-color style="--tag:${t}"`:''}${CP.open===ck(c.email)&&CP.mode==='cust'?' class="on"':''}>
       <td class="acts"><span class="ra"><input type="checkbox" data-cptick="${k(c)}" ${CU.sel.has(ck(c.email))?'checked':''} aria-label="Tick ${who(c)}"><button class="tiny" type="button" data-cpopen="${k(c)}" title="Open and edit" aria-label="Open and edit ${who(c)}">✎</button><button class="tiny x" type="button" data-cpdel="${k(c)}" title="Remove" aria-label="Remove ${who(c)}">${I.x}</button></span></td>
-      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}</td><td>${esc(c.company)}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
+      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}${more(inf[OTHER.name])}</td><td>${esc(c.company)}${more(inf[OTHER.company])}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
       <td>${grpsOf(c).map(g=>gChip(g)).join('')}</td><td title="${esc(c.note||'')}">${esc(String(c.note||'').split('\n')[0])}</td>
-      ${ks.map(x=>`<td class="${String(inf[x]||'').includes('\n')?'ml':''}" title="${esc(inf[x]||'')}">${esc(inf[x]||'')}</td>`).join('')}</tr>`;}).join('')}</tbody>`
-    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>Add customer</b>.</td></tr></tbody>';
+      ${ks.map(x=>`<td title="${esc(inf[x]||'')}">${esc(lines(inf[x])[0]||'')}${more(lines(inf[x]).slice(1).join('\n'))}</td>`).join('')}</tr>`;}).join('')}</tbody>`
+    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>＋ New customer</b>.</td></tr></tbody>';
   if(CU.list.length&&!shown.length)$('#cpTable').insertAdjacentHTML('beforeend',`<tbody><tr><td></td><td colspan="${5+ks.length}" class="cu-empty">No customers match.</td></tr></tbody>`);
   $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Click a customer to open it. Tick customers to email, group or delete them.');
   for(const id of['cpEmail','cpTickGrp','cpTickDel'])$('#'+id).disabled=!ticked;
@@ -2553,44 +2555,56 @@ function renderCPDetail(){const d=$('#cpDetail');if(!CP.mode){d.hidden=true;d.in
   const key=CP.mode+':'+(CP.open||''),same=d.dataset.for===key;if(!same){d.dataset.for=key;CP.closeSure=false;CP.delSure=false;}
   const sc=same?d.querySelector('.cpd-b')?.scrollTop||0:0;d.innerHTML=CP.mode==='dupes'?dupesHTML():CP.mode==='groups'?groupsHTML():custHTML();if(!CP.mode){renderCPDetail();return;}const b=d.querySelector('.cpd-b');if(b)b.scrollTop=sc;d.querySelectorAll('.np-auto').forEach(npSize);
   if(CP.mode==='cust'){const gi=$('#cpdGrpIn');if(gi)groupSuggest(gi,{allowNew:true,selected:()=>new Set(CP.W.groups.map(gKey)),pick:(k,name)=>{if(!CP.W.groups.some(g=>gKey(g)===k)){CP.W.groups.push(allGroups().find(g=>gKey(g.name)===k)?.name||name);CP.dirty=true;}renderCPDetail();$('#cpdGrpIn')?.focus();}});}}
+// working copy of the open customer. Every detail is a list of values: the first is the main one, the rest are alternates
+// (kept from duplicate rows or added by hand). Alternate names / companies are stored as the "Other names" / "Other companies" details.
+const OTHER={name:'Other names',company:'Other companies'},lines=v=>String(v||'').split('\n').map(x=>x.trim()).filter(Boolean);
 function workCopy(){if(CP.W)return CP.W;const c=CP.open==='new'?null:CU.list.find(x=>ck(x.email)===CP.open);if(CP.open!=='new'&&!c){CP.mode='';return null;}
-  const emails=c?[c.email,...altOf(c)]:[''];CP.W={name:c?.name||'',company:c?.company||'',emails,useIdx:c?Math.max(0,emails.findIndex(a=>ck(a)===ck(useOf(c)[0]))):0,groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||'',info:{...infoOf(c)}};return CP.W;}
-// the customer tab, laid out like a Notion page: big title, a list of properties, then the note as the page body
+  const inf=infoOf(c),emails=c?[c.email,...altOf(c)]:[''],keys=Object.keys(inf).filter(k=>k!==OTHER.name&&k!==OTHER.company);
+  const vals={name:[c?.name||'',...lines(inf[OTHER.name])],company:[c?.company||'',...lines(inf[OTHER.company])]};for(const k of keys){const l=lines(inf[k]);vals['i:'+k]=l.length?l:[''];}
+  CP.W={vals,keys,emails,useIdx:c?Math.max(0,emails.findIndex(a=>ck(a)===ck(useOf(c)[0]))):0,exp:new Set(),
+    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||''};return CP.W;}
+function wInfo(W){const info={},uniq=a=>[...new Map(a.map(x=>x.trim()).filter(Boolean).map(x=>[nrm(x),x])).values()];
+  for(const k of W.keys){const l=uniq(W.vals['i:'+k]);if(l.length)info[k]=l.join('\n');}
+  for(const f of['name','company']){const main=nrm(W.vals[f][0]),l=uniq(W.vals[f].slice(1)).filter(x=>nrm(x)!==main);if(l.length)info[OTHER[f]]=l.join('\n');}return info;}
+// the customer page, laid out like a Notion page: big title, a list of properties, then the note as the page body
 const NP_IC={co:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',grp:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
-  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>'};
+  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
 const npI=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NP_IC[k]}</svg>`;
-function npParts(W,isNew){const t=tagHex(W.color),ks=Object.keys(W.info);
+// the "▾ N more" button that opens a detail's alternates
+function npDD(f,n,label){const open=CP.W.exp.has(f);return`<button class="np-dd${open?' open':''}${n?' has':''}" type="button" data-cpd="dd" data-f="${esc(f)}" aria-expanded="${open}" title="${n?`Show the other ${esc(label)}`:`Add another ${esc(label)}`}">${n?`${n} more`:'Add other'}${npI('chev')}</button>`;}
+// one detail: its main value, and (when opened) a dropdown list of alternates
+function npMulti(f,label){const W=CP.W,v=W.vals[f],open=W.exp.has(f),lab=label.toLowerCase();
+  return`<div class="np-multi"><div class="np-main"><input class="np-in" data-alt="${esc(f)}|0" value="${esc(v[0])}" placeholder="Empty" aria-label="${esc(label)}">${npDD(f,v.length-1,lab)}</div>${open?npAltList(f,v,lab):''}</div>`;}
+function npAltList(f,v,lab){return`<div class="np-altlist" role="group" aria-label="Other ${esc(lab)}"><span class="np-alth">Other ${esc(lab)}</span>${v.slice(1).map((x,i)=>`<div class="np-altrow"><input class="np-in" data-alt="${esc(f)}|${i+1}" value="${esc(x)}" placeholder="Another ${esc(lab)}" aria-label="Other ${esc(lab)} ${i+1}"><button class="np-mk" type="button" data-cpd="mkmain" data-f="${esc(f)}" data-i="${i+1}" title="Use this as the main one">Make main</button><button class="np-x" type="button" data-cpd="rmalt" data-f="${esc(f)}" data-i="${i+1}" aria-label="Remove">✕</button></div>`).join('')}
+  <button class="np-add" type="button" data-cpd="addalt" data-f="${esc(f)}">${npI('add')}Add another</button></div>`;}
+function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   const sent=isNew?[]:threads().filter(th=>{const all=[th.root.email,...th.root.emails].map(ck);return th.root.cust===CP.open||W.emails.some(a=>all.includes(ck(a)));}).sort((a,b)=>b.last-a.last);
   const prop=(ic,label,val,cls='')=>`<div class="np-prop ${cls}"><span class="np-k">${npI(ic)}${label}</span><div class="np-v">${val}</div></div>`;
+  const mailRow=(a,i)=>`<input class="np-in" type="email" data-wmail="${i}" value="${esc(a)}" placeholder="name@company.com" aria-label="${i?'Other email '+i:'Main email'}"><label class="np-send${i===W.useIdx?' on':''}" title="Send emails to this address"><input type="radio" name="cpdUse" data-wuse="${i}" ${i===W.useIdx?'checked':''}>${i===W.useIdx?'Sends here':'Send here'}</label>`;
+  const mails=`<div class="np-multi"><div class="np-main">${mailRow(W.emails[0],0)}${npDD('mail',W.emails.length-1,'emails')}</div>${open.has('mail')?`<div class="np-altlist" role="group" aria-label="Other emails"><span class="np-alth">Other emails</span>${W.emails.slice(1).map((a,j)=>`<div class="np-altrow np-mailrow">${mailRow(a,j+1)}<button class="np-mk" type="button" data-cpd="mkmail" data-i="${j+1}" title="Make this the main address">Make main</button><button class="np-x" type="button" data-cpd="rmmail" data-i="${j+1}" aria-label="Remove this email">✕</button></div>`).join('')}<button class="np-add" type="button" data-cpd="addmail">${npI('add')}Add another</button></div>`:''}</div>`;
   const P={};
   P.head=`<div class="np-head"><button class="np-icon${t?' on':''}" style="${t?`--tag:${t}`:''}" type="button" data-cpd="color" title="Colour tag: ${esc(tagName(W.color)||'none')}" aria-label="Colour tag">${t?'':npI('col')}</button>
-    <div class="np-tw"><input class="np-title" data-w="name" value="${esc(W.name)}" placeholder="${isNew?'New customer name':'No name yet'}" aria-label="Name">${!W.name.trim()&&!isNew?'<span class="np-warn">⚠ No name: emails to this customer start “Hi,”. Type a name above.</span>':''}</div></div>`;
+    <div class="np-tw"><input class="np-title" data-alt="name|0" value="${esc(W.vals.name[0])}" placeholder="${isNew?'New customer name':'No name yet'}" aria-label="Name">
+      <div class="np-tsub">${npDD('name',W.vals.name.length-1,'names')}${!W.vals.name[0].trim()&&!isNew?'<span class="np-warn">⚠ No name: emails to this customer start “Hi,”. Type a name above.</span>':''}</div>${open.has('name')?npAltList('name',W.vals.name,'names'):''}</div></div>`;
   P.props=`<div class="np-props" id="np-props">
-    ${prop('co','Company',`<input class="np-in" data-w="company" value="${esc(W.company)}" placeholder="Empty" aria-label="Company">`)}
-    ${prop('mail','Email',`<div class="np-mails">${W.emails.map((a,i)=>`<div class="np-mail"><input class="np-in" type="email" data-wmail="${i}" value="${esc(a)}" placeholder="name@company.com" aria-label="Email ${i+1}"><label class="np-send${i===W.useIdx?' on':''}" title="Send emails to this address"><input type="radio" name="cpdUse" data-wuse="${i}" ${i===W.useIdx?'checked':''}>${i===W.useIdx?'Sends here':'Send here'}</label>${W.emails.length>1?`<button class="np-x" type="button" data-cpd="rmmail" data-i="${i}" aria-label="Remove this email">✕</button>`:''}</div>`).join('')}<button class="np-add" type="button" data-cpd="addmail">${npI('add')}Add email</button></div>`)}
+    ${prop('co','Company',npMulti('company','Company'))}
+    ${prop('mail','Email',mails)}
     ${prop('grp','Groups',`<div class="np-grps">${W.groups.map(g=>gChip(g,`<button type="button" data-cpd="rmgrp" data-g="${esc(g)}" aria-label="Remove from ${esc(g)}">✕</button>`).replace('<span class="gchip"',`<span class="gchip" data-gcol="${esc(g)}" title="Click to change the colour of ${esc(gName(g))}"`)).join('')}<input class="np-in np-gin" id="cpdGrpIn" placeholder="${W.groups.length?'Add…':'Add to a group…'}" autocomplete="off" aria-label="Add to a group"></div>`)}
     ${prop('col','Colour',`<button class="np-colbtn" type="button" data-cpd="color">${t?`<i style="background:${t}"></i>${esc(tagName(W.color))}`:'<span class="np-empty">None</span>'}</button>`)}
-    ${ks.map(k=>{const v=String(W.info[k]||''),n=v.split('\n').filter(Boolean).length;return prop('info',esc(k),`<textarea class="np-in np-auto" rows="1" data-winfo="${esc(k)}" aria-label="${esc(k)}">${esc(v)}</textarea>${n>1?`<span class="np-alts">${n-1} alternate${n>2?'s':''}</span>`:''}<button class="np-x" type="button" data-cpd="rminfo" data-k="${esc(k)}" aria-label="Remove ${esc(k)}">✕</button>`,'np-info');}).join('')}
-    <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div>
-    ${ks.some(k=>String(W.info[k]).includes('\n'))?'<p class="np-tip">Fields with several lines hold alternates (for example from duplicate rows): the first line is the main one.</p>':''}</div>`;
+    ${W.keys.map(k=>prop('info',esc(k),npMulti('i:'+k,k)+`<button class="np-x np-rmprop" type="button" data-cpd="rminfo" data-k="${esc(k)}" title="Remove this detail" aria-label="Remove ${esc(k)}">✕</button>`,'np-info')).join('')}
+    ${(()=>{const have=new Set(W.keys),q=[...new Set(['Phone','Address','Website',...infoKeys()])].filter(k=>!have.has(k)&&k!==OTHER.name&&k!==OTHER.company).slice(0,8);
+      return q.length?`<div class="np-quick"><span>Quick add:</span>${q.map(k=>`<button type="button" data-cpd="qadd" data-k="${esc(k)}">${npI('add')}${esc(k)}</button>`).join('')}</div>`:'';})()}
+    <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().filter(x=>x!==OTHER.name&&x!==OTHER.company).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div></div>`;
   P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
   P.sent=`<div class="np-sec" id="np-sent"><h4>${npI('sent')}Sent to this customer${sent.length?` <span class="np-count">${sent.length}</span>`:''}</h4>${sent.length?`<div class="np-list">${sent.slice(0,20).map(th=>`<div class="np-row"><span class="np-dot" style="background:${tagHex(th.root.color)||'var(--line2)'}"></span><b>${esc(th.root.sheet)}</b><span>${esc(ago(th.root.at))}${th.fups.length?` · ${th.fups.length} follow-up${th.fups.length>1?'s':''}`:''}</span><em>${esc(ST_NAME[th.root.status||'none'])}</em></div>`).join('')}</div>`:'<p class="np-empty">Nothing sent yet.</p>'}</div>`;
-  P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
-    ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to delete':'Delete'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
-  P.x=`<button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button>`;
+  P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
+    ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to remove':'Remove customer'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
-function custHTML(){const W=workCopy();if(!W)return'';const isNew=CP.open==='new',P=npParts(W,isNew),L=CP.layout||lsGet('ss-np-layout')||'a';
-  if(L==='b')return`<div class="np np-b">${P.x}<nav class="np-toc" aria-label="Sections"><b>${esc(W.name||W.company||'Customer')}</b><a href="#np-props" data-np="np-props">${npI('info')}Properties</a><a href="#np-note" data-np="np-note">${npI('note')}My note</a><a href="#np-sent" data-np="np-sent">${npI('sent')}Sent emails</a>
-      <div class="np-toc-g">${W.groups.map(g=>gChip(g)).join('')}</div></nav><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}${P.note}${P.sent}</div></div>${P.foot}</div>`;
-  if(L==='c'){const tab=CP.tab||'over',T=(k,l)=>`<button type="button" class="np-tab" data-nptab="${k}" aria-selected="${tab===k}">${l}</button>`;
-    return`<div class="np np-c">${P.x}<div class="np-ch">${P.head}<div class="np-tabs" role="tablist">${T('over','Overview')}${T('note','My note')}${T('sent','Sent emails')}</div></div>
-      <div class="cpd-b np-page"><div class="np-inner">${tab==='over'?P.props:tab==='note'?P.note:P.sent}</div></div>${P.foot}</div>`;}
-  return`<div class="np np-a">${P.x}<div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
-// auto-height for the note and multi-line properties
+function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
+  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
+// auto-height for the note
 const npSize=el=>{el.style.height='auto';el.style.height=el.scrollHeight+2+'px';};
 custDlg.addEventListener('input',e=>{if(e.target.classList.contains('np-auto'))npSize(e.target);const st=$('#cpdState');if(st&&CP.dirty)st.textContent='● Unsaved changes';});
-custDlg.addEventListener('click',e=>{const tb=e.target.closest('[data-nptab]');if(tb){CP.tab=tb.dataset.nptab;renderCPDetail();return;}
-  const a=e.target.closest('[data-np]');if(a){e.preventDefault();$('#'+a.dataset.np)?.scrollIntoView({behavior:'smooth',block:'start'});}});
 
 function dupesHTML(){const ds=findDupes();return`<div class="cpd-h"><h3>Possible duplicates<small>Same name and company. Merging keeps every email (as alternates), detail, group and note.</small></h3><button class="btn icon sm ghost" type="button" data-cpd="close" aria-label="Close">✕</button></div>
   <div class="cpd-b" style="grid-template-columns:1fr">${ds.length?ds.map((g,i)=>`<div class="cp-dupe"><b>${esc(g[0].name)} · ${esc(g[0].company)}</b><ul>${g.map(c=>`<li>${esc([c.email,...altOf(c)].join(', '))}${Object.keys(infoOf(c)).length?` · ${Object.keys(infoOf(c)).length} details`:''}${grpsOf(c).map(x=>gChip(x)).join('')}</li>`).join('')}</ul><button class="btn sm" type="button" data-cpd="merge" data-i="${i}" style="justify-self:start">Merge into one customer</button></div>`).join(''):'<span class="cpd-hint">No duplicates left.</span>'}</div>
@@ -2602,11 +2616,11 @@ function groupsHTML(){const gs=allGroups();return`<div class="cpd-h"><h3>Groups<
 function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
   CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
-  const err=cuUpsert(CP.open,{name:W.name,company:W.company,email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:W.info});
+  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W)});
   if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
 function removeCustomers(list){const now=Date.now();for(const c of list){CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:now});}cuSave();if(mailDlg.open)renderCust();}
 custDlg.addEventListener('input',e=>{const t=e.target,W=CP.W;if(!W||CP.mode!=='cust')return;
-  if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.winfo!==undefined){W.info[t.dataset.winfo]=t.value;CP.dirty=true;}
+  if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;}
   if(CP.closeSure){CP.closeSure=false;const b=$$('#cpDetail .cpd-f [data-cpd=close]')[0];if(b)b.textContent='Close';}});
 custDlg.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.wuse!==undefined&&CP.W){CP.W.useIdx=+t.dataset.wuse;CP.dirty=true;return;}
@@ -2627,21 +2641,30 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(!a)return;const act=a.dataset.cpd;
   if(act==='close'){closeCPDetail();return;}
   if(act==='color'){colorPop(a,W?.color||'',v=>{W.color=v;CP.dirty=true;renderCPDetail();});return;}
-  if(act==='addmail'){W.emails.push('');renderCPDetail();$$('#cpDetail [data-wmail]').pop()?.focus();return;}
+  if(act==='addmail'){W.emails.push('');W.exp.add('mail');renderCPDetail();$$('#cpDetail [data-wmail]').pop()?.focus();return;}
+  if(act==='dd'){const f=a.dataset.f;if(W.exp.has(f)){W.exp.delete(f);renderCPDetail();return;}W.exp.add(f);
+    const v=f==='mail'?W.emails:W.vals[f];if(v.length<2){v.push('');renderCPDetail();(f==='mail'?$$('#cpDetail [data-wmail]'):$$(`#cpDetail [data-alt^="${CSS.escape(f)}|"]`)).pop()?.focus();}else renderCPDetail();return;}
+  if(act==='addalt'){const f=a.dataset.f;W.vals[f].push('');renderCPDetail();$$(`#cpDetail [data-alt^="${CSS.escape(f)}|"]`).pop()?.focus();return;}
+  if(act==='rmalt'){W.vals[a.dataset.f].splice(+a.dataset.i,1);CP.dirty=true;renderCPDetail();return;}
+  if(act==='mkmain'){const v=W.vals[a.dataset.f],i=+a.dataset.i;[v[0],v[i]]=[v[i],v[0]];CP.dirty=true;renderCPDetail();return;}
+  if(act==='mkmail'){const use=W.emails[W.useIdx],i=+a.dataset.i;const [m]=W.emails.splice(i,1);W.emails.unshift(m);W.useIdx=Math.max(0,W.emails.indexOf(use));CP.dirty=true;renderCPDetail();return;}
   if(act==='rmmail'){const i=+a.dataset.i;W.emails.splice(i,1);if(W.useIdx>=W.emails.length||W.useIdx===i)W.useIdx=0;else if(W.useIdx>i)W.useIdx--;CP.dirty=true;renderCPDetail();return;}
   if(act==='rmgrp'){W.groups=W.groups.filter(g=>g!==a.dataset.g);CP.dirty=true;renderCPDetail();return;}
-  if(act==='rminfo'){delete W.info[a.dataset.k];CP.dirty=true;renderCPDetail();return;}
-  if(act==='addinfo'){const k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();if(!k||!v){toast('Type a detail name and a value');return;}W.info[k]=W.info[k]?W.info[k]+'\n'+v:v;CP.dirty=true;renderCPDetail();return;}
+  if(act==='qadd'){const k=a.dataset.k;if(!W.keys.includes(k)){W.keys.push(k);W.vals['i:'+k]=[''];}renderCPDetail();$(`#cpDetail [data-alt="${CSS.escape('i:'+k)}|0"]`)?.focus();return;}
+  if(act==='saveadd'){if(saveCustomer())openCustomer('new');return;}
+  if(act==='rminfo'){const k=a.dataset.k;W.keys=W.keys.filter(x=>x!==k);delete W.vals['i:'+k];CP.dirty=true;renderCPDetail();return;}
   if(act==='save'){saveCustomer();return;}
   if(act==='email'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;CU.sel.add(k);closeCPDetail(true);custDlg.close();if(mailDlg.open){renderCust();}else openMail();return;}
-  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);toast('Customer deleted');return;}
+  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);toast('Customer removed');return;}
   if(act==='merge'||act==='mergeall'){const ds=findDupes(),pick=act==='merge'?[ds[+a.dataset.i]]:ds;let n=0;for(const g of pick)if(g){mergeDupes(g);n++;}cuSave();if(mailDlg.open)renderCust();renderCP();toast(`Merged ${n} duplicate${n===1?'':'s'}`);return;}
   if(act==='gcol'){const g=a.dataset.g;colorPop(a,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
   if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);return;}
   if(act==='gdel'){const k=gKey(a.dataset.g);if(CP.gdel!==k){CP.gdel=k;renderCPDetail();return;}CP.gdel='';deleteGroup(a.dataset.g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');return;}
   if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
 custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNewV'||e.target.id==='cpdNewK')){e.preventDefault();const W=CP.W,k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();
-    if(!k){$('#cpdNewK').focus();return;}if(!v){$('#cpdNewV').focus();return;}W.info[k]=W.info[k]?W.info[k]+'\n'+v:v;CP.dirty=true;renderCPDetail();$('#cpdNewK')?.focus();}
+    if(!k){$('#cpdNewK').focus();return;}if(!v){$('#cpdNewV').focus();return;}
+    const f=k===OTHER.name?'name':k===OTHER.company?'company':'i:'+k;if(f.startsWith('i:')&&!W.keys.includes(k)){W.keys.push(k);W.vals[f]=[v];}else{const l=W.vals[f];if(!l[0].trim())l[0]=v;else{l.push(v);W.exp.add(f);}}
+    CP.dirty=true;renderCPDetail();$('#cpdNewK')?.focus();}
   else if(e.key==='Enter'&&e.target.id==='cpdNewGrp'){e.preventDefault();$('#cpDetail [data-cpd=gadd]').click();}});
 // Esc closes the customer tab first, then the page
 custDlg.addEventListener('cancel',e=>{if(CP.mode){e.preventDefault();closeCPDetail();}});
