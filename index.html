@@ -436,7 +436,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .menu button{display:grid;gap:1px;text-align:left;border:0;background:none;border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);font:inherit}
 .menu button:hover,.menu button:focus-visible{background:var(--raise);outline:none}.menu b{font-size:14.5px}.menu-h{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.04em;color:var(--faint);padding:8px 12px 2px}.menu small{color:var(--muted);font-size:12.5px}
 #logDlg{width:min(1180px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
-.lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}
+.lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}#logDlg .lg-wrap{grid-template-rows:auto auto auto minmax(0,1fr) auto}
 .lg-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--raise)}
 .lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}#lgStatus,#lgSheet,#lgColor,#lgGroup{flex:0 1 190px;min-width:0}
 .lg-date{display:grid;gap:2px;font-size:12px;font-weight:600;color:var(--muted)}.lg-date .in{width:150px}
@@ -463,6 +463,13 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .lg-pal #lgHex{width:96px;height:30px;font-family:ui-monospace,Menlo,Consolas,monospace;text-transform:uppercase}.lg-pal #lgHex[aria-invalid=true]{border-color:var(--bad)}
 .flag{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--warn);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}
 .lg-empty{color:var(--muted);padding:30px 10px;text-align:center;line-height:1.5}
+.badge.rp{right:auto;left:-6px;background:var(--accent)}
+.lg-rp{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:0;border-width:0 0 1px;padding:8px 16px}.lg-rp:empty{display:none}
+.lg-rp .rp-s{flex:1 1 260px;min-width:0;color:var(--ink)}.lg-rp .rp-s small{display:block;color:var(--muted);font-size:12.5px}.lg-rp .rp-n{display:flex;align-items:center;gap:8px;color:var(--muted)}.lg-rp.bad .rp-s{color:var(--bad)}
+.rp-chip{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--accent);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}.rp-chip.new{box-shadow:0 0 0 3px var(--accent-soft);animation:rpPulse 1.6s ease-in-out 3}
+@keyframes rpPulse{50%{box-shadow:0 0 0 6px var(--accent-soft)}}
+.lg-row .rp-line{display:block;font-size:12.5px;color:var(--ink);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lg-row .rp-line a{color:var(--accent);font-weight:600;margin-left:6px}
+.lg-row.replied.fresh{border-color:var(--accent)}
 .sent-btn{position:relative}.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--warn);color:#fff;font:700 11.5px/20px var(--ui);font-style:normal;padding:0 5px;text-align:center}
 .cu .last{color:var(--accent)}
 @media (max-width:900px){.lg-fups{grid-column:1/-1}.lg-fu{grid-template-columns:auto 1fr auto}.lg-fu>.c:nth-of-type(2){grid-column:2/-1}.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
@@ -531,7 +538,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="spacer"></div>
     <button class="btn icon ghost" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="btn ghost acct" id="acctBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
-    <button class="btn dl-word sent-btn" id="sentBtn" type="button" title="Sell sheets you've emailed, and how customers responded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Sent</span><i class="badge" id="sentBadge" hidden></i></button>
+    <button class="btn dl-word sent-btn" id="sentBtn" type="button" title="Sell sheets you've emailed, and how customers responded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Sent</span><i class="badge" id="sentBadge" hidden></i><i class="badge rp" id="replyBadge" hidden></i></button>
     <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
     <div class="dl-menu">
       <button class="btn primary" id="dlBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="dlMenu" title="Save or download the sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Save</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -719,6 +726,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 <dialog id="logDlg" aria-label="Sent sell sheets">
   <div class="lg-wrap">
     <div class="ml-top"><h2>Sent sell sheets</h2><span class="note" id="lgSum"></span><button class="btn icon sm ghost" id="lgClose" type="button" aria-label="Close">✕</button></div>
+    <div class="lg-rp" id="lgRp" role="status"></div>
     <div class="lg-filters">
       <input class="in" id="lgQ" type="search" placeholder="Search customer, email, sell sheet or note" aria-label="Search">
       <select class="in" id="lgStatus" aria-label="Status"></select>
@@ -1968,6 +1976,8 @@ for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMod
    they're kept per provider and renewed when needed: Microsoft silently with its refresh token, Google with a pop-up
    that closes by itself (no clicks) once permission has been given. */
 const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
+// read-only Gmail access, used only to spot replies from customers you've sent sell sheets to
+const GMAIL_READ='https://www.googleapis.com/auth/gmail.readonly';
 const lsJ=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}},lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
 const authGet=()=>{const a=lsJ('ss-acct');return a&&a.prov?a:null;};
 const authSet=a=>a?lsSet('ss-acct',JSON.stringify({prov:a.prov,email:a.email||''})):lsDel('ss-acct');
@@ -1988,7 +1998,7 @@ async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh()
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
 function googleLogin(choose,hint){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
-  const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
+  const scope='openid email profile https://www.googleapis.com/auth/gmail.send '+GMAIL_READ+' https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
@@ -2112,7 +2122,7 @@ $('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
 
 /* ---------- sent log: who got which sell sheet, when, and how they responded ----------
    One entry per recipient. Kept in this browser, and synced with the customers when signed in. */
-const logDlg=$('#logDlg'),LG={list:[],deleted:[],sel:new Set()},FOLLOW_DAYS=7;
+const logDlg=$('#logDlg'),LG={list:[],deleted:[],sel:new Set(),fresh:new Set()},FOLLOW_DAYS=7;
 const COLORS=[['red','Red','#DC2626'],['orange','Orange','#EA7317'],['yellow','Yellow','#EAB308'],['green','Green','#16A34A'],['blue','Blue','#2563EB'],['purple','Purple','#9333EA'],['grey','Grey','#6B7280']],COLOR_HEX=Object.fromEntries(COLORS.map(c=>[c[0],c[2]]));
 // a colour tag is a preset name above or any custom '#RRGGBB'
 const normHex=v=>{v=String(v||'').trim().replace(/^#?/,'#');if(/^#[0-9a-f]{3}$/i.test(v))v='#'+[...v.slice(1)].map(c=>c+c).join('');return /^#[0-9a-f]{6}$/i.test(v)?v.toUpperCase():'';};
@@ -2130,33 +2140,39 @@ function threads(){if(thC&&thC.v===lgV&&thC.n===LG.list.length)return thC.t;cons
 function threadsRaw(){const g=new Map();for(const e of LG.list.slice().sort((a,b)=>a.at-b.at)){const k=e.sheetId+'|'+recipKey(e);if(g.has(k))g.get(k).fups.push(e);else g.set(k,{root:e,fups:[]});}
   return[...g.values()].map(t=>({...t,last:Math.max(t.root.at,...t.fups.map(f=>f.at))}));}
 // response status lives on the original; any send (original or follow-up) restarts the wait
-const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined')return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
+// a reply (found in Gmail) after the latest send counts as a response
+const replyFresh=t=>!!(t.root.reply&&t.root.reply.at>t.last);
+const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined'||replyFresh(t))return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
 // date formatters are built once (building one per call is slow when listing hundreds of rows)
 const DTF_WHEN=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}),DTF_DAY=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric'}),DTF_LONG=new Intl.DateTimeFormat(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 const fmtWhen=t=>DTF_WHEN.format(t);
 const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:DTF_DAY.format(t);};
 const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + attached'};
-function renderBadge(){const n=threads().filter(needsFollow).length,b=$('#sentBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#sentBtn').title=n?`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`:'Sell sheets you\'ve emailed, and how customers responded';}
+function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.filter(t=>t.root.reply&&!t.root.reply.seen).length,b=$('#sentBadge'),rb=$('#replyBadge');
+  b.hidden=!n;b.textContent=n>99?'99+':n;rb.hidden=!r;rb.textContent=r>99?'99+':r;rb.title=r?`${r} new repl${r>1?'ies':'y'}`:'';b.title=n?`${n} need${n>1?'':'s'} a follow-up`:'';
+  $('#sentBtn').title=[r&&`${r} new repl${r>1?'ies':'y'} from customers`,n&&`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`].filter(Boolean).join(' · ')||'Sell sheets you\'ve emailed, and how customers responded';
+  const base=document.title.replace(/^\(\d+\+?\) /,'');document.title=r+n?`(${r+n>99?'99+':r+n}) ${base}`:base;}
 // called after each successful email
-function logSent(m,prov,from,kinds,parts){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
+function logSent(m,prov,from,kinds,parts,res){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
   for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:S.id,sheet:sheetName(S),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
-    how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',upd:now});}
+    how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',gthread:res?.threadId||'',upd:now});}
+const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip:String(r.snip||'').slice(0,300),thread:String(r.thread||'').slice(0,40),seen:!!r.seen}:undefined;
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
   return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),
-      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
+      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
 const lgGroupBy=()=>lsGet('ss-lggroup')==='sheet'?'sheet':'date';
 function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
-  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):(e.status||'none')===lgF.status))
+  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):lgF.status==='reply'?!!e.reply:(e.status||'none')===lgF.status))
     &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
     &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
 function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
   $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
   const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
-  $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
+  $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option><option value="reply">↩ Has a reply</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
   const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
@@ -2168,9 +2184,9 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   for(const t of by==='date'?shown.slice().sort((a,b)=>(dk.get(a)<dk.get(b)?1:dk.get(a)>dk.get(b)?-1:0)||b.last-a.last):shown){const k=by==='date'?dk.get(t):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
   const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+DTF_LONG.format(t);};
   const head=ts=>`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(by==='date'?dayName(ts[0].root.at):ts[0].root.sheet)}</b><span>${ts.length} customer${ts.length>1?'s':''}${by==='sheet'?` · last sent ${esc(ago(Math.max(...ts.map(t=>t.last))))}`:''}</span></div>`;
-  LG.row=t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+  LG.row=t=>{const e=t.root,d=needsFollow(t),rp=e.reply,fresh=rp&&LG.fresh.has(e.id);return`<div class="lg-row${d?' due':''}${rp?' replied':''}${fresh?' fresh':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
       <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
-      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
+      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?`<span class="flag" title="${e.follow?'No reply by the follow-up date':'No reply after '+FOLLOW_DAYS+' days'}">${e.follow?'No reply by '+esc(DTF_DAY.format(new Date(e.follow+'T12:00'))):'Follow up'}</span>`:''}${rp?`<span class="rp-chip${fresh?' new':''}" title="Reply found in Gmail">${fresh?'New reply':'Replied'} ${esc(ago(rp.at))}</span>`:''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small>${rp?`<span class="rp-line" title="${esc(rp.snip)}">↩ ${esc(rp.subj||'(no subject)')}${rp.snip?' · '+esc(rp.snip):''}</span><span class="rp-line"><a href="${esc(gmailLink(rp.thread,e.from))}" target="_blank" rel="noopener">Open in Gmail ↗</a>${rp.at<t.last?' <small style="display:inline">(before your latest follow-up)</small>':''}</span>`:''}</div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
       <div class="c">${esc(fmtWhen(e.at))}<small>${esc(ago(e.at))}${e.from?' · from '+esc(e.from):''}</small></div>
       <select class="in lg-st" data-lst data-s="${e.status||'none'}" aria-label="Response">${STATUSES.map(([v,n])=>`<option value="${v}"${(e.status||'none')===v?' selected':''}>${n}</option>`).join('')}</select>
@@ -2192,9 +2208,12 @@ function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'Int
 function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
   mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
 $('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
-function openLog(){LG.keepN=0;lgLoad();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();}
+function openLog(){LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
+  if(LG.fresh.size){for(const t of threads())if(LG.fresh.has(t.root.id)){t.root.reply.seen=true;t.root.upd=Date.now();}lgSave();}
+  if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
 $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
+logDlg.addEventListener('close',()=>{LG.fresh.clear();});
 let lgQt=0;$('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;LG.keepN=0;clearTimeout(lgQt);lgQt=setTimeout(()=>{renderLog();$('#lgQ').focus();},90);});
 for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;LG.keepN=0;renderLog();});
 $('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);LG.keepN=0;renderLog();});
@@ -2244,6 +2263,91 @@ $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.r
   for(const e of picked){const c=e.cust&&CU.list.find(c=>ck(c.email)===e.cust);if(c)CU.sel.add(ck(c.email));else typed.push(...(e.emails.length?e.emails:[e.email]).filter(Boolean));}
   $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();
   renderCust();updMode();updMsgPrev();toast('Follow-up ready to send. Check the message, then click Send.');};
+
+/* ---------- replies and reminders ----------
+   While the site is open, Gmail is checked every few minutes for emails from the customers you've sent sell sheets to
+   (read-only access; only messages from those addresses, after the date you sent, are looked at). A reply marks the
+   entry Replied, shows a badge on Sent and, if switched on, a desktop notification. Entries with no reply by their
+   follow-up date (or after FOLLOW_DAYS with no date set) get a reminder too.
+   Google sign-ins last an hour and can only be renewed with a click, so checks pause until the next sign-in, send or "Check now". */
+const RP={busy:null,last:+lsGet('ss-rpchk')||0,err:'',meta:new Map()};
+const canRead=t=>!!t&&String(t.scope||'').split(/\s+/).includes(GMAIL_READ);
+const gmailLink=(thread,acct)=>`https://mail.google.com/mail/?authuser=${encodeURIComponent(acct||meFor('google')||'')}#all/${encodeURIComponent(thread||'')}`;
+async function gmailGet(tok,path){const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,{headers:{Authorization:'Bearer '+tok.token}});
+  if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',e=new Error(msg||'Gmail error '+r.status);e.status=r.status;
+    e.kind=r.status===401?'expired':/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg+JSON.stringify(j.error?.errors||''))?'api':/insufficient|scope/i.test(msg+JSON.stringify(j.error?.details||''))?'scope':'failed';throw e;}
+  return r.json();}
+const mHdr=(m,n)=>(m.payload?.headers||[]).find(h=>h.name.toLowerCase()===n.toLowerCase())?.value||'';
+// out-of-office and other automatic answers don't count as a reply
+const isAuto=m=>{const as=mHdr(m,'Auto-Submitted').toLowerCase();return(as&&as!=='no')||!!mHdr(m,'X-Autoreply')||!!mHdr(m,'X-Autorespond')||/auto_reply|junk/i.test(mHdr(m,'Precedence'))
+  ||/^\s*(automatic reply|auto[- ]?reply|autoreply|out of (the )?office|away from (the )?office)\b/i.test(mHdr(m,'Subject'));};
+// sent sell sheets still waiting for a reply, from this Gmail account, in the last 4 months
+function rpWaiting(me){const cut=Date.now()-120*864e5;return threads().filter(t=>{const e=t.root;return e.prov!=='microsoft'&&(!e.from||ck(e.from)===ck(me))&&t.last>cut&&e.status!=='ordered'&&e.status!=='declined'&&!replyFresh(t);});}
+async function checkReplies(manual){if(RP.busy)return RP.busy;const a=authGet();
+  if(!a||a.prov!=='google'){RP.err='signin';renderRP();return;}
+  let tok=tokGet('google');
+  if(manual&&(!tok||!canRead(tok))){try{tok=await login('google',false,true);}catch(e){RP.err='';toast(e.message);renderRP();return;}}
+  if(!tok){RP.err='expired';renderRP();return;}if(!canRead(tok)){RP.err='scope';renderRP();return;}
+  RP.busy=(async()=>{RP.err='';renderRP();lgLoad();const me=tok.email||a.email,waiting=rpWaiting(me),groups=new Map();
+    for(const t of waiting){const addrs=[...new Set([t.root,...t.fups].flatMap(x=>[x.email,...(x.emails||[])]).map(ck).filter(x=>EMAIL_RE.test(x)))].sort();if(!addrs.length)continue;
+      const k=addrs.join(' ');if(!groups.has(k))groups.set(k,{addrs,ts:[]});groups.get(k).ts.push(t);}
+    const found=[],jobs=[...groups.values()];
+    const work=async g=>{const since=Math.min(...g.ts.map(t=>t.last)),q=`from:(${g.addrs.join(' OR ')}) after:${Math.floor(since/1000)-60} -in:chats`;
+      const list=await gmailGet(tok,'messages?maxResults=15&q='+encodeURIComponent(q)),msgs=[];
+      for(const x of list.messages||[]){let m=RP.meta.get(x.id);
+        if(!m){const j=await gmailGet(tok,`messages/${x.id}?format=metadata`+['Subject','From','Auto-Submitted','X-Autoreply','X-Autorespond','Precedence'].map(h=>'&metadataHeaders='+h).join(''));
+          m={id:j.id,thread:j.threadId,at:+j.internalDate||0,subj:mHdr(j,'Subject'),snip:String(j.snippet||'').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>'),auto:isAuto(j)};RP.meta.set(x.id,m);}
+        if(!m.auto)msgs.push(m);}
+      msgs.sort((x,y)=>x.at-y.at);const done=new Set();
+      // a message in the same Gmail conversation belongs to that sell sheet; otherwise to the latest one sent before it
+      for(const m of msgs){const open=g.ts.filter(t=>!done.has(t)&&t.last<m.at);if(!open.length)continue;
+        const t=open.find(t=>[t.root,...t.fups].some(x=>x.gthread&&x.gthread===m.thread))||open.sort((x,y)=>y.last-x.last)[0];done.add(t);found.push([t,m]);}};
+    try{for(let i=0;i<jobs.length;i+=3)await Promise.all(jobs.slice(i,i+3).map(work));
+      RP.last=Date.now();lsSet('ss-rpchk',String(RP.last));
+      if(found.length){lgLoad();const byId=new Map(LG.list.map(e=>[e.id,e])),now=Date.now(),fresh=[];
+        for(const[t,m]of found){const e=byId.get(t.root.id);if(!e||(e.reply&&e.reply.at>=m.at&&e.reply.at>t.last))continue;
+          const seen=logDlg.open&&!document.hidden;e.reply={at:m.at,subj:m.subj,snip:m.snip,thread:m.thread,seen};if((e.status||'none')==='none')e.status='replied';e.upd=now;if(seen)LG.fresh.add(e.id);fresh.push(e);}
+        if(fresh.length){lgSave();if(logDlg.open)renderLog();announceReplies(fresh);}}}
+    catch(e){console.error(e);RP.err=e.kind||'failed';if(e.kind==='expired')tokSet('google',null);}
+    finally{RP.busy=null;renderRP();}})();return RP.busy;}
+// desktop notifications (optional; the browser asks for permission once)
+const NT={has:()=>'Notification' in window,on:()=>lsGet('ss-notify')==='1'&&'Notification' in window&&Notification.permission==='granted'};
+const NT_ICON='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0E993F"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="17" y="10" width="30" height="44" rx="4"/><path d="M25 22h14M25 32h14M25 42h7"/></g></svg>');
+function notify(title,body,tag,then){if(!NT.on())return false;try{const n=new Notification(title,{body,tag,icon:NT_ICON});n.onclick=()=>{try{window.focus();}catch(_){}n.close();then?.();};return true;}catch(_){return false;}}
+const who=e=>e.name||e.company||e.email||'A customer';
+function announceReplies(list){const one=list[0];
+  toast(list.length>1?`${list.length} new replies from customers`:`${who(one)} replied about ${one.sheet}`,4000);
+  notify(list.length>1?`${list.length} new replies`:`${who(one)} replied`,list.length>1?list.slice(0,4).map(e=>`${who(e)}: ${e.sheet}`).join('\n'):`${one.sheet}${one.reply?.snip?'\n“'+one.reply.snip.slice(0,120)+'”':''}`,'ss-reply',()=>openLog());}
+// reminders for sell sheets with no reply by their follow-up date: once each (per follow-up date and latest send) on this device
+function dueNotify(){const due=threads().filter(needsFollow);if(!due.length)return;let seen=[];try{seen=JSON.parse(lsGet('ss-notified')||'[]');}catch(_){}
+  const key=t=>`${t.root.id}|${t.root.follow||'auto'}|${t.last}`,fresh=due.filter(t=>!seen.includes(key(t)));if(!fresh.length)return;
+  const e=fresh[0].root,body=fresh.length>1?fresh.slice(0,4).map(t=>`${who(t.root)}: ${t.root.sheet}`).join('\n'):`${e.sheet}${e.follow?' · follow-up date '+DTF_DAY.format(new Date(e.follow+'T12:00')):''}`;
+  const shown=notify(fresh.length>1?`${fresh.length} sell sheets have no reply yet`:`No reply yet from ${who(e)}`,body,'ss-due',()=>{lgF.status='follow';openLog();});
+  if(!shown&&!document.hidden)toast(fresh.length>1?`${fresh.length} sell sheets are past their follow-up date with no reply`:`No reply yet from ${who(e)} about ${e.sheet}`,4000);
+  if(shown||!document.hidden)lsSet('ss-notified',JSON.stringify([...seen,...fresh.map(key)].slice(-500)));}
+const agoMin=t=>{const m=Math.round((Date.now()-t)/60e3);return m<1?'just now':m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:ago(t);};
+function renderRP(){const el=$('#lgRp');if(!el||!logDlg.open)return;const a=authGet(),tok=tokGet('google');
+  const btn=(id,t,cls='btn sm')=>`<button class="${cls}" type="button" id="${id}">${t}</button>`;let s,b='',bad=false;
+  if(!a||a.prov!=='google'){s=`<b>Reply checking</b><small>Sign in with Google to have replies from customers spotted automatically.</small>`;b=EMAIL_SETUP.google?btn('rpSign','Sign in with Google'):'';}
+  else if(RP.busy){s='Checking Gmail for replies…';}
+  else if(RP.err==='scope'||(tok&&!canRead(tok))){s=`<b>Turn on reply checking</b><small>Lets this site read your Gmail (read-only) to spot replies from customers you've sent sell sheets to. Google will ask once.</small>`;b=btn('rpNow','Turn on','btn sm primary');}
+  else if(RP.err==='api'){bad=true;s='Gmail API is switched off in your Google Cloud project. Enable it, then click Check now.';b=btn('rpNow','Check now');}
+  else if(RP.err==='failed'){bad=true;s='Couldn\'t check Gmail for replies just now.';b=btn('rpNow','Try again');}
+  else if(!tok){s=`<b>Replies last checked ${RP.last?esc(agoMin(RP.last)):'never'}</b><small>Checking pauses when the Google sign-in runs out (after an hour). Click to check and keep checking.</small>`;b=btn('rpNow','Check now','btn sm primary');}
+  else s=`Replies checked ${RP.last?esc(agoMin(RP.last)):'just now'}. Gmail is checked every 5 minutes while this site is open.`,b=btn('rpNow','Check now');
+  const n=!NT.has()?'':Notification.permission==='denied'?'<span class="rp-n">Desktop notifications are blocked in your browser\'s site settings.</span>'
+    :NT.on()?`<span class="rp-n">Desktop notifications on ${btn('rpNotOff','Turn off','lnk')}</span>`:`<span class="rp-n">${btn('rpNotOn','Turn on desktop notifications','btn sm ghost')}</span>`;
+  el.className='lg-rp'+(bad?' bad':'');el.innerHTML=`<span class="rp-s">${s}</span>${b}${n}`;}
+$('#lgRp').addEventListener('click',async e=>{const id=e.target.closest('button')?.id;if(!id)return;
+  if(id==='rpNow'){await checkReplies(true);dueNotify();}
+  else if(id==='rpSign'){try{await login('google',false);await checkReplies(true);}catch(err){toast(err.message);}}
+  else if(id==='rpNotOn'){let p=Notification.permission;if(p==='default')p=await Notification.requestPermission();if(p==='granted'){lsSet('ss-notify','1');notify('Notifications are on','You\'ll be told about replies and sell sheets with no reply by their follow-up date.','ss-test');}else toast('Notifications weren\'t allowed. You can allow them in your browser\'s site settings.');}
+  else if(id==='rpNotOff'){lsSet('ss-notify','0');}
+  renderRP();});
+// every minute: Gmail at most every 5 minutes (while a sign-in is active), reminders always. Also when coming back to the tab.
+setInterval(async()=>{if(authGet()?.prov==='google'&&tokGet('google')&&Date.now()-RP.last>4.5*60e3)await checkReplies();dueNotify();renderBadge();if(logDlg.open)renderRP();},60e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authGet()?.prov==='google'&&tokGet('google')&&Date.now()-RP.last>2*60e3)checkReplies().then(dueNotify);});
+setTimeout(async()=>{if(authGet()?.prov==='google'&&tokGet('google'))await checkReplies();dueNotify();},2500);
 
 /* ---------- save to Google Drive ----------
    Uses the drive.file permission: the site can only see files it saves and folders the person picks in Google's own picker. */
@@ -2443,7 +2547,7 @@ async function sendOne(p,tok,m){
     if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',why=(j.error?.errors||[]).map(x=>x.reason).join(' ')+' '+(j.error?.details||[]).map(x=>x.reason||'').join(' ');
       const e=new Error(/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg+why)?'The Gmail API is switched off in your Google Cloud project. Open console.cloud.google.com → APIs & Services → Library → Gmail API → Enable, wait a minute, then send again.'
         :/insufficient|scope/i.test(msg+why)?'Google didn\'t give permission to send email. Sign out (top right), sign in again and tick "Send email on your behalf".'
-        :r.status===401?'Your Google sign-in expired. Click Send again to sign in.':(msg||('Gmail error '+r.status)));e.status=r.status===401?401:r.status;throw e;}return;}
+        :r.status===401?'Your Google sign-in expired. Click Send again to sign in.':(msg||('Gmail error '+r.status)));e.status=r.status===401?401:r.status;throw e;}return await r.json().catch(()=>({}));}
   const body=JSON.stringify(graphMail(m));if(body.length>3.9e6){throw new Error('Too large for Outlook (4 MB limit). Untick an attachment or the product summary and try again.');}
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
@@ -2473,7 +2577,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
-      try{await sendOne(p,tok,full);done++;logSent(m,p,tok.email,kinds,parts);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
+      try{const res=await sendOne(p,tok,full);done++;logSent(m,p,tok.email,kinds,parts,res);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     if(fails.length){mlStatus(`Sent ${done} of ${plan.length}. Not sent: ${fails.join(' · ')}`,true);}
     else{mlStatus('');mailDlg.close();toast(plan.length>1?`Sent ${done} emails`:'Email sent');}}
@@ -2602,7 +2706,8 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
 function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
-  $('#navSent').textContent=th.length?`${th.length} sent${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
+  const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
+  $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();

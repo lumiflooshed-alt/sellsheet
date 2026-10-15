@@ -35,6 +35,9 @@ Your site addresses (add every one you use):
 5. If you chose **External**, go to **Audience → Test users → Add users** and add every Google address that will sign in (up to 100).
    - They'll see a "Google hasn't verified this app" screen the first time. Click **Continue**.
    - To remove that screen for everyone you'd have to submit the app for Google's verification. That's only needed if you open it to the public.
+5b. Go to **Data Access → Add or remove scopes** and tick **Gmail API · `.../auth/gmail.readonly`** (paste `https://www.googleapis.com/auth/gmail.readonly` into **Manually add scopes** if it isn't listed). Click **Update**, then **Save**.
+   - This lets the Sent list spot replies from customers (see "Reply checking" below). The site only looks at emails from people you've sent sell sheets to.
+   - Google calls this a *restricted* scope. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
 6. Go to **Clients → Create client**:
    - Application type: **Web application**. Name: `Sell Sheet Studio`.
    - **Authorized JavaScript origins**: click **Add URI** and enter `https://lumiflooshed-alt.github.io`. Add your Cloudflare address too if you have one, e.g. `https://YOUR-NAME.pages.dev`.
@@ -145,3 +148,18 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 - **To remove access at any time:**
   - Google: <https://myaccount.google.com/permissions>
   - Microsoft: <https://account.live.com/consent/Manage> (personal) or <https://myapps.microsoft.com> (work)
+
+## Reply checking and notifications (Gmail)
+
+- While the site is open, Gmail is checked every 5 minutes for emails from customers you've sent sell sheets to.
+  - A reply marks the entry **Replied** in **Sent**, with the subject, the first line and an **Open in Gmail** link.
+  - New replies show a green badge on the **Sent** button.
+  - Out-of-office and other automatic answers are ignored.
+  - Replies in a new conversation count too: any email from that customer after you sent the sheet.
+- **Follow-up date:** set one on an entry in **Sent**. If there's no reply by that day, the entry is flagged **No reply by …** and you get a reminder. Without a date, the reminder comes after 7 days.
+- **Desktop notifications:** open **Sent → Turn on desktop notifications** and allow them when the browser asks. You're told about new replies and missed follow-up dates. This is set per browser.
+- **The first time:** signing in after this update asks Google for the extra read-only permission. If you were already signed in, click **Sent → Turn on**.
+- **Limits:**
+  - Checks only run while the site is open in a tab.
+  - Google's sign-in lasts an hour and can only be renewed with a click. After that, checking pauses until you send an email, sign in, or click **Sent → Check now**.
+  - Follow-up date reminders don't need Gmail, so they keep working.
