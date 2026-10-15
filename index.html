@@ -843,7 +843,10 @@ const editStates=new Map(); // photo id -> in-memory editing data (not saved)
 let dbp=null;
 function db(){return dbp||(dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('sellsheets',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('sheets',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));}
 async function dbAll(){try{const d=await db();return await new Promise(res=>{const q=d.transaction('sheets').objectStore('sheets').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);});}catch(e){return null;}}
-async function dbPut(s){try{const d=await db();await new Promise((res,rej)=>{const t=d.transaction('sheets','readwrite');t.objectStore('sheets').put(JSON.parse(JSON.stringify(s)));t.oncomplete=res;t.onerror=()=>rej(t.error);});return true;}catch(e){return false;}}
+async function dbPut(s){try{const d=await db();await new Promise((res,rej)=>{const t=d.transaction('sheets','readwrite'),os=t.objectStore('sheets');
+    // the sheet is plain data, so it can be stored directly (no extra JSON copy of all the photo text); fall back to a clean copy if something isn't storable
+    try{os.put(s);}catch(e){if(e&&e.name==='DataCloneError')os.put(JSON.parse(JSON.stringify(s)));else throw e;}
+    t.oncomplete=res;t.onerror=()=>rej(t.error);});return true;}catch(e){return false;}}
 async function dbDel(id){try{const d=await db();await new Promise(res=>{const t=d.transaction('sheets','readwrite');t.objectStore('sheets').delete(id);t.oncomplete=res;t.onerror=res;});}catch(e){}}
 const lsGet=k=>{try{return localStorage.getItem(k);}catch(e){return null;}}, lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 let saveT=0;
@@ -875,12 +878,19 @@ function fmtCss(f){let c='';if(f.color)c+=`color:${f.color};`;if(f.size)c+=`font
   if(f.font)c+=`font-family:'${f.font.replace(/'/g,'')}',Arial,sans-serif;`;if(f.align)c+=`display:block;text-align:${f.align};`;return c;}
 const ed=(k,v,ph)=>`<span class="ed" contenteditable="true" spellcheck="false" data-edit="${k}" data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
 function styleVars(){const st=S.style;return `--f:'${st.font.replace(/'/g,'')}';--phH:${st.phH}px;--lw:${st.lw}px;--gap:${st.gap}px;`+Object.entries(st.sz).map(([k,v])=>`--s-${k}:${v}px`).join(';');}
+// Photos are stored as base64 text (often 300 KB-1 MB each). The sheet is rebuilt on every keystroke, so each photo is turned into a short
+// blob: address once; putting megabytes of text through the HTML parser on every key made typing lag when a sheet had several photos.
+const blobCache=new Map();
+function photoSrc(url){if(typeof url!=='string'||!/^data:image\/[a-z+.-]+;base64,/.test(url)||typeof URL==='undefined'||!URL.createObjectURL)return url;
+  let b=blobCache.get(url);if(b){blobCache.delete(url);blobCache.set(url,b);return b;}
+  try{const i=url.indexOf(','),bin=atob(url.slice(i+1)),u8=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u8[k]=bin.charCodeAt(k);b=URL.createObjectURL(new Blob([u8],{type:url.slice(5,url.indexOf(';'))}));}catch(_){return url;}
+  blobCache.set(url,b);if(blobCache.size>24){const[k0,v0]=blobCache.entries().next().value;blobCache.delete(k0);URL.revokeObjectURL(v0);}return b;}
 function sheetHTML(forExport){
   const c=calc(), tv=themeVars(), sz=S.showSizes, B=S.style.blocks, showCt=S.showColours!==false;
   const ph=S.photos, gT=fmtCss(effFmt(null,'table')), gH=fmtCss(effFmt(null,'thead'));
   const blk=(name,inner,extra='')=>`<div class="blk${selBlock===name&&!forExport?' selected':''}" data-block="${name}" style="width:${B[name].w}%;${extra}">${inner}${forExport||selBlock!==name?'':frame(name)}</div>`;
   let photos='';
-  if(ph.length) photos=blk('photos',`<div class="phs" style="--np:${ph.length}">${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${p.url}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
+  if(ph.length) photos=blk('photos',`<div class="phs" style="--np:${ph.length}">${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${photoSrc(p.url)}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
   else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos<small style="display:block;font-weight:500;font-size:13px;margin-top:4px;opacity:.8">Up to ${MAX_PHOTOS} · backgrounds are removed automatically</small></span></div></div>`);
   const th=t=>`<th style="${gH}">${t}</th>`, td=v=>`<td style="${gT}">${v}</td>`;
   const head=sz?th('Colour')+S.sizes.map(s=>th(esc(s))).join('')+th('Boxes')+th('Total pcs'):th('Colour')+th('Pcs per box')+th('Boxes')+th('Total pcs');
@@ -901,7 +911,10 @@ let selBlock=null, freshPhoto=null;
 let editingSheet=false;
 function renderSheet(){
   if(editingSheet) return;
+  // keep the photo elements that are unchanged: the browser has already decoded them, so a keystroke doesn't re-decode every photo
+  const keepImg=new Map();$$('#paper .phbox').forEach(b=>{const im=b.querySelector('img');if(im&&b.dataset.photo)keepImg.set(b.dataset.photo+'|'+im.getAttribute('src'),im);});
   $('#paper').innerHTML=sheetHTML(false);freshPhoto=null;
+  $$('#paper .phbox').forEach(b=>{const im=b.querySelector('img'),old=im&&keepImg.get(b.dataset.photo+'|'+im.getAttribute('src'));if(old)im.replaceWith(old);});
   const sh=$('#paper .sheet'),ft=sh.querySelector('.ft'); const over=(ft.getBoundingClientRect().bottom-sh.getBoundingClientRect().top)/zoom>1056-30;
   let ob=$('#overflow'); if(over&&!ob){ob=document.createElement('div');ob.id='overflow';ob.className='overflow';ob.textContent='Content runs past one page';$('#canvas').appendChild(ob);} else if(!over&&ob) ob.remove();
 }
@@ -969,7 +982,7 @@ function renderPanel(){
   }
   else if(tab==='photos'){
     h=`<h2>Photos</h2><p class="lead">Up to ${MAX_PHOTOS} photos, spaced evenly across the sheet. Backgrounds are removed on this device.</p>
-    <div class="photos">${S.photos.map((p,i)=>`<div class="ph"><img src="${p.url}" alt="Photo ${i+1}"><div style="display:grid;gap:8px"><strong>Photo ${i+1}</strong><div class="b">
+    <div class="photos">${S.photos.map((p,i)=>`<div class="ph"><img src="${photoSrc(p.url)}" alt="Photo ${i+1}"><div style="display:grid;gap:8px"><strong>Photo ${i+1}</strong><div class="b">
       <button class="btn sm" data-pedit="${p.id}">Edit</button><button class="btn sm" data-pmove="${i}" ${i===0?'disabled':''}>Move left</button><button class="btn sm danger" data-pdel="${p.id}">Remove</button></div></div></div>`).join('')}</div>
     ${S.photos.length<MAX_PHOTOS?`<div class="ph-add"><button class="add" data-addphoto="1">${I.plus}Add photo</button><button class="add" data-pastephoto="1">${I.paste}Paste image</button></div>
     <p class="note">You can also copy a picture (e.g. right-click → Copy image) and press <b>${/Mac|iP/.test(navigator.platform)?'⌘':'Ctrl'}+V</b> anywhere, or drag a picture onto the page.</p>`:''}
