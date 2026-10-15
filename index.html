@@ -468,6 +468,11 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 @media (max-width:900px){.lg-fups{grid-column:1/-1}.lg-fu{grid-template-columns:auto 1fr auto}.lg-fu>.c:nth-of-type(2){grid-column:2/-1}.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
 .prev-h{display:flex;align-items:center;gap:10px}.prev-h h3{margin:0;font-size:15px;white-space:nowrap}.prev-h select{flex:1;min-width:0;height:38px}
 .ml-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}.ml-pane[hidden]{display:none}
+.gr-def{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13.5px}.gr-def label{font-weight:600}.gr-def select{height:34px;width:auto}.gr-def small{flex-basis:100%;color:var(--muted)}
+.gr-ctl{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}.gr-ctl .in{height:32px;font-size:13.5px;padding:0 8px;width:auto}.gr-ctl .gr-hon{width:84px}.gr-ctl .gr-name{width:160px}.gr-out{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+.tok{background:#eaf1ff;color:inherit;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}
+.ml-subj{display:block;outline:none;border-radius:6px;padding:1px 4px;margin:-1px -4px;cursor:text}.ml-subj:hover{background:var(--panel)}.ml-subj:focus{box-shadow:0 0 0 2px var(--accent)}
+.prev-tip{color:var(--muted);font-size:12.5px;margin-top:-4px}
 .ml-msgprev{font-size:13px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:6px 10px;line-height:1.4}.ml-msgprev:empty{display:none}
 .how-row{display:flex;gap:14px 22px;align-items:end;flex-wrap:wrap}
 .dd{position:relative}.dd-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:210px;height:42px;cursor:pointer;text-align:left;font-weight:600}.dd-btn svg{width:14px;height:14px;flex:none}
@@ -642,7 +647,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
         <div class="row2"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
         <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
-        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name (never their company), {company} their company and {product} this product. Customers without a name are flagged so you can add one. Your wording is remembered.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's name (never their company), with their title if you've set one, {company} their company and {product} the product name. Customers without a name are flagged so you can add one. You can also edit the message right in the preview. Your wording is remembered for next time, and synced when you're signed in.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <div class="gr-def"><label for="mlGreetBy">Greet customers by</label><select class="in" id="mlGreetBy"><option value="first">First name</option><option value="last">Last name</option><option value="full">Full name</option></select><small>Change it for one customer, or add Mr., Mrs. and so on, in the preview or on their customer page.</small></div>
         <div class="group ml-how"><h3>Include the sell sheet</h3>
           <div class="how-row">
             <div class="field"><span>Attach as</span>
@@ -666,6 +672,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
           <div class="ml-count" id="mlCount" role="status"></div>
           <div class="prev-h"><h3>Preview</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for each customer"></select></div>
           <div class="ml-meta" id="mlPrevMeta"></div>
+          <small class="prev-tip">Click the subject or message to edit them here; the editor on the left follows along. Highlighted words are filled in for each customer.</small>
           <iframe id="mlPrevFrame" title="Email preview" sandbox="allow-same-origin allow-popups"></iframe>
         </div>
       </section>
@@ -1723,6 +1730,7 @@ async function buildDocx(){
 /* ---------- email: customers, sign-in (Gmail / Outlook) and sending ---------- */
 // Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
 const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
+const MAIL_DEF_SUBJ='Sell sheet: {product}',FUP_DEF_SUBJ='Following up: {product}',FUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
 const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
 const MAIL=Object.assign({prov:'google',att:['pdf'],mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
 // deliver: 'embed' | 'attach' | 'both'. embed: parts shown inside the email. Older settings (one "summary" checkbox) carry over.
@@ -1731,7 +1739,8 @@ if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 // current model: att = attachment types (may be none), sheetPic = embed the sell sheet picture, show = extra parts in the email
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
 if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show}));
+if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,greetBy:MAIL.greetBy}));
 const embedParts=()=>[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
@@ -1780,6 +1789,7 @@ function mergeCustomers(main,others){const now=Date.now();
     if(o.name&&nrm(o.name)!==nrm(main.name)){if(!String(main.name||'').trim())main.name=o.name;else addInfo(inf,{'Other names':o.name});}
     if(o.company&&nrm(o.company)!==nrm(main.company)){if(!String(main.company||'').trim())main.company=o.company;else addInfo(inf,{'Other companies':o.company});}
     addInfo(inf,infoOf(o));main.info=inf;main.groups=grpsOf({groups:[...grpsOf(main),...grpsOf(o)]});
+    if(!cleanGreet(main.greet)&&cleanGreet(o.greet))main.greet=cleanGreet(o.greet);
     if(o.note&&!String(main.note||'').includes(o.note))main.note=[main.note,o.note].filter(Boolean).join('\n');if(!main.color&&o.color)main.color=o.color;
     CU.list=CU.list.filter(x=>x!==o);CU.deleted.push({email:ck(o.email),at:now});if(CU.sel.delete(ck(o.email)))CU.sel.add(ck(main.email));}
   main.upd=now;return main;}
@@ -1788,6 +1798,10 @@ const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_R
 // the one address a customer's email goes to (chosen from a dropdown when they have several; main address by default)
 const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.find(a=>c.use.some(x=>ck(x)===ck(a))):null;return[u||c.email];};
 const noName=c=>!String(c?.name||'').trim();
+// how a customer is greeted: by {first|last|full|custom}, name (when custom), hon (Mr., Mrs.…). Missing = the Email window's default.
+const GREET_BY=['first','last','full','custom'];
+function cleanGreet(g){if(!g||typeof g!=='object')return undefined;const o={};if(GREET_BY.includes(g.by))o.by=g.by;
+  const nm=String(g.name||'').replace(/\s+/g,' ').trim().slice(0,80),h=String(g.hon||'').replace(/\s+/g,' ').trim().slice(0,20);if(nm)o.name=nm;if(h)o.hon=h;return Object.keys(o).length?o:undefined;}
 // extra details from imported sheets (phone, address, notes…): {label: text}; several values are kept one per line
 const cleanInfo=o=>{const r={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const[k,v]of Object.entries(o).slice(0,40)){const kk=String(k).replace(/\s+/g,' ').trim().slice(0,60),vv=String(v??'').trim().slice(0,4000);if(kk&&vv)r[kk]=vv;}return r;};
 const infoOf=c=>cleanInfo(c?.info);
@@ -1828,7 +1842,7 @@ function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.te
   const data={email,alt,use:v.use&&all.some(a=>ck(a)===ck(v.use))?[all.find(a=>ck(a)===ck(v.use))]:old?useOf({...old,email,alt}):[email],upd:now};
   for(const k of['name','company','note'])if(v[k]!==undefined||!old)data[k]=String(v[k]||'').trim();
   if(v.groups!==undefined||!old)data.groups=grpsOf({groups:Array.isArray(v.groups)?v.groups:String(v.groups||'').split(/[;,]/)});
-  if(v.color!==undefined)data.color=v.color||'';if(v.info)data.info=cleanInfo(v.info);
+  if(v.color!==undefined)data.color=v.color||'';if(v.info)data.info=cleanInfo(v.info);if(v.greet!==undefined)data.greet=cleanGreet(v.greet);
   for(const g of data.groups||[])if(CU.gmeta[gKey(g)]?.del)setGroupMeta(g,{});
   if(!old){CU.list.push(data);if(mailDlg.open)CU.sel.add(ck(email));}
   else{if(ck(old.email)!==ck(email)){CU.deleted.push({email:ck(old.email),at:now});if(CU.sel.delete(ck(old.email)))CU.sel.add(ck(email));}Object.assign(old,data);}
@@ -1936,11 +1950,11 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.f
   $('#mlChips').innerHTML=sel.slice(0,40).map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('')+(sel.length>40?`<span class="chip" title="Everyone ticked is included">+${sel.length-40} more</span>`:'');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
 // one entry per person; a customer can have several chosen addresses
-function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1,key:ck(c.email)});}
+function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,greet:c.greet,cust:1,key:ck(c.email)});}
   for(const a of splitAddr($('#mlTo').value)){const k=ck(a);if(!seen.has(k)){seen.add(k);out.push({email:a,emails:[a]});}}return out;}
 // every customer gets their own email; the side panel says how many, and who has no name yet
 let nnOk=false;
-function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!firstName(p));nnOk=false;
+function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnOk=false;
   $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
@@ -2022,7 +2036,7 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),upd:+c.upd||0};}),
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),greet:cleanGreet(c.greet),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at})),groups:mergeGroupMeta(a.groups,b.groups)};}
 // group colours/names: newest change wins; deleted groups are remembered
 function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
@@ -2039,17 +2053,21 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
+const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj']];
 function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
   syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
       const m=mergeCust(local,{customers:Array.isArray(rd.customers)?rd.customers:[],deleted:Array.isArray(rd.deleted)?rd.deleted:[],groups:rd.groups});
-      const msgL={text:lsGet('ss-mailmsg'),upd:+lsGet('ss-mailmsg-upd')||0},msgR=rd.mailMsg&&typeof rd.mailMsg.text==='string'?rd.mailMsg:{},msg=(+msgR.upd||0)>msgL.upd?msgR:msgL;
-      if(msg.text&&msg!==msgL){lsSet('ss-mailmsg',String(msg.text));lsSet('ss-mailmsg-upd',String(msg.upd));if(mailDlg.open&&document.activeElement!==$('#mlMsg'))$('#mlMsg').value=msg.text;}
+      // remembered wording: the newest edit wins (new-email and follow-up message and subject)
+      const W8={};let wChanged=false;for(const[rk,ls,kind,inp]of WORD_SYNC){const L={text:lsGet(ls),upd:+lsGet(ls+'-upd')||0},R=rd[rk]&&typeof rd[rk].text==='string'?rd[rk]:{},w=(+R.upd||0)>L.upd?R:L;
+        if(w.text&&w!==L){lsSet(ls,String(w.text));lsSet(ls+'-upd',String(w.upd));if(mailDlg.open&&(MAIL.kind||'new')===kind&&document.activeElement!==$(inp)&&!$('#mlPrev').contains(document.activeElement)){$(inp).value=w.text;wChanged=true;}}
+        if(w.text)W8[rk]={text:String(w.text),upd:+w.upd||0};}
+      if(wChanged){updMsgPrev();updMode();schedPreview();}
       lsSet(key,JSON.stringify(m));
-      if(JSON.stringify([m.customers,m.deleted,m.groups,msg.text||null,lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},rd.mailMsg?.text||null,lr.entries||[],lr.deleted||[]]))
-        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
+      if(JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[]]))
+        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,updated:Date.now()})});
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
@@ -2224,8 +2242,7 @@ $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.r
   if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}await switchTo(sh);}
   logDlg.close();openMail();cuLoad();CU.sel.clear();const typed=[];
   for(const e of picked){const c=e.cust&&CU.list.find(c=>ck(c.email)===e.cust);if(c)CU.sel.add(ck(c.email));else typed.push(...(e.emails.length?e.emails:[e.email]).filter(Boolean));}
-  $('#mlTo').value=[...new Set(typed)].join(', ');$('#mlSubj').value=`Following up: ${sheetName(S)}`;
-  $('#mlMsg').value="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
+  $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();
   renderCust();updMode();updMsgPrev();toast('Follow-up ready to send. Check the message, then click Send.');};
 
 /* ---------- save to Google Drive ----------
@@ -2318,12 +2335,44 @@ function doneView(title,sub,files){dvStatus('');$('#dvDone').innerHTML=`<div cla
   showDone(true);toast(title);}
 
 /* the email itself */
-const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
-// {name}: the customer's first name only (never the company). "LEE, SARAH" → Sarah; ALL-CAPS names are tidied; Mr/Mrs/Ms/Dr are skipped.
-function firstName(p){const nm=String(p?.name||'').trim(),w=(nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{M}'’-]/gu,'')).filter(Boolean);
-  let f=(w.length>1&&/^(mr|mrs|ms|miss|mx|dr|sir)$/i.test(w[0])?w[1]:w[0])||'';if(f&&f===f.toUpperCase()&&f!==f.toLowerCase())f=f.toLowerCase().replace(/(^|[-'’])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());return f;}
-function fillTokens(text,p){const v={name:firstName(p),company:p?.company||'',product:productLabel()};
+// {product} is the product name only (the item code stays in the product summary and the attached sheet)
+const productLabel=()=>String(S.title||'').trim()||String(S.code||'').trim()||'this product';
+// a name split into first / last / full. "LEE, SARAH" → Sarah / Lee; titles (Mr, Mrs…) and suffixes (Jr, III…) are skipped; ALL-CAPS is tidied.
+const HON_RE=/^(mr|mrs|ms|miss|mx|dr|prof|sir)\.?$/i,SUF_RE=/^(jr|sr|ii|iii|iv|phd|md|esq)\.?$/i;
+const tidyName=f=>f&&f===f.toUpperCase()&&f!==f.toLowerCase()?f.toLowerCase().replace(/(^|[-'’\s])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase()):f;
+function nameParts(nm){nm=String(nm||'').trim();const words=t=>t.trim().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{M}'’.-]/gu,'').replace(/^\.+|\.+$/g,'')).filter(Boolean);
+  let F,L;if(nm.includes(',')){const i=nm.indexOf(',');F=words(nm.slice(i+1)).filter(x=>!HON_RE.test(x)&&!SUF_RE.test(x));L=words(nm.slice(0,i)).filter(x=>!SUF_RE.test(x)&&!HON_RE.test(x));}
+  else{const w=words(nm);while(w.length>1&&HON_RE.test(w[0]))w.shift();while(w.length>1&&SUF_RE.test(w[w.length-1]))w.pop();F=w.slice(0,w.length>1?w.length-1:1);L=w.length>1?[w[w.length-1]]:[];}
+  const first=tidyName(F[0]||''),last=tidyName(L.join(' '));return{first,last,full:tidyName([...F,...L].join(' '))};}
+// greeting choices for addresses typed into To (not saved customers): kept while this page is open
+const TYPED_GREET=new Map();
+const greetOf=p=>p?(p.cust||'greet' in p?(p.greet||{}):TYPED_GREET.get(ck(p.email))||{}):{};
+const BY_NAME={first:'First name',last:'Last name',full:'Full name',custom:'Typed name'};
+// {name}: the name this customer is greeted by, with their title. Never the company.
+function greetName(p){if(!p)return'';const g=greetOf(p),by=g.by||MAIL.greetBy,n=nameParts(p.name);
+  const v=by==='custom'?String(g.name||'').trim():by==='last'?n.last||n.first:by==='full'?n.full:n.first;if(!v)return'';const h=String(g.hon||'').trim();return h?h+' '+v:v;}
+const tokVals=p=>({name:greetName(p),company:p?.company||'',product:productLabel()});
+function fillTokens(text,p){const v=tokVals(p);
   return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
+// the same text as HTML for editing in the preview: filled-in words are highlighted chips that turn back into {name}, {company}, {product}
+const TOK_TIP={name:'Each customer\'s name',company:'Each customer\'s company',product:'The product name'};
+function tokHTML(text,p){const v=tokVals(p),lit=t=>esc(t).replace(/\r?\n/g,'<br>');let out='',i=0;
+  String(text).replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k,at)=>{out+=lit(String(text).slice(i,at));i=at+m.length;
+    out+=v[k]?lit(sp)+`<span class="tok" data-tok="${k}" contenteditable="false" title="${TOK_TIP[k]}: filled in for each email">${esc(v[k])}</span>`
+      :`<span class="tok empty" data-tok="${k}" data-sp="${esc(sp)}" contenteditable="false" title="${TOK_TIP[k]}: missing for this customer, so it's left out">${sp===' '?' ':''}no ${k}</span>`;return m;});
+  return out+lit(String(text).slice(i));}
+// …and back to text with {tokens}
+function tokText(root){let s='';const BLOCK=/^(DIV|P|LI|H\d|TR)$/;
+  const walk=n=>{for(const c of n.childNodes){if(c.nodeType===3)s+=c.nodeValue.replace(/ /g,' ');else if(c.nodeType===1){
+    if(c.dataset.tok){s+=(c.hasAttribute('data-sp')?c.dataset.sp:'')+'{'+c.dataset.tok+'}';continue;}
+    if(c.nodeName==='BR'){s+='\n';continue;}const blk=BLOCK.test(c.nodeName);if(blk&&s&&!s.endsWith('\n'))s+='\n';walk(c);}}};
+  walk(root);return s.replace(/\n$/,'');}
+// greeting controls: title (Mr., Mrs.… or anything typed) + which name, or a name typed in
+function greetCtl(g,nm,attr){const n=nameParts(nm),by=g.by||'',opt=(v,l)=>`<option value="${v}"${by===v?' selected':''}>${esc(l)}</option>`;
+  return`<span class="gr-ctl"><input class="in gr-hon" ${attr}="hon" list="honList" value="${esc(g.hon||'')}" placeholder="Title" maxlength="20" autocomplete="off" aria-label="Title, like Mr. or Mrs. (optional)"><select class="in gr-by" ${attr}="by" aria-label="Which name to greet them by">${opt('',`Default (${BY_NAME[MAIL.greetBy].toLowerCase()}${n[MAIL.greetBy]?': '+n[MAIL.greetBy]:''})`)}${opt('first',`First name${n.first?': '+n.first:''}`)}${opt('last',`Last name${n.last?': '+n.last:''}`)}${opt('full',`Full name${n.full?': '+n.full:''}`)}${opt('custom','Type a name…')}</select>${by==='custom'?`<input class="in gr-name" ${attr}="name" value="${esc(g.name||'')}" placeholder="Name to use" maxlength="80" autocomplete="off" aria-label="Name to use in the greeting">`:''}</span>`;}
+// change how one recipient is greeted (saved on the customer; typed addresses keep it while the page is open)
+function setGreet(p,k,v){if(!p)return;if(p.cust){const c=CU.list.find(c=>ck(c.email)===p.key);if(!c)return;c.greet=cleanGreet({...(c.greet||{}),[k]:v});c.upd=Date.now();cuSave();p.greet=c.greet;}
+  else{const g=cleanGreet({...(TYPED_GREET.get(ck(p.email))||{}),[k]:v});g?TYPED_GREET.set(ck(p.email),g):TYPED_GREET.delete(ck(p.email));}}
 // pictures shown inside the email, made once per opening of the Email window
 let inlineCache=null,sheetPicCache=null;
 const hashStr=t=>{let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+'.'+t.length;};
@@ -2343,7 +2392,7 @@ async function emailPhotos(){const out=[];for(const [i,p] of S.photos.entries())
   const sc=Math.min(1,560/img.naturalWidth),c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
   out.push({cid:`photo${i+1}@sellsheet`,name:`photo${i+1}.jpg`,b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:c.width,h:c.height});}return out;}
-function emailHTML(msg,inline,parts){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=esc(msg).replace(/\r?\n/g,'<br>'),has=k=>parts.includes(k);
+function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=edit?tokHTML(edit.tpl,edit.person):esc(msg).replace(/\r?\n/g,'<br>'),has=k=>parts.includes(k);
   const sheetImg=inline.find(p=>p.sheet),photos=has('photos')?inline.filter(p=>!p.sheet):[];
   let sum='';
   if(sheetImg)sum+=`<tr><td style="padding:0 28px 6px"><img src="cid:${sheetImg.cid}" width="544" alt="Sell sheet: ${esc(sheetName(S))}" style="display:block;width:100%;max-width:544px;height:auto;border:1px solid ${tv.line}"></td></tr>`;
@@ -2365,7 +2414,7 @@ function emailHTML(msg,inline,parts){const tv=themeVars(),F="Arial,Helvetica,san
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
-<tr><td style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
+<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
 function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
   if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
@@ -2416,7 +2465,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
-  const nn=plan.filter(m=>m.person&&!firstName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
+  const nn=plan.filter(m=>m.person&&!greetName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
   if(nn.length&&!nnOk){nnOk=true;mlStatus(`${nn.length} ${nn.length>1?'customers have':'customer has'} no name (see the list on the right). Add names, or click Send again to send anyway.`,true);return;}
   sending=true;$('#mlSend').disabled=true;
   try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();}
@@ -2438,12 +2487,21 @@ $('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus(
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
 function openMail(){cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
-  inlineCache=null;$('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;renderHow();
+  inlineCache=null;MAIL.kind='new';loadWording();$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
-$('#mlMsg').addEventListener('input',e=>{lsSet('ss-mailmsg',e.target.value);lsSet('ss-mailmsg-upd',String(Date.now()));scheduleSync();});
+// the wording is remembered (and synced) as you type, for new emails and follow-ups separately. The product name is stored as {product}
+// so the next sell sheet gets its own name.
+const WORD_KEYS={new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ}};
+const wordKeys=()=>WORD_KEYS[MAIL.kind==='follow'?'follow':'new'];
+function loadWording(){const k=wordKeys();$('#mlSubj').value=lsGet(k.subj)||k.defSubj();$('#mlMsg').value=lsGet(k.msg)||k.defMsg();}
+function keepWording(which,v){const pl=productLabel();if(pl!=='this product'&&pl.length>=3)v=v.split(pl).join('{product}');const key=wordKeys()[which];
+  lsSet(key,v);lsSet(key+'-upd',String(Date.now()));scheduleSync();}
+$('#mlMsg').addEventListener('input',e=>keepWording('msg',e.target.value));
+$('#mlSubj').addEventListener('input',e=>keepWording('subj',e.target.value));
+$('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMail();updMsgPrev();updMode();schedPreview();});
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
 function renderHow(){$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
   $('#mlSheetPic').checked=!!MAIL.sheetPic;$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
@@ -2462,22 +2520,45 @@ $('#mlMsg').addEventListener('input',()=>{updMsgPrev();updMode();});$('#mlTo').a
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
+async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
   if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
   const files=attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
-  const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';
-  $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
-    +row('Subject',esc(fillTokens($('#mlSubj').value,m.person)))+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
-    +(m.person&&!firstName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
-  const fr=$('#mlPrevFrame');fr.srcdoc=emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos')).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');
+  const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
+  if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
+    +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
+    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
+    +(m.person&&!greetName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
+  const fr=$('#mlPrevFrame'),ed=()=>({tpl:$('#mlMsg').value,person:m.person}),prep=h=>h.replace('<head>','<head><base target="_blank"><style>'+PREV_CSS+'</style>');
+  fr.srcdoc=prep(emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos'),ed())).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');fr._stale=false;
   const inline=parts.length?await emailInline(parts):[];if(seq!==prevSeq)return;
-  let html=emailHTML(msg,inline,parts);for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
-  fr.srcdoc=html.replace('<head>','<head><base target="_blank">');}
+  // don't pull the message out from under the cursor: finish once they click away
+  if(document.activeElement===fr){fr._stale=true;return;}
+  let html=emailHTML(msg,inline,parts,ed());for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
+  fr.srcdoc=prep(html);}
 $('#mlPrevWho').addEventListener('change',buildPreview);
+const PREV_CSS='.tok{background:#eaf1ff;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px;cursor:default}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}#ssEdit{outline:none;cursor:text}#ssEdit:hover{box-shadow:inset 0 0 0 1px #d5dbe3}#ssEdit:focus{box-shadow:inset 0 0 0 2px #7aa2f7}';
+const prevPerson=()=>prevPlan[+$('#mlPrevWho').value||0]?.person||null;
+// how the greeting reads for this recipient
+function greetLine(p){const first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';return first?`Their email starts “${esc(first.trim())}”`:'';}
+// text typed in the preview goes back into the editor (with {tokens}), and is remembered like typing in the editor
+function fromPreview(which,tpl){const inp=$(which==='msg'?'#mlMsg':'#mlSubj');if(inp.value===tpl)return;inp.value=tpl;keepWording(which,tpl);updMsgPrev();updMode();const o=$('#mlGrOut'),p=prevPerson();if(o&&p)o.innerHTML=greetLine(p);}
+// plain text only, and Enter makes a line break (a new line in the editor)
+function plainEditing(el,doc,oneLine){el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!oneLine)doc.execCommand('insertLineBreak');}});
+  el.addEventListener('paste',e=>{e.preventDefault();let t=(e.clipboardData||window.clipboardData).getData('text/plain')||'';if(oneLine)t=t.replace(/\s*\r?\n\s*/g,' ');doc.execCommand('insertText',false,t);});
+  el.addEventListener('drop',e=>e.preventDefault());}
+$('#mlPrevFrame').addEventListener('load',e=>{const fr=e.currentTarget,d=fr.contentDocument,el=d&&d.getElementById('ssEdit');if(!el)return;plainEditing(el,d,false);
+  el.addEventListener('input',()=>fromPreview('msg',tokText(el)));
+  el.addEventListener('blur',()=>{if(fr._stale){fr._stale=false;schedPreview();}});
+  el.addEventListener('click',ev=>{if(ev.target.closest('[data-tok=name]'))$('#mlPrevMeta [data-pg=by]')?.focus();});});
+$('#mlPrevMeta').addEventListener('input',e=>{const t=e.target;if(t.id==='mlPrevSubj'||t.closest?.('#mlPrevSubj')){fromPreview('subj',tokText($('#mlPrevSubj')).replace(/\s*\n\s*/g,' '));return;}
+  const k=t.dataset?.pg;if(!k||t.nodeName==='SELECT')return;setGreet(prevPerson(),k,t.value);updMsgPrev();updMode();schedPreview();});
+$('#mlPrevMeta').addEventListener('change',e=>{const t=e.target,k=t.dataset?.pg;if(k!=='by')return;setGreet(prevPerson(),'by',t.value);updMsgPrev();updMode();buildPreview(true).then(()=>{if(t.value==='custom')$('#mlPrevMeta [data-pg=name]')?.focus();});});
+$('#mlPrevMeta').addEventListener('focusin',e=>{if(e.target.id==='mlPrevSubj'&&!e.target._wired){e.target._wired=1;plainEditing(e.target,document,true);}});
+$('#mlPrevMeta').addEventListener('focusout',e=>{if(e.target.id==='mlPrevSubj')setTimeout(()=>{if(!$('#mlPrevMeta').contains(document.activeElement))schedPreview();});});
 $('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 
@@ -2632,13 +2713,13 @@ function workCopy(){if(CP.W)return CP.W;const c=CP.open==='new'?null:CU.list.fin
   const inf=infoOf(c),emails=c?[c.email,...altOf(c)]:[''],keys=Object.keys(inf).filter(k=>k!==OTHER.name&&k!==OTHER.company);
   const vals={name:[c?.name||'',...lines(inf[OTHER.name])],company:[c?.company||'',...lines(inf[OTHER.company])]};for(const k of keys){const l=lines(inf[k]);vals['i:'+k]=l.length?l:[''];}
   CP.W={vals,keys,emails,useIdx:c?Math.max(0,emails.findIndex(a=>ck(a)===ck(useOf(c)[0]))):0,exp:new Set(),
-    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||''};return CP.W;}
+    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||'',greet:{...(c?.greet||{})}};return CP.W;}
 function wInfo(W){const info={},uniq=a=>[...new Map(a.map(x=>x.trim()).filter(Boolean).map(x=>[nrm(x),x])).values()];
   for(const k of W.keys){const l=uniq(W.vals['i:'+k]);if(l.length)info[k]=l.join('\n');}
   for(const f of['name','company']){const main=nrm(W.vals[f][0]),l=uniq(W.vals[f].slice(1)).filter(x=>nrm(x)!==main);if(l.length)info[OTHER[f]]=l.join('\n');}return info;}
 // the customer page, laid out like a Notion page: big title, a list of properties, then the note as the page body
 const NP_IC={co:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',grp:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
-  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
+  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',greet:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
 const npI=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NP_IC[k]}</svg>`;
 // the "▾ N more" button that opens a detail's alternates
 function npDD(f,n,label){const open=CP.W.exp.has(f);return`<button class="np-dd${open?' open':''}${n?' has':''}" type="button" data-cpd="dd" data-f="${esc(f)}" aria-expanded="${open}" title="${n?`Show the other ${esc(label)}`:`Add another ${esc(label)}`}">${n?`${n} more`:'Add other'}${npI('chev')}</button>`;}
@@ -2659,6 +2740,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.props=`<div class="np-props" id="np-props">
     ${prop('co','Company',npMulti('company','Company'))}
     ${prop('mail','Email',mails)}
+    ${prop('greet','Greeting',greetCtl(W.greet,W.vals.name[0],'data-wg')+`<span class="gr-out" id="cpdGrOut">${npGreetOut(W)}</span>`)}
     ${prop('grp','Groups',`<div class="np-grps">${W.groups.map(g=>gChip(g,`<button type="button" data-cpd="rmgrp" data-g="${esc(g)}" aria-label="Remove from ${esc(g)}">✕</button>`).replace('<span class="gchip"',`<span class="gchip" data-gcol="${esc(g)}" title="Click to change the colour of ${esc(gName(g))}"`)).join('')}<input class="np-in np-gin" id="cpdGrpIn" placeholder="${W.groups.length?'Add…':'Add to a group…'}" autocomplete="off" aria-label="Add to a group"></div>`)}
     ${prop('col','Colour',`<button class="np-colbtn" type="button" data-cpd="color">${t?`<i style="background:${t}"></i>${esc(tagName(W.color))}`:'<span class="np-empty">None</span>'}</button>`)}
     ${W.keys.map(k=>prop('info',esc(k),npMulti('i:'+k,k)+`<button class="np-x np-rmprop" type="button" data-cpd="rminfo" data-k="${esc(k)}" title="Remove this detail" aria-label="Remove ${esc(k)}">✕</button>`,'np-info')).join('')}
@@ -2670,6 +2752,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
     ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to remove':'Remove customer'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
+function npGreetOut(W){const n=greetName({cust:1,name:W.vals.name[0],greet:W.greet});return n?`Emails greet them as “${esc(n)}”`:'No name to greet them by yet';}
 function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
   return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
 // auto-height for the note
@@ -2686,14 +2769,16 @@ function groupsHTML(){const gs=allGroups();return`<div class="cpd-h"><h3>Groups<
 function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
   CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;cpSelectRow(null);renderCPDetail();renderCPFoot();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
-  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W)});
+  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W),greet:W.greet});
   if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
 function removeCustomers(list){const now=Date.now();for(const c of list){CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:now});}cuSave();if(mailDlg.open)renderCust();}
 custDlg.addEventListener('input',e=>{const t=e.target,W=CP.W;if(!W||CP.mode!=='cust')return;
-  if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;}
+  if(t.dataset.wg!==undefined){if(t.nodeName==='SELECT')return;W.greet[t.dataset.wg]=t.value;CP.dirty=true;const o=$('#cpdGrOut');if(o)o.innerHTML=npGreetOut(W);}
+  else if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;if(d==='name|0'){const o=$('#cpdGrOut');if(o)o.innerHTML=npGreetOut(W);}}
   if(CP.closeSure){CP.closeSure=false;const b=$$('#cpDetail .cpd-f [data-cpd=close]')[0];if(b)b.textContent='Close';}});
 custDlg.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.wuse!==undefined&&CP.W){CP.W.useIdx=+t.dataset.wuse;CP.dirty=true;return;}
+  if(t.dataset.wg==='by'&&CP.W){CP.W.greet.by=t.value;CP.dirty=true;renderCPDetail();if(t.value==='custom')$('#cpDetail [data-wg=name]')?.focus();return;}
   if(t.dataset.grename!==undefined){const to=t.value.trim();if(to&&gKey(to)!==gKey(t.dataset.grename)&&allGroups().some(g=>gKey(g.name)===gKey(to))){toast(`There's already a group called ${to}`);t.value=t.dataset.grename;return;}
     if(to){renameGroup(t.dataset.grename,to);renderCP();toast('Group renamed');}else t.value=t.dataset.grename;return;}
   if(t.id==='cpColor'){CP.color=t.value;renderCP(true);return;}
@@ -2772,4 +2857,5 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 })();
 })();
 </script>
+<datalist id="honList"><option value="Mr."><option value="Mrs."><option value="Ms."><option value="Miss"><option value="Dr."><option value="Mx."><option value="Prof."></datalist>
 </body></html>
