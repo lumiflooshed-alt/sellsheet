@@ -436,7 +436,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .menu button{display:grid;gap:1px;text-align:left;border:0;background:none;border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);font:inherit}
 .menu button:hover,.menu button:focus-visible{background:var(--raise);outline:none}.menu b{font-size:14.5px}.menu-h{font:700 11px var(--ui);text-transform:uppercase;letter-spacing:.04em;color:var(--faint);padding:8px 12px 2px}.menu small{color:var(--muted);font-size:12.5px}
 #logDlg{width:min(1180px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
-.lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}
+.lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}#logDlg .lg-wrap{grid-template-rows:auto auto auto minmax(0,1fr) auto}
 .lg-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--raise)}
 .lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}#lgStatus,#lgSheet,#lgColor,#lgGroup{flex:0 1 190px;min-width:0}
 .lg-date{display:grid;gap:2px;font-size:12px;font-weight:600;color:var(--muted)}.lg-date .in{width:150px}
@@ -463,11 +463,23 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .lg-pal #lgHex{width:96px;height:30px;font-family:ui-monospace,Menlo,Consolas,monospace;text-transform:uppercase}.lg-pal #lgHex[aria-invalid=true]{border-color:var(--bad)}
 .flag{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--warn);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}
 .lg-empty{color:var(--muted);padding:30px 10px;text-align:center;line-height:1.5}
+.badge.rp{right:auto;left:-6px;background:var(--accent)}
+.lg-rp{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:0;border-width:0 0 1px;padding:8px 16px}.lg-rp:empty{display:none}
+.lg-rp .rp-s{flex:1 1 260px;min-width:0;color:var(--ink)}.lg-rp .rp-s small{display:block;color:var(--muted);font-size:12.5px}.lg-rp .rp-n{display:flex;align-items:center;gap:8px;color:var(--muted)}.lg-rp.bad .rp-s{color:var(--bad)}
+.rp-chip{display:inline-block;font:700 11px var(--ui);color:#fff;background:var(--accent);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}.rp-chip.new{box-shadow:0 0 0 3px var(--accent-soft);animation:rpPulse 1.6s ease-in-out 3}
+@keyframes rpPulse{50%{box-shadow:0 0 0 6px var(--accent-soft)}}
+.lg-row .rp-line{display:block;font-size:12.5px;color:var(--ink);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lg-row .rp-line a{color:var(--accent);font-weight:600;margin-left:6px}
+.lg-row.replied.fresh{border-color:var(--accent)}
 .sent-btn{position:relative}.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--warn);color:#fff;font:700 11.5px/20px var(--ui);font-style:normal;padding:0 5px;text-align:center}
 .cu .last{color:var(--accent)}
 @media (max-width:900px){.lg-fups{grid-column:1/-1}.lg-fu{grid-template-columns:auto 1fr auto}.lg-fu>.c:nth-of-type(2){grid-column:2/-1}.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
 .prev-h{display:flex;align-items:center;gap:10px}.prev-h h3{margin:0;font-size:15px;white-space:nowrap}.prev-h select{flex:1;min-width:0;height:38px}
 .ml-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}.ml-pane[hidden]{display:none}
+.gr-def{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13.5px}.gr-def label{font-weight:600}.gr-def select{height:34px;width:auto}.gr-def small{flex-basis:100%;color:var(--muted)}
+.gr-ctl{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}.gr-ctl .in{height:32px;font-size:13.5px;padding:0 8px;width:auto}.gr-ctl .gr-hon{width:84px}.gr-ctl .gr-name{width:160px}.gr-out{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+.tok{background:#eaf1ff;color:inherit;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}
+.ml-subj{display:block;outline:none;border-radius:6px;padding:1px 4px;margin:-1px -4px;cursor:text}.ml-subj:hover{background:var(--panel)}.ml-subj:focus{box-shadow:0 0 0 2px var(--accent)}
+.prev-tip{color:var(--muted);font-size:12.5px;margin-top:-4px}
 .ml-msgprev{font-size:13px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:6px 10px;line-height:1.4}.ml-msgprev:empty{display:none}
 .how-row{display:flex;gap:14px 22px;align-items:end;flex-wrap:wrap}
 .dd{position:relative}.dd-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:210px;height:42px;cursor:pointer;text-align:left;font-weight:600}.dd-btn svg{width:14px;height:14px;flex:none}
@@ -526,7 +538,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="spacer"></div>
     <button class="btn icon ghost" id="themeBtn" type="button" title="Switch light / dark" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="btn ghost acct" id="acctBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="acctLbl">Sign in</span></button>
-    <button class="btn dl-word sent-btn" id="sentBtn" type="button" title="Sell sheets you've emailed, and how customers responded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Sent</span><i class="badge" id="sentBadge" hidden></i></button>
+    <button class="btn dl-word sent-btn" id="sentBtn" type="button" title="Sell sheets you've emailed, and how customers responded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>Sent</span><i class="badge" id="sentBadge" hidden></i><i class="badge rp" id="replyBadge" hidden></i></button>
     <button class="btn dl-word" id="emailBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email</span></button>
     <div class="dl-menu">
       <button class="btn primary" id="dlBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="dlMenu" title="Save or download the sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Save</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -642,7 +654,8 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
         <div class="row2"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
         <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
-        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's first name (never their company), {company} their company and {product} this product. Customers without a name are flagged so you can add one. Your wording is remembered.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's name (never their company), with their title if you've set one, {company} their company and {product} the product name. Customers without a name are flagged so you can add one. You can also edit the message right in the preview. Your wording is remembered for next time, and synced when you're signed in.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
+        <div class="gr-def"><label for="mlGreetBy">Greet customers by</label><select class="in" id="mlGreetBy"><option value="first">First name</option><option value="last">Last name</option><option value="full">Full name</option></select><small>Change it for one customer, or add Mr., Mrs. and so on, in the preview or on their customer page.</small></div>
         <div class="group ml-how"><h3>Include the sell sheet</h3>
           <div class="how-row">
             <div class="field"><span>Attach as</span>
@@ -666,6 +679,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
           <div class="ml-count" id="mlCount" role="status"></div>
           <div class="prev-h"><h3>Preview</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for each customer"></select></div>
           <div class="ml-meta" id="mlPrevMeta"></div>
+          <small class="prev-tip">Click the subject or message to edit them here; the editor on the left follows along. Highlighted words are filled in for each customer.</small>
           <iframe id="mlPrevFrame" title="Email preview" sandbox="allow-same-origin allow-popups"></iframe>
         </div>
       </section>
@@ -712,6 +726,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 <dialog id="logDlg" aria-label="Sent sell sheets">
   <div class="lg-wrap">
     <div class="ml-top"><h2>Sent sell sheets</h2><span class="note" id="lgSum"></span><button class="btn icon sm ghost" id="lgClose" type="button" aria-label="Close">✕</button></div>
+    <div class="lg-rp" id="lgRp" role="status"></div>
     <div class="lg-filters">
       <input class="in" id="lgQ" type="search" placeholder="Search customer, email, sell sheet or note" aria-label="Search">
       <select class="in" id="lgStatus" aria-label="Status"></select>
@@ -1723,6 +1738,7 @@ async function buildDocx(){
 /* ---------- email: customers, sign-in (Gmail / Outlook) and sending ---------- */
 // Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
 const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
+const MAIL_DEF_SUBJ='Sell sheet: {product}',FUP_DEF_SUBJ='Following up: {product}',FUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
 const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
 const MAIL=Object.assign({prov:'google',att:['pdf'],mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
 // deliver: 'embed' | 'attach' | 'both'. embed: parts shown inside the email. Older settings (one "summary" checkbox) carry over.
@@ -1731,7 +1747,8 @@ if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 // current model: att = attachment types (may be none), sheetPic = embed the sell sheet picture, show = extra parts in the email
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
 if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show}));
+if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,greetBy:MAIL.greetBy}));
 const embedParts=()=>[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
@@ -1780,6 +1797,7 @@ function mergeCustomers(main,others){const now=Date.now();
     if(o.name&&nrm(o.name)!==nrm(main.name)){if(!String(main.name||'').trim())main.name=o.name;else addInfo(inf,{'Other names':o.name});}
     if(o.company&&nrm(o.company)!==nrm(main.company)){if(!String(main.company||'').trim())main.company=o.company;else addInfo(inf,{'Other companies':o.company});}
     addInfo(inf,infoOf(o));main.info=inf;main.groups=grpsOf({groups:[...grpsOf(main),...grpsOf(o)]});
+    if(!cleanGreet(main.greet)&&cleanGreet(o.greet))main.greet=cleanGreet(o.greet);
     if(o.note&&!String(main.note||'').includes(o.note))main.note=[main.note,o.note].filter(Boolean).join('\n');if(!main.color&&o.color)main.color=o.color;
     CU.list=CU.list.filter(x=>x!==o);CU.deleted.push({email:ck(o.email),at:now});if(CU.sel.delete(ck(o.email)))CU.sel.add(ck(main.email));}
   main.upd=now;return main;}
@@ -1788,6 +1806,10 @@ const altOf=c=>Array.isArray(c.alt)?c.alt.filter(a=>typeof a==='string'&&EMAIL_R
 // the one address a customer's email goes to (chosen from a dropdown when they have several; main address by default)
 const useOf=c=>{const all=[c.email,...altOf(c)],u=Array.isArray(c.use)?all.find(a=>c.use.some(x=>ck(x)===ck(a))):null;return[u||c.email];};
 const noName=c=>!String(c?.name||'').trim();
+// how a customer is greeted: by {first|last|full|custom}, name (when custom), hon (Mr., Mrs.…). Missing = the Email window's default.
+const GREET_BY=['first','last','full','custom'];
+function cleanGreet(g){if(!g||typeof g!=='object')return undefined;const o={};if(GREET_BY.includes(g.by))o.by=g.by;
+  const nm=String(g.name||'').replace(/\s+/g,' ').trim().slice(0,80),h=String(g.hon||'').replace(/\s+/g,' ').trim().slice(0,20);if(nm)o.name=nm;if(h)o.hon=h;return Object.keys(o).length?o:undefined;}
 // extra details from imported sheets (phone, address, notes…): {label: text}; several values are kept one per line
 const cleanInfo=o=>{const r={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const[k,v]of Object.entries(o).slice(0,40)){const kk=String(k).replace(/\s+/g,' ').trim().slice(0,60),vv=String(v??'').trim().slice(0,4000);if(kk&&vv)r[kk]=vv;}return r;};
 const infoOf=c=>cleanInfo(c?.info);
@@ -1828,7 +1850,7 @@ function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.te
   const data={email,alt,use:v.use&&all.some(a=>ck(a)===ck(v.use))?[all.find(a=>ck(a)===ck(v.use))]:old?useOf({...old,email,alt}):[email],upd:now};
   for(const k of['name','company','note'])if(v[k]!==undefined||!old)data[k]=String(v[k]||'').trim();
   if(v.groups!==undefined||!old)data.groups=grpsOf({groups:Array.isArray(v.groups)?v.groups:String(v.groups||'').split(/[;,]/)});
-  if(v.color!==undefined)data.color=v.color||'';if(v.info)data.info=cleanInfo(v.info);
+  if(v.color!==undefined)data.color=v.color||'';if(v.info)data.info=cleanInfo(v.info);if(v.greet!==undefined)data.greet=cleanGreet(v.greet);
   for(const g of data.groups||[])if(CU.gmeta[gKey(g)]?.del)setGroupMeta(g,{});
   if(!old){CU.list.push(data);if(mailDlg.open)CU.sel.add(ck(email));}
   else{if(ck(old.email)!==ck(email)){CU.deleted.push({email:ck(old.email),at:now});if(CU.sel.delete(ck(old.email)))CU.sel.add(ck(email));}Object.assign(old,data);}
@@ -1936,11 +1958,11 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.f
   $('#mlChips').innerHTML=sel.slice(0,40).map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('')+(sel.length>40?`<span class="chip" title="Everyone ticked is included">+${sel.length-40} more</span>`:'');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
 // one entry per person; a customer can have several chosen addresses
-function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1,key:ck(c.email)});}
+function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,greet:c.greet,cust:1,key:ck(c.email)});}
   for(const a of splitAddr($('#mlTo').value)){const k=ck(a);if(!seen.has(k)){seen.add(k);out.push({email:a,emails:[a]});}}return out;}
 // every customer gets their own email; the side panel says how many, and who has no name yet
 let nnOk=false;
-function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!firstName(p));nnOk=false;
+function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnOk=false;
   $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
@@ -1954,6 +1976,8 @@ for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMod
    they're kept per provider and renewed when needed: Microsoft silently with its refresh token, Google with a pop-up
    that closes by itself (no clicks) once permission has been given. */
 const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
+// read-only Gmail access, used only to spot replies from customers you've sent sell sheets to
+const GMAIL_READ='https://www.googleapis.com/auth/gmail.readonly';
 const lsJ=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}},lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
 const authGet=()=>{const a=lsJ('ss-acct');return a&&a.prov?a:null;};
 const authSet=a=>a?lsSet('ss-acct',JSON.stringify({prov:a.prov,email:a.email||''})):lsDel('ss-acct');
@@ -1974,7 +1998,7 @@ async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh()
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
 function googleLogin(choose,hint){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
-  const scope='openid email profile https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
+  const scope='openid email profile https://www.googleapis.com/auth/gmail.send '+GMAIL_READ+' https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
@@ -2022,7 +2046,7 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),upd:+c.upd||0};}),
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),greet:cleanGreet(c.greet),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at})),groups:mergeGroupMeta(a.groups,b.groups)};}
 // group colours/names: newest change wins; deleted groups are remembered
 function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
@@ -2039,17 +2063,21 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
+const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj']];
 function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
   syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
       const local=(()=>{try{const d=JSON.parse(lsGet(key)||'{}');return Array.isArray(d)?{customers:d,deleted:[]}:d;}catch(_){return{};}})();
       const m=mergeCust(local,{customers:Array.isArray(rd.customers)?rd.customers:[],deleted:Array.isArray(rd.deleted)?rd.deleted:[],groups:rd.groups});
-      const msgL={text:lsGet('ss-mailmsg'),upd:+lsGet('ss-mailmsg-upd')||0},msgR=rd.mailMsg&&typeof rd.mailMsg.text==='string'?rd.mailMsg:{},msg=(+msgR.upd||0)>msgL.upd?msgR:msgL;
-      if(msg.text&&msg!==msgL){lsSet('ss-mailmsg',String(msg.text));lsSet('ss-mailmsg-upd',String(msg.upd));if(mailDlg.open&&document.activeElement!==$('#mlMsg'))$('#mlMsg').value=msg.text;}
+      // remembered wording: the newest edit wins (new-email and follow-up message and subject)
+      const W8={};let wChanged=false;for(const[rk,ls,kind,inp]of WORD_SYNC){const L={text:lsGet(ls),upd:+lsGet(ls+'-upd')||0},R=rd[rk]&&typeof rd[rk].text==='string'?rd[rk]:{},w=(+R.upd||0)>L.upd?R:L;
+        if(w.text&&w!==L){lsSet(ls,String(w.text));lsSet(ls+'-upd',String(w.upd));if(mailDlg.open&&(MAIL.kind||'new')===kind&&document.activeElement!==$(inp)&&!$('#mlPrev').contains(document.activeElement)){$(inp).value=w.text;wChanged=true;}}
+        if(w.text)W8[rk]={text:String(w.text),upd:+w.upd||0};}
+      if(wChanged){updMsgPrev();updMode();schedPreview();}
       lsSet(key,JSON.stringify(m));
-      if(JSON.stringify([m.customers,m.deleted,m.groups,msg.text||null,lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},rd.mailMsg?.text||null,lr.entries||[],lr.deleted||[]]))
-        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,mailMsg:msg.text?{text:String(msg.text),upd:+msg.upd||0}:undefined,updated:Date.now()})});
+      if(JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[]]))
+        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,updated:Date.now()})});
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
@@ -2094,7 +2122,7 @@ $('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
 
 /* ---------- sent log: who got which sell sheet, when, and how they responded ----------
    One entry per recipient. Kept in this browser, and synced with the customers when signed in. */
-const logDlg=$('#logDlg'),LG={list:[],deleted:[],sel:new Set()},FOLLOW_DAYS=7;
+const logDlg=$('#logDlg'),LG={list:[],deleted:[],sel:new Set(),fresh:new Set()},FOLLOW_DAYS=7;
 const COLORS=[['red','Red','#DC2626'],['orange','Orange','#EA7317'],['yellow','Yellow','#EAB308'],['green','Green','#16A34A'],['blue','Blue','#2563EB'],['purple','Purple','#9333EA'],['grey','Grey','#6B7280']],COLOR_HEX=Object.fromEntries(COLORS.map(c=>[c[0],c[2]]));
 // a colour tag is a preset name above or any custom '#RRGGBB'
 const normHex=v=>{v=String(v||'').trim().replace(/^#?/,'#');if(/^#[0-9a-f]{3}$/i.test(v))v='#'+[...v.slice(1)].map(c=>c+c).join('');return /^#[0-9a-f]{6}$/i.test(v)?v.toUpperCase():'';};
@@ -2112,33 +2140,39 @@ function threads(){if(thC&&thC.v===lgV&&thC.n===LG.list.length)return thC.t;cons
 function threadsRaw(){const g=new Map();for(const e of LG.list.slice().sort((a,b)=>a.at-b.at)){const k=e.sheetId+'|'+recipKey(e);if(g.has(k))g.get(k).fups.push(e);else g.set(k,{root:e,fups:[]});}
   return[...g.values()].map(t=>({...t,last:Math.max(t.root.at,...t.fups.map(f=>f.at))}));}
 // response status lives on the original; any send (original or follow-up) restarts the wait
-const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined')return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
+// a reply (found in Gmail) after the latest send counts as a response
+const replyFresh=t=>!!(t.root.reply&&t.root.reply.at>t.last);
+const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined'||replyFresh(t))return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
 // date formatters are built once (building one per call is slow when listing hundreds of rows)
 const DTF_WHEN=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}),DTF_DAY=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric'}),DTF_LONG=new Intl.DateTimeFormat(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 const fmtWhen=t=>DTF_WHEN.format(t);
 const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:DTF_DAY.format(t);};
 const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + attached'};
-function renderBadge(){const n=threads().filter(needsFollow).length,b=$('#sentBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#sentBtn').title=n?`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`:'Sell sheets you\'ve emailed, and how customers responded';}
+function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.filter(t=>t.root.reply&&!t.root.reply.seen).length,b=$('#sentBadge'),rb=$('#replyBadge');
+  b.hidden=!n;b.textContent=n>99?'99+':n;rb.hidden=!r;rb.textContent=r>99?'99+':r;rb.title=r?`${r} new repl${r>1?'ies':'y'}`:'';b.title=n?`${n} need${n>1?'':'s'} a follow-up`:'';
+  $('#sentBtn').title=[r&&`${r} new repl${r>1?'ies':'y'} from customers`,n&&`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`].filter(Boolean).join(' · ')||'Sell sheets you\'ve emailed, and how customers responded';
+  const base=document.title.replace(/^\(\d+\+?\) /,'');document.title=r+n?`(${r+n>99?'99+':r+n}) ${base}`:base;}
 // called after each successful email
-function logSent(m,prov,from,kinds,parts){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
+function logSent(m,prov,from,kinds,parts,res){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
   for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:S.id,sheet:sheetName(S),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
-    how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',upd:now});}
+    how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',gthread:res?.threadId||'',upd:now});}
+const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip:String(r.snip||'').slice(0,300),thread:String(r.thread||'').slice(0,40),seen:!!r.seen}:undefined;
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
   return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),
-      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
+      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
 const lgGroupBy=()=>lsGet('ss-lggroup')==='sheet'?'sheet':'date';
 function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
-  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):(e.status||'none')===lgF.status))
+  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):lgF.status==='reply'?!!e.reply:(e.status||'none')===lgF.status))
     &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
     &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
 function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
   $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
   const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
-  $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
+  $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option><option value="reply">↩ Has a reply</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
   const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
@@ -2150,9 +2184,9 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   for(const t of by==='date'?shown.slice().sort((a,b)=>(dk.get(a)<dk.get(b)?1:dk.get(a)>dk.get(b)?-1:0)||b.last-a.last):shown){const k=by==='date'?dk.get(t):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
   const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+DTF_LONG.format(t);};
   const head=ts=>`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(by==='date'?dayName(ts[0].root.at):ts[0].root.sheet)}</b><span>${ts.length} customer${ts.length>1?'s':''}${by==='sheet'?` · last sent ${esc(ago(Math.max(...ts.map(t=>t.last))))}`:''}</span></div>`;
-  LG.row=t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+  LG.row=t=>{const e=t.root,d=needsFollow(t),rp=e.reply,fresh=rp&&LG.fresh.has(e.id);return`<div class="lg-row${d?' due':''}${rp?' replied':''}${fresh?' fresh':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
       <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
-      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
+      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?`<span class="flag" title="${e.follow?'No reply by the follow-up date':'No reply after '+FOLLOW_DAYS+' days'}">${e.follow?'No reply by '+esc(DTF_DAY.format(new Date(e.follow+'T12:00'))):'Follow up'}</span>`:''}${rp?`<span class="rp-chip${fresh?' new':''}" title="Reply found in Gmail">${fresh?'New reply':'Replied'} ${esc(ago(rp.at))}</span>`:''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small>${rp?`<span class="rp-line" title="${esc(rp.snip)}">↩ ${esc(rp.subj||'(no subject)')}${rp.snip?' · '+esc(rp.snip):''}</span><span class="rp-line"><a href="${esc(gmailLink(rp.thread,e.from))}" target="_blank" rel="noopener">Open in Gmail ↗</a>${rp.at<t.last?' <small style="display:inline">(before your latest follow-up)</small>':''}</span>`:''}</div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
       <div class="c">${esc(fmtWhen(e.at))}<small>${esc(ago(e.at))}${e.from?' · from '+esc(e.from):''}</small></div>
       <select class="in lg-st" data-lst data-s="${e.status||'none'}" aria-label="Response">${STATUSES.map(([v,n])=>`<option value="${v}"${(e.status||'none')===v?' selected':''}>${n}</option>`).join('')}</select>
@@ -2174,9 +2208,12 @@ function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'Int
 function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
   mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
 $('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
-function openLog(){LG.keepN=0;lgLoad();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();}
+function openLog(){LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
+  if(LG.fresh.size){for(const t of threads())if(LG.fresh.has(t.root.id)){t.root.reply.seen=true;t.root.upd=Date.now();}lgSave();}
+  if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
 $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
+logDlg.addEventListener('close',()=>{LG.fresh.clear();});
 let lgQt=0;$('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;LG.keepN=0;clearTimeout(lgQt);lgQt=setTimeout(()=>{renderLog();$('#lgQ').focus();},90);});
 for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;LG.keepN=0;renderLog();});
 $('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);LG.keepN=0;renderLog();});
@@ -2224,9 +2261,93 @@ $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.r
   if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}await switchTo(sh);}
   logDlg.close();openMail();cuLoad();CU.sel.clear();const typed=[];
   for(const e of picked){const c=e.cust&&CU.list.find(c=>ck(c.email)===e.cust);if(c)CU.sel.add(ck(c.email));else typed.push(...(e.emails.length?e.emails:[e.email]).filter(Boolean));}
-  $('#mlTo').value=[...new Set(typed)].join(', ');$('#mlSubj').value=`Following up: ${sheetName(S)}`;
-  $('#mlMsg').value="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
+  $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();
   renderCust();updMode();updMsgPrev();toast('Follow-up ready to send. Check the message, then click Send.');};
+
+/* ---------- replies and reminders ----------
+   While the site is open, Gmail is checked every few minutes for emails from the customers you've sent sell sheets to
+   (read-only access; only messages from those addresses, after the date you sent, are looked at). A reply marks the
+   entry Replied, shows a badge on Sent and, if switched on, a desktop notification. Entries with no reply by their
+   follow-up date (or after FOLLOW_DAYS with no date set) get a reminder too.
+   Google sign-ins last an hour and can only be renewed with a click, so checks pause until the next sign-in, send or "Check now". */
+const RP={busy:null,last:+lsGet('ss-rpchk')||0,err:'',meta:new Map()};
+const canRead=t=>!!t&&String(t.scope||'').split(/\s+/).includes(GMAIL_READ);
+const gmailLink=(thread,acct)=>`https://mail.google.com/mail/?authuser=${encodeURIComponent(acct||meFor('google')||'')}#all/${encodeURIComponent(thread||'')}`;
+async function gmailGet(tok,path){const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,{headers:{Authorization:'Bearer '+tok.token}});
+  if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',e=new Error(msg||'Gmail error '+r.status);e.status=r.status;
+    e.kind=r.status===401?'expired':/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg+JSON.stringify(j.error?.errors||''))?'api':/insufficient|scope/i.test(msg+JSON.stringify(j.error?.details||''))?'scope':'failed';throw e;}
+  return r.json();}
+const mHdr=(m,n)=>(m.payload?.headers||[]).find(h=>h.name.toLowerCase()===n.toLowerCase())?.value||'';
+// out-of-office and other automatic answers don't count as a reply
+const isAuto=m=>{const as=mHdr(m,'Auto-Submitted').toLowerCase();return(as&&as!=='no')||!!mHdr(m,'X-Autoreply')||!!mHdr(m,'X-Autorespond')||/auto_reply|junk/i.test(mHdr(m,'Precedence'))
+  ||/^\s*(automatic reply|auto[- ]?reply|autoreply|out of (the )?office|away from (the )?office)\b/i.test(mHdr(m,'Subject'));};
+// sent sell sheets still waiting for a reply, from this Gmail account, in the last 4 months
+function rpWaiting(me){const cut=Date.now()-120*864e5;return threads().filter(t=>{const e=t.root;return e.prov!=='microsoft'&&(!e.from||ck(e.from)===ck(me))&&t.last>cut&&e.status!=='ordered'&&e.status!=='declined'&&!replyFresh(t);});}
+async function checkReplies(manual){if(RP.busy)return RP.busy;const a=authGet();
+  if(!a||a.prov!=='google'){RP.err='signin';renderRP();return;}
+  let tok=tokGet('google');
+  if(manual&&(!tok||!canRead(tok))){try{tok=await login('google',false,true);}catch(e){RP.err='';toast(e.message);renderRP();return;}}
+  if(!tok){RP.err='expired';renderRP();return;}if(!canRead(tok)){RP.err='scope';renderRP();return;}
+  RP.busy=(async()=>{RP.err='';renderRP();lgLoad();const me=tok.email||a.email,waiting=rpWaiting(me),groups=new Map();
+    for(const t of waiting){const addrs=[...new Set([t.root,...t.fups].flatMap(x=>[x.email,...(x.emails||[])]).map(ck).filter(x=>EMAIL_RE.test(x)))].sort();if(!addrs.length)continue;
+      const k=addrs.join(' ');if(!groups.has(k))groups.set(k,{addrs,ts:[]});groups.get(k).ts.push(t);}
+    const found=[],jobs=[...groups.values()];
+    const work=async g=>{const since=Math.min(...g.ts.map(t=>t.last)),q=`from:(${g.addrs.join(' OR ')}) after:${Math.floor(since/1000)-60} -in:chats`;
+      const list=await gmailGet(tok,'messages?maxResults=15&q='+encodeURIComponent(q)),msgs=[];
+      for(const x of list.messages||[]){let m=RP.meta.get(x.id);
+        if(!m){const j=await gmailGet(tok,`messages/${x.id}?format=metadata`+['Subject','From','Auto-Submitted','X-Autoreply','X-Autorespond','Precedence'].map(h=>'&metadataHeaders='+h).join(''));
+          m={id:j.id,thread:j.threadId,at:+j.internalDate||0,subj:mHdr(j,'Subject'),snip:String(j.snippet||'').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>'),auto:isAuto(j)};RP.meta.set(x.id,m);}
+        if(!m.auto)msgs.push(m);}
+      msgs.sort((x,y)=>x.at-y.at);const done=new Set();
+      // a message in the same Gmail conversation belongs to that sell sheet; otherwise to the latest one sent before it
+      for(const m of msgs){const open=g.ts.filter(t=>!done.has(t)&&t.last<m.at);if(!open.length)continue;
+        const t=open.find(t=>[t.root,...t.fups].some(x=>x.gthread&&x.gthread===m.thread))||open.sort((x,y)=>y.last-x.last)[0];done.add(t);found.push([t,m]);}};
+    try{for(let i=0;i<jobs.length;i+=3)await Promise.all(jobs.slice(i,i+3).map(work));
+      RP.last=Date.now();lsSet('ss-rpchk',String(RP.last));
+      if(found.length){lgLoad();const byId=new Map(LG.list.map(e=>[e.id,e])),now=Date.now(),fresh=[];
+        for(const[t,m]of found){const e=byId.get(t.root.id);if(!e||(e.reply&&e.reply.at>=m.at&&e.reply.at>t.last))continue;
+          const seen=logDlg.open&&!document.hidden;e.reply={at:m.at,subj:m.subj,snip:m.snip,thread:m.thread,seen};if((e.status||'none')==='none')e.status='replied';e.upd=now;if(seen)LG.fresh.add(e.id);fresh.push(e);}
+        if(fresh.length){lgSave();if(logDlg.open)renderLog();announceReplies(fresh);}}}
+    catch(e){console.error(e);RP.err=e.kind||'failed';if(e.kind==='expired')tokSet('google',null);}
+    finally{RP.busy=null;renderRP();}})();return RP.busy;}
+// desktop notifications (optional; the browser asks for permission once)
+const NT={has:()=>'Notification' in window,on:()=>lsGet('ss-notify')==='1'&&'Notification' in window&&Notification.permission==='granted'};
+const NT_ICON='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0E993F"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="17" y="10" width="30" height="44" rx="4"/><path d="M25 22h14M25 32h14M25 42h7"/></g></svg>');
+function notify(title,body,tag,then){if(!NT.on())return false;try{const n=new Notification(title,{body,tag,icon:NT_ICON});n.onclick=()=>{try{window.focus();}catch(_){}n.close();then?.();};return true;}catch(_){return false;}}
+const who=e=>e.name||e.company||e.email||'A customer';
+function announceReplies(list){const one=list[0];
+  toast(list.length>1?`${list.length} new replies from customers`:`${who(one)} replied about ${one.sheet}`,4000);
+  notify(list.length>1?`${list.length} new replies`:`${who(one)} replied`,list.length>1?list.slice(0,4).map(e=>`${who(e)}: ${e.sheet}`).join('\n'):`${one.sheet}${one.reply?.snip?'\n“'+one.reply.snip.slice(0,120)+'”':''}`,'ss-reply',()=>openLog());}
+// reminders for sell sheets with no reply by their follow-up date: once each (per follow-up date and latest send) on this device
+function dueNotify(){const due=threads().filter(needsFollow);if(!due.length)return;let seen=[];try{seen=JSON.parse(lsGet('ss-notified')||'[]');}catch(_){}
+  const key=t=>`${t.root.id}|${t.root.follow||'auto'}|${t.last}`,fresh=due.filter(t=>!seen.includes(key(t)));if(!fresh.length)return;
+  const e=fresh[0].root,body=fresh.length>1?fresh.slice(0,4).map(t=>`${who(t.root)}: ${t.root.sheet}`).join('\n'):`${e.sheet}${e.follow?' · follow-up date '+DTF_DAY.format(new Date(e.follow+'T12:00')):''}`;
+  const shown=notify(fresh.length>1?`${fresh.length} sell sheets have no reply yet`:`No reply yet from ${who(e)}`,body,'ss-due',()=>{lgF.status='follow';openLog();});
+  if(!shown&&!document.hidden)toast(fresh.length>1?`${fresh.length} sell sheets are past their follow-up date with no reply`:`No reply yet from ${who(e)} about ${e.sheet}`,4000);
+  if(shown||!document.hidden)lsSet('ss-notified',JSON.stringify([...seen,...fresh.map(key)].slice(-500)));}
+const agoMin=t=>{const m=Math.round((Date.now()-t)/60e3);return m<1?'just now':m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:ago(t);};
+function renderRP(){const el=$('#lgRp');if(!el||!logDlg.open)return;const a=authGet(),tok=tokGet('google');
+  const btn=(id,t,cls='btn sm')=>`<button class="${cls}" type="button" id="${id}">${t}</button>`;let s,b='',bad=false;
+  if(!a||a.prov!=='google'){s=`<b>Reply checking</b><small>Sign in with Google to have replies from customers spotted automatically.</small>`;b=EMAIL_SETUP.google?btn('rpSign','Sign in with Google'):'';}
+  else if(RP.busy){s='Checking Gmail for replies…';}
+  else if(RP.err==='scope'||(tok&&!canRead(tok))){s=`<b>Turn on reply checking</b><small>Lets this site read your Gmail (read-only) to spot replies from customers you've sent sell sheets to. Google will ask once.</small>`;b=btn('rpNow','Turn on','btn sm primary');}
+  else if(RP.err==='api'){bad=true;s='Gmail API is switched off in your Google Cloud project. Enable it, then click Check now.';b=btn('rpNow','Check now');}
+  else if(RP.err==='failed'){bad=true;s='Couldn\'t check Gmail for replies just now.';b=btn('rpNow','Try again');}
+  else if(!tok){s=`<b>Replies last checked ${RP.last?esc(agoMin(RP.last)):'never'}</b><small>Checking pauses when the Google sign-in runs out (after an hour). Click to check and keep checking.</small>`;b=btn('rpNow','Check now','btn sm primary');}
+  else s=`Replies checked ${RP.last?esc(agoMin(RP.last)):'just now'}. Gmail is checked every 5 minutes while this site is open.`,b=btn('rpNow','Check now');
+  const n=!NT.has()?'':Notification.permission==='denied'?'<span class="rp-n">Desktop notifications are blocked in your browser\'s site settings.</span>'
+    :NT.on()?`<span class="rp-n">Desktop notifications on ${btn('rpNotOff','Turn off','lnk')}</span>`:`<span class="rp-n">${btn('rpNotOn','Turn on desktop notifications','btn sm ghost')}</span>`;
+  el.className='lg-rp'+(bad?' bad':'');el.innerHTML=`<span class="rp-s">${s}</span>${b}${n}`;}
+$('#lgRp').addEventListener('click',async e=>{const id=e.target.closest('button')?.id;if(!id)return;
+  if(id==='rpNow'){await checkReplies(true);dueNotify();}
+  else if(id==='rpSign'){try{await login('google',false);await checkReplies(true);}catch(err){toast(err.message);}}
+  else if(id==='rpNotOn'){let p=Notification.permission;if(p==='default')p=await Notification.requestPermission();if(p==='granted'){lsSet('ss-notify','1');notify('Notifications are on','You\'ll be told about replies and sell sheets with no reply by their follow-up date.','ss-test');}else toast('Notifications weren\'t allowed. You can allow them in your browser\'s site settings.');}
+  else if(id==='rpNotOff'){lsSet('ss-notify','0');}
+  renderRP();});
+// every minute: Gmail at most every 5 minutes (while a sign-in is active), reminders always. Also when coming back to the tab.
+setInterval(async()=>{if(authGet()?.prov==='google'&&tokGet('google')&&Date.now()-RP.last>4.5*60e3)await checkReplies();dueNotify();renderBadge();if(logDlg.open)renderRP();},60e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authGet()?.prov==='google'&&tokGet('google')&&Date.now()-RP.last>2*60e3)checkReplies().then(dueNotify);});
+setTimeout(async()=>{if(authGet()?.prov==='google'&&tokGet('google'))await checkReplies();dueNotify();},2500);
 
 /* ---------- save to Google Drive ----------
    Uses the drive.file permission: the site can only see files it saves and folders the person picks in Google's own picker. */
@@ -2318,12 +2439,44 @@ function doneView(title,sub,files){dvStatus('');$('#dvDone').innerHTML=`<div cla
   showDone(true);toast(title);}
 
 /* the email itself */
-const productLabel=()=>[S.title,S.code&&`(${S.code})`].filter(Boolean).join(' ')||'this product';
-// {name}: the customer's first name only (never the company). "LEE, SARAH" → Sarah; ALL-CAPS names are tidied; Mr/Mrs/Ms/Dr are skipped.
-function firstName(p){const nm=String(p?.name||'').trim(),w=(nm.includes(',')?nm.split(',')[1]:nm).trim().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{M}'’-]/gu,'')).filter(Boolean);
-  let f=(w.length>1&&/^(mr|mrs|ms|miss|mx|dr|sir)$/i.test(w[0])?w[1]:w[0])||'';if(f&&f===f.toUpperCase()&&f!==f.toLowerCase())f=f.toLowerCase().replace(/(^|[-'’])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());return f;}
-function fillTokens(text,p){const v={name:firstName(p),company:p?.company||'',product:productLabel()};
+// {product} is the product name only (the item code stays in the product summary and the attached sheet)
+const productLabel=()=>String(S.title||'').trim()||String(S.code||'').trim()||'this product';
+// a name split into first / last / full. "LEE, SARAH" → Sarah / Lee; titles (Mr, Mrs…) and suffixes (Jr, III…) are skipped; ALL-CAPS is tidied.
+const HON_RE=/^(mr|mrs|ms|miss|mx|dr|prof|sir)\.?$/i,SUF_RE=/^(jr|sr|ii|iii|iv|phd|md|esq)\.?$/i;
+const tidyName=f=>f&&f===f.toUpperCase()&&f!==f.toLowerCase()?f.toLowerCase().replace(/(^|[-'’\s])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase()):f;
+function nameParts(nm){nm=String(nm||'').trim();const words=t=>t.trim().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{M}'’.-]/gu,'').replace(/^\.+|\.+$/g,'')).filter(Boolean);
+  let F,L;if(nm.includes(',')){const i=nm.indexOf(',');F=words(nm.slice(i+1)).filter(x=>!HON_RE.test(x)&&!SUF_RE.test(x));L=words(nm.slice(0,i)).filter(x=>!SUF_RE.test(x)&&!HON_RE.test(x));}
+  else{const w=words(nm);while(w.length>1&&HON_RE.test(w[0]))w.shift();while(w.length>1&&SUF_RE.test(w[w.length-1]))w.pop();F=w.slice(0,w.length>1?w.length-1:1);L=w.length>1?[w[w.length-1]]:[];}
+  const first=tidyName(F[0]||''),last=tidyName(L.join(' '));return{first,last,full:tidyName([...F,...L].join(' '))};}
+// greeting choices for addresses typed into To (not saved customers): kept while this page is open
+const TYPED_GREET=new Map();
+const greetOf=p=>p?(p.cust||'greet' in p?(p.greet||{}):TYPED_GREET.get(ck(p.email))||{}):{};
+const BY_NAME={first:'First name',last:'Last name',full:'Full name',custom:'Typed name'};
+// {name}: the name this customer is greeted by, with their title. Never the company.
+function greetName(p){if(!p)return'';const g=greetOf(p),by=g.by||MAIL.greetBy,n=nameParts(p.name);
+  const v=by==='custom'?String(g.name||'').trim():by==='last'?n.last||n.first:by==='full'?n.full:n.first;if(!v)return'';const h=String(g.hon||'').trim();return h?h+' '+v:v;}
+const tokVals=p=>({name:greetName(p),company:p?.company||'',product:productLabel()});
+function fillTokens(text,p){const v=tokVals(p);
   return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
+// the same text as HTML for editing in the preview: filled-in words are highlighted chips that turn back into {name}, {company}, {product}
+const TOK_TIP={name:'Each customer\'s name',company:'Each customer\'s company',product:'The product name'};
+function tokHTML(text,p){const v=tokVals(p),lit=t=>esc(t).replace(/\r?\n/g,'<br>');let out='',i=0;
+  String(text).replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k,at)=>{out+=lit(String(text).slice(i,at));i=at+m.length;
+    out+=v[k]?lit(sp)+`<span class="tok" data-tok="${k}" contenteditable="false" title="${TOK_TIP[k]}: filled in for each email">${esc(v[k])}</span>`
+      :`<span class="tok empty" data-tok="${k}" data-sp="${esc(sp)}" contenteditable="false" title="${TOK_TIP[k]}: missing for this customer, so it's left out">${sp===' '?' ':''}no ${k}</span>`;return m;});
+  return out+lit(String(text).slice(i));}
+// …and back to text with {tokens}
+function tokText(root){let s='';const BLOCK=/^(DIV|P|LI|H\d|TR)$/;
+  const walk=n=>{for(const c of n.childNodes){if(c.nodeType===3)s+=c.nodeValue.replace(/ /g,' ');else if(c.nodeType===1){
+    if(c.dataset.tok){s+=(c.hasAttribute('data-sp')?c.dataset.sp:'')+'{'+c.dataset.tok+'}';continue;}
+    if(c.nodeName==='BR'){s+='\n';continue;}const blk=BLOCK.test(c.nodeName);if(blk&&s&&!s.endsWith('\n'))s+='\n';walk(c);}}};
+  walk(root);return s.replace(/\n$/,'');}
+// greeting controls: title (Mr., Mrs.… or anything typed) + which name, or a name typed in
+function greetCtl(g,nm,attr){const n=nameParts(nm),by=g.by||'',opt=(v,l)=>`<option value="${v}"${by===v?' selected':''}>${esc(l)}</option>`;
+  return`<span class="gr-ctl"><input class="in gr-hon" ${attr}="hon" list="honList" value="${esc(g.hon||'')}" placeholder="Title" maxlength="20" autocomplete="off" aria-label="Title, like Mr. or Mrs. (optional)"><select class="in gr-by" ${attr}="by" aria-label="Which name to greet them by">${opt('',`Default (${BY_NAME[MAIL.greetBy].toLowerCase()}${n[MAIL.greetBy]?': '+n[MAIL.greetBy]:''})`)}${opt('first',`First name${n.first?': '+n.first:''}`)}${opt('last',`Last name${n.last?': '+n.last:''}`)}${opt('full',`Full name${n.full?': '+n.full:''}`)}${opt('custom','Type a name…')}</select>${by==='custom'?`<input class="in gr-name" ${attr}="name" value="${esc(g.name||'')}" placeholder="Name to use" maxlength="80" autocomplete="off" aria-label="Name to use in the greeting">`:''}</span>`;}
+// change how one recipient is greeted (saved on the customer; typed addresses keep it while the page is open)
+function setGreet(p,k,v){if(!p)return;if(p.cust){const c=CU.list.find(c=>ck(c.email)===p.key);if(!c)return;c.greet=cleanGreet({...(c.greet||{}),[k]:v});c.upd=Date.now();cuSave();p.greet=c.greet;}
+  else{const g=cleanGreet({...(TYPED_GREET.get(ck(p.email))||{}),[k]:v});g?TYPED_GREET.set(ck(p.email),g):TYPED_GREET.delete(ck(p.email));}}
 // pictures shown inside the email, made once per opening of the Email window
 let inlineCache=null,sheetPicCache=null;
 const hashStr=t=>{let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+'.'+t.length;};
@@ -2343,7 +2496,7 @@ async function emailPhotos(){const out=[];for(const [i,p] of S.photos.entries())
   const sc=Math.min(1,560/img.naturalWidth),c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
   out.push({cid:`photo${i+1}@sellsheet`,name:`photo${i+1}.jpg`,b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:c.width,h:c.height});}return out;}
-function emailHTML(msg,inline,parts){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=esc(msg).replace(/\r?\n/g,'<br>'),has=k=>parts.includes(k);
+function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetica,sans-serif",para=edit?tokHTML(edit.tpl,edit.person):esc(msg).replace(/\r?\n/g,'<br>'),has=k=>parts.includes(k);
   const sheetImg=inline.find(p=>p.sheet),photos=has('photos')?inline.filter(p=>!p.sheet):[];
   let sum='';
   if(sheetImg)sum+=`<tr><td style="padding:0 28px 6px"><img src="cid:${sheetImg.cid}" width="544" alt="Sell sheet: ${esc(sheetName(S))}" style="display:block;width:100%;max-width:544px;height:auto;border:1px solid ${tv.line}"></td></tr>`;
@@ -2365,7 +2518,7 @@ function emailHTML(msg,inline,parts){const tv=themeVars(),F="Arial,Helvetica,san
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
-<tr><td style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
+<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
 function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
   if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
@@ -2394,7 +2547,7 @@ async function sendOne(p,tok,m){
     if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',why=(j.error?.errors||[]).map(x=>x.reason).join(' ')+' '+(j.error?.details||[]).map(x=>x.reason||'').join(' ');
       const e=new Error(/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg+why)?'The Gmail API is switched off in your Google Cloud project. Open console.cloud.google.com → APIs & Services → Library → Gmail API → Enable, wait a minute, then send again.'
         :/insufficient|scope/i.test(msg+why)?'Google didn\'t give permission to send email. Sign out (top right), sign in again and tick "Send email on your behalf".'
-        :r.status===401?'Your Google sign-in expired. Click Send again to sign in.':(msg||('Gmail error '+r.status)));e.status=r.status===401?401:r.status;throw e;}return;}
+        :r.status===401?'Your Google sign-in expired. Click Send again to sign in.':(msg||('Gmail error '+r.status)));e.status=r.status===401?401:r.status;throw e;}return await r.json().catch(()=>({}));}
   const body=JSON.stringify(graphMail(m));if(body.length>3.9e6){throw new Error('Too large for Outlook (4 MB limit). Untick an attachment or the product summary and try again.');}
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
@@ -2416,7 +2569,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
-  const nn=plan.filter(m=>m.person&&!firstName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
+  const nn=plan.filter(m=>m.person&&!greetName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
   if(nn.length&&!nnOk){nnOk=true;mlStatus(`${nn.length} ${nn.length>1?'customers have':'customer has'} no name (see the list on the right). Add names, or click Send again to send anyway.`,true);return;}
   sending=true;$('#mlSend').disabled=true;
   try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();}
@@ -2424,7 +2577,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
-      try{await sendOne(p,tok,full);done++;logSent(m,p,tok.email,kinds,parts);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
+      try{const res=await sendOne(p,tok,full);done++;logSent(m,p,tok.email,kinds,parts,res);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     if(fails.length){mlStatus(`Sent ${done} of ${plan.length}. Not sent: ${fails.join(' · ')}`,true);}
     else{mlStatus('');mailDlg.close();toast(plan.length>1?`Sent ${done} emails`:'Email sent');}}
@@ -2438,12 +2591,21 @@ $('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus(
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
 function openMail(){cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
-  inlineCache=null;$('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;renderHow();
+  inlineCache=null;MAIL.kind='new';loadWording();$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
-$('#mlMsg').addEventListener('input',e=>{lsSet('ss-mailmsg',e.target.value);lsSet('ss-mailmsg-upd',String(Date.now()));scheduleSync();});
+// the wording is remembered (and synced) as you type, for new emails and follow-ups separately. The product name is stored as {product}
+// so the next sell sheet gets its own name.
+const WORD_KEYS={new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ}};
+const wordKeys=()=>WORD_KEYS[MAIL.kind==='follow'?'follow':'new'];
+function loadWording(){const k=wordKeys();$('#mlSubj').value=lsGet(k.subj)||k.defSubj();$('#mlMsg').value=lsGet(k.msg)||k.defMsg();}
+function keepWording(which,v){const pl=productLabel();if(pl!=='this product'&&pl.length>=3)v=v.split(pl).join('{product}');const key=wordKeys()[which];
+  lsSet(key,v);lsSet(key+'-upd',String(Date.now()));scheduleSync();}
+$('#mlMsg').addEventListener('input',e=>keepWording('msg',e.target.value));
+$('#mlSubj').addEventListener('input',e=>keepWording('subj',e.target.value));
+$('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMail();updMsgPrev();updMode();schedPreview();});
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
 function renderHow(){$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
   $('#mlSheetPic').checked=!!MAIL.sheetPic;$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
@@ -2462,22 +2624,45 @@ $('#mlMsg').addEventListener('input',()=>{updMsgPrev();updMode();});$('#mlTo').a
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
+async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
   if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
   const files=attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
-  const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';
-  $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
-    +row('Subject',esc(fillTokens($('#mlSubj').value,m.person)))+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
-    +(m.person&&!firstName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
-  const fr=$('#mlPrevFrame');fr.srcdoc=emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos')).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');
+  const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
+  if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
+    +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
+    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
+    +(m.person&&!greetName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
+  const fr=$('#mlPrevFrame'),ed=()=>({tpl:$('#mlMsg').value,person:m.person}),prep=h=>h.replace('<head>','<head><base target="_blank"><style>'+PREV_CSS+'</style>');
+  fr.srcdoc=prep(emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos'),ed())).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');fr._stale=false;
   const inline=parts.length?await emailInline(parts):[];if(seq!==prevSeq)return;
-  let html=emailHTML(msg,inline,parts);for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
-  fr.srcdoc=html.replace('<head>','<head><base target="_blank">');}
+  // don't pull the message out from under the cursor: finish once they click away
+  if(document.activeElement===fr){fr._stale=true;return;}
+  let html=emailHTML(msg,inline,parts,ed());for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
+  fr.srcdoc=prep(html);}
 $('#mlPrevWho').addEventListener('change',buildPreview);
+const PREV_CSS='.tok{background:#eaf1ff;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px;cursor:default}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}#ssEdit{outline:none;cursor:text}#ssEdit:hover{box-shadow:inset 0 0 0 1px #d5dbe3}#ssEdit:focus{box-shadow:inset 0 0 0 2px #7aa2f7}';
+const prevPerson=()=>prevPlan[+$('#mlPrevWho').value||0]?.person||null;
+// how the greeting reads for this recipient
+function greetLine(p){const first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';return first?`Their email starts “${esc(first.trim())}”`:'';}
+// text typed in the preview goes back into the editor (with {tokens}), and is remembered like typing in the editor
+function fromPreview(which,tpl){const inp=$(which==='msg'?'#mlMsg':'#mlSubj');if(inp.value===tpl)return;inp.value=tpl;keepWording(which,tpl);updMsgPrev();updMode();const o=$('#mlGrOut'),p=prevPerson();if(o&&p)o.innerHTML=greetLine(p);}
+// plain text only, and Enter makes a line break (a new line in the editor)
+function plainEditing(el,doc,oneLine){el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!oneLine)doc.execCommand('insertLineBreak');}});
+  el.addEventListener('paste',e=>{e.preventDefault();let t=(e.clipboardData||window.clipboardData).getData('text/plain')||'';if(oneLine)t=t.replace(/\s*\r?\n\s*/g,' ');doc.execCommand('insertText',false,t);});
+  el.addEventListener('drop',e=>e.preventDefault());}
+$('#mlPrevFrame').addEventListener('load',e=>{const fr=e.currentTarget,d=fr.contentDocument,el=d&&d.getElementById('ssEdit');if(!el)return;plainEditing(el,d,false);
+  el.addEventListener('input',()=>fromPreview('msg',tokText(el)));
+  el.addEventListener('blur',()=>{if(fr._stale){fr._stale=false;schedPreview();}});
+  el.addEventListener('click',ev=>{if(ev.target.closest('[data-tok=name]'))$('#mlPrevMeta [data-pg=by]')?.focus();});});
+$('#mlPrevMeta').addEventListener('input',e=>{const t=e.target;if(t.id==='mlPrevSubj'||t.closest?.('#mlPrevSubj')){fromPreview('subj',tokText($('#mlPrevSubj')).replace(/\s*\n\s*/g,' '));return;}
+  const k=t.dataset?.pg;if(!k||t.nodeName==='SELECT')return;setGreet(prevPerson(),k,t.value);updMsgPrev();updMode();schedPreview();});
+$('#mlPrevMeta').addEventListener('change',e=>{const t=e.target,k=t.dataset?.pg;if(k!=='by')return;setGreet(prevPerson(),'by',t.value);updMsgPrev();updMode();buildPreview(true).then(()=>{if(t.value==='custom')$('#mlPrevMeta [data-pg=name]')?.focus();});});
+$('#mlPrevMeta').addEventListener('focusin',e=>{if(e.target.id==='mlPrevSubj'&&!e.target._wired){e.target._wired=1;plainEditing(e.target,document,true);}});
+$('#mlPrevMeta').addEventListener('focusout',e=>{if(e.target.id==='mlPrevSubj')setTimeout(()=>{if(!$('#mlPrevMeta').contains(document.activeElement))schedPreview();});});
 $('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
 $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 
@@ -2521,7 +2706,8 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
 function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
-  $('#navSent').textContent=th.length?`${th.length} sent${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
+  const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
+  $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
@@ -2632,13 +2818,13 @@ function workCopy(){if(CP.W)return CP.W;const c=CP.open==='new'?null:CU.list.fin
   const inf=infoOf(c),emails=c?[c.email,...altOf(c)]:[''],keys=Object.keys(inf).filter(k=>k!==OTHER.name&&k!==OTHER.company);
   const vals={name:[c?.name||'',...lines(inf[OTHER.name])],company:[c?.company||'',...lines(inf[OTHER.company])]};for(const k of keys){const l=lines(inf[k]);vals['i:'+k]=l.length?l:[''];}
   CP.W={vals,keys,emails,useIdx:c?Math.max(0,emails.findIndex(a=>ck(a)===ck(useOf(c)[0]))):0,exp:new Set(),
-    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||''};return CP.W;}
+    groups:c?grpsOf(c).map(gName):[...CP.gsel].map(k=>allGroups().find(g=>gKey(g.name)===k)?.name).filter(Boolean),color:c?.color||'',note:c?.note||'',greet:{...(c?.greet||{})}};return CP.W;}
 function wInfo(W){const info={},uniq=a=>[...new Map(a.map(x=>x.trim()).filter(Boolean).map(x=>[nrm(x),x])).values()];
   for(const k of W.keys){const l=uniq(W.vals['i:'+k]);if(l.length)info[k]=l.join('\n');}
   for(const f of['name','company']){const main=nrm(W.vals[f][0]),l=uniq(W.vals[f].slice(1)).filter(x=>nrm(x)!==main);if(l.length)info[OTHER[f]]=l.join('\n');}return info;}
 // the customer page, laid out like a Notion page: big title, a list of properties, then the note as the page body
 const NP_IC={co:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',grp:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
-  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
+  col:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/>',info:'<path d="M4 6h16M4 12h16M4 18h10"/>',note:'<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',greet:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',sent:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',add:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
 const npI=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NP_IC[k]}</svg>`;
 // the "▾ N more" button that opens a detail's alternates
 function npDD(f,n,label){const open=CP.W.exp.has(f);return`<button class="np-dd${open?' open':''}${n?' has':''}" type="button" data-cpd="dd" data-f="${esc(f)}" aria-expanded="${open}" title="${n?`Show the other ${esc(label)}`:`Add another ${esc(label)}`}">${n?`${n} more`:'Add other'}${npI('chev')}</button>`;}
@@ -2659,6 +2845,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.props=`<div class="np-props" id="np-props">
     ${prop('co','Company',npMulti('company','Company'))}
     ${prop('mail','Email',mails)}
+    ${prop('greet','Greeting',greetCtl(W.greet,W.vals.name[0],'data-wg')+`<span class="gr-out" id="cpdGrOut">${npGreetOut(W)}</span>`)}
     ${prop('grp','Groups',`<div class="np-grps">${W.groups.map(g=>gChip(g,`<button type="button" data-cpd="rmgrp" data-g="${esc(g)}" aria-label="Remove from ${esc(g)}">✕</button>`).replace('<span class="gchip"',`<span class="gchip" data-gcol="${esc(g)}" title="Click to change the colour of ${esc(gName(g))}"`)).join('')}<input class="np-in np-gin" id="cpdGrpIn" placeholder="${W.groups.length?'Add…':'Add to a group…'}" autocomplete="off" aria-label="Add to a group"></div>`)}
     ${prop('col','Colour',`<button class="np-colbtn" type="button" data-cpd="color">${t?`<i style="background:${t}"></i>${esc(tagName(W.color))}`:'<span class="np-empty">None</span>'}</button>`)}
     ${W.keys.map(k=>prop('info',esc(k),npMulti('i:'+k,k)+`<button class="np-x np-rmprop" type="button" data-cpd="rminfo" data-k="${esc(k)}" title="Remove this detail" aria-label="Remove ${esc(k)}">✕</button>`,'np-info')).join('')}
@@ -2670,6 +2857,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
     ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to remove':'Remove customer'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
+function npGreetOut(W){const n=greetName({cust:1,name:W.vals.name[0],greet:W.greet});return n?`Emails greet them as “${esc(n)}”`:'No name to greet them by yet';}
 function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
   return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
 // auto-height for the note
@@ -2686,14 +2874,16 @@ function groupsHTML(){const gs=allGroups();return`<div class="cpd-h"><h3>Groups<
 function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
   CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;cpSelectRow(null);renderCPDetail();renderCPFoot();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
-  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W)});
+  const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W),greet:W.greet});
   if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
 function removeCustomers(list){const now=Date.now();for(const c of list){CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:now});}cuSave();if(mailDlg.open)renderCust();}
 custDlg.addEventListener('input',e=>{const t=e.target,W=CP.W;if(!W||CP.mode!=='cust')return;
-  if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;}
+  if(t.dataset.wg!==undefined){if(t.nodeName==='SELECT')return;W.greet[t.dataset.wg]=t.value;CP.dirty=true;const o=$('#cpdGrOut');if(o)o.innerHTML=npGreetOut(W);}
+  else if(t.dataset.w!==undefined){W[t.dataset.w]=t.value;CP.dirty=true;}else if(t.dataset.wmail!==undefined){W.emails[+t.dataset.wmail]=t.value;CP.dirty=true;}else if(t.dataset.alt!==undefined){const d=t.dataset.alt,cut=d.lastIndexOf('|');W.vals[d.slice(0,cut)][+d.slice(cut+1)]=t.value;CP.dirty=true;if(d==='name|0'){const o=$('#cpdGrOut');if(o)o.innerHTML=npGreetOut(W);}}
   if(CP.closeSure){CP.closeSure=false;const b=$$('#cpDetail .cpd-f [data-cpd=close]')[0];if(b)b.textContent='Close';}});
 custDlg.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.wuse!==undefined&&CP.W){CP.W.useIdx=+t.dataset.wuse;CP.dirty=true;return;}
+  if(t.dataset.wg==='by'&&CP.W){CP.W.greet.by=t.value;CP.dirty=true;renderCPDetail();if(t.value==='custom')$('#cpDetail [data-wg=name]')?.focus();return;}
   if(t.dataset.grename!==undefined){const to=t.value.trim();if(to&&gKey(to)!==gKey(t.dataset.grename)&&allGroups().some(g=>gKey(g.name)===gKey(to))){toast(`There's already a group called ${to}`);t.value=t.dataset.grename;return;}
     if(to){renameGroup(t.dataset.grename,to);renderCP();toast('Group renamed');}else t.value=t.dataset.grename;return;}
   if(t.id==='cpColor'){CP.color=t.value;renderCP(true);return;}
@@ -2772,4 +2962,5 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 })();
 })();
 </script>
+<datalist id="honList"><option value="Mr."><option value="Mrs."><option value="Ms."><option value="Miss"><option value="Dr."><option value="Mx."><option value="Prof."></datalist>
 </body></html>
