@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style></head><body>
 <title>Sell Sheet Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
 <style>
 /* Layout: app shell — top bar, left tab rail + form panel, centre canvas with the live letter-size sheet (dot grid, floating zoom pill). Phones stack Edit / Preview. */
@@ -399,7 +400,7 @@ dialog[open]{animation:pop .22s var(--ease)}
 .cu .who{min-width:0;font-size:14px;line-height:1.3;cursor:pointer}.cu .who small{display:block;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cu .gp{font-size:11px;font-weight:700;color:var(--muted);background:var(--raise);border:1px solid var(--line);border-radius:5px;padding:1px 5px;margin-left:4px}
 .cu .acts{display:flex;gap:2px}
-.cu-empty{color:var(--muted);font-size:13.5px;padding:10px 4px}
+.cu-empty{color:var(--muted);font-size:13.5px;padding:10px 4px}.cu-more{justify-self:center;margin:4px 0}
 .cu-form{background:var(--panel);border:1px solid var(--accent);border-radius:10px;padding:10px;display:grid;gap:8px}
 .cu-form .in{height:38px}
 .ml-from{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -426,7 +427,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .ml-count{display:grid;gap:6px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:13.5px}
 .ml-count .big{font-size:15px}.ml-count .big b{font-size:22px;color:var(--accent);margin-right:4px}
 .ml-count .warn{color:var(--bad);display:grid;gap:4px}.ml-count .warn ul{margin:0;padding-left:18px;max-height:96px;overflow:auto}.ml-count .warn button{border:0;background:none;color:var(--accent);font:600 12.5px var(--ui);cursor:pointer;padding:0 4px}
-.lg-gh{position:sticky;top:-12px;z-index:2;display:flex;align-items:baseline;gap:8px;padding:10px 4px 4px;background:var(--panel);font-size:14px}.lg-gh span{color:var(--muted);font-size:12.5px}.lg-gh:first-child{padding-top:0}
+.lg-more{display:grid;justify-items:center;padding:8px}.lg-gh{position:sticky;top:-12px;z-index:2;display:flex;align-items:baseline;gap:8px;padding:10px 4px 4px;background:var(--panel);font-size:14px}.lg-gh span{color:var(--muted);font-size:12.5px}.lg-gh:first-child{padding-top:0}
 .cu-mails label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-width:0}.cu-mails input{width:16px;height:16px;accent-color:var(--accent);margin:0;flex:none}
 .cu-mails span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-mails em{font-style:normal;color:var(--muted);font-size:11.5px;flex:none}
 #driveDlg{width:min(620px,calc(100vw - 24px))}
@@ -788,7 +789,7 @@ const LIBS=Object.assign({
 },window.__LIBS||{});
 const loaded={};
 const loadScript=k=>loaded[k]||(loaded[k]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIBS[k];s.onload=res;s.onerror=()=>{delete loaded[k];rej(new Error('Could not load '+k));};document.head.appendChild(s);}));
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'},esc=s=>{s=String(s??'');return /[&<>"]/.test(s)?s.replace(/[&<>"]/g,c=>ESC_MAP[c]):s;};
 const uid=()=>Math.random().toString(36).slice(2,9);
 // notices sit in the browser's top layer, so they also show above an open window (Email, Sent, Drive…)
 const toast=(t,ms=2600)=>{const el=$('#toast');el.textContent=t;clearTimeout(toast.t);clearTimeout(toast.h);
@@ -1471,12 +1472,14 @@ async function save(name,blob){if(!downloads){
   try{await downloads.save({filename:name,data:blob});toast('Saved '+name);}catch(e){toast(e&&e.code==='declined'?'Not saved.':'Could not save. Please try again.');}}
 const fileBase=()=>(S.code||S.title||'Sell sheet').replace(/[\\/:*?"<>|]+/g,'').trim()+' Sell Sheet';
 async function busy(btn,fn){const t=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin" style="width:18px;height:18px;border-width:3px"></span>Preparing…';try{await fn();}catch(e){console.error(e);toast('Something went wrong while making the file.');}finally{btn.disabled=false;btn.innerHTML=t;}}
-async function sheetCanvas(){await loadScript('h2c');
+// scale: 2.5 for the saved PDF / image; the sheet picture inside an email only needs ~1.5 (it is shown 544 px wide)
+async function sheetCanvas(scale=2.5){await loadScript('h2c');
   const host=document.createElement('div');host.className='exporting';host.style.cssText='position:fixed;left:-10000px;top:0;width:816px';host.innerHTML=sheetHTML(true);document.body.appendChild(host);
   const el=host.firstElementChild;el.style.boxShadow='none';el.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));
   await Promise.all([...el.querySelectorAll('img')].map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;})));
   try{await Promise.all([document.fonts.load(`700 20px "${S.style.font}"`),document.fonts.load(`400 14px "${S.style.font}"`)]);await document.fonts.ready;}catch(_){}
-  try{return await html2canvas(el,{scale:2.5,backgroundColor:'#ffffff',logging:false,width:816,height:1056});}finally{host.remove();}}
+  // html2canvas clones the whole page before drawing; skipping every other part of the page (windows, lists, scripts; styles are kept) keeps that fast
+  try{return await html2canvas(el,{scale,backgroundColor:'#ffffff',logging:false,width:816,height:1056,ignoreElements:n=>n.parentNode===document.body&&n!==host&&n.nodeName!=='STYLE'&&n.nodeName!=='LINK'});}finally{host.remove();}}
 // kind: 'pdf' | 'docx' | 'jpg'. PDF and Word carry the sheet's data so they can be re-opened here.
 async function makeFile(kind,cv){
   if(kind==='docx'){await Promise.all([loadScript('docx'),loadScript('jszip')]);return embedDocx(await buildDocx());}
@@ -1493,7 +1496,7 @@ dlMenu.addEventListener('keydown',e=>{const items=[...dlMenu.querySelectorAll('b
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();items[(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length].focus();}else if(e.key==='Escape'){e.preventDefault();dlOpen(false);dlBtn.focus();}});
 dlMenu.addEventListener('click',e=>{const b=e.target.closest('[data-dl]');if(!b)return;const k=b.dataset.dl;dlOpen(false);if(k==='drive'){openDrive();return;}
   busy(dlBtn,async()=>{await save(fileBase()+MAIL_TYPES[k][1],await makeFile(k));});});
-for(const[id,libs]of[['dlBtn',['jspdf','h2c','docx','jszip']],['openSheet',['jszip']]])for(const ev of['pointerenter','focus'])$('#'+id).addEventListener(ev,()=>libs.forEach(k=>loadScript(k).catch(()=>{})),{once:true});
+for(const[id,libs]of[['dlBtn',['jspdf','h2c','docx','jszip']],['openSheet',['jszip']],['emailBtn',['jspdf','h2c']]])for(const ev of['pointerenter','focus'])$('#'+id).addEventListener(ev,()=>libs.forEach(k=>loadScript(k).catch(()=>{})),{once:true});
 
 /* ---------- re-opening downloads: each PDF / Word file carries a copy of its sheet ---------- */
 const MARK='SELLSHEET-DATA';
@@ -1725,18 +1728,23 @@ const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$
 const CU={list:[],deleted:[],sel:new Set(),q:'',gsel:new Set(),nn:false,gmeta:{}};
 const ck=e=>String(e||'').trim().toLowerCase();
 const cuKey=()=>{const a=authGet();return a?`ss-customers:${a.prov}:${ck(a.email)}`:'ss-customers';};
-function cuLoad(){try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
+// cached views of the customer list (groups, detail names, duplicates, search text, sort order): rebuilt only after customers change.
+// cuV is bumped by cuLoad and cuSave, which every change goes through.
+let cuV=0;const CUC={v:-1,n:-1},COLL=new Intl.Collator(undefined,{sensitivity:'base'});
+function cuc(){if(CUC.v!==cuV||CUC.n!==CU.list.length){CUC.v=cuV;CUC.n=CU.list.length;CUC.groups=CUC.keys=CUC.dupes=CUC.order=CUC.colors=null;CUC.nn=-1;CUC.hay=new Map();}return CUC;}
+function cuLoad(){cuV++;try{const d=JSON.parse(lsGet(cuKey())||'[]');const list=Array.isArray(d)?d:d.customers||[];
   CU.list=list.filter(c=>c&&typeof c.email==='string'&&EMAIL_RE.test(c.email.trim())).map(c=>{const g=grpsOf(c);delete c.group;c.groups=g;return c;});
   CU.deleted=Array.isArray(d.deleted)?d.deleted:[];CU.gmeta=!Array.isArray(d)&&d.groups&&typeof d.groups==='object'?d.groups:{};}catch(_){CU.list=[];CU.deleted=[];CU.gmeta={};}
   const keep=new Set(allGroups().map(g=>gKey(g.name)));CU.gsel=new Set([...CU.gsel].filter(k=>keep.has(k)));}
-const cuSave=()=>{lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted,groups:CU.gmeta}));scheduleSync();};
+const cuSave=()=>{cuV++;lsSet(cuKey(),JSON.stringify({customers:CU.list,deleted:CU.deleted,groups:CU.gmeta}));scheduleSync();};
 // groups: a customer can be in several; each group has a colour (kept with the customers and synced)
 const gKey=n=>String(n||'').replace(/\s+/g,' ').trim().toLowerCase();
 const grpsOf=c=>{const g=Array.isArray(c?.groups)?c.groups:(c?.group?String(c.group).split(/\s*[;,]\s*/):[]);const m=new Map();
   for(const x of g){const t=String(x||'').replace(/\s+/g,' ').trim().slice(0,40);if(t&&!m.has(t.toLowerCase()))m.set(t.toLowerCase(),t);}return[...m.values()];};
 const GCOL=['#2563EB','#16A34A','#EA7317','#9333EA','#DC2626','#0891B2','#CA8A04','#DB2777','#4B5563'];
 const gColor=n=>{const m=CU.gmeta[gKey(n)];if(m&&!m.del&&tagHex(m.color))return tagHex(m.color);let h=0;for(const ch of gKey(n))h=(h*31+ch.charCodeAt(0))>>>0;return GCOL[h%GCOL.length];};
-function allGroups(){const m=new Map();for(const c of CU.list)for(const g of grpsOf(c)){const k=gKey(g);if(!m.has(k))m.set(k,{name:CU.gmeta[k]?.name||g,n:0});m.get(k).n++;}
+const allGroups=()=>cuc().groups||(cuc().groups=allGroupsRaw());
+function allGroupsRaw(){const m=new Map();for(const c of CU.list)for(const g of grpsOf(c)){const k=gKey(g);if(!m.has(k))m.set(k,{name:CU.gmeta[k]?.name||g,n:0});m.get(k).n++;}
   for(const[k,v]of Object.entries(CU.gmeta))if(v&&!v.del&&v.name&&!m.has(k))m.set(k,{name:v.name,n:0});return[...m.values()].sort((a,b)=>a.name.localeCompare(b.name,undefined,{sensitivity:'base'}));}
 const gName=n=>CU.gmeta[gKey(n)]?.name||n;
 const gChip=(g,extra='')=>`<span class="gchip" style="--gc:${gColor(g)}">${esc(gName(g))}${extra}</span>`;
@@ -1749,7 +1757,8 @@ function deleteGroup(name){const k=gKey(name),now=Date.now();for(const c of CU.l
 // duplicates: same name and company (ignoring case, spaces and punctuation)
 const nrm=v=>ck(v).replace(/[^\p{L}\p{N}]/gu,'');
 const dupKey=c=>{const n=ck(c.name).replace(/[^\p{L}\p{N}]/gu,''),co=ck(c.company).replace(/[^\p{L}\p{N}]/gu,'');return n&&co?n+'|'+co:'';};
-function findDupes(){const m=new Map();for(const c of CU.list){const k=dupKey(c);if(!k)continue;if(!m.has(k))m.set(k,[]);m.get(k).push(c);}return[...m.values()].filter(g=>g.length>1);}
+const findDupes=()=>cuc().dupes||(cuc().dupes=findDupesRaw());
+function findDupesRaw(){const m=new Map();for(const c of CU.list){const k=dupKey(c);if(!k)continue;if(!m.has(k))m.set(k,[]);m.get(k).push(c);}return[...m.values()].filter(g=>g.length>1);}
 const richness=c=>(c.name?3:0)+(c.company?1:0)+altOf(c).length+Object.keys(infoOf(c)).length+(c.note?1:0)+grpsOf(c).length;
 // fold other customers into one: their emails become alternates; differing names/companies and details are kept as alternate options
 function mergeCustomers(main,others){const now=Date.now();
@@ -1770,21 +1779,34 @@ const noName=c=>!String(c?.name||'').trim();
 const cleanInfo=o=>{const r={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const[k,v]of Object.entries(o).slice(0,40)){const kk=String(k).replace(/\s+/g,' ').trim().slice(0,60),vv=String(v??'').trim().slice(0,4000);if(kk&&vv)r[kk]=vv;}return r;};
 const infoOf=c=>cleanInfo(c?.info);
 function addInfo(to,from){for(const[k,v]of Object.entries(from||{})){const have=String(to[k]||'').split('\n').filter(Boolean);for(const x of String(v).split('\n'))if(x&&!have.includes(x))have.push(x);if(have.length)to[k]=have.slice(0,60).join('\n');}return to;}
-const infoKeys=()=>{const ks=[];for(const c of CU.list)for(const k of Object.keys(infoOf(c)))if(!ks.includes(k))ks.push(k);return ks;};
+const infoKeys=()=>cuc().keys||(cuc().keys=infoKeysRaw());
+const nnCount=()=>{const c=cuc();return c.nn<0?(c.nn=CU.list.filter(noName).length):c.nn;},
+  cuColors=()=>{const c=cuc();return c.colors||(c.colors=[...new Set(CU.list.map(x=>normHex(x.color)).filter(Boolean))].sort());},
+  cuSorted=()=>{const c=cuc();return c.order||(c.order=CU.list.map(x=>[x.name||x.company||x.email||'',x]).sort((a,b)=>COLL.compare(a[0],b[0])).map(q=>q[1]));},
+  hay=c=>{const m=cuc().hay;let h=m.get(c);if(h===undefined){h=[c.name,c.company,c.email,c.note,...grpsOf(c),...altOf(c),...Object.values(infoOf(c))].join('\n').toLowerCase();m.set(c,h);}return h;};
+const infoKeysRaw=()=>{const ks=[];for(const c of CU.list)for(const k of Object.keys(infoOf(c)))if(!ks.includes(k))ks.push(k);return ks;};
 // search text matches any field; picked groups narrow to customers in any of them
-const custMatch=(c,q,gsel)=>(!gsel.size||grpsOf(c).some(g=>gsel.has(gKey(g))))&&(!q||[c.name,c.company,c.email,c.note,...grpsOf(c),...altOf(c),...Object.values(infoOf(c))].some(v=>String(v||'').toLowerCase().includes(q)));
-const cuShown=()=>{const q=CU.q.trim().toLowerCase();return CU.list.filter(c=>(!CU.nn||noName(c))&&custMatch(c,q,CU.gsel));};
-function renderCust(){const nn=CU.list.filter(noName).length;if(!nn)CU.nn=false;
+const custMatch=(c,q,gsel)=>(!gsel.size||grpsOf(c).some(g=>gsel.has(gKey(g))))&&(!q||hay(c).includes(q));
+const cuShown=()=>{const q=CU.q.trim().toLowerCase();return cuSorted().filter(c=>(!CU.nn||noName(c))&&custMatch(c,q,CU.gsel));};
+function renderCust(reset){const nn=nnCount();if(!nn)CU.nn=false;
   $('#cuGroups').innerHTML=groupToggles(CU.gsel)
     +(nn?`<button type="button" class="nn-chip" data-nn aria-pressed="${CU.nn}" title="Show only customers without a name, so you can add one">⚠ No name (${nn})</button>`:'');
-  const shown=cuShown().sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));
+  const shown=cuShown();CU.rows=shown;CU.n=Math.min(shown.length,Math.max(60,reset?0:CU.n||0));
   $('#cuCount').textContent=CU.list.length?(shown.length===CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:`Showing ${shown.length} of ${CU.list.length}`)+(CU.sel.size?` · ${CU.sel.size} ticked`:''):'';
   const last=new Map();for(const t of threads()){const c=t.root.cust;if(c&&(!last.has(c)||last.get(c).last<t.last))last.set(c,t);}
-  $('#cuList').innerHTML=shown.length?shown.map((c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
+  const row=(c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
       <label class="who" for="cu-${n}">${tagHex(c.color)?`<i class="cdot" style="background:${tagHex(c.color)}"></i>`:''}<b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${grpsOf(c).map(g=>gChip(g)).join('')}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}</small></label>
-      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Open'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Open and edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`).join('')
+      <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Open'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Open and edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`;CU.row=row;
+  const moreBtn=()=>`<button class="btn sm ghost cu-more" type="button" data-cumore>Show ${Math.min(60,shown.length-CU.n)} more</button>`;
+  $('#cuList').innerHTML=shown.length?shown.slice(0,CU.n).map(row).join('')+(CU.n<shown.length?moreBtn():'')
     :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import an Excel (.xlsx) or CSV file.'}</div>`;
-  renderChips();renderSync();}
+  renderChips();renderSync();cuObserve();}
+// the next 100 customers, appended when the list is scrolled near its end (or "Show more" is clicked)
+let cuIO=null;
+function cuObserve(){const mb=$('#cuList .cu-more');if(!mb)return;if(!cuIO&&'IntersectionObserver' in window)cuIO=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))cuMore();},{root:$('#cuList'),rootMargin:'200px'});if(cuIO){cuIO.disconnect();cuIO.observe(mb);}}
+function cuMore(){const rows=CU.rows||[],a=CU.n,L=$('#cuList'),mb=L.querySelector('.cu-more');if(!mb||a>=rows.length||!CU.row)return;CU.n=Math.min(rows.length,a+60);
+  mb.insertAdjacentHTML('beforebegin',rows.slice(a,CU.n).map((c,i)=>CU.row(c,a+i)).join(''));if(CU.n>=rows.length){cuIO?.disconnect();mb.remove();}else{mb.textContent=`Show ${Math.min(60,rows.length-CU.n)} more`;cuObserve();}}
+$('#cuList').addEventListener('click',e=>{if(e.target.closest('[data-cumore]'))cuMore();});
 function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.test(email))return'Enter a valid email address';
   const altIn=splitAddr(v.alt),badAlt=altIn.filter(a=>!EMAIL_RE.test(a));if(badAlt.length)return'Check these addresses: '+badAlt.join(', ');
   const alt=altIn.filter((a,i)=>ck(a)!==ck(email)&&altIn.findIndex(x=>ck(x)===ck(a))===i),mine=new Set([ck(email),...alt.map(ck)]);
@@ -1799,9 +1821,9 @@ function cuUpsert(edit,v){const email=String(v.email||'').trim();if(!EMAIL_RE.te
   else{if(ck(old.email)!==ck(email)){CU.deleted.push({email:ck(old.email),at:now});if(CU.sel.delete(ck(old.email)))CU.sel.add(ck(email));}Object.assign(old,data);}
   CU.deleted=CU.deleted.filter(d=>d.email!==ck(email));cuSave();return'';}
 $('#cuAdd').onclick=()=>openCustomer('new');
-$('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;renderCust();});
-$('#cuGroups').addEventListener('click',e=>{if(e.target.closest('[data-nn]')){CU.nn=!CU.nn;renderCust();return;}const b=e.target.closest('[data-gtog]');if(!b)return;const k=b.dataset.gtog;CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);renderCust();});
-groupSuggest($('#cuSearch'),{selected:()=>CU.gsel,pick:k=>{CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);CU.q='';renderCust();}});
+let cuQt=0;$('#cuSearch').addEventListener('input',e=>{CU.q=e.target.value;clearTimeout(cuQt);cuQt=setTimeout(()=>renderCust(true),90);});
+$('#cuGroups').addEventListener('click',e=>{if(e.target.closest('[data-nn]')){CU.nn=!CU.nn;renderCust(true);return;}const b=e.target.closest('[data-gtog]');if(!b)return;const k=b.dataset.gtog;CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);renderCust(true);});
+groupSuggest($('#cuSearch'),{selected:()=>CU.gsel,pick:k=>{CU.gsel.has(k)?CU.gsel.delete(k):CU.gsel.add(k);CU.q='';renderCust(true);}});
 $('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
   if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;c.use=[e.target.value];c.upd=Date.now();cuSave();renderChips();return;}
   const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderCustCount();renderChips();});
@@ -1888,7 +1910,7 @@ async function importCustFile(f){
   try{if(/\.xls$/i.test(f.name)){toast('Old .xls files can\'t be read. In Excel use File → Save As → Excel Workbook (.xlsx), then import that.',6000);return;}
     const head=new Uint8Array(await f.slice(0,4).arrayBuffer()),isZip=head[0]===0x50&&head[1]===0x4B;
     const r=importRows(isZip?await readXlsx(f):parseCSV((await f.text()).replace(/^\uFEFF/,'')));
-    const nn=CU.list.filter(noName).length;
+    const nn=nnCount();
     toast(r.added||r.merged?[`Imported ${r.added} new customer${r.added===1?'':'s'}`,r.merged?`updated ${r.merged}`:'',r.combined?`${r.combined} repeated row${r.combined===1?'':'s'} combined`:'',r.noMail?`${r.noMail} row${r.noMail===1?'':'s'} without an email skipped`:''].filter(Boolean).join(' · ')+(nn?`. ${nn} have no name: tap "⚠ No name" to fix them.`:'.')
       :r.rows?'No new customers: everyone in that file is already saved'+(r.noMail?` (${r.noMail} rows had no email)`:'')+'.':'No customers found in that file. It needs an Email column.',7000);}
   catch(e){console.error(e);toast(e.message&&!/^[A-Z]\w+Error/.test(e.name)?e.message:'That file could not be read',5000);}
@@ -1898,7 +1920,7 @@ $('#cuExport').onclick=()=>{if(!CU.list.length){toast('No customers to export ye
 
 /* recipients */
 function renderChips(){setTimeout(updMsgPrev);schedPreview();const sel=CU.list.filter(c=>CU.sel.has(ck(c.email)));
-  $('#mlChips').innerHTML=sel.map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('');updMode();}
+  $('#mlChips').innerHTML=sel.slice(0,40).map(c=>`<span class="chip" title="${esc(useOf(c).join(', '))}">${esc(c.name||c.company||c.email)}${useOf(c).length>1?` <small>(${useOf(c).length})</small>`:''}<button type="button" data-unsel="${esc(ck(c.email))}" aria-label="Remove ${esc(c.name||c.email)}">✕</button></span>`).join('')+(sel.length>40?`<span class="chip" title="Everyone ticked is included">+${sel.length-40} more</span>`:'');updMode();}
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;CU.sel.delete(b.dataset.unsel);renderCust();});
 // one entry per person; a customer can have several chosen addresses
 function people(){const out=[],seen=new Set();for(const c of CU.list.filter(c=>CU.sel.has(ck(c.email)))){const emails=useOf(c).filter(a=>!seen.has(ck(a)));emails.forEach(a=>seen.add(ck(a)));if(emails.length)out.push({email:emails[0],emails,name:c.name,company:c.company,cust:1,key:ck(c.email)});}
@@ -2067,17 +2089,21 @@ const tagHex=c=>COLOR_HEX[c]||normHex(c),tagName=c=>(COLORS.find(x=>x[0]===c)||[
 const lgRecent=()=>{const r=lsJ('ss-lgcolors');return Array.isArray(r)?r.map(normHex).filter(Boolean).slice(0,8):[];};
 const STATUSES=[['none','No reply yet'],['replied','Replied'],['interested','Interested'],['ordered','Ordered'],['declined','Not interested']],ST_NAME=Object.fromEntries(STATUSES);
 const lgKey=()=>{const a=authGet();return a?`ss-log:${a.prov}:${ck(a.email)}`:'ss-log';};
-function lgLoad(){try{const d=JSON.parse(lsGet(lgKey())||'{}')||{};LG.list=Array.isArray(d.entries)?d.entries.filter(e=>e&&e.id&&e.at):[];LG.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){LG.list=[];LG.deleted=[];}}
-const lgSave=()=>{lsSet(lgKey(),JSON.stringify({entries:LG.list,deleted:LG.deleted}));scheduleSync();renderBadge();};
+let lgV=0,thC=null; // lgV is bumped by lgLoad and lgSave, so the grouped threads are only rebuilt when the log changes
+function lgLoad(){lgV++;try{const d=JSON.parse(lsGet(lgKey())||'{}')||{};LG.list=Array.isArray(d.entries)?d.entries.filter(e=>e&&e.id&&e.at):[];LG.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){LG.list=[];LG.deleted=[];}}
+const lgSave=()=>{lgV++;lsSet(lgKey(),JSON.stringify({entries:LG.list,deleted:LG.deleted}));scheduleSync();renderBadge();};
 const dayStr=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;};
 // A thread is the first send of a sell sheet to someone; later sends of the same sheet to them are its follow-ups.
 const recipKey=e=>e.cust||ck((e.emails&&e.emails[0])||e.email)||'id:'+e.id;
-function threads(){const g=new Map();for(const e of LG.list.slice().sort((a,b)=>a.at-b.at)){const k=e.sheetId+'|'+recipKey(e);if(g.has(k))g.get(k).fups.push(e);else g.set(k,{root:e,fups:[]});}
+function threads(){if(thC&&thC.v===lgV&&thC.n===LG.list.length)return thC.t;const t=threadsRaw();thC={v:lgV,n:LG.list.length,t};return t;}
+function threadsRaw(){const g=new Map();for(const e of LG.list.slice().sort((a,b)=>a.at-b.at)){const k=e.sheetId+'|'+recipKey(e);if(g.has(k))g.get(k).fups.push(e);else g.set(k,{root:e,fups:[]});}
   return[...g.values()].map(t=>({...t,last:Math.max(t.root.at,...t.fups.map(f=>f.at))}));}
 // response status lives on the original; any send (original or follow-up) restarts the wait
 const needsFollow=t=>{const e=t.root;if(e.status==='ordered'||e.status==='declined')return false;if(e.follow)return e.follow<=dayStr(Date.now())&&dayStr(t.last)<e.follow;return(e.status||'none')==='none'&&Date.now()-t.last>=FOLLOW_DAYS*864e5;};
-const fmtWhen=t=>new Date(t).toLocaleString(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'});
-const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});};
+// date formatters are built once (building one per call is slow when listing hundreds of rows)
+const DTF_WHEN=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}),DTF_DAY=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric'}),DTF_LONG=new Intl.DateTimeFormat(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const fmtWhen=t=>DTF_WHEN.format(t);
+const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:DTF_DAY.format(t);};
 const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + attached'};
 function renderBadge(){const n=threads().filter(needsFollow).length,b=$('#sentBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#sentBtn').title=n?`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`:'Sell sheets you\'ve emailed, and how customers responded';}
 // called after each successful email
@@ -2103,14 +2129,15 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
-  const shown=lgShown();LG.sel=new Set([...LG.sel].filter(id=>shown.some(t=>t.root.id===id)));
+  const shown=lgShown(),shownIds=new Set(shown.map(t=>t.root.id));LG.sel=new Set([...LG.sel].filter(id=>shownIds.has(id)));
   const sentAs=e=>`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
   // one listing per customer, under a heading per day (when first sent) or per sell sheet
   const by=lgGroupBy(),groups=new Map();
-  for(const t of by==='date'?shown.slice().sort((a,b)=>dayStr(b.root.at).localeCompare(dayStr(a.root.at))||b.last-a.last):shown){const k=by==='date'?dayStr(t.root.at):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
-  const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+new Date(t).toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});};
+  const dk=new Map(by==='date'?shown.map(t=>[t,dayStr(t.root.at)]):[]);
+  for(const t of by==='date'?shown.slice().sort((a,b)=>(dk.get(a)<dk.get(b)?1:dk.get(a)>dk.get(b)?-1:0)||b.last-a.last):shown){const k=by==='date'?dk.get(t):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
+  const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+DTF_LONG.format(t);};
   const head=ts=>`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(by==='date'?dayName(ts[0].root.at):ts[0].root.sheet)}</b><span>${ts.length} customer${ts.length>1?'s':''}${by==='sheet'?` · last sent ${esc(ago(Math.max(...ts.map(t=>t.last))))}`:''}</span></div>`;
-  $('#lgList').innerHTML=shown.length?[...groups.values()].map(ts=>head(ts)+ts.map(t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+  LG.row=t=>{const e=t.root,d=needsFollow(t);return`<div class="lg-row${d?' due':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
       <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
       <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?'<span class="flag">Follow up</span>':''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small></div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
@@ -2121,17 +2148,26 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
       <input class="in note-in" type="text" data-lnote value="${esc(e.note)}" placeholder="Add a note, e.g. wants 20 boxes of Navy" aria-label="Note">
       ${t.fups.length?`<div class="lg-fups">${t.fups.map((f,n)=>`<div class="lg-fu" data-id="${esc(f.id)}"><span class="fu-tag">Follow-up${t.fups.length>1?' '+(n+1):''}</span>
         <div class="c">${esc(fmtWhen(f.at))}<small>${esc(ago(f.at))}${f.from?' · from '+esc(f.from):''}</small></div><div class="c">${sentAs(f)||'&nbsp;'}<small>${esc((f.emails.length?f.emails:[f.email]).join(', '))}</small></div>
-        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;}).join('')).join('')
+        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;};LG.head=head;
+  LG.items=[];for(const ts of groups.values()){LG.items.push({h:ts});for(const t of ts)LG.items.push({t});}
+  LG.n=Math.min(LG.items.length,Math.max(40,LG.keepN||0));
+  $('#lgList').innerHTML=shown.length?LG.items.slice(0,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join('')+(LG.n<LG.items.length?lgMoreRow():'')
     :`<div class="lg-empty">${all.length?'Nothing matches these filters.':'Nothing sent yet. Every sell sheet you email from here is listed automatically, with the date, who it went to and how they responded.'}</div>`;
-  $('#lgFollow').disabled=!LG.sel.size;$('#lgFollow').textContent=LG.sel.size?`Follow up selected (${LG.sel.size})`:'Follow up selected';
+  $('#lgFollow').disabled=!LG.sel.size;$('#lgFollow').textContent=LG.sel.size?`Follow up selected (${LG.sel.size})`:'Follow up selected';lgObserve();
   const a=authGet();$('#lgNote').innerHTML=a?`Synced to <b>${esc(a.email||'your account')}</b>.`:'Saved in this browser. Sign in (optional) to keep it on every device.';renderBadge();}
-function openLog(){lgLoad();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();}
+const lgMoreRow=()=>`<div class="lg-more"><button class="btn sm ghost" type="button" data-lgmore>Show more (${LG.items.length-LG.n} left)</button></div>`;
+let lgIO=null;
+function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'IntersectionObserver' in window)lgIO=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))lgMore();},{root:$('#lgList'),rootMargin:'300px'});if(lgIO){lgIO.disconnect();lgIO.observe(mr);}}
+function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
+  mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
+$('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
+function openLog(){LG.keepN=0;lgLoad();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
 $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
-$('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;renderLog();$('#lgQ').focus();});
-for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;renderLog();});
-$('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);renderLog();});
-$('#lgClear').onclick=()=>{Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to:'',color:''});$('#lgQ').value='';$('#lgFrom').value='';$('#lgTo').value='';renderLog();};
+let lgQt=0;$('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;LG.keepN=0;clearTimeout(lgQt);lgQt=setTimeout(()=>{renderLog();$('#lgQ').focus();},90);});
+for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;LG.keepN=0;renderLog();});
+$('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);LG.keepN=0;renderLog();});
+$('#lgClear').onclick=()=>{LG.keepN=0;Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to:'',color:''});$('#lgQ').value='';$('#lgFrom').value='';$('#lgTo').value='';renderLog();};
 let lgSure={};
 // colour palette for one email (stored on the original; follow-ups share it)
 function openPalette(btn,en){let pal=$('#lgPal');if(!pal){pal=document.createElement('div');pal.id='lgPal';pal.className='lg-pal';pal.setAttribute('role','group');pal.setAttribute('aria-label','Colour');logDlg.appendChild(pal);}
@@ -2276,11 +2312,17 @@ function firstName(p){const nm=String(p?.name||'').trim(),w=(nm.includes(',')?nm
 function fillTokens(text,p){const v={name:firstName(p),company:p?.company||'',product:productLabel()};
   return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
 // pictures shown inside the email, made once per opening of the Email window
-let inlineCache=null;
+let inlineCache=null,sheetPicCache=null;
+const hashStr=t=>{let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+'.'+t.length;};
 function emailInline(parts){if(!inlineCache)inlineCache={};const want=k=>parts.includes(k);
   const job=async()=>{const out=[];
-    if(want('sheet')){inlineCache.sheet=inlineCache.sheet||(async()=>{const cv=await sheetCanvas();const w=1200,c=document.createElement('canvas');c.width=w;c.height=Math.round(cv.height*w/cv.width);
-      const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(cv,0,0,c.width,c.height);cv.width=cv.height=0;return{cid:'sheet@sellsheet',name:'sell-sheet.jpg',b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:544,h:Math.round(544*c.height/c.width),sheet:1};})();out.push(await inlineCache.sheet);}
+    if(want('sheet')){
+      // the rendered sheet picture is kept between openings of this window until the sheet itself changes
+      if(!inlineCache.sig)inlineCache.sig=hashStr(sheetHTML(true));
+      if(!sheetPicCache||sheetPicCache.sig!==inlineCache.sig){const sig=inlineCache.sig,pr=(async()=>{const cv=await sheetCanvas(1.5);const w=1200,c=document.createElement('canvas');c.width=w;c.height=Math.round(cv.height*w/cv.width);
+        const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(cv,0,0,c.width,c.height);cv.width=cv.height=0;return{cid:'sheet@sellsheet',name:'sell-sheet.jpg',b64:c.toDataURL('image/jpeg',.85).split(',')[1],w:544,h:Math.round(544*c.height/c.width),sheet:1};})();
+        sheetPicCache={sig,pr};pr.catch(()=>{if(sheetPicCache?.pr===pr)sheetPicCache=null;});}
+      out.push(await sheetPicCache.pr);}
     if(want('photos')){inlineCache.photos=inlineCache.photos||emailPhotos();out.push(...await inlineCache.photos);}
     return out;};
   return job();}
@@ -2384,7 +2426,7 @@ $('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus(
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
 function openMail(){cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;$('#mlSubj').value=`Sell sheet: ${sheetName(S)}`;$('#mlMsg').value=lsGet('ss-mailmsg')||MAIL_DEF_MSG;renderHow();
-  $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust();renderAcct();
+  $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
@@ -2465,7 +2507,7 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
 
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
-function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=CU.list.filter(noName).length;
+function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
   $('#navSent').textContent=th.length?`${th.length} sent${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
@@ -2524,32 +2566,47 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 
 /* ---------- Customers page: every customer with every detail; opens each one in a large tab ---------- */
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
-function openCP(){if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();
-  if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}renderCP();}
-function openCustomer(key){openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;renderCP();if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
-const cpShown=()=>{const q=CP.q.trim().toLowerCase();return CU.list.filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel))
-  .sort((a,b)=>(a.name||a.company||a.email).localeCompare(b.name||b.company||b.email,undefined,{sensitivity:'base'}));};
-function renderCP(){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==OTHER.company),nn=CU.list.filter(noName).length;if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
-  const shown=cpShown(),dupes=findDupes();
-  $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
-  const cus=[...new Set(CU.list.map(c=>normHex(c.color)).filter(Boolean))].sort();
-  $('#cpColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;
-  $('#cpColor').value=[...$('#cpColor').options].some(o=>o.value===CP.color)?CP.color:'';
-  $('#cpChips').innerHTML=groupToggles(CP.gsel)+(nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'');
-  $('#cpDupes').hidden=!dupes.length;$('#cpDupes').textContent=`⚠ ${dupes.length} possible duplicate${dupes.length>1?'s':''}`;
-  const more=v=>{const n=lines(v).length;return n?`<span class="sub">+${n} other${n>1?'s':''}</span>`:'';},k=c=>esc(ck(c.email)),ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length,who=c=>esc(c.name||c.company||c.email);
-  $('#cpTable').innerHTML=CU.list.length?`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown" ${shown.length&&shown.every(c=>CU.sel.has(ck(c.email)))?'checked':''}></th><th>Name</th><th>Company</th><th>Email</th><th>Groups</th><th>My note</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
-    <tbody>${shown.map(c=>{const inf=infoOf(c),t=tagHex(c.color);return`<tr data-cp="${k(c)}"${t?` data-color style="--tag:${t}"`:''}${CP.open===ck(c.email)&&CP.mode==='cust'?' class="on"':''}>
-      <td class="acts"><span class="ra"><input type="checkbox" data-cptick="${k(c)}" ${CU.sel.has(ck(c.email))?'checked':''} aria-label="Tick ${who(c)}"><button class="tiny" type="button" data-cpopen="${k(c)}" title="Open and edit" aria-label="Open and edit ${who(c)}">✎</button><button class="tiny x" type="button" data-cpdel="${k(c)}" title="Remove" aria-label="Remove ${who(c)}">${I.x}</button></span></td>
-      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}${more(inf[OTHER.name])}</td><td>${esc(c.company)}${more(inf[OTHER.company])}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
+function openCP(){if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
+  if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
+function openCustomer(key){const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
+  if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
+const cpShown=()=>{const q=CP.q.trim().toLowerCase();return cuSorted().filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel));};
+// the table draws 80 rows at a time (more as you scroll): with hundreds of customers, drawing them all is what made it slow
+const CP_STEP=50,cpMoreSub=v=>{const n=lines(v).length;return n?`<span class="sub">+${n} other${n>1?'s':''}</span>`:'';};
+function cpRow(c){const inf=infoOf(c),t=tagHex(c.color),key=esc(ck(c.email)),who=esc(c.name||c.company||c.email),sel=CU.sel.has(ck(c.email));
+  return`<tr data-cp="${key}"${t?` data-color style="--tag:${t}"`:''}${CP.open===ck(c.email)&&CP.mode==='cust'?' class="on"':''}>
+      <td class="acts"><span class="ra"><input type="checkbox" data-cptick="${key}" ${sel?'checked':''} aria-label="Tick ${who}"><button class="tiny" type="button" data-cpopen="${key}" title="Open and edit" aria-label="Open and edit ${who}">✎</button><button class="tiny x" type="button" data-cpdel="${key}" title="Remove" aria-label="Remove ${who}">${I.x}</button></span></td>
+      <td>${noName(c)?'<span class="nn">⚠ No name</span>':esc(c.name)}${cpMoreSub(inf[OTHER.name])}</td><td>${esc(c.company)}${cpMoreSub(inf[OTHER.company])}</td><td>${esc(useOf(c)[0])}${altOf(c).length?`<span class="sub">+${altOf(c).length} more</span>`:''}</td>
       <td>${grpsOf(c).map(g=>gChip(g)).join('')}</td><td title="${esc(c.note||'')}">${esc(String(c.note||'').split('\n')[0])}</td>
-      ${ks.map(x=>`<td title="${esc(inf[x]||'')}">${esc(lines(inf[x])[0]||'')}${more(lines(inf[x]).slice(1).join('\n'))}</td>`).join('')}</tr>`;}).join('')}</tbody>`
-    :'<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>＋ New customer</b>.</td></tr></tbody>';
-  if(CU.list.length&&!shown.length)$('#cpTable').insertAdjacentHTML('beforeend',`<tbody><tr><td></td><td colspan="${5+ks.length}" class="cu-empty">No customers match.</td></tr></tbody>`);
+      ${CP.ks.map(x=>{const l=lines(inf[x]);return`<td title="${esc(inf[x]||'')}">${esc(l[0]||'')}${l.length>1?cpMoreSub(l.slice(1).join('\n')):''}</td>`;}).join('')}</tr>`;}
+const cpMoreRow=()=>`<tr class="cp-more"><td></td><td colspan="${4+CP.ks.length}"><button class="btn sm ghost" type="button" data-cpmore>Show ${Math.min(CP_STEP,CP.rows.length-CP.n)} more</button> <span class="note">Showing ${CP.n} of ${CP.rows.length}</span></td></tr>`;
+let cpIO=null;
+function cpObserve(){const mr=$('#cpTable .cp-more');if(!mr)return;if(!cpIO&&'IntersectionObserver' in window)cpIO=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))cpMore();},{root:$('#custDlg .cp-tw'),rootMargin:'300px'});if(cpIO){cpIO.disconnect();cpIO.observe(mr);}}
+function cpMore(){const rows=CP.rows||[],a=CP.n,mr=$('#cpTable .cp-more');if(!mr||a>=rows.length)return;CP.n=Math.min(rows.length,a+CP_STEP);
+  mr.insertAdjacentHTML('beforebegin',rows.slice(a,CP.n).map(cpRow).join(''));if(CP.n>=rows.length){cpIO?.disconnect();mr.remove();}else{mr.outerHTML=cpMoreRow();cpObserve();}}
+// keep=true: redraw the same number of rows (after an edit); false: start from the top (the filter changed)
+function renderCPTable(keep){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==OTHER.company),shown=cpShown();CP.ks=ks;CP.rows=shown;CP.n=Math.min(shown.length,Math.max(CP_STEP,keep?CP.n||0:0));const tb=$('#cpTable');
+  if(!CU.list.length){tb.innerHTML='<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>＋ New customer</b>.</td></tr></tbody>';return;}
+  tb.innerHTML=`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown"></th><th>Name</th><th>Company</th><th>Email</th><th>Groups</th><th>My note</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
+    <tbody>${shown.slice(0,CP.n).map(cpRow).join('')}${shown.length?'':`<tr><td></td><td colspan="${5+ks.length}" class="cu-empty">No customers match.</td></tr>`}${CP.n<shown.length?cpMoreRow():''}</tbody>`;
+  if(!keep)$('#custDlg .cp-tw').scrollTop=0;cpObserve();}
+// footer, button states and the tick-all box: cheap, so ticking a customer only touches these
+function renderCPFoot(){const shown=CP.rows||[],ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length;
   $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Click a customer to open it. Tick customers to email, group or delete them.');
   for(const id of['cpEmail','cpTickGrp','cpTickDel'])$('#'+id).disabled=!ticked;
   $('#cpEmail').textContent=ticked?`Email ${ticked} ticked`:'Email ticked customers';$('#cpTickDel').textContent=CP.tickSure?`Delete ${ticked}? Click again`:'Delete ticked';
-  renderCPDetail();}
+  const all=$('#cpTable [data-cpall]');if(all)all.checked=!!shown.length&&shown.every(c=>CU.sel.has(ck(c.email)));}
+// highlight the open customer's row without redrawing the table
+function cpSelectRow(key){$('#cpTable tr.on')?.classList.remove('on');if(key&&CP.mode==='cust'){const tr=[...$$('#cpTable tr[data-cp]')].find(r=>r.dataset.cp===key);tr?.classList.add('on');}}
+// reset=true when a filter changed (go back to the top of the list)
+function renderCP(reset){const nn=nnCount();if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
+  const dupes=findDupes();
+  $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
+  $('#cpColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cuColors()].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;
+  $('#cpColor').value=[...$('#cpColor').options].some(o=>o.value===CP.color)?CP.color:'';
+  $('#cpChips').innerHTML=groupToggles(CP.gsel)+(nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'');
+  $('#cpDupes').hidden=!dupes.length;$('#cpDupes').textContent=`⚠ ${dupes.length} possible duplicate${dupes.length>1?'s':''}`;
+  renderCPTable(!reset);renderCPFoot();renderCPDetail();}
 // the large customer tab (also used for duplicates and the groups list)
 function renderCPDetail(){const d=$('#cpDetail');if(!CP.mode){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;d.classList.toggle('is-np',CP.mode==='cust');
   const key=CP.mode+':'+(CP.open||''),same=d.dataset.for===key;if(!same){d.dataset.for=key;CP.closeSure=false;CP.delSure=false;}
@@ -2614,7 +2671,7 @@ function groupsHTML(){const gs=allGroups();return`<div class="cpd-h"><h3>Groups<
     <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button></div></div>
   <div class="cpd-f"><span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
 function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
-  CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();return true;}
+  CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;cpSelectRow(null);renderCPDetail();renderCPFoot();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
   const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W)});
   if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
@@ -2626,12 +2683,13 @@ custDlg.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.wuse!==undefined&&CP.W){CP.W.useIdx=+t.dataset.wuse;CP.dirty=true;return;}
   if(t.dataset.grename!==undefined){const to=t.value.trim();if(to&&gKey(to)!==gKey(t.dataset.grename)&&allGroups().some(g=>gKey(g.name)===gKey(to))){toast(`There's already a group called ${to}`);t.value=t.dataset.grename;return;}
     if(to){renameGroup(t.dataset.grename,to);renderCP();toast('Group renamed');}else t.value=t.dataset.grename;return;}
-  if(t.id==='cpColor'){CP.color=t.value;renderCP();return;}
-  if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);CP.tickSure=false;renderCP();return;}
-  if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));CP.tickSure=false;renderCP();}});
+  if(t.id==='cpColor'){CP.color=t.value;renderCP(true);return;}
+  if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);CP.tickSure=false;renderCPFoot();return;}
+  if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));CP.tickSure=false;$$('#cpTable [data-cptick]').forEach(cb=>{cb.checked=CU.sel.has(cb.dataset.cptick);});renderCPFoot();}});
 custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),W=CP.W;
-  if(t.closest('[data-cpnn]')){CP.nn=!CP.nn;renderCP();return;}
-  const gt=t.closest('#cpChips [data-gtog]');if(gt){const k=gt.dataset.gtog;CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);renderCP();return;}
+  if(t.closest('[data-cpmore]')){cpMore();return;}
+  if(t.closest('[data-cpnn]')){CP.nn=!CP.nn;renderCP(true);return;}
+  const gt=t.closest('#cpChips [data-gtog]');if(gt){const k=gt.dataset.gtog;CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);renderCP(true);return;}
   const op=t.closest('[data-cpopen]');if(op){openCustomer(op.dataset.cpopen);return;}
   const dl=t.closest('[data-cpdel]');if(dl){const c=CU.list.find(x=>ck(x.email)===dl.dataset.cpdel);if(!c)return;
     if(dl.dataset.sure!=='1'){dl.dataset.sure='1';dl.style.color='var(--bad)';toast(`Click ✕ again to remove ${c.name||c.company||c.email}`);setTimeout(()=>{if(dl.isConnected){dl.dataset.sure='';dl.style.color='';}},3000);return;}
@@ -2655,10 +2713,10 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(act==='rminfo'){const k=a.dataset.k;W.keys=W.keys.filter(x=>x!==k);delete W.vals['i:'+k];CP.dirty=true;renderCPDetail();return;}
   if(act==='save'){saveCustomer();return;}
   if(act==='email'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;CU.sel.add(k);closeCPDetail(true);custDlg.close();if(mailDlg.open){renderCust();}else openMail();return;}
-  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);toast('Customer removed');return;}
+  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);renderCP();toast('Customer removed');return;}
   if(act==='merge'||act==='mergeall'){const ds=findDupes(),pick=act==='merge'?[ds[+a.dataset.i]]:ds;let n=0;for(const g of pick)if(g){mergeDupes(g);n++;}cuSave();if(mailDlg.open)renderCust();renderCP();toast(`Merged ${n} duplicate${n===1?'':'s'}`);return;}
   if(act==='gcol'){const g=a.dataset.g;colorPop(a,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
-  if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);return;}
+  if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);renderCP(true);return;}
   if(act==='gdel'){const k=gKey(a.dataset.g);if(CP.gdel!==k){CP.gdel=k;renderCPDetail();return;}CP.gdel='';deleteGroup(a.dataset.g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');return;}
   if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
 custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNewV'||e.target.id==='cpdNewK')){e.preventDefault();const W=CP.W,k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();
@@ -2669,15 +2727,15 @@ custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNe
 // Esc closes the customer tab first, then the page
 custDlg.addEventListener('cancel',e=>{if(CP.mode){e.preventDefault();closeCPDetail();}});
 custDlg.addEventListener('close',()=>{CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;$('#gSug').classList.add('hide');if(mailDlg.open)renderCust();});
-$('#cpQ').addEventListener('input',e=>{CP.q=e.target.value;renderCP();});
-groupSuggest($('#cpQ'),{selected:()=>CP.gsel,pick:k=>{CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);CP.q='';renderCP();}});
+let cpQt=0;$('#cpQ').addEventListener('input',e=>{CP.q=e.target.value;clearTimeout(cpQt);cpQt=setTimeout(()=>{renderCPTable(false);renderCPFoot();},90);});
+groupSuggest($('#cpQ'),{selected:()=>CP.gsel,pick:k=>{CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);CP.q='';renderCP(true);}});
 $('#cpAdd').onclick=()=>openCustomer('new');
-$('#cpDupes').onclick=()=>{CP.mode='dupes';CP.open=null;CP.W=null;renderCP();};
-$('#cpGroups').onclick=()=>{CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';renderCP();};
+$('#cpDupes').onclick=()=>{CP.mode='dupes';CP.open=null;CP.W=null;cpSelectRow(null);renderCPDetail();};
+$('#cpGroups').onclick=()=>{CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';cpSelectRow(null);renderCPDetail();};
 $('#cpImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.currentTarget);};
 $('#cpExport').onclick=()=>$('#cuExport').click();
 $('#cpEmail').onclick=()=>{custDlg.close();if(mailDlg.open)renderCust();else openMail();};
-$('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;if(!CP.tickSure){CP.tickSure=true;renderCP();return;}CP.tickSure=false;removeCustomers(list);renderCP();toast(`Removed ${list.length} customer${list.length>1?'s':''}`);};
+$('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;if(!CP.tickSure){CP.tickSure=true;renderCPFoot();return;}CP.tickSure=false;removeCustomers(list);renderCP();toast(`Removed ${list.length} customer${list.length>1?'s':''}`);};
 $('#cpTickGrp').onclick=e=>{const btn=e.currentTarget,gs=allGroups();
   const m=popMenu(btn,`<span class="menu-h">Add ticked customers to</span>${gs.map(g=>`<button type="button" role="menuitem" data-tg="${esc(g.name)}"><b><span class="cdot" style="background:${gColor(g.name)}"></span>${esc(g.name)}</b><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')}<div style="display:flex;gap:6px;padding:6px 8px"><input class="in" id="tgNew" placeholder="New group" style="height:34px;flex:1" aria-label="New group name"><button class="btn sm" type="button" data-tgnew>Add</button></div>`,
     (ev,menu)=>{const b=ev.target.closest('[data-tg],[data-tgnew]');if(!b)return;const name=b.dataset.tg||$('#tgNew').value.trim().replace(/\s+/g,' ').slice(0,40);if(!name)return;
