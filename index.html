@@ -41,6 +41,28 @@ svg{flex:none}
 .nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
 #invDlg{width:min(1500px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+#lineDlg{width:min(1400px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}#plDlg{width:min(1600px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+.ln-wrap{grid-template-rows:auto minmax(0,1fr) auto}.ln-main{display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);min-height:0}
+.ln-form{overflow:auto;padding:16px 18px;border-right:1px solid var(--line);display:grid;gap:14px;align-content:start}.ln-form .field{margin:0}.ln-form h4{margin:4px 0 0;font:700 12.5px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.ln-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ln-togs{display:flex;flex-wrap:wrap;gap:6px}
+.ln-items{display:grid;gap:4px}.ln-it{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:8px;align-items:center;padding:4px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.ln-it img,.ln-it .iv-ph{width:40px;height:50px;object-fit:cover;object-position:top;border-radius:4px;font-size:12px}.ln-it b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ln-it small{color:var(--muted);font-size:12px}
+.ln-it .acts{display:flex;gap:2px}.ln-it .acts button{border:0;background:none;width:26px;height:26px;border-radius:6px;cursor:pointer;color:var(--muted);font-size:14px}.ln-it .acts button:hover{background:var(--raise);color:var(--ink)}
+.ln-prev{position:relative;background:#525659;min-height:0;overflow:hidden}.ln-pages{position:absolute;inset:0;overflow:auto;padding:18px;display:grid;gap:16px;justify-items:center;align-content:start}.ln-pages canvas{width:min(100%,760px);height:auto;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.35);border-radius:2px}.ln-wait{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px}.ln-wait[hidden]{display:none}
+.ml-line{display:flex;gap:12px;align-items:center;background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;font-size:14px}.ml-line svg{width:28px;height:28px;color:var(--accent);flex:none}.ml-line small{display:block;color:var(--muted)}.ml-line[hidden]{display:none}
+@media (max-width:860px){.ln-main{grid-template-columns:1fr;grid-template-rows:auto minmax(320px,1fr);overflow:auto}.ln-form{border-right:0;border-bottom:1px solid var(--line);overflow:visible}}
+.pl-wrap{grid-template-rows:auto auto minmax(0,1fr)}.pl-bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise)}.pl-bar #plQ{flex:1 1 240px;min-width:0;height:38px}.pl-bar select{height:38px;width:auto}
+.pl-kpis{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted)}.pl-kpis b{color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums}
+.pl-board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(215px,1fr);gap:12px;overflow:auto;padding:14px 16px;min-height:0;background:var(--bg)}
+.pl-col{display:flex;flex-direction:column;min-height:0;background:var(--raise);border:1px solid var(--line);border-radius:12px;max-height:100%}.pl-col.over{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.pl-ch{padding:10px 12px 8px;border-bottom:1px solid var(--line)}.pl-ch b{display:flex;align-items:center;gap:8px;font-size:14px}.pl-ch b i{width:10px;height:10px;border-radius:50%;background:var(--c)}.pl-ch b span{margin-left:auto;font:600 12px var(--ui);color:var(--muted);background:var(--panel);border-radius:999px;padding:1px 8px}.pl-ch small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;font-variant-numeric:tabular-nums}
+.pl-cards{overflow:auto;padding:8px;display:grid;gap:8px;align-content:start;min-height:80px}
+.pl-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 11px;display:grid;gap:5px;cursor:grab;font-size:13px}.pl-card:active{cursor:grabbing}.pl-card.drag{opacity:.4}.pl-card:hover{border-color:var(--line2)}
+.pl-card .who{border:0;background:none;padding:0;text-align:left;font:700 14px var(--ui);color:var(--ink);cursor:pointer}.pl-card .who:hover{color:var(--accent)}.pl-card .pl-sub{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-card .pl-sheet{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pl-card .pl-row{display:flex;gap:6px;align-items:center}.pl-card .pl-row .spacer{flex:1}
+.pl-val{width:96px;height:30px;border:1px solid var(--line2);border-radius:7px;padding:0 8px;font:600 13px var(--ui);background:var(--panel);color:var(--ink);font-variant-numeric:tabular-nums}.pl-mv{height:30px;border:1px solid var(--line2);border-radius:7px;background:var(--panel);color:var(--muted);font:12.5px var(--ui);max-width:120px}
+.pl-rp{font-size:11.5px;font-weight:700;color:#fff;background:var(--accent);border-radius:6px;padding:1px 6px}
+.pl-empty{color:var(--muted);font-size:12.5px;text-align:center;padding:14px 6px;border:1px dashed var(--line2);border-radius:8px}
 #homeDlg{width:min(1320px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
 .hm-wrap{grid-template-rows:auto minmax(0,1fr)}.hm-scroll{overflow:auto;min-height:0;background:var(--bg)}
 .hm{max-width:1240px;margin:0 auto;padding:20px 20px 32px;display:grid;gap:16px}
@@ -81,6 +103,7 @@ svg{flex:none}
 .iv-chip{border:1px solid var(--line2);background:var(--panel);border-radius:10px;height:38px;padding:0 12px;font:600 13px var(--ui);color:var(--ink);cursor:pointer}.iv-chip[aria-pressed=true]{background:#FFF4D6;border-color:#E8A600;color:#7A5500}
 .iv-bulk{position:sticky;top:-18px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--ink);color:var(--panel);border-radius:12px;padding:8px 12px;margin-bottom:12px;font-size:14px}.iv-bulk .btn{background:transparent;color:inherit;border-color:rgba(255,255,255,.35)}.iv-bulk .btn:hover{background:rgba(255,255,255,.12)}.iv-bulk .spacer{flex:1}
 .ivd-state{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0}.ivd-state .switch{margin:0}
+.iv-type{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:1px 7px;font:700 11.5px var(--ui);margin-right:6px;vertical-align:2px}
 .ivd-note{width:100%;min-height:70px;resize:vertical;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;font:14px/1.45 var(--ui);background:var(--panel);color:var(--ink)}
 .ivd-sent{display:grid;gap:2px;max-height:320px;overflow:auto}.ivd-sent .r{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 8px;border-radius:8px;font-size:13.5px;cursor:pointer}.ivd-sent .r:hover{background:var(--raise)}
 .ivd-sent .r b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ivd-sent .r small{display:block;color:var(--muted);font-size:12px}.ivd-sent .st{font-size:12px;border-radius:6px;padding:2px 7px;background:var(--raise);color:var(--muted);white-space:nowrap}.ivd-sent .st.rp{background:var(--accent-soft);color:var(--accent);font-weight:600}
@@ -744,6 +767,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
         <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
         <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea><small class="hint">{name} becomes each customer's name (never their company), with their title if you've set one, {company} their company and {product} the product name. Customers without a name are flagged so you can add one. You can also edit the message right in the preview. Your wording is remembered for next time, and synced when you're signed in.</small><small class="ml-msgprev" id="mlMsgPrev"></small></label>
         <div class="gr-def"><label for="mlGreetBy">Greet customers by</label><select class="in" id="mlGreetBy"><option value="first">First name</option><option value="last">Last name</option><option value="full">Full name</option></select><small>Change it for one customer, or add Mr., Mrs. and so on, in the preview or on their customer page.</small></div>
+        <div class="ml-line" id="mlLine" hidden></div>
         <div class="group ml-how"><h3>Include the sell sheet</h3>
           <div class="how-row">
             <div class="field"><span>Attach as</span>
@@ -781,6 +805,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span><b>Home</b><small id="navHome">Today at a glance</small></span></button>
       <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><span><b>Inventory</b><small id="navInv"></small></span></button>
+      <button type="button" class="nav-it" data-nav="pipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/></svg><span><b>Pipeline</b><small id="navPipe">Customers from first send to order</small></span></button>
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
       <button type="button" class="nav-it nav-sub" data-nav="cust-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span><b>New customer</b></span></button>
@@ -797,6 +822,23 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
   </div>
 </dialog>
 <div class="hm-tip" id="hmTip" role="tooltip" hidden></div>
+<dialog id="lineDlg" aria-label="Line sheet">
+  <div class="lg-wrap ln-wrap">
+    <div class="ml-top"><h2>Line sheet</h2><span class="note" id="lnSum"></span><button class="btn icon sm ghost" id="lnClose" type="button" aria-label="Close">✕</button></div>
+    <div class="ln-main">
+      <div class="ln-form" id="lnForm"></div>
+      <div class="ln-prev"><div class="ln-pages" id="lnPages" aria-label="Line sheet preview"></div><div class="ln-wait" id="lnWait">Making the preview…</div></div>
+    </div>
+    <div class="ml-bot"><span class="note" id="lnStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="lnDrive" type="button">Save to Google Drive</button><button class="btn sm" id="lnDl" type="button">Download PDF</button><button class="btn primary" id="lnEmail" type="button">Email it</button></div></div>
+  </div>
+</dialog>
+<dialog id="plDlg" aria-label="Pipeline">
+  <div class="lg-wrap pl-wrap">
+    <div class="ml-top"><h2>Pipeline</h2><span class="note" id="plSum"></span><button class="btn icon sm ghost" id="plClose" type="button" aria-label="Close">✕</button></div>
+    <div class="pl-bar" id="plBar"></div>
+    <div class="pl-board" id="plBoard"></div>
+  </div>
+</dialog>
 <dialog id="invDlg" aria-label="Inventory">
   <div class="lg-wrap iv-wrap">
     <div class="ml-top"><h2>Inventory</h2><span class="note" id="ivSum"></span><button class="btn icon sm ghost" id="ivClose" type="button" aria-label="Close">✕</button></div>
@@ -1853,7 +1895,7 @@ if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.
 if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
 const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,greetBy:MAIL.greetBy}));
-const embedParts=()=>[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.att;
+const embedParts=()=>MAIL.line?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line?[]:MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
@@ -2167,7 +2209,7 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
-const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj']];
+const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj'],['lineMsg','ss-linemsg','line','#mlMsg'],['lineSubj','ss-linesubj','line','#mlSubj']];
 function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
   syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
@@ -2184,7 +2226,7 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       const im=mergeInvMeta(ivMetaAll(),rd.invMeta);lsSet('ss-inv-meta',JSON.stringify(im));
       if(JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}]))
         await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,updated:Date.now()})});
-      if(invDlg.open)renderInv();
+      if(invDlg.open)renderInv(true);
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
@@ -2235,7 +2277,7 @@ const COLORS=[['red','Red','#DC2626'],['orange','Orange','#EA7317'],['yellow','Y
 const normHex=v=>{v=String(v||'').trim().replace(/^#?/,'#');if(/^#[0-9a-f]{3}$/i.test(v))v='#'+[...v.slice(1)].map(c=>c+c).join('');return /^#[0-9a-f]{6}$/i.test(v)?v.toUpperCase():'';};
 const tagHex=c=>COLOR_HEX[c]||normHex(c),tagName=c=>(COLORS.find(x=>x[0]===c)||[])[1]||normHex(c);
 const lgRecent=()=>{const r=lsJ('ss-lgcolors');return Array.isArray(r)?r.map(normHex).filter(Boolean).slice(0,8):[];};
-const STATUSES=[['none','No reply yet'],['replied','Replied'],['interested','Interested'],['ordered','Ordered'],['declined','Not interested']],ST_NAME=Object.fromEntries(STATUSES);
+const STATUSES=[['none','No reply yet'],['replied','Replied'],['interested','Interested'],['quoted','Quoted'],['ordered','Ordered'],['declined','Not interested']],ST_NAME=Object.fromEntries(STATUSES);
 const lgKey=()=>{const a=authGet();return a?`ss-log:${a.prov}:${ck(a.email)}`:'ss-log';};
 let lgV=0,thC=null; // lgV is bumped by lgLoad and lgSave, so the grouped threads are only rebuilt when the log changes
 function lgLoad(){lgV++;try{const d=JSON.parse(lsGet(lgKey())||'{}')||{};LG.list=Array.isArray(d.entries)?d.entries.filter(e=>e&&e.id&&e.at):[];LG.deleted=Array.isArray(d.deleted)?d.deleted:[];}catch(_){LG.list=[];LG.deleted=[];}}
@@ -2261,14 +2303,15 @@ function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.f
   const base=document.title.replace(/^\(\d+\+?\) /,'');document.title=r+n?`(${r+n>99?'99+':r+n}) ${base}`:base;}
 // called after each successful email
 function logSent(m,prov,from,kinds,parts,res){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
-  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:S.id,sheet:sheetName(S),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
+  const L=MAIL.line;
+  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:L?'line:'+L.id:S.id,sheet:L?L.title+' (line sheet)':sheetName(S),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
     how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',gthread:res?.threadId||'',upd:now});}
 const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip:String(r.snip||'').slice(0,300),thread:String(r.thread||'').slice(0,40),seen:!!r.seen}:undefined;
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
   return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),
-      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
+      how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),value:Math.max(0,Math.min(1e9,+e.value||0))||undefined,line:Array.isArray(e.line)?e.line.map(x=>String(x).slice(0,200)).slice(0,120):undefined,upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
 const lgGroupBy=()=>lsGet('ss-lggroup')==='sheet'?'sheet':'date';
@@ -2547,7 +2590,7 @@ function doneView(title,sub,files){dvStatus('');$('#dvDone').innerHTML=`<div cla
 
 /* the email itself */
 // {product} is the product name only (the item code stays in the product summary and the attached sheet)
-const productLabel=()=>String(S.title||'').trim()||String(S.code||'').trim()||'this product';
+const productLabel=()=>MAIL.line?MAIL.line.title:String(S.title||'').trim()||String(S.code||'').trim()||'this product';
 // a name split into first / last / full. "LEE, SARAH" → Sarah / Lee; titles (Mr, Mrs…) and suffixes (Jr, III…) are skipped; ALL-CAPS is tidied.
 const HON_RE=/^(mr|mrs|ms|miss|mx|dr|prof|sir)\.?$/i,SUF_RE=/^(jr|sr|ii|iii|iv|phd|md|esq)\.?$/i;
 const tidyName=f=>f&&f===f.toUpperCase()&&f!==f.toLowerCase()?f.toLowerCase().replace(/(^|[-'’\s])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase()):f;
@@ -2669,7 +2712,7 @@ async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
     const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
-function checkHow(){return attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
+function checkHow(){return MAIL.line||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
 let sending=false;
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
@@ -2680,7 +2723,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(nn.length&&!nnOk){nnOk=true;mlStatus(`${nn.length} ${nn.length>1?'customers have':'customer has'} no name (see the list on the right). Add names, or click Send again to send anyway.`,true);return;}
   sending=true;$('#mlSend').disabled=true;
   try{let tok=tokGet(p);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=await login(p,false);renderAcct();}
-    const files=kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
+    const files=MAIL.line?[{name:MAIL.line.name,type:'application/pdf',blob:MAIL.line.blob,b64:await blobB64(MAIL.line.blob)}]:kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
@@ -2691,22 +2734,26 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   catch(e){console.error(e);mlStatus(e.message||'Sending failed.',true);}
   finally{sending=false;$('#mlSend').disabled=false;}};
 // Share: hands the files to the device's own email / share options (no sign-in needed)
-$('#mlShare').onclick=async()=>{const kinds=MAIL.att;if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
+$('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.blob],MAIL.line.name,{type:'application/pdf'})];if(!navigator.canShare?.({files:fl})){mlStatus('This browser can\'t share files. Download the PDF and attach it yourself.',true);return;}await navigator.share({files:fl,title:$('#mlSubj').value});}catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);}return;}
+  const kinds=MAIL.att;if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
   if(!navigator.canShare){mlStatus('Sharing files isn\'t supported in this browser. Try Chrome, Edge or Safari, or download the file and attach it yourself.',true);return;}
   try{const files=(await buildAttachments(kinds)).map(f=>new File([f.blob],f.name,{type:f.type}));mlStatus('');
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
-function openMail(){cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
-  inlineCache=null;MAIL.kind='new';loadWording();$('#mlGreetBy').value=MAIL.greetBy;renderHow();
+function openMail(opts){MAIL.line=opts?.line||null;cuLoad();lgLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
+  inlineCache=null;MAIL.kind=MAIL.line?'line':'new';loadWording();
+  const ml=$('#mlLine');ml.hidden=!MAIL.line;$('.ml-how').hidden=!!MAIL.line;if(MAIL.line)ml.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>Attached: ${esc(MAIL.line.name)}</b><small>Line sheet with ${MAIL.line.items.length} product${MAIL.line.items.length>1?'s':''} · ${MAIL.line.blob.size<1048576?Math.max(1,Math.round(MAIL.line.blob.size/1024))+' KB':(MAIL.line.blob.size/1048576).toFixed(1)+' MB'}. {product} becomes “${esc(MAIL.line.title)}”.</small></span>`;$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
+mailDlg.addEventListener('close',()=>{MAIL.line=null;});
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
 // the wording is remembered (and synced) as you type, for new emails and follow-ups separately. The product name is stored as {product}
 // so the next sell sheet gets its own name.
-const WORD_KEYS={new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ}};
-const wordKeys=()=>WORD_KEYS[MAIL.kind==='follow'?'follow':'new'];
+const LINE_DEF_SUBJ='Line sheet: {product}',LINE_DEF_MSG="Hi {name},\n\nPlease find attached our line sheet, {product}. Let me know which styles you'd like, or if you have any questions.\n\nThank you,";
+const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ}};
+const wordKeys=()=>WORD_KEYS[MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:'new'];
 function loadWording(){const k=wordKeys();$('#mlSubj').value=lsGet(k.subj)||k.defSubj();$('#mlMsg').value=lsGet(k.msg)||k.defMsg();}
 function keepWording(which,v){const pl=productLabel();if(pl!=='this product'&&pl.length>=3)v=v.split(pl).join('{product}');const key=wordKeys()[which];
   lsSet(key,v);lsSet(key+'-upd',String(Date.now()));scheduleSync();}
@@ -2737,7 +2784,7 @@ async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let p
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
   if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
-  const files=attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
+  const files=MAIL.line?[MAIL.line.name]:attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
   const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
   if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
     +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
@@ -2822,16 +2869,19 @@ function mergeInvMeta(...srcs){const out={};for(const src of srcs)if(src&&typeof
     if(!out[k]||(+v.upd||0)>(+out[k].upd||0))out[k]={active:v.active!==false,star:!!v.star,note:String(v.note||'').slice(0,2000),upd:+v.upd||0};}return out;}
 let IVM=ivMetaAll();
 const ivm=k=>IVM[k]||{active:true,star:false,note:''};
+// settings follow the product (by item code, else name), not the folder it's in
+const mk=x=>x.sum?.code?'c:'+nrm(x.sum.code):'n:'+nrm(x.name),mkOf=k=>{const x=IV.items.find(i=>i.key===k);return x?mk(x):k;};
 function ivmSet(keys,patch){const now=Date.now();IVM=ivMetaAll();for(const k of keys)IVM[k]={...ivm(k),...patch,upd:now};lsSet('ss-inv-meta',JSON.stringify(IVM));scheduleSync();}
 // who each product was sent to: the Sent list stores the sheet as "CODE · Title"
 const sheetParts=n=>{const p=String(n||'').split(' · ');return p.length>1?{code:nrm(p[0]),title:nrm(p.slice(1).join(' · '))}:{code:nrm(p[0]),title:nrm(p[0])};};
 let ivSendC=null;
-function ivSendIndex(){if(ivSendC&&ivSendC.v===lgV&&ivSendC.n===LG.list.length)return ivSendC.m;const m=new Map(),add=(k,t)=>{if(!k)return;if(!m.has(k))m.set(k,[]);m.get(k).push(t);};
-  for(const t of threads()){const p=sheetParts(t.root.sheet);add('c:'+p.code,t);if(p.title!==p.code)add('t:'+p.title,t);}ivSendC={v:lgV,n:LG.list.length,m};return m;}
+function ivSendIndex(){if(ivSendC&&ivSendC.v===lgV&&ivSendC.n===LG.list.length)return ivSendC.m;const m=new Map(),add=(k,t)=>{if(!k)return;if(!m.has(k))m.set(k,[]);const l=m.get(k);if(!l.includes(t))l.push(t);};
+  for(const t of threads()){if(t.root.line){for(const n of t.root.line){const p=sheetParts(n);add('c:'+p.code,t);if(p.title!==p.code)add('t:'+p.title,t);}continue;}const p=sheetParts(t.root.sheet);add('c:'+p.code,t);if(p.title!==p.code)add('t:'+p.title,t);}ivSendC={v:lgV,n:LG.list.length,m};return m;}
 function ivSends(x){const m=ivSendIndex(),code=nrm(x.sum?.code),title=nrm(invTitle(x));const l=(code&&m.get('c:'+code))||(title&&(m.get('t:'+title)||m.get('c:'+title)))||[];return l;}
 const ivSendStats=x=>{const l=ivSends(x);return{n:l.length,rep:l.filter(t=>t.root.reply||['replied','interested','ordered'].includes(t.root.status)).length,ord:l.filter(t=>t.root.status==='ordered').length,last:l.length?Math.max(...l.map(t=>t.last)):0,list:l};};
 const IV={folder:(()=>{try{const f=JSON.parse(lsGet('ss-inv-folder')||'null');return f&&f.id?f:null;}catch(_){return null;}})(),items:[],busy:false,prog:null,err:'',last:+lsGet('ss-inv-sync')||0,
-  q:'',cat:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map(),status:'active',star:false,sel:new Set()};
+  tree:(()=>{try{return new Map(JSON.parse(lsGet('ss-inv-tree')||'[]'));}catch(_){return new Map();}})(),add:null,
+  q:'',cat:'',type:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map(),status:'active',star:false,sel:new Set()};
 const INV_MIMES={'application/pdf':'PDF','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'Word','application/vnd.google-apps.document':'Doc','image/jpeg':'JPG','image/png':'PNG'};
 const INV_RANK={PDF:0,Word:1,Doc:2,JPG:3,PNG:4};
 let invDbp=null;
@@ -2839,20 +2889,83 @@ function invDb(){return invDbp||(invDbp=new Promise((res,rej)=>{let r;try{r=inde
 async function invAll(){try{const d=await invDb();return await new Promise(res=>{const q=d.transaction('items').objectStore('items').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);});}catch(_){return[];}}
 async function invPut(list,dropKeys=[]){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite'),os=t.objectStore('items');for(const x of list)os.put(x);for(const k of dropKeys)os.delete(k);t.oncomplete=res;t.onerror=res;t.onabort=res;});}catch(_){}}
 async function invClear(){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite');t.objectStore('items').clear();t.oncomplete=res;t.onerror=res;});}catch(_){}}
+const DRIVE_EDIT='https://www.googleapis.com/auth/drive';
+async function invEditToken(){const t=tokGet('google');if(t&&hasScope(t,DRIVE_EDIT))return t;const a=authGet();
+  const n=a&&a.prov!=='google'?await googleLogin(false,meFor('google'),[DRIVE_READ,DRIVE_EDIT]):await login('google',false,true,[DRIVE_READ,DRIVE_EDIT]);
+  if(!hasScope(n,DRIVE_EDIT))throw new Error('Google didn\'t give permission to move files. Try again and allow "See, edit, create and delete all of your Google Drive files".');return n;}
+// the matching folder on the other side: …/Active/Stock/Mens → …/Inactive/Stock/Mens (made if missing)
+async function ivTargetFolder(t,x,toOn,made){const ids=x.ids||[],i=x.fsi,base=i>0?ids[i-1]:IV.folder.id,tree=IV.tree||new Map(),rx=toOn?FST_ON:FST_OFF;
+  const kid=async(parent,test,name)=>{for(const[id,f]of tree)if(f.parent===parent&&test(f.name))return id;const k=parent+'|'+name.toLowerCase();if(made.has(k))return made.get(k);
+    const nf=await driveFetch(t,'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true&fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:FOLDER_MIME,parents:[parent]})});
+    tree.set(nf.id,{name:nf.name,parent});made.set(k,nf.id);return nf.id;};
+  let cur=await kid(base,n=>rx.test(n),toOn?'Active':'Inactive');
+  for(const id of ids.slice(i+1)){const nm=tree.get(id)?.name;if(!nm)break;cur=await kid(cur,n=>n.trim().toLowerCase()===nm.trim().toLowerCase(),nm);}
+  return cur;}
+async function ivMove(list,toOn){let t;try{t=await invEditToken();}catch(e){toast(e.message,6000);renderInv();return;}
+  const made=new Map();let n=0;toast(`Moving ${list.length} sell sheet${list.length>1?'s':''} in Google Drive…`,20000);
+  try{for(const x of list){const to=await ivTargetFolder(t,x,toOn,made);
+      for(const f of x.files){if(!f.parent||f.parent===to)continue;await driveFetch(t,`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?addParents=${encodeURIComponent(to)}&removeParents=${encodeURIComponent(f.parent)}&supportsAllDrives=true&fields=id`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:'{}'});}n++;}
+    toast(`Moved ${n} sell sheet${n>1?'s':''} to your ${toOn?'Active':'Inactive'} folder`);}
+  catch(e){console.error(e);toast(`Moved ${n} of ${list.length}. ${e.message||'Google Drive refused the move.'}`,7000);}
+  IV.open=null;await invSync(false);}
+// folders under the inventory folder, with their full names ("Active / Stock / Mens")
+function ivFolders(){const T=IV.tree,root=IV.folder?.id,out=[];if(!root||!T)return out;
+  for(const[id]of T){const names=[];let cur=id,ok=false,n=0;while(cur&&n++<12){if(cur===root){ok=true;break;}const f=T.get(cur);if(!f)break;names.unshift(f.name);cur=f.parent;}if(ok)out.push({id,names,label:names.join(' / ')});}
+  return out.sort((a,b)=>COLL.compare(a.label,b.label));}
+const ivFolderLabel=id=>id===IV.folder?.id?IV.folder.name+' (top level)':(ivFolders().find(f=>f.id===id)?.label||'');
+const ivDestOpts=sel=>[{id:IV.folder.id,label:IV.folder.name+' (top level)'},...ivFolders()].map(f=>`<option value="${esc(f.id)}"${f.id===sel?' selected':''}>${esc(f.label)}</option>`).join('');
+// where new things go by default: the last folder used, else the folder matching the filters on screen
+function ivDefaultDest(){const last=lsGet('ss-inv-dest'),fs=ivFolders();if(last&&(last===IV.folder.id||fs.some(f=>f.id===last)))return last;
+  const want=fs.filter(f=>{const c=ivClassify(f.names);return(IV.status==='all'||!c.fst||c.fst===(IV.status==='active'?'on':'off'))&&(!IV.type||c.type===IV.type)&&(!IV.cat||c.cats[0]===IV.cat);});
+  return(want.sort((a,b)=>b.names.length-a.names.length)[0]||{id:IV.folder.id}).id;}
+function ivAddHTML(){const A=IV.add,x=A.key&&IV.items.find(i=>i.key===A.key),dest=A.dest||(x?x.files[0]?.parent:ivDefaultDest());
+  const sel=(lab,id)=>`<label class="field"><span>${lab}</span><select class="in" id="${id}">${ivDestOpts(dest)}</select></label>`;
+  const body=A.mode==='folder'?`<h3>New folder</h3><p class="iv-sync">Creates the folder in Google Drive, so it shows here and in Drive. Use it as a category, e.g. “Mens”, or a status or type folder.</p>
+      <label class="field"><span>Folder name</span><input class="in" id="ivNewName" maxlength="80" placeholder="e.g. Mens" autocomplete="off"></label>${sel('Inside','ivDest')}`
+    :A.mode==='sheet'?`<h3>Add the open sell sheet</h3><p class="iv-sync">Saves <b>${esc(sheetName(S))}</b> into the folder as a PDF. It reads back here exactly, with its photos.</p>${sel('Save into','ivDest')}<label class="tog" style="justify-self:start"><input type="checkbox" id="ivAlsoWord"><span>Also save a Word copy</span></label>`
+    :A.mode==='upload'?`<h3>Upload sell sheets</h3><p class="iv-sync">PDF, Word or picture files from this computer are copied into the folder in Google Drive.</p><label class="field"><span>Files</span><input class="in" type="file" id="ivFiles" multiple accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf"></label>${sel('Upload into','ivDest')}`
+    :`<h3>Move ${esc(invTitle(x||{name:''}))}</h3><p class="iv-sync">Moves ${x&&x.files.length>1?`all ${x.files.length} files (${x.files.map(f=>f.kind).join(', ')})`:'the file'} to another folder in Google Drive.</p>${sel('Move to','ivDest')}`;
+  return`<div class="ivd-b" style="grid-template-columns:1fr;max-width:560px">${body.replace('<h3>','<div style="display:grid;gap:12px"><h3 style="margin:0;font:700 20px var(--ui)">')}</div></div>
+    <div class="ivd-f"><button class="btn sm primary" type="button" data-ivgo>${A.mode==='folder'?'Create folder':A.mode==='move'?'Move':A.mode==='upload'?'Upload':'Save to Drive'}</button><span class="iv-sync" id="ivAddMsg"></span><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivaddx>Cancel</button></div>`;}
+async function ivAddGo(){const A=IV.add,dest=$('#ivDest')?.value||IV.folder.id,msg=t=>{const m=$('#ivAddMsg');if(m)m.textContent=t;};lsSet('ss-inv-dest',dest);
+  let t;try{t=await invEditToken();}catch(e){msg(e.message);return;}
+  try{if(A.mode==='folder'){const name=$('#ivNewName').value.trim().replace(/\s+/g,' ');if(!name){$('#ivNewName').focus();return;}
+      const dup=[...IV.tree].find(([,f])=>f.parent===dest&&f.name.trim().toLowerCase()===name.toLowerCase());if(dup){msg('There\'s already a folder with that name there.');return;}
+      msg('Creating…');const nf=await driveFetch(t,'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true&fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:FOLDER_MIME,parents:[dest]})});
+      IV.tree.set(nf.id,{name:nf.name,parent:dest});lsSet('ss-inv-tree',JSON.stringify([...IV.tree]));lsSet('ss-inv-dest',nf.id);IV.add=null;toast(`Folder “${nf.name}” created in Google Drive`);renderInv();return;}
+    if(A.mode==='move'){const x=IV.items.find(i=>i.key===A.key);if(!x)return;msg('Moving…');
+      for(const f of x.files){if(!f.parent||f.parent===dest)continue;await driveFetch(t,`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?addParents=${encodeURIComponent(dest)}&removeParents=${encodeURIComponent(f.parent)}&supportsAllDrives=true&fields=id`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:'{}'});}
+      IV.add=null;IV.open=null;toast(`Moved to ${ivFolderLabel(dest)}`);await invSync(false);return;}
+    if(A.mode==='sheet'){msg('Making the PDF…');await loadScript('jspdf');const cv=await sheetCanvas(),files=[[fileBase()+'.pdf','application/pdf',await makeFile('pdf',cv)]];
+      if($('#ivAlsoWord')?.checked){msg('Making the Word file…');files.push([fileBase()+'.docx',MAIL_TYPES.docx[0],await makeFile('docx',cv)]);}cv.width=cv.height=0;
+      for(const[n,ty,b]of files){msg('Saving '+n+'…');await driveUpload(t,dest,n,ty,b,true);}
+      IV.add=null;toast(`Saved “${sheetName(S)}” to ${ivFolderLabel(dest)}`);await invSync(false);return;}
+    if(A.mode==='upload'){const fl=[...($('#ivFiles')?.files||[])];if(!fl.length){$('#ivFiles').focus();return;}let n=0;
+      for(const file of fl){msg(`Uploading ${++n} of ${fl.length}…`);const ty=file.type||(/\.pdf$/i.test(file.name)?'application/pdf':/\.docx$/i.test(file.name)?MAIL_TYPES.docx[0]:'image/jpeg');await driveUpload(t,dest,file.name,ty,file,false);}
+      IV.add=null;toast(`Uploaded ${fl.length} file${fl.length>1?'s':''} to ${ivFolderLabel(dest)}`);await invSync(false);}}
+  catch(e){console.error(e);msg(e.message||'Google Drive refused that.');}}
 // a Google token that can read Drive (asks once)
-async function invToken(interactive){const t=tokGet('google');if(t&&hasScope(t,DRIVE_READ))return t;if(!interactive)return null;
+async function invToken(interactive){const t=tokGet('google');if(t&&(hasScope(t,DRIVE_READ)||hasScope(t,DRIVE_EDIT)))return t;if(!interactive)return null;
   const a=authGet(),n=a&&a.prov!=='google'?await googleLogin(false,meFor('google'),[DRIVE_READ]):await login('google',false,true,[DRIVE_READ]);
   if(!hasScope(n,DRIVE_READ))throw new Error('Google didn\'t give permission to read your Drive. Try again and allow "See and download all your Google Drive files".');return n;}
 const folderIdFrom=v=>{v=String(v||'').trim();const m=v.match(/\/folders\/([\w-]{10,})/)||v.match(/[?&]id=([\w-]{10,})/)||v.match(/^([\w-]{20,})$/);return m?m[1]:'';};
 // the base product name of a file: "ABC-1 Sell Sheet.pdf" → "abc-1"
 const invBase=n=>String(n||'').replace(/\.(pdf|docx?|jpe?g|png)$/i,'').replace(/\s*[-–]?\s*sell\s*sheet\s*$/i,'').replace(/\s*\(\d+\)$/,'').trim();
-async function invList(t,folder){const out=[],seen=new Set();
-  const walk=async(id,path,depth)=>{if(seen.has(id)||out.length>=800)return;seen.add(id);let page='';
+// Folder names can set a product's status and type: a folder called "Active…" or "Inactive…" (also Discontinued / Archive)
+// sets the status of everything inside it, and the folder just inside that is the type (e.g. "Stock" / "Inventory item").
+// Any other folders are categories.
+const FST_ON=/^\s*(active|current|live|in\s*season)\b/i,FST_OFF=/^\s*(inactive|not\s*active|discontinued|archived?|old|retired|past)\b/i;
+const fstOf=n=>FST_OFF.test(n)?'off':FST_ON.test(n)?'on':'';
+function ivClassify(names){const i=names.findIndex(fstOf);if(i<0)return{fst:'',type:'',cats:names};
+  const rest=names.slice(i+1);return{fst:fstOf(names[i]),fsi:i,type:rest[0]||'',cats:[...names.slice(0,i),...rest.slice(1)]};}
+async function invList(t,folder){const out=[],seen=new Set(),tree=new Map([[folder.id,{name:folder.name,parent:null}]]);
+  const walk=async(id,path,ids,depth)=>{if(seen.has(id)||out.length>=1200)return;seen.add(id);let page='';
     do{const q=encodeURIComponent(`'${qs(id)}' in parents and trashed=false`);
       const j=await driveFetch(t,`https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=200&supportsAllDrives=true&includeItemsFromAllDrives=true&fields=nextPageToken,files(id,name,mimeType,modifiedTime,size,webViewLink)${page?'&pageToken='+encodeURIComponent(page):''}`);
-      for(const f of j.files||[]){if(f.mimeType===FOLDER_MIME){if(depth<3)await walk(f.id,[...path,f.name],depth+1);}else if(INV_MIMES[f.mimeType])out.push({...f,cat:path[0]||'',path:path.join(' / ')});}
+      for(const f of j.files||[]){if(f.mimeType===FOLDER_MIME){tree.set(f.id,{name:f.name,parent:id});if(depth<5)await walk(f.id,[...path,f.name],[...ids,f.id],depth+1);}
+        else if(INV_MIMES[f.mimeType]){const c=ivClassify(path);out.push({...f,parent:id,names:path,ids,...c,cat:c.cats[0]||'',path:[c.type,...c.cats].filter(Boolean).join(' / ')});}}
       page=j.nextPageToken||'';}while(page);};
-  await walk(folder.id,[],0);return out;}
+  await walk(folder.id,[],[],0);IV.tree=tree;lsSet('ss-inv-tree',JSON.stringify([...tree]));return out;}
 async function invDownload(t,f){const ex=f.mimeType==='application/vnd.google-apps.document';
   const url=ex?`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}/export?mimeType=${encodeURIComponent('application/vnd.openxmlformats-officedocument.wordprocessingml.document')}`:`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&supportsAllDrives=true`;
   let r;try{r=await fetch(url,{headers:{Authorization:'Bearer '+t.token}});}catch(_){throw new Error('Could not reach Google Drive.');}
@@ -2870,7 +2983,9 @@ function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
       colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot})),totQ:c.T.q,
       details:sh.rows.map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
   catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
-async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f.id,mod:f.modifiedTime,cat:group.cat,path:group.path,name:group.name,files:group.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name})),updated:Math.max(...group.files.map(x=>Date.parse(x.modifiedTime)||0))};
+const ivFile=x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name,parent:x.parent});
+const ivPlace=g=>({cat:g.cat,path:g.path,fst:g.fst,type:g.type,ids:g.ids,fsi:g.fsi});
+async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f.id,mod:f.modifiedTime,...ivPlace(group),name:group.name,files:group.files.map(ivFile),updated:Math.max(...group.files.map(x=>Date.parse(x.modifiedTime)||0))};
   try{const file=await invDownload(t,f),kind=INV_MIMES[f.mimeType];
     if(kind==='JPG'||kind==='PNG'){out.thumb=await shrink(file,480);out.kind='image';return out;}
     const buf=kind==='PDF'?await file.arrayBuffer():null;
@@ -2880,25 +2995,25 @@ async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f
     return out;}
   catch(e){out.bad=e.status===401?'Sign-in expired':'Couldn\'t download';out.retry=true;return out;}}
 async function invSync(interactive){if(IV.busy||!IV.folder)return;let t;
-  try{t=await invToken(interactive);}catch(e){IV.err=e.message;renderInv();return;}
-  if(!t){IV.err='signin';renderInv();return;}
-  IV.busy=true;IV.err='';IV.prog={done:0,total:0,phase:'list'};renderInv();
+  try{t=await invToken(interactive);}catch(e){IV.err=e.message;renderInv(true);return;}
+  if(!t){IV.err='signin';renderInv(true);return;}
+  IV.busy=true;IV.err='';IV.prog={done:0,total:0,phase:'list'};renderInv(true);
   try{const files=await invList(t,IV.folder),groups=new Map();
-    for(const f of files){const base=invBase(f.name),k=(f.path+'|'+base).toLowerCase();if(!groups.has(k))groups.set(k,{key:k,name:base||f.name,cat:f.cat,path:f.path,files:[]});groups.get(k).files.push(f);}
+    for(const f of files){const base=invBase(f.name),k=(f.names.join('/')+'|'+base).toLowerCase();if(!groups.has(k))groups.set(k,{key:k,name:base||f.name,...ivPlace(f),files:[]});groups.get(k).files.push(f);}
     for(const g of groups.values())g.files.sort((a,b)=>INV_RANK[INV_MIMES[a.mimeType]]-INV_RANK[INV_MIMES[b.mimeType]]);
-    const cached=new Map(IV.items.map(x=>[x.key,x])),keep=[],todo=[];
-    for(const g of groups.values()){const c=cached.get(g.key),f=g.files[0];
-      if(c&&!c.retry&&c.file===f.id&&c.mod===f.modifiedTime){keep.push({...c,cat:g.cat,path:g.path,files:g.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name})),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0))});}else todo.push(g);}
+    const cached=new Map(IV.items.map(x=>[x.key,x])),byFile=new Map(IV.items.filter(x=>x.file).map(x=>[x.file+'|'+x.mod,x])),keep=[],todo=[];
+    for(const g of groups.values()){const f=g.files[0],c=byFile.get(f.id+'|'+f.modifiedTime);
+      if(c&&!c.retry){keep.push({...c,key:g.key,name:g.name,...ivPlace(g),files:g.files.map(ivFile),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0))});}else todo.push(g);}
     const gone=[...cached.keys()].filter(k=>!groups.has(k));
-    IV.items=[...keep,...todo.map(g=>({key:g.key,name:g.name,cat:g.cat,path:g.path,files:g.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,name:x.name})),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0)),pending:true}))];
-    IV.prog={done:0,total:todo.length,phase:'read'};renderInv();await invPut(keep,gone);
+    IV.items=[...keep,...todo.map(g=>({key:g.key,name:g.name,...ivPlace(g),files:g.files.map(ivFile),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0)),pending:true}))];
+    IV.prog={done:0,total:todo.length,phase:'read'};renderInv(true);await invPut(keep,gone);
     let i=0;const next=async()=>{while(i<todo.length){const g=todo[i++],it=await invRead(t,g);const at=IV.items.findIndex(x=>x.key===g.key);if(at>=0)IV.items[at]=it;await invPut([it]);IV.prog.done++;invSoon();}};
     await Promise.all([next(),next(),next()]);
     IV.last=Date.now();lsSet('ss-inv-sync',String(IV.last));}
   catch(e){console.error(e);IV.err=e.status===404?'That folder can\'t be found. It may have been moved or deleted, or shared with a different Google account.':e.message||'Couldn\'t read the folder.';}
-  finally{IV.busy=false;IV.prog=null;renderInv();}}
-let invT=0;const invSoon=()=>{clearTimeout(invT);invT=setTimeout(renderInv,120);};
-async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.items=[];IV.full.clear();await invClear();}IV.folder={id:f.id,name:f.name};lsSet('ss-inv-folder',JSON.stringify(IV.folder));IV.cat='';IV.open=null;await invSync(true);}
+  finally{IV.busy=false;IV.prog=null;renderInv(true);}}
+let invT=0;const invSoon=()=>{clearTimeout(invT);invT=setTimeout(()=>renderInv(true),120);};
+async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.items=[];IV.full.clear();IV.tree=new Map();await invClear();}IV.folder={id:f.id,name:f.name};lsSet('ss-inv-folder',JSON.stringify(IV.folder));IV.cat='';IV.open=null;await invSync(true);}
 async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn\'t set up yet. Click Sign in → Set up sign-in.',5000);return;}
   let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
   if(!EMAIL_SETUP.googleApiKey){$('#ivLink')?.focus();toast('Paste the folder\'s link from Google Drive (the picker needs a Google API key).',5000);return;}
@@ -2928,21 +3043,22 @@ const invTitle=x=>x.sum?.title||x.name,invPic=x=>x.photo||x.thumb||'';
 function invPicHTML(x,cls=''){const p=invPic(x);if(x.pending)return'<div class="iv-skel"></div>';
   return p?`<img src="${p}" alt="" loading="lazy"${!x.photo&&x.kind!=='image'?` class="contain${cls}"`:''}>`:`<div class="iv-ph" style="--c:${esc(x.sum?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`;}
 const ivNF=new Intl.NumberFormat();
-const ivOn=x=>ivm(x.key).active!==false;
-function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(IV.status==='all'||(IV.status==='active')===ivOn(x))&&(!IV.star||ivm(x.key).star)&&(!IV.cat||x.cat===IV.cat)&&(!q||ivm(x.key).note.toLowerCase().includes(q)||[invTitle(x),x.name,x.sum?.code,x.cat,x.path,...(x.sum?.colours||[]).map(c=>c.name),...(x.sum?.details||[]).map(d=>d.value)].some(v=>String(v||'').toLowerCase().includes(q))));
+// a status folder in Drive decides; otherwise what was set here
+const ivOn=x=>x.fst?x.fst==='on':ivm(mk(x)).active!==false;
+function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(!IV.type||x.type===IV.type)&&(IV.status==='all'||(IV.status==='active')===ivOn(x))&&(!IV.star||ivm(mk(x)).star)&&(!IV.cat||x.cat===IV.cat)&&(!q||ivm(mk(x)).note.toLowerCase().includes(q)||[invTitle(x),x.name,x.sum?.code,x.cat,x.path,...(x.sum?.colours||[]).map(c=>c.name),...(x.sum?.details||[]).map(d=>d.value)].some(v=>String(v||'').toLowerCase().includes(q))));
   const by={name:(a,b)=>COLL.compare(invTitle(a),invTitle(b)),code:(a,b)=>COLL.compare(a.sum?.code||'~',b.sum?.code||'~'),pcs:(a,b)=>(b.sum?.pcs||0)-(a.sum?.pcs||0),updated:(a,b)=>b.updated-a.updated,
     sent:(a,b)=>ivSendStats(b).n-ivSendStats(a).n,replies:(a,b)=>ivSendStats(b).rep-ivSendStats(a).rep,lastsent:(a,b)=>ivSendStats(b).last-ivSendStats(a).last}[IV.sort]||((a,b)=>b.updated-a.updated);
   // starred first, then the chosen order
   return l.sort((a,b)=>(+!!ivm(b.key).star)-(+!!ivm(a.key).star)||by(a,b));}
-function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;IVM=ivMetaAll();lgLoad();
-  const nOn=items.filter(ivOn).length,nOff=items.length-nOn,nStar=items.filter(x=>ivm(x.key).star).length,base=IV.status==='all'?items:items.filter(x=>(IV.status==='active')===ivOn(x));
+function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;IVM=ivMetaAll();lgLoad();
+  const nOn=items.filter(ivOn).length,nOff=items.length-nOn,nStar=items.filter(x=>ivm(mk(x)).star).length,base=IV.status==='all'?items:items.filter(x=>(IV.status==='active')===ivOn(x));
   IV.sel=new Set([...IV.sel].filter(k=>items.some(x=>x.key===k)));
   const sum=base.reduce((a,x)=>(a.pcs+=x.sum?.pcs||0,a.boxes+=x.sum?.boxes||0,(x.sum?.colours||[]).forEach(c=>a.cols.add(c.name.toLowerCase())),a),{pcs:0,boxes:0,cols:new Set()});
-  $('#ivSum').textContent=F?`${nOn} active · ${nOff} inactive`:'';
+  $('#ivSum').textContent=F?`${nOn} active · ${nOff} inactive${items.some(x=>x.fst)?' (from your Drive folders)':''}`:'';
   // bar: folder, sync state
   const fic='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
   const P=IV.prog;
-  $('#ivBar').innerHTML=F?`<span class="iv-folder">${fic}<span title="${esc(F.name)}">${esc(F.name)}</span></span><a class="lnk" href="https://drive.google.com/drive/folders/${encodeURIComponent(F.id)}" target="_blank" rel="noopener">Open in Drive ↗</a><button class="lnk" type="button" id="ivChange">Change folder</button><span class="spacer"></span>
+  $('#ivBar').innerHTML=F?`<span class="iv-folder">${fic}<span title="${esc(F.name)}">${esc(F.name)}</span></span><a class="lnk" href="https://drive.google.com/drive/folders/${encodeURIComponent(F.id)}" target="_blank" rel="noopener">Open in Drive ↗</a><button class="lnk" type="button" id="ivChange">Change folder</button><button class="btn sm primary" type="button" id="ivAdd" aria-haspopup="menu">＋ Add</button><span class="spacer"></span>
     ${P?`<span class="iv-prog">${P.phase==='list'?'Looking through the folder…':`Reading sell sheets ${P.done} of ${P.total}`}${P.total?`<i><b style="width:${Math.round(P.done/P.total*100)}%"></b></i>`:''}</span>`
       :IV.err==='signin'?`<span class="iv-sync">Showing what was read ${IV.last?esc(agoMin(IV.last)):''}. Sign in with Google to refresh.</span><button class="btn sm primary" type="button" id="ivSync">Refresh</button>`
       :IV.err?`<span class="iv-bad">${esc(IV.err)}</span><button class="btn sm" type="button" id="ivSync">Try again</button>`
@@ -2951,36 +3067,42 @@ function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;IVM
     <h3>Your sell sheets, as an inventory</h3><p>Choose the Google Drive folder where you keep your sell sheets. Every sheet in it (PDF, Word, Google Docs or image) is shown here as a product with its picture, item code, price, colours and quantities. Subfolders become categories.</p>
     <button class="btn primary" type="button" id="ivPick">Choose folder in Google Drive</button><small class="iv-sync">or paste the folder's link</small>
     <div class="row"><input class="in" id="ivLink" placeholder="https://drive.google.com/drive/folders/…" aria-label="Folder link"><button class="btn" type="button" id="ivLinkGo">Use folder</button></div>
-    <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail();return;}
-  const cats=[...items.reduce((m,x)=>m.set(x.cat,(m.get(x.cat)||0)+1),new Map())].filter(([c])=>c).sort((a,b)=>COLL.compare(a[0],b[0]));
+    <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail(!bg);return;}
+  const types=[...items.reduce((m,x)=>x.type?m.set(x.type,(m.get(x.type)||0)+1):m,new Map())].sort((a,b)=>COLL.compare(a[0],b[0]));if(IV.type&&!types.some(t=>t[0]===IV.type))IV.type='';
+  const catM=items.reduce((m,x)=>m.set(x.cat,(m.get(x.cat)||0)+1),new Map());for(const fo of ivFolders()){const c=ivClassify(fo.names);if(c.cats[0]&&!catM.has(c.cats[0])&&(!IV.type||c.type===IV.type))catM.set(c.cats[0],0);}
+  const cats=[...catM].filter(([c])=>c).sort((a,b)=>COLL.compare(a[0],b[0]));
   const shown=invShown(),stat=(l,v)=>`<div class="iv-stat"><small>${l}</small><b>${v}</b></div>`,st=items.reduce((a,x)=>{const z=ivSendStats(x);a.sent+=z.n;a.rep+=z.rep;a.never+=z.n?0:ivOn(x)?1:0;return a;},{sent:0,rep:0,never:0});
   const scroll=$('#ivScroll').scrollTop,focus=document.activeElement?.id;
   const lab=IV.status==='inactive'?'Inactive':IV.status==='all'?'All':'Active';
   $('#ivBody').innerHTML=`<div class="iv-stats">${stat(lab+' products',ivNF.format(base.length))}${stat('Total pieces',ivNF.format(sum.pcs))}${stat('Total boxes',ivNF.format(sum.boxes))}${stat('Colours',ivNF.format(sum.cols.size))}${stat('Times sent',ivNF.format(st.sent))}${stat('Replies',`${ivNF.format(st.rep)}${st.sent?` <small style="display:inline;font-size:13px">(${Math.round(st.rep/st.sent*100)}%)</small>`:''}`)}${st.never?stat('Active, never sent',ivNF.format(st.never)):''}</div>
     <div class="iv-tools"><input class="in" id="ivQ" type="search" placeholder="Search name, item code, colour…" value="${esc(IV.q)}" aria-label="Search inventory">
       <span class="iv-seg" role="group" aria-label="Show">${[['active','Active',nOn],['inactive','Inactive',nOff],['all','All',items.length]].map(([v,n,c])=>`<button type="button" data-ivst="${v}" aria-pressed="${IV.status===v}">${n}<small>${c}</small></button>`).join('')}</span>
+      ${types.length?`<span class="iv-seg" role="group" aria-label="Type"><button type="button" data-ivtype="" aria-pressed="${!IV.type}">All types</button>${types.map(([t,n])=>`<button type="button" data-ivtype="${esc(t)}" aria-pressed="${IV.type===t}">${esc(t)}<small>${n}</small></button>`).join('')}</span>`:''}
       <button class="iv-chip" type="button" data-ivstar-f aria-pressed="${IV.star}" title="Only starred products">★ Starred${nStar?` (${nStar})`:''}</button>
       <select class="in" id="ivSort" aria-label="Sort">${[['updated','Recently updated'],['name','Name A–Z'],['code','Item code'],['pcs','Most pieces'],['sent','Most sent'],['replies','Most replies'],['lastsent','Recently sent']].map(([v,n])=>`<option value="${v}"${IV.sort===v?' selected':''}>${n}</option>`).join('')}</select>
       <span class="iv-view" role="group" aria-label="View"><button type="button" data-ivview="grid" aria-pressed="${IV.view==='grid'}">Cards</button><button type="button" data-ivview="list" aria-pressed="${IV.view==='list'}">List</button></span>
-      <button class="btn sm ghost" type="button" id="ivExport" title="Download the inventory as a spreadsheet (CSV)">Export</button></div>
-    ${IV.sel.size?`<div class="iv-bulk" role="toolbar" aria-label="Selected products"><b>${IV.sel.size} selected</b><span class="spacer"></span><button class="btn sm" type="button" data-ivbulk="on">Mark active</button><button class="btn sm" type="button" data-ivbulk="off">Mark inactive</button><button class="btn sm" type="button" data-ivbulk="star">★ Star</button><button class="btn sm" type="button" data-ivbulk="unstar">Unstar</button><button class="btn sm" type="button" data-ivbulk="all">Select all shown</button><button class="btn sm" type="button" data-ivbulk="clear">Clear</button></div>`:''}
+      <button class="btn sm ghost" type="button" id="ivExport" title="Download the inventory as a spreadsheet (CSV)">Export</button><button class="btn sm primary" type="button" id="ivLine" title="Make one PDF with several products: the ticked ones, or everything shown">Line sheet${IV.sel.size?` (${IV.sel.size})`:''}</button></div>
+    ${IV.sel.size?`<div class="iv-bulk" role="toolbar" aria-label="Selected products"><b>${IV.sel.size} selected</b><span class="spacer"></span><button class="btn sm" type="button" data-ivbulk="on">Mark active</button><button class="btn sm" type="button" data-ivbulk="off">Mark inactive</button><button class="btn sm" type="button" data-ivbulk="star">★ Star</button><button class="btn sm" type="button" data-ivbulk="unstar">Unstar</button><button class="btn sm" type="button" data-ivbulk="line">Line sheet</button><button class="btn sm" type="button" data-ivbulk="all">Select all shown</button><button class="btn sm" type="button" data-ivbulk="clear">Clear</button></div>`:''}
     <div class="iv-cats">${cats.length?`<button class="iv-cat" type="button" data-ivcat="" aria-pressed="${!IV.cat}">All<small>${items.length}</small></button>${cats.map(([c,n])=>`<button class="iv-cat" type="button" data-ivcat="${esc(c)}" aria-pressed="${IV.cat===c}">${esc(c)}<small>${n}</small></button>`).join('')}`:''}</div>
     ${!items.length&&!IV.busy?'<div class="iv-empty"><h3>No sell sheets in this folder yet</h3><p>Add PDF or Word sell sheets to the folder in Google Drive (Save to Drive from this site works too), then click Refresh.</p></div>'
       :!shown.length?`<div class="iv-empty"><p>${IV.status==='inactive'&&!nOff?'No inactive products. Mark a product inactive (in its panel, or tick several) to hide it from the active list without deleting anything.':'Nothing matches.'}</p></div>`
-      :IV.view==='list'?`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="num">Sent</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>{const z=ivSendStats(x),m=ivm(x.key);return`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"${ivOn(x)?'':' style="opacity:.6"'}><td><input type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"></td><td><div class="th">${invPicHTML(x)}</div></td><td><b>${m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${ivOn(x)?'':' <span class="iv-sync">· Inactive</span>'}${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc(x.cat||'')}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="num">${z.n?`${z.n}${z.rep?` <span class="iv-sync">· ${z.rep} ↩</span>`:''}`:'<span class="iv-sync">–</span>'}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`;}).join('')}</tbody></table>`
-      :`<div class="iv-grid${IV.sel.size?' selecting':''}">${shown.map(x=>{const z=ivSendStats(x),m=ivm(x.key),on=ivOn(x);return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"><button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>${on?'':'<span class="iv-off">Inactive</span>'}<div class="iv-img">${invPicHTML(x)}${x.cat?`<span class="iv-tag">${esc(x.cat)}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
+      :IV.view==='list'?`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Type / category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="num">Sent</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>{const z=ivSendStats(x),m=ivm(mk(x));return`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"${ivOn(x)?'':' style="opacity:.6"'}><td><input type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"></td><td><div class="th">${invPicHTML(x)}</div></td><td><b>${m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${ivOn(x)?'':' <span class="iv-sync">· Inactive</span>'}${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc([x.type,x.cat].filter(Boolean).join(' · '))}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="num">${z.n?`${z.n}${z.rep?` <span class="iv-sync">· ${z.rep} ↩</span>`:''}`:'<span class="iv-sync">–</span>'}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`;}).join('')}</tbody></table>`
+      :`<div class="iv-grid${IV.sel.size?' selecting':''}">${shown.map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),on=ivOn(x);return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"><button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>${on?'':'<span class="iv-off">Inactive</span>'}<div class="iv-img">${invPicHTML(x)}${x.cat||x.type?`<span class="iv-tag">${esc([x.type,x.cat].filter(Boolean).join(' · '))}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
         <div class="iv-info">${x.sum?.code?`<span class="iv-code">${esc(x.sum.code)}</span>`:''}<h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}
           ${x.sum?.price?`<span class="iv-price">${esc(x.sum.price)}</span>`:''}${x.sum&&(x.sum.pcs||x.sum.boxes)?`<span class="iv-meta"><span><b>${ivNF.format(x.sum.pcs)}</b> pcs</span><span><b>${ivNF.format(x.sum.boxes)}</b> box${x.sum.boxes===1?'':'es'}</span>${x.sum.sizes?.length&&x.sum.showSizes?`<span>${esc(x.sum.sizes.join(' · '))}</span>`:''}</span>`:''}${swDots(x.sum?.colours||[])}<span class="iv-sent">${z.n?`Sent to <b>${z.n}</b> · ${z.rep?`<span class="rp">${z.rep} replied</span>`:'no replies yet'}`:'Not sent yet'}</span></div></div>`;}).join('')}</div>`}`;
   $('#ivScroll').scrollTop=scroll;if(focus==='ivQ'){const q=$('#ivQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
-  renderInvDetail();}
-function renderInvDetail(){const d=$('#ivDetail'),x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';return;}d.hidden=false;
+  renderInvDetail(!bg);}
+function renderInvDetail(force){const d=$('#ivDetail');
+  // a background refresh mustn't wipe a form being filled in, or a note being typed
+  const sig=IV.add?'add:'+IV.add.mode+':'+(IV.add.key||''):'item:'+IV.open;if(!force&&d.dataset.sig===sig&&!d.hidden&&(IV.add||d.contains(document.activeElement)))return;d.dataset.sig=sig;
+  if(IV.add){d.hidden=false;d.innerHTML=ivAddHTML();return;}const x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';d.dataset.sig='';return;}d.hidden=false;
   const s=x.sum,full=IV.full.get(x.key),sz=s?.showSizes&&s?.sizes?.length;
   const pv=full||x.thumb||x.photo;
   d.innerHTML=`<div class="ivd-b"><div><div class="ivd-pv">${pv?`<img src="${pv}" alt="Sell sheet ${esc(invTitle(x))}">`:`<div class="iv-ph" style="--c:${esc(s?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`}</div>
       ${x.photos?.length>1||(x.photo&&x.thumb)?`<div class="ivd-photos">${x.thumb?`<img src="${x.thumb}" alt="Sell sheet" data-ivpv="sheet" title="The sell sheet">`:''}${(x.photos||[]).map((p,i)=>`<img src="${p}" alt="Photo ${i+1}" data-ivpv="${i}" title="Photo ${i+1}">`).join('')}</div>`:''}</div>
-    <div><div class="ivd-h">${x.cat?`<span class="iv-sync">${esc(x.path||x.cat)}</span>`:''}<h3>${esc(invTitle(x))}</h3>${s?.code?`<span class="iv-code">ITEM CODE · ${esc(s.code)}</span>`:''}${s?.price?`<span class="iv-price">${esc(s.price)}</span>`:''}</div>
-      <div class="ivd-state"><label class="switch"><input type="checkbox" data-ivd-active ${ivOn(x)?'checked':''}><span class="sw-ui" aria-hidden="true"></span><span><b>${ivOn(x)?'Active':'Inactive'}</b><small>${ivOn(x)?'Shown in the active list':'Hidden from the active list; nothing is deleted'}</small></span></label>
-        <button class="iv-chip" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!ivm(x.key).star}">${ivm(x.key).star?'★ Starred':'☆ Star'}</button></div>
+    <div><div class="ivd-h">${x.cat?`<span class="iv-sync">${esc(x.path||x.cat)}</span>`:''}<h3>${esc(invTitle(x))}</h3>${x.type?`<span class="iv-type">${esc(x.type)}</span> `:''}${s?.code?`<span class="iv-code">ITEM CODE · ${esc(s.code)}</span>`:''}${s?.price?`<span class="iv-price">${esc(s.price)}</span>`:''}</div>
+      <div class="ivd-state"><label class="switch"><input type="checkbox" data-ivd-active ${ivOn(x)?'checked':''}><span class="sw-ui" aria-hidden="true"></span><span><b>${ivOn(x)?'Active':'Inactive'}</b><small>${x.fst?`From your Drive folder “${esc(IV.tree?.get(x.ids?.[x.fsi])?.name||(x.fst==='on'?'Active':'Inactive'))}”. Switching moves the file${x.files.length>1?'s':''} to your ${x.fst==='on'?'Inactive':'Active'} folder.`:ivOn(x)?'Shown in the active list':'Hidden from the active list; nothing is deleted'}</small></span></label>
+        <button class="iv-chip" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!ivm(mk(x)).star}">${ivm(mk(x)).star?'★ Starred':'☆ Star'}</button></div>
       ${x.bad?`<p class="iv-bad">${esc(x.bad)}. You can still open it in Drive.</p>`:''}
       ${s?`<div class="ivd-kpis"><div><small>Total pieces</small><b>${ivNF.format(s.pcs||0)}</b></div><div><small>Boxes</small><b>${ivNF.format(s.boxes||0)}</b></div><div><small>Colours</small><b>${(s.colours||[]).length}</b></div></div>`:''}
       ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
@@ -2990,7 +3112,8 @@ function renderInvDetail(){const d=$('#ivDetail'),x=IV.items.find(i=>i.key===IV.
         return`<div class="ivd-sec"><h4>Sent to${z.n?` (${z.n})`:''}</h4>${z.n?`<p class="ivd-sentsum"><b>${z.n}</b> customer${z.n>1?'s':''} · <b>${z.rep}</b> replied${z.ord?` · <b>${z.ord}</b> ordered`:''} · last sent ${esc(ago(z.last))}</p>
           <div class="ivd-sent">${l.map(t=>{const e=t.root,rp=e.reply||['replied','interested','ordered'].includes(e.status);return`<div class="r" data-ivwho="${esc(e.email||e.name)}" title="Show in Sent"><span><b>${esc(e.name||e.company||e.email)}</b><small>${esc([e.company&&e.name?e.company:'',e.email].filter(Boolean).join(' · '))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></span><span class="st${rp?' rp':''}">${esc(e.reply&&e.status==='none'?'Replied':ST_NAME[e.status||'none'])}</span><em class="iv-sync">${esc(ago(t.last))}</em></div>`;}).join('')}</div>`
           :'<p class="hm-empty">Not emailed to anyone yet.</p>'}${never.length&&x.kind!=='image'?`<p style="margin:10px 0 0"><button class="btn sm" type="button" data-ivd="sendnew">Email it to customers who haven't had it (${never.length})</button></p>`:''}</div>`;})()}
-      <div class="ivd-sec"><h4>My note</h4><textarea class="ivd-note" data-ivnote="${esc(x.key)}" placeholder="Anything to remember: reorder date, supplier, minimums…">${esc(ivm(x.key).note)}</textarea></div>
+      <div class="ivd-sec"><h4>My note</h4><textarea class="ivd-note" data-ivnote="${esc(x.key)}" placeholder="Anything to remember: reorder date, supplier, minimums…">${esc(ivm(mk(x)).note)}</textarea></div>
+      <div class="ivd-sec"><h4>Folder in Drive</h4><p class="ivd-sentsum" style="margin:0 0 6px"><b>${esc(ivFolderLabel(x.files[0]?.parent)||IV.folder?.name||'')}</b></p><button class="btn sm ghost" type="button" data-ivadd="move" data-k="${esc(x.key)}">Move to another folder…</button></div>
       <div class="ivd-sec"><h4>Files in Drive</h4><div class="ivd-files">${x.files.map(f=>`<a href="${esc(f.link||'https://drive.google.com/file/d/'+encodeURIComponent(f.id)+'/view')}" target="_blank" rel="noopener" title="${esc(f.name)}">${esc(f.kind)} ↗</a>`).join('')}</div><p class="iv-sync" style="margin:8px 0 0">Updated ${esc(DTF_WHEN.format(x.updated))}</p></div></div></div>
     <div class="ivd-f"><button class="btn sm primary" type="button" data-ivd="edit"${x.kind==='image'?' disabled title="Pictures can\'t be opened in the editor"':''}>Open in editor</button><button class="btn sm" type="button" data-ivd="email"${x.kind==='image'?' disabled':''}>Email this sell sheet</button><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivd="close">Close</button></div>`;
   // a sharper picture of the sell sheet for the large preview
@@ -3004,17 +3127,28 @@ async function openInv(){if(!invDlg.open)invDlg.showModal();if(!IV.items.length&
 invDlg.addEventListener('click',async e=>{const t=e.target;
   const sb=t.closest('[data-ivsel]');if(sb){sb.checked?IV.sel.add(sb.dataset.ivsel):IV.sel.delete(sb.dataset.ivsel);renderInv();return;}
   if(t.closest('[data-ivselall]')){const sh=invShown(),all=sh.every(x=>IV.sel.has(x.key));sh.forEach(x=>all?IV.sel.delete(x.key):IV.sel.add(x.key));renderInv();return;}
-  const sr=t.closest('[data-ivstar]');if(sr){const k=sr.dataset.ivstar;ivmSet([k],{star:!ivm(k).star});renderInv();return;}
+  const sr=t.closest('[data-ivstar]');if(sr){const k=mkOf(sr.dataset.ivstar);ivmSet([k],{star:!ivm(k).star});renderInv();return;}
   if(t.closest('[data-ivstar-f]')){IV.star=!IV.star;renderInv();return;}
+  const ty=t.closest('[data-ivtype]');if(ty){IV.type=ty.dataset.ivtype;renderInv();return;}
+  if(t.id==='ivAdd'){const m=popMenu(t,`<span class="menu-h">Add to your Drive folder</span><button type="button" role="menuitem" data-ivadd="folder"><b>New folder</b><small>A category, type or status folder</small></button><button type="button" role="menuitem" data-ivadd="sheet"><b>The sell sheet open in the editor</b><small>${esc(sheetName(S))}, saved as a PDF</small></button><button type="button" role="menuitem" data-ivadd="upload"><b>Upload files</b><small>PDF, Word or pictures from this computer</small></button>`,(ev,menu)=>{const b=ev.target.closest('[data-ivadd]');if(!b)return;menu.classList.add('hide');IV.add={mode:b.dataset.ivadd};renderInvDetail();setTimeout(()=>($('#ivNewName')||$('#ivDest'))?.focus());});return;}
+  const ad=t.closest('[data-ivadd]');if(ad&&ad.dataset.k){IV.add={mode:'move',key:ad.dataset.k};renderInvDetail();return;}
+  if(t.closest('[data-ivaddx]')){IV.add=null;renderInv();return;}
+  if(t.closest('[data-ivgo]')){ivAddGo();return;}
+  if(t.id==='ivLine'){openLine(IV.sel.size?[...IV.sel]:invShown().map(x=>x.key));return;}
   const stb=t.closest('[data-ivst]');if(stb){IV.status=stb.dataset.ivst;IV.sel.clear();renderInv();return;}
   const bk=t.closest('[data-ivbulk]');if(bk){const a=bk.dataset.ivbulk,keys=[...IV.sel];
     if(a==='clear')IV.sel.clear();else if(a==='all')invShown().forEach(x=>IV.sel.add(x.key));
-    else{ivmSet(keys,a==='on'?{active:true}:a==='off'?{active:false}:{star:a==='star'});toast(`${keys.length} product${keys.length>1?'s':''} ${a==='on'?'marked active':a==='off'?'marked inactive':a==='star'?'starred':'unstarred'}`);if(a==='on'||a==='off')IV.sel.clear();}
+    else if(a==='line'){openLine(keys);return;}
+    else if(a==='on'||a==='off'){const its=keys.map(k=>IV.items.find(x=>x.key===k)).filter(Boolean),inF=its.filter(x=>x.fst&&(x.fst==='on')!==(a==='on')),loose=its.filter(x=>!x.fst);
+      if(loose.length)ivmSet(loose.map(mk),{active:a==='on'});
+      if(inF.length){if(!confirm(`Move ${inF.length} sell sheet${inF.length>1?'s':''} to your ${a==='on'?'Active':'Inactive'} folder in Google Drive?`)){renderInv();return;}await ivMove(inF,a==='on');}
+      else toast(`${keys.length} product${keys.length>1?'s':''} marked ${a==='on'?'active':'inactive'}`);IV.sel.clear();}
+    else{ivmSet(keys.map(mkOf),{star:a==='star'});toast(`${keys.length} product${keys.length>1?'s':''} ${a==='star'?'starred':'unstarred'}`);}
     renderInv();return;}
   const who=t.closest('[data-ivwho]');if(who){lgF.q=who.dataset.ivwho;lgF.status='';invDlg.close();openLog();return;}
   if(t.id==='ivExport'){invExport();return;}
   if(t.closest('[data-ivd-active]'))return;
-  const card=t.closest('[data-iv]');if(card){IV.open=IV.open===card.dataset.iv?null:card.dataset.iv;$$('#ivBody [data-iv]').forEach(c=>c.classList.toggle('on',c.dataset.iv===IV.open));renderInvDetail();return;}
+  const card=t.closest('[data-iv]');if(card){IV.add=null;IV.open=IV.open===card.dataset.iv?null:card.dataset.iv;$$('#ivBody [data-iv]').forEach(c=>c.classList.toggle('on',c.dataset.iv===IV.open));renderInvDetail();return;}
   const v=t.closest('[data-ivview]');if(v){IV.view=v.dataset.ivview;lsSet('ss-inv-view',IV.view);renderInv();return;}
   const c=t.closest('[data-ivcat]');if(c){IV.cat=c.dataset.ivcat;renderInv();return;}
   const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?(IV.full.get(IV.open)||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
@@ -3023,21 +3157,134 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
     else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
   const id=t.closest('button')?.id;
   if(id==='ivPick'||id==='ivChange')invPickFolder();else if(id==='ivSync')invSync(true);else if(id==='ivLinkGo')invUseLink($('#ivLink').value);});
-invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
+invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
   else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv],.iv-card[data-iv]')){e.preventDefault();e.target.click();}});
 // spreadsheet of the inventory
-function invExport(){const q=v=>`"${String(v??'').replace(/"/g,'""')}"`,rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(x.key),s=x.sum||{};
-    return[invTitle(x),s.code,x.path||x.cat,ivOn(x)?'Active':'Inactive',m.star?'Yes':'',s.price,s.pcs,s.boxes,(s.colours||[]).map(c=>c.name).join('; '),(s.sizes||[]).join(' '),z.n,z.rep,z.last?dayStr(z.last):'',dayStr(x.updated),m.note,x.files.map(f=>f.link||'').join(' ')].map(q).join(',');});
-  save(`Inventory ${dayStr(Date.now())}.csv`,new Blob(['\uFEFF'+['Product,Item code,Category,Status,Starred,Price,Pieces,Boxes,Colours,Sizes,Sent to,Replies,Last sent,Updated,Note,Drive files',...rows].join('\r\n')],{type:'text/csv'}));}
+function invExport(){const q=v=>`"${String(v??'').replace(/"/g,'""')}"`,rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),s=x.sum||{};
+    return[invTitle(x),s.code,x.type||'',x.cats?x.cats.join(' / '):x.cat,ivOn(x)?'Active':'Inactive',m.star?'Yes':'',s.price,s.pcs,s.boxes,(s.colours||[]).map(c=>c.name).join('; '),(s.sizes||[]).join(' '),z.n,z.rep,z.last?dayStr(z.last):'',dayStr(x.updated),m.note,x.files.map(f=>f.link||'').join(' ')].map(q).join(',');});
+  save(`Inventory ${dayStr(Date.now())}.csv`,new Blob(['\uFEFF'+['Product,Item code,Type,Category,Status,Starred,Price,Pieces,Boxes,Colours,Sizes,Sent to,Replies,Last sent,Updated,Note,Drive files',...rows].join('\r\n')],{type:'text/csv'}));}
 let ivNt=0;
-let ivQt=0;invDlg.addEventListener('input',e=>{if(e.target.dataset.ivnote!==undefined){const k=e.target.dataset.ivnote,v=e.target.value;clearTimeout(ivNt);ivNt=setTimeout(()=>ivmSet([k],{note:v.slice(0,2000)}),400);return;}
+let ivQt=0;invDlg.addEventListener('input',e=>{if(e.target.dataset.ivnote!==undefined){const k=mkOf(e.target.dataset.ivnote),v=e.target.value;clearTimeout(ivNt);ivNt=setTimeout(()=>ivmSet([k],{note:v.slice(0,2000)}),400);return;}
   if(e.target.id==='ivQ'){IV.q=e.target.value;clearTimeout(ivQt);ivQt=setTimeout(renderInv,90);}});
-invDlg.addEventListener('change',e=>{if(e.target.matches('[data-ivd-active]')&&IV.open){ivmSet([IV.open],{active:e.target.checked});toast(e.target.checked?'Marked active':'Marked inactive. Find it under Inactive.');renderInv();return;}
+invDlg.addEventListener('change',async e=>{if(e.target.matches('[data-ivd-active]')&&IV.open){const x=IV.items.find(i=>i.key===IV.open);if(!x)return;
+    if(x.fst){e.target.checked=!e.target.checked;await ivMove([x],x.fst!=='on');return;}
+    ivmSet([mk(x)],{active:e.target.checked});toast(e.target.checked?'Marked active':'Marked inactive. Find it under Inactive.');renderInv();return;}
   if(e.target.id==='ivSort'){IV.sort=e.target.value;lsSet('ss-inv-sort',IV.sort);renderInv();}});
-invDlg.addEventListener('cancel',e=>{if(IV.open){e.preventDefault();IV.open=null;renderInv();}});
+invDlg.addEventListener('cancel',e=>{if(IV.add){e.preventDefault();IV.add=null;renderInv();return;}if(IV.open){e.preventDefault();IV.open=null;renderInv();}});
 $('#ivClose').onclick=()=>invDlg.close();
 // what was read last time, for the sidebar count
 if(IV.folder)invAll().then(a=>{if(!IV.items.length)IV.items=a.filter(x=>x&&x.key);});
+
+/* ---------- line sheet: several products in one PDF ---------- */
+const lineDlg=$('#lineDlg');
+const LN=Object.assign({title:'Line sheet',sub:'',contact:'',note:'',per:6,pic:'photo',show:['price','code','colours','qty','sizes'],color:'#1F2A44'},(()=>{try{return JSON.parse(lsGet('ss-line')||'{}');}catch(_){return{};}})(),{keys:[],url:'',blob:null,seq:0});
+const lnSave=()=>lsSet('ss-line',JSON.stringify({title:LN.title,sub:LN.sub,contact:LN.contact,note:LN.note,per:LN.per,pic:LN.pic,show:LN.show,color:LN.color}));
+const lnItems=()=>LN.keys.map(k=>IV.items.find(x=>x.key===k)).filter(Boolean);
+const LN_SHOW=[['price','Price'],['code','Item code'],['colours','Colours'],['qty','Pieces & boxes'],['sizes','Sizes'],['type','Type / category']];
+function openLine(keys){LN.keys=[...new Set(keys)].filter(k=>{const x=IV.items.find(i=>i.key===k);return x&&!x.pending&&x.kind!=='image'||x?.kind==='image';});
+  if(!LN.keys.length){toast('Pick some products first: tick their cards, or filter the list to what you want.',5000);return;}
+  if(!LN.sub)LN.sub=new Intl.DateTimeFormat(undefined,{month:'long',year:'numeric'}).format(new Date());
+  if(!LN.contact)LN.contact=S?.email||meFor('google')||'';
+  invDlg.close();if(!lineDlg.open)lineDlg.showModal();renderLineForm();lnBuild();}
+function renderLineForm(){const its=lnItems();$('#lnSum').textContent=`${its.length} product${its.length===1?'':'s'} · ${Math.ceil(its.length/LN.per)} page${Math.ceil(its.length/LN.per)===1?'':'s'}`;
+  $('#lnForm').innerHTML=`<label class="field"><span>Title</span><input class="in" data-ln="title" value="${esc(LN.title)}" maxlength="80"></label>
+    <div class="ln-row"><label class="field"><span>Subtitle</span><input class="in" data-ln="sub" value="${esc(LN.sub)}" placeholder="e.g. Fall 2026" maxlength="80"></label><label class="field"><span>Colour</span><input class="in" type="color" data-ln="color" value="${esc(LN.color)}" style="padding:2px;height:44px"></label></div>
+    <label class="field"><span>Contact (shown on every page)</span><input class="in" data-ln="contact" value="${esc(LN.contact)}" placeholder="sales@yourcompany.com · 555-0100" maxlength="120"></label>
+    <label class="field"><span>Note on the first page (optional)</span><textarea class="in" data-ln="note" rows="2" maxlength="300" placeholder="e.g. Prices valid until 30 November. Minimum order 2 boxes per style.">${esc(LN.note)}</textarea></label>
+    <div class="ln-row"><label class="field"><span>Products per page</span><select class="in" data-ln="per">${[4,6,9,12].map(n=>`<option value="${n}"${LN.per===n?' selected':''}>${n}</option>`).join('')}</select></label>
+      <label class="field"><span>Picture</span><select class="in" data-ln="pic"><option value="photo"${LN.pic==='photo'?' selected':''}>Product photo</option><option value="sheet"${LN.pic==='sheet'?' selected':''}>Sell sheet page</option></select></label></div>
+    <div class="field"><span>Show</span><div class="ln-togs togs">${LN_SHOW.map(([k,n])=>`<label class="tog"><input type="checkbox" data-lnshow="${k}" ${LN.show.includes(k)?'checked':''}><span>${n}</span></label>`).join('')}</div></div>
+    <h4>Products, in order</h4><div class="ln-items">${its.map((x,i)=>`<div class="ln-it">${invPic(x)?`<img src="${invPic(x)}" alt="">`:`<div class="iv-ph" style="--c:${esc(x.sum?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`}<span><b>${esc(invTitle(x))}</b><small>${esc([x.sum?.code,x.sum?.price].filter(Boolean).join(' · '))}</small></span>
+      <span class="acts"><button type="button" data-lnmv="${i}|-1" aria-label="Move up" ${i?'':'disabled'}>↑</button><button type="button" data-lnmv="${i}|1" aria-label="Move down" ${i<its.length-1?'':'disabled'}>↓</button><button type="button" data-lnrm="${i}" aria-label="Remove ${esc(invTitle(x))}">✕</button></span></div>`).join('')}</div>
+    <button class="btn sm ghost" type="button" id="lnMore">＋ Add or remove products in Inventory</button>`;}
+const lnRgb=h=>{const m=normHex(h)||'#1F2A44';return[1,3,5].map(i=>parseInt(m.slice(i,i+2),16));};
+const imgSize=src=>new Promise(res=>{const i=new Image();i.onload=()=>res([i.naturalWidth,i.naturalHeight]);i.onerror=()=>res([0,0]);i.src=src;});
+// latin text only for the PDF's standard font
+const pdfTxt=v=>String(v??'').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[^\x20-\x7E -ÿ–—•·…€]/g,'');
+async function lnMake(){await loadScript('jspdf');const {jsPDF}=window.jspdf,doc=new jsPDF({unit:'pt',format:'letter'}),W=612,H=792,M=34,G=14,its=lnItems(),C=lnRgb(LN.color),sh=k=>LN.show.includes(k);
+  const cols=LN.per<=4?2:LN.per<=6?2:3,rows=Math.ceil(LN.per/cols),pages=Math.max(1,Math.ceil(its.length/LN.per)),date=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'long',year:'numeric'}).format(new Date());
+  const head=(pg)=>{doc.setFillColor(...C);doc.rect(0,0,W,58,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(20);doc.text(pdfTxt(LN.title||'Line sheet'),M,30);
+    doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(pdfTxt([LN.sub,`${its.length} styles`].filter(Boolean).join('  ·  ')),M,46);
+    doc.setFontSize(9);doc.text(pdfTxt(LN.contact),W-M,30,{align:'right'});doc.text(pdfTxt(date),W-M,46,{align:'right'});
+    doc.setTextColor(120,120,120);doc.setFontSize(8);doc.text(`Page ${pg+1} of ${pages}`,W-M,H-16,{align:'right'});if(LN.contact)doc.text(pdfTxt(LN.contact),M,H-16);};
+  for(let pg=0;pg<pages;pg++){if(pg)doc.addPage();head(pg);let top=58+G;
+    if(pg===0&&LN.note.trim()){doc.setTextColor(60,60,60);doc.setFont('helvetica','italic');doc.setFontSize(9.5);const ls=doc.splitTextToSize(pdfTxt(LN.note.trim()),W-2*M).slice(0,3);doc.text(ls,M,top+8);top+=ls.length*12+8;}
+    const cw=(W-2*M-(cols-1)*G)/cols,ch=(H-28-top-(rows-1)*G)/rows,fs=cols===3?8:9,lh=fs+3,textH=lh*(1+['code','price','colours','qty','sizes','type'].filter(sh).length)+8,ih=ch-textH;
+    for(let i=0;i<LN.per;i++){const x=its[pg*LN.per+i];if(!x)break;const cx=M+(i%cols)*(cw+G),cy=top+Math.floor(i/cols)*(ch+G),s=x.sum||{};
+      doc.setDrawColor(225,228,226);doc.setLineWidth(.6);doc.roundedRect(cx,cy,cw,ch,6,6,'S');
+      const src=LN.pic==='sheet'?(x.thumb||x.photo):(x.photo||x.thumb);
+      if(src){const [nw,nh]=await imgSize(src);if(nw){const bw=cw-12,bh=ih-12,sc=Math.min(bw/nw,bh/nh),w=nw*sc,h=nh*sc;try{doc.addImage(src,'JPEG',cx+6+(bw-w)/2,cy+6+(bh-h)/2,w,h);}catch(_){}}}
+      else{doc.setFillColor(...C);doc.roundedRect(cx+6,cy+6,cw-12,ih-12,4,4,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(26);doc.text(pdfTxt(initials(invTitle(x))),cx+cw/2,cy+ih/2+8,{align:'center'});}
+      let ty=cy+ih+lh;const tx=cx+8,tw=cw-16,line=(t,o={})=>{if(!String(t||'').trim())return;doc.setFont('helvetica',o.b?'bold':'normal');doc.setFontSize(o.fs||fs);doc.setTextColor(...(o.c||[40,40,40]));doc.text(doc.splitTextToSize(pdfTxt(t),tw)[0]||'',tx,ty);ty+=lh;};
+      line(invTitle(x),{b:1,fs:fs+1.5,c:[15,15,15]});
+      if(sh('code'))line(s.code?'Item code: '+s.code:'',{c:[110,110,110]});
+      if(sh('price'))line(s.price||'',{b:1,c:C});
+      if(sh('colours'))line(s.colours?.length?`Colours: ${s.colours.map(c=>c.name).join(', ')}`:'');
+      if(sh('qty'))line(s.pcs?`${s.pcs.toLocaleString()} pcs · ${s.boxes} box${s.boxes===1?'':'es'}`:'');
+      if(sh('sizes'))line(s.sizes?.length&&s.showSizes?`Sizes: ${s.sizes.join(' ')}`:'',{c:[110,110,110]});
+      if(sh('type'))line([x.type,x.cat].filter(Boolean).join(' · '),{c:[110,110,110]});}}
+  return doc.output('blob');}
+let lnT=0;function lnBuild(){clearTimeout(lnT);lnT=setTimeout(async()=>{const seq=++LN.seq;$('#lnWait').hidden=false;
+  try{const blob=await lnMake();if(seq!==LN.seq)return;LN.blob=blob;await lnShow(blob,seq);$('#lnStatus').textContent='';}
+  catch(e){console.error(e);$('#lnStatus').textContent='Couldn\'t make the PDF: '+(e.message||e);}finally{if(seq===LN.seq)$('#lnWait').hidden=true;}},350);}
+// the preview: each page drawn with pdf.js (works the same in every browser, phones included)
+async function lnShow(blob,seq){await loadScript('pdfjs');const L=window.pdfjsLib;L.GlobalWorkerOptions.workerSrc=LIBS.pdfjs.replace(/pdf(\.min)?\.js$/,'pdf.worker$1.js');
+  const pdf=await L.getDocument({data:new Uint8Array(await blob.arrayBuffer()),isEvalSupported:false}).promise,host=$('#lnPages'),w=Math.min(760,Math.max(320,host.clientWidth-36)),dpr=Math.min(2,window.devicePixelRatio||1),cvs=[];
+  for(let n=1;n<=pdf.numPages;n++){if(seq!==LN.seq)return;const pg=await pdf.getPage(n),vp=pg.getViewport({scale:w*dpr/pg.getViewport({scale:1}).width}),c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);c.setAttribute('aria-label',`Page ${n} of ${pdf.numPages}`);
+    await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;cvs.push(c);}
+  if(seq!==LN.seq)return;const st=host.scrollTop;host.replaceChildren(...cvs);host.scrollTop=st;pdf.destroy?.();}
+const lnName=()=>`${(LN.title||'Line sheet').replace(/[\\/:*?"<>|]+/g,'').trim()}${LN.sub?' - '+LN.sub.replace(/[\\/:*?"<>|]+/g,'').trim():''}.pdf`;
+lineDlg.addEventListener('input',e=>{const k=e.target.dataset.ln;if(!k)return;LN[k]=k==='per'?+e.target.value:e.target.value;lnSave();if(k==='per')renderLineForm();lnBuild();});
+lineDlg.addEventListener('change',e=>{const k=e.target.dataset.lnshow;if(k){LN.show=LN_SHOW.map(s=>s[0]).filter(x=>x===k?e.target.checked:LN.show.includes(x));lnSave();lnBuild();}});
+lineDlg.addEventListener('click',async e=>{const mv=e.target.closest('[data-lnmv]'),rm=e.target.closest('[data-lnrm]');
+  if(mv){const[i,d]=mv.dataset.lnmv.split('|').map(Number),j=i+d;[LN.keys[i],LN.keys[j]]=[LN.keys[j],LN.keys[i]];renderLineForm();lnBuild();return;}
+  if(rm){LN.keys.splice(+rm.dataset.lnrm,1);if(!LN.keys.length){lineDlg.close();openInv();return;}renderLineForm();lnBuild();return;}
+  if(e.target.id==='lnMore'){lineDlg.close();IV.sel=new Set(LN.keys);openInv();}});
+const lnReady=async()=>{if(LN.seq&&!LN.blob||$('#lnWait').hidden===false){await new Promise(r=>setTimeout(r,400));}if(!LN.blob)LN.blob=await lnMake();return LN.blob;};
+$('#lnDl').onclick=async()=>save(lnName(),await lnReady());
+$('#lnEmail').onclick=async()=>{const blob=await lnReady(),its=lnItems();lineDlg.close();openMail({line:{id:hashStr(LN.keys.join('|')),name:lnName(),blob,title:[LN.title,LN.sub].filter(Boolean).join(' · '),items:its.map(x=>[x.sum?.code,invTitle(x)].filter(Boolean).join(' · '))}});};
+$('#lnDrive').onclick=async()=>{const st=$('#lnStatus');st.textContent='Saving to Google Drive…';
+  try{const t=await driveToken(),blob=await lnReady();let fo=(await driveFetch(t,`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(`name='Line Sheets' and mimeType='${FOLDER_MIME}' and trashed=false`)}&spaces=drive&fields=files(id,name)`)).files?.[0];
+    if(!fo)fo=await driveFetch(t,'https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Line Sheets',mimeType:FOLDER_MIME})});
+    const r=await driveUpload(t,fo.id,lnName(),'application/pdf',blob,true);st.innerHTML=`Saved to the <b>Line Sheets</b> folder in your Drive.${r.webViewLink?` <a href="${esc(r.webViewLink)}" target="_blank" rel="noopener">Open ↗</a>`:''}`;}
+  catch(e){st.textContent=e.message||'Couldn\'t save to Drive.';}};
+$('#lnClose').onclick=()=>lineDlg.close();
+
+/* ---------- pipeline: each customer × sell sheet, from first send to order ---------- */
+const plDlg=$('#plDlg'),PL={q:'',days:90,sheet:''},PL_COLS=[['none','Sent, no reply','#9AA19C'],['replied','Replied','#2563EB'],['interested','Interested','#9333EA'],['quoted','Quoted','#EA7317'],['ordered','Ordered','#0E993F'],['declined','Not interested','#C2413B']];
+const money=v=>v?'$'+Math.round(v).toLocaleString():'';
+function plThreads(){lgLoad();const q=PL.q.trim().toLowerCase(),cut=PL.days?Date.now()-PL.days*DAY:0;
+  return threads().filter(t=>{const e=t.root,last=Math.max(t.last,e.reply?.at||0,e.upd||0);return last>=cut&&(!PL.sheet||e.sheet===PL.sheet)&&(!q||[e.name,e.company,e.email,e.sheet,e.note].some(v=>String(v||'').toLowerCase().includes(q)));});}
+function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_COLS.map(c=>[c[0],[]]));for(const t of th)(by.get(t.root.status||'none')||by.get('none')).push(t);
+  const sum=k=>by.get(k).reduce((a,t)=>a+(+t.root.value||0),0),open=['replied','interested','quoted'].reduce((a,k)=>a+sum(k),0),won=sum('ordered'),nW=by.get('ordered').length,nL=by.get('declined').length;
+  $('#plSum').textContent=`${th.length} in the last ${PL.days?PL.days+' days':'all time'}`;
+  const sheets=[...new Set(threads().map(t=>t.root.sheet))].sort((a,b)=>COLL.compare(a,b));
+  if(!$('#plQ'))$('#plBar').innerHTML=`<input class="in" id="plQ" type="search" placeholder="Search customer or sell sheet" aria-label="Search pipeline"><select class="in" id="plDays" aria-label="Period">${[[30,'Last 30 days'],[90,'Last 90 days'],[365,'Last 12 months'],[0,'All time']].map(([v,n])=>`<option value="${v}"${PL.days===v?' selected':''}>${n}</option>`).join('')}</select><select class="in" id="plSheet" aria-label="Sell sheet"></select><span class="pl-kpis" id="plKpis"></span>`;
+  $('#plSheet').innerHTML=`<option value="">All sell sheets</option>${sheets.map(n=>`<option value="${esc(n)}"${PL.sheet===n?' selected':''}>${esc(n)}</option>`).join('')}`;
+  $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||'$0'}</b></span><span>Won: <b>${money(won)||'$0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>`;
+  const card=t=>{const e=t.root;return`<div class="pl-card" draggable="true" data-pl="${esc(e.id)}"><button class="who" type="button" data-plwho="${esc(e.email||e.name)}" title="Show in Sent">${esc(e.name||e.company||e.email||'(no name)')}</button>${e.company&&e.name?`<span class="pl-sub">${esc(e.company)}</span>`:''}
+    <span class="pl-sheet" title="${esc(e.sheet)}">${esc(e.sheet)}</span><span class="pl-sub">${e.reply?'<span class="pl-rp">Replied</span> ':''}Sent ${esc(ago(e.at))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</span>
+    <div class="pl-row"><input class="pl-val" data-plval="${esc(e.id)}" inputmode="decimal" placeholder="$ value" value="${e.value?esc(String(e.value)):''}" aria-label="Order value"><span class="spacer"></span><select class="pl-mv" data-plmv="${esc(e.id)}" aria-label="Move to">${PL_COLS.map(([k,n])=>`<option value="${k}"${(e.status||'none')===k?' selected':''}>${n}</option>`).join('')}</select></div></div>`;};
+  const sc=$('#plBoard').scrollLeft;
+  $('#plBoard').innerHTML=PL_COLS.map(([k,n,c])=>{const l=by.get(k).sort((a,b)=>b.last-a.last),v=sum(k);return`<section class="pl-col" data-plcol="${k}" aria-label="${n}"><div class="pl-ch"><b><i style="--c:${c}"></i>${n}<span>${l.length}</span></b><small>${v?money(v):'&nbsp;'}</small></div>
+    <div class="pl-cards">${l.length?l.slice(0,150).map(card).join(''):'<div class="pl-empty">Drag a customer here</div>'}${l.length>150?`<div class="pl-empty">and ${l.length-150} more: search to narrow down</div>`:''}</div></section>`;}).join('');
+  $('#plBoard').scrollLeft=sc;}
+function plSet(id,patch){lgLoad();const e=LG.list.find(x=>x.id===id);if(!e)return;Object.assign(e,patch,{upd:Date.now()});lgSave();}
+async function openPipe(){if(!plDlg.open)plDlg.showModal();renderPipe();}
+plDlg.addEventListener('input',e=>{if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}});
+plDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='plDays'){PL.days=+t.value;renderPipe();}else if(t.id==='plSheet'){PL.sheet=t.value;renderPipe();}
+  else if(t.dataset.plmv){plSet(t.dataset.plmv,{status:t.value});renderPipe();toast(`Moved to ${ST_NAME[t.value]}`);}
+  else if(t.dataset.plval){const v=parseFloat(String(t.value).replace(/[^0-9.]/g,''))||0;plSet(t.dataset.plval,{value:v||undefined});renderPipe();}});
+plDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.plval)e.target.blur();});
+plDlg.addEventListener('click',e=>{const w=e.target.closest('[data-plwho]');if(w){lgF.q=w.dataset.plwho;lgF.status='';plDlg.close();openLog();}});
+// drag and drop between columns
+let plDrag=null;
+plDlg.addEventListener('dragstart',e=>{const c=e.target.closest?.('[data-pl]');if(!c)return;plDrag=c.dataset.pl;c.classList.add('drag');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',plDrag);}catch(_){}});
+plDlg.addEventListener('dragend',e=>{e.target.closest?.('[data-pl]')?.classList.remove('drag');$$('#plBoard .over').forEach(x=>x.classList.remove('over'));plDrag=null;});
+plDlg.addEventListener('dragover',e=>{const col=e.target.closest('[data-plcol]');if(!col||!plDrag)return;e.preventDefault();$$('#plBoard .over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over');});
+plDlg.addEventListener('drop',e=>{const col=e.target.closest('[data-plcol]');if(!col||!plDrag)return;e.preventDefault();const id=plDrag;plDrag=null;plSet(id,{status:col.dataset.plcol});renderPipe();toast(`Moved to ${ST_NAME[col.dataset.plcol]}`);});
+$('#plClose').onclick=()=>plDlg.close();
 
 /* ---------- home: today at a glance ---------- */
 const homeDlg=$('#homeDlg'),DAY=864e5;
@@ -3054,7 +3301,7 @@ function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.lis
   const thP=th.filter(t=>inP(t.root.at,30,0)),rate=hmPct(thP.filter(repOf).length,thP.length),thPP=th.filter(t=>inP(t.root.at,60,30)),ratePrev=hmPct(thPP.filter(repOf).length,thPP.length);
   const due=th.filter(needsFollow).sort((a,b)=>(a.root.follow||'9')<(b.root.follow||'9')?-1:1),fresh=th.filter(t=>t.root.reply&&!t.root.reply.seen).sort((a,b)=>b.root.reply.at-a.root.reply.at);
   const recentRep=th.filter(t=>t.root.reply).sort((a,b)=>b.root.reply.at-a.root.reply.at).slice(0,6);
-  const ordered=th.filter(t=>t.root.status==='ordered'&&inP(t.root.upd,30,0)).length;
+  const ordered=th.filter(t=>t.root.status==='ordered'&&inP(t.root.upd,30,0)).length,pipe=th.filter(t=>['replied','interested','quoted'].includes(t.root.status)).reduce((a,t)=>a+(+t.root.value||0),0);
   // sends per week, 12 weeks (weeks start Monday)
   const wk0=new Date();wk0.setHours(0,0,0,0);wk0.setDate(wk0.getDate()-((wk0.getDay()+6)%7));const weeks=[];
   for(let i=11;i>=0;i--){const a=+wk0-i*7*DAY,b=a+7*DAY;weeks.push({a,n:L.filter(e=>e.at>=a&&e.at<b).length,r:th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length});}
@@ -3066,8 +3313,8 @@ function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.lis
   for(const t of th)if(t.root.reply)ev.push({kind:'reply',at:t.root.reply.at,sheet:t.root.sheet,who:[t.root.name||t.root.company||t.root.email],snip:t.root.reply.snip});
   ev.sort((a,b)=>b.at-a.at);
   const items=IV.items,on=items.filter(ivOn);
-  return{now,sent:sent.length,sentPrev:sentPrev.length,reached,reachedPrev,rep,repPrev,rate,ratePrev,thP:thP.length,due,fresh,recentRep,ordered,weeks,top,ev:ev.slice(0,10),
-    inv:{n:items.length,on:on.length,off:items.length-on.length,pcs:on.reduce((a,x)=>a+(x.sum?.pcs||0),0),never:on.filter(x=>!ivSendStats(x).n).length,star:items.filter(x=>ivm(x.key).star&&ivOn(x))},
+  return{now,sent:sent.length,sentPrev:sentPrev.length,reached,reachedPrev,rep,repPrev,rate,ratePrev,thP:thP.length,due,fresh,recentRep,ordered,pipe,weeks,top,ev:ev.slice(0,10),
+    inv:{n:items.length,on:on.length,off:items.length-on.length,pcs:on.reduce((a,x)=>a+(x.sum?.pcs||0),0),never:on.filter(x=>!ivSendStats(x).n).length,star:items.filter(x=>ivm(mk(x)).star&&ivOn(x))},
     cust:{n:CU.list.length,nn:nnCount(),groups:allGroups().length},total:L.length};}
 function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet();
   $('#hmDate').textContent=DTF_LONG.format(D.now);
@@ -3078,9 +3325,9 @@ function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet();
   const wkFmt=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short'});
   const maxTop=Math.max(1,...D.top.map(p=>p.n));
   $('#hmBody').innerHTML=`<div class="hm-hello"><h3>${hmHello()}${a?.email?', '+esc(a.email.split('@')[0]):''}</h3><p>${D.fresh.length||D.due.length?`You have ${[D.fresh.length&&`<b>${D.fresh.length} new repl${D.fresh.length>1?'ies':'y'}</b>`,D.due.length&&`<b>${D.due.length} follow-up${D.due.length>1?'s':''}</b> due`].filter(Boolean).join(' and ')}.`:'You\'re all caught up.'}</p></div>
-  <div class="hm-actions"><button class="btn sm primary" type="button" data-hm="newsheet">＋ New sell sheet</button><button class="btn sm" type="button" data-hm="email">Email this sell sheet</button><button class="btn sm" type="button" data-hm="inv">Inventory</button><button class="btn sm" type="button" data-hm="cust">Customers</button><button class="btn sm" type="button" data-hm="sent">Sent</button></div>
+  <div class="hm-actions"><button class="btn sm primary" type="button" data-hm="newsheet">＋ New sell sheet</button><button class="btn sm" type="button" data-hm="email">Email this sell sheet</button><button class="btn sm" type="button" data-hm="inv">Inventory</button><button class="btn sm" type="button" data-hm="cust">Customers</button><button class="btn sm" type="button" data-hm="sent">Sent</button><button class="btn sm" type="button" data-hm="pipe">Pipeline</button></div>
   <div class="hm-kpis">${kpi('Sell sheets sent · 30 days',ivNF.format(D.sent),hmDelta(D.sent,D.sentPrev),'sent')}${kpi('Customers reached · 30 days',ivNF.format(D.reached),hmDelta(D.reached,D.reachedPrev))}${kpi('Replies · 30 days',ivNF.format(D.rep),hmDelta(D.rep,D.repPrev),'replies')}
-    ${kpi('Reply rate · 30 days',D.thP?D.rate+'%':'–',D.thP?hmDelta(D.rate,D.ratePrev,' pts'):'<span>Send a sheet to see it</span>')}${kpi('Follow-ups due',ivNF.format(D.due.length),`<span>${D.due.length?'No reply by their date':'Nothing waiting'}</span>`,'due',D.due.length?'alert':'')}${D.ordered?kpi('Orders · 30 days',ivNF.format(D.ordered),'<span>Marked Ordered in Sent</span>','sent'):''}</div>
+    ${kpi('Reply rate · 30 days',D.thP?D.rate+'%':'–',D.thP?hmDelta(D.rate,D.ratePrev,' pts'):'<span>Send a sheet to see it</span>')}${kpi('Follow-ups due',ivNF.format(D.due.length),`<span>${D.due.length?'No reply by their date':'Nothing waiting'}</span>`,'due',D.due.length?'alert':'')}${D.ordered?kpi('Orders · 30 days',ivNF.format(D.ordered),'<span>Marked Ordered</span>','pipe'):''}${D.pipe?kpi('Open pipeline',money(D.pipe),'<span>Replied, interested and quoted</span>','pipe'):''}</div>
   <div class="hm-grid"><div class="hm-col">
     ${showSteps?`<div class="hm-card"><h4>Get set up<span class="n">${steps.filter(s=>s[0]).length} of ${steps.length}</span><button class="lnk" type="button" data-hm="hidesteps">Hide</button></h4><div class="hm-steps">${steps.map(([ok,t,go])=>`<div class="hm-step${ok?' done':''}"><i class="ck">${ok?'✓':''}</i><span>${t}</span>${ok?'':`<button class="btn sm ghost" type="button" data-hm="${go}">Start</button>`}</div>`).join('')}</div></div>`:''}
     <div class="hm-card"><h4>Needs your attention${D.fresh.length+D.due.length?`<span class="n">${D.fresh.length+D.due.length}</span>`:''}<button class="lnk" type="button" data-hm="sent">Open Sent</button></h4>
@@ -3107,7 +3354,7 @@ homeDlg.addEventListener('click',e=>{const t=e.target,b=t.closest('[data-hm]');
   if(v==='hidesteps'){lsSet('ss-home-steps','hide');renderHome();return;}
   homeDlg.close();
   if(v==='sent'){lgF.q='';lgF.status='';openLog();}else if(v==='replies'){lgF.q='';lgF.status='reply';openLog();}else if(v==='due'){lgF.q='';lgF.status='follow';openLog();}
-  else if(v==='inv')openInv();else if(v==='cust')openCP();else if(v==='email')openMail();else if(v==='newsheet')$('#newSheet')?.click();
+  else if(v==='inv')openInv();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='email')openMail();else if(v==='newsheet')$('#newSheet')?.click();
   else if(v==='signin'){if(EMAIL_SETUP.google)login('google',false).then(()=>{toast('Signed in');openHome();}).catch(err=>toast(err.message));else openSetup();}});
 homeDlg.addEventListener('change',e=>{if(e.target.id==='hmStart')lsSet('ss-home-start',e.target.checked?'1':'0');});
 $('#hmClose').onclick=()=>homeDlg.close();
@@ -3128,7 +3375,7 @@ function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollo
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
