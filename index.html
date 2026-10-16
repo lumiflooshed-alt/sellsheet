@@ -1102,7 +1102,7 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   const fix=(arr,def)=>[...arr.filter(k=>def.includes(k)),...def.filter(k=>!arr.includes(k))];d.tabs=fix(d.tabs,SET_DEF.tabs);d.home.kpis=fix(d.home.kpis,SET_DEF.home.kpis);d.home.secs=fix(d.home.secs,SET_DEF.home.secs);
-  if(!d.name&&d.home.name)d.name=d.home.name;if(typeof sv.upd==='number')d.upd=sv.upd;try{if(!sv.start&&localStorage.getItem('ss-home-start')==='0')d.start='editor';}catch(_){}return d;}
+  d.currency=String(d.currency).trim().slice(0,6)||'$';if(!d.name&&d.home.name)d.name=d.home.name;if(typeof sv.upd==='number')d.upd=sv.upd;try{if(!sv.start&&localStorage.getItem('ss-home-start')==='0')d.start='editor';}catch(_){}return d;}
 const SET=setNorm((()=>{try{return JSON.parse(localStorage.getItem('ss-settings')||'{}');}catch(_){return{};}})());
 function setSave(){SET.upd=Date.now();try{localStorage.setItem('ss-settings',JSON.stringify(SET));}catch(_){}if(typeof scheduleSync==='function')scheduleSync();}
 const FD=()=>Math.max(1,+SET.followDays||7);
@@ -2333,7 +2333,7 @@ const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncEr
 const httpErr=async(what,r)=>{let j={};try{j=await r.json();}catch(_){}return Object.assign(new Error(j.error?.message||what+' '+r.status),{status:r.status,off:/has not been used|is disabled|accessNotConfigured|SERVICE_DISABLED/i.test(JSON.stringify(j))});};
 async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   if(a.prov==='google'){
-    if(method==='GET'){const r=await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${encodeURIComponent(`name='${SYNC_FILE}'`)}&fields=files(id)`,{headers:H});if(!r.ok)throw await httpErr('Drive',r);
+    if(method==='GET'){const r=await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${encodeURIComponent(`name='${SYNC_FILE}'`)}&orderBy=createdTime&fields=files(id)`,{headers:H});if(!r.ok)throw await httpErr('Drive',r);
       const id=(await r.json()).files?.[0]?.id;if(!id)return{data:null};const f=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{headers:H});if(!f.ok)throw await httpErr('Drive',f);return{id,data:await f.json().catch(()=>null)};}
     if(body.id){const r=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${body.id}?uploadType=media`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('Drive',r);return;}
     const B='b'+uid()+uid(),mp=`--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name:SYNC_FILE,parents:['appDataFolder']})}\r\n--${B}\r\nContent-Type: application/json\r\n\r\n${body.json}\r\n--${B}--`;
@@ -2440,7 +2440,7 @@ function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.f
 // called after each successful email
 function logSent(m,prov,from,kinds,parts,res){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
   const L=MAIL.line;
-  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:L?'line:'+L.id:S.id,sheet:L?L.title+' (line sheet)':sheetName(S),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?ck(p.email):'',
+  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:L?'line:'+L.id:S.id,sheet:L?L.title+' (line sheet)':sheetName(S),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.cust?(p.key||ck(p.email)):'',
     how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',gthread:res?.threadId||'',upd:now});}
 const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip:String(r.snip||'').slice(0,300),thread:String(r.thread||'').slice(0,40),seen:!!r.seen}:undefined;
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
@@ -2839,7 +2839,8 @@ async function sendOne(p,tok,m){
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
 function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),bcc=splitAddr($('#mlBcc').value);
-  const bad=[...P.flatMap(x=>x.emails),...cc,...bcc].filter(a=>!EMAIL_RE.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
+  const all=[...P.flatMap(x=>x.emails),...cc,...bcc],bad=all.filter(a=>!EMAIL_RE.test(a)),acc=all.filter(a=>EMAIL_RE.test(a)&&/[^\x21-\x7e]/.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
+  if(acc.length)throw new Error('These addresses have accented or special letters, which can\'t be sent from here: '+acc.join(', '));
   if(!P.length&&!cc.length&&!bcc.length)throw new Error('Add at least one recipient: tick a customer or type an email address.');
   if(P.length)return P.map(p=>({to:p.emails,cc,bcc,person:p,people:[p]}));
   return[{to:[],cc,bcc,person:null,people:[]}];}
@@ -2851,7 +2852,9 @@ async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
 function checkHow(){return MAIL.line||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
 let sending=false;
-$('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
+const dropSent=sent=>{const typed=new Set();for(const m of sent){if(m.person?.cust)CU.sel.delete(m.person.key);else if(m.person)m.to.forEach(a=>typed.add(ck(a)));}
+  if(typed.size)$('#mlTo').value=splitAddr($('#mlTo').value).filter(a=>!typed.has(ck(a))).join(', ');renderCust();updMode();};
+$('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');const sent=[];
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
   let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
@@ -2864,12 +2867,13 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
     let done=0;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const full={...m,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
-      try{const res=await sendOne(p,tok,full);done++;logSent(m,p,tok.email,kinds,parts,res);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error('Your sign-in expired. Click Send again to sign in.');}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
+      try{const res=await sendOne(p,tok,full);done++;sent.push(m);logSent(m,p,tok.email,kinds,parts,res);lgSave();}catch(e){if(e.status===401){tokSet(p,null);renderAcct();throw new Error(`Your sign-in expired${done?` after ${done} of ${plan.length} were sent (they're taken off the list)`:''}. Click Send again to sign in and send the rest.`);}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
-    if(fails.length){mlStatus(`Sent ${done} of ${plan.length}. Not sent: ${fails.join(' · ')}`,true);}
+    const left=plan.length-done-fails.length;
+    if(fails.length){mlStatus(`Sent ${done} of ${plan.length}${done?' (taken off the list)':''}. Not sent: ${fails.join(' · ')}${left>0?` · ${left} more not tried`:''}`,true);}
     else{mlStatus('');mailDlg.close();toast(plan.length>1?`Sent ${done} emails`:'Email sent');}}
   catch(e){console.error(e);mlStatus(e.message||'Sending failed.',true);}
-  finally{sending=false;$('#mlSend').disabled=false;}};
+  finally{sending=false;$('#mlSend').disabled=false;if(sent.length&&sent.length<plan.length)dropSent(sent);}};
 // Share: hands the files to the device's own email / share options (no sign-in needed)
 $('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.blob],MAIL.line.name,{type:'application/pdf'})];if(!navigator.canShare?.({files:fl})){mlStatus('This browser can\'t share files. Download the PDF and attach it yourself.',true);return;}await navigator.share({files:fl,title:$('#mlSubj').value});}catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);}return;}
   const kinds=MAIL.att;if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
@@ -2892,7 +2896,7 @@ const LINE_DEF_SUBJ='Line sheet: {product}',LINE_DEF_MSG="Hi {name},\n\nPlease f
 const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ}};
 const wordKeys=()=>WORD_KEYS[MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:'new'];
 function loadWording(){const k=wordKeys();$('#mlSubj').value=lsGet(k.subj)||k.defSubj();$('#mlMsg').value=lsGet(k.msg)||k.defMsg();}
-function keepWording(which,v){const pl=productLabel();if(pl!=='this product'&&pl.length>=3)v=v.split(pl).join('{product}');const key=wordKeys()[which];
+function keepWording(which,v){const pl=productLabel();if(pl!=='this product'&&(/[\s\d]/.test(pl.trim())||pl.length>=10))v=v.replace(new RegExp('(^|[^\\p{L}\\p{N}])'+pl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),'$1{product}');const key=wordKeys()[which];
   lsSet(key,v);lsSet(key+'-upd',String(Date.now()));scheduleSync();}
 $('#mlMsg').addEventListener('input',e=>keepWording('msg',e.target.value));
 $('#mlSubj').addEventListener('input',e=>keepWording('subj',e.target.value));
@@ -3449,7 +3453,7 @@ $('#lnClose').onclick=()=>lineDlg.close();
 
 /* ---------- pipeline: each customer × sell sheet, from first send to order ---------- */
 const plDlg=$('#plDlg'),PL={q:'',days:SET.pipe.days,sheet:''},PL_COLS=[['none','Sent, no reply','#9AA19C'],['replied','Replied','#2563EB'],['interested','Interested','#9333EA'],['quoted','Quoted','#EA7317'],['ordered','Ordered','#0E993F'],['declined','Not interested','#C2413B']];
-const money=v=>v?SET.currency+Math.round(v).toLocaleString():'';
+const money=v=>v?esc(SET.currency)+Math.round(v).toLocaleString():'';
 function plThreads(){lgLoad();const q=PL.q.trim().toLowerCase(),cut=PL.days?Date.now()-PL.days*DAY:0;
   return threads().filter(t=>{const e=t.root,last=Math.max(t.last,e.reply?.at||0,e.upd||0);return last>=cut&&(!PL.sheet||e.sheet===PL.sheet)&&(!q||[e.name,e.company,e.email,e.sheet,e.note].some(v=>String(v||'').toLowerCase().includes(q)));});}
 function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_COLS.map(c=>[c[0],[]]));for(const t of th)(by.get(t.root.status||'none')||by.get('none')).push(t);
@@ -3459,7 +3463,7 @@ function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_C
   const sheets=[...new Set(threads().map(t=>t.root.sheet))].sort((a,b)=>COLL.compare(a,b));
   if(!$('#plQ'))$('#plBar').innerHTML=`<input class="in" id="plQ" type="search" placeholder="Search customer or sell sheet" aria-label="Search pipeline"><select class="in" id="plDays" aria-label="Period">${[[30,'Last 30 days'],[90,'Last 90 days'],[365,'Last 12 months'],[0,'All time']].map(([v,n])=>`<option value="${v}"${PL.days===v?' selected':''}>${n}</option>`).join('')}</select><select class="in" id="plSheet" aria-label="Sell sheet"></select><span class="pl-kpis" id="plKpis"></span>`;
   $('#plSheet').innerHTML=`<option value="">All sell sheets</option>${sheets.map(n=>`<option value="${esc(n)}"${PL.sheet===n?' selected':''}>${esc(n)}</option>`).join('')}`;
-  $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||SET.currency+'0'}</b></span><span>Won: <b>${money(won)||SET.currency+'0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>`;
+  $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||esc(SET.currency)+'0'}</b></span><span>Won: <b>${money(won)||esc(SET.currency)+'0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>`;
   const card=t=>{const e=t.root;return`<div class="pl-card" draggable="true" data-pl="${esc(e.id)}"><button class="who" type="button" data-plwho="${esc(e.email||e.name)}" title="Show in Sent">${esc(e.name||e.company||e.email||'(no name)')}</button>${e.company&&e.name?`<span class="pl-sub">${esc(e.company)}</span>`:''}
     <span class="pl-sheet" title="${esc(e.sheet)}">${esc(e.sheet)}</span><span class="pl-sub">${e.reply?'<span class="pl-rp">Replied</span> ':''}Sent ${esc(ago(e.at))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</span>
     <div class="pl-row"><input class="pl-val" data-plval="${esc(e.id)}" inputmode="decimal" placeholder="$ value" value="${e.value?esc(String(e.value)):''}" aria-label="Order value"><span class="spacer"></span><select class="pl-mv" data-plmv="${esc(e.id)}" aria-label="Move to">${PL_COLS.filter(([k])=>!SET.pipe.colsOff.includes(k)||(e.status||'none')===k).map(([k,n])=>`<option value="${k}"${(e.status||'none')===k?' selected':''}>${n}</option>`).join('')}</select></div></div>`;};
@@ -3500,7 +3504,7 @@ function renderSettings(){if(!setDlg.open)return;
   $('#stNav').innerHTML=ST_SECS.map(([k,n,ic])=>`<button type="button" data-ssec="${k}" aria-current="${ST.sec===k}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('');
   const row=(t,sub,ctl,wide)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${wide?`<div class="st-wide">${ctl}</div>`:ctl}</div>`;
   const seg=(p,opts,cur)=>{const v=cur!==undefined?cur:getP(SET,p);return`<span class="st-seg" role="group">${opts.map(([val,lab])=>`<button type="button" data-sp="${p}" data-sv="${esc(String(val))}" aria-pressed="${String(v)===String(val)}">${lab}</button>`).join('')}</span>`;};
-  const sel=(p,opts,cur,lab)=>{const v=cur!==undefined?cur:getP(SET,p);return`<select class="in" data-sp="${p}" aria-label="${esc(lab||'')}">${opts.map(([val,lab])=>`<option value="${esc(String(val))}"${String(v)===String(val)?' selected':''}>${lab}</option>`).join('')}</select>`;};
+  const sel=(p,opts,cur,lab)=>{const v=cur!==undefined?cur:getP(SET,p);return`<select class="in" data-sp="${p}" aria-label="${esc(lab||'')}">${opts.map(([val,lab])=>`<option value="${esc(String(val))}"${String(v)===String(val)?' selected':''}>${esc(String(lab))}</option>`).join('')}</select>`;};
   const tog=(p,cur)=>`<label class="st-sw2"><input type="checkbox" data-sp="${p}" ${(cur!==undefined?cur:getP(SET,p))?'checked':''}><i></i></label>`;
   const txt=(p,ph,cur,type='text',lab)=>`<input class="in" type="${type}" data-sp="${p}" value="${esc(String(cur!==undefined?cur:getP(SET,p)??''))}" placeholder="${esc(ph||'')}" aria-label="${esc(lab||ph||'')}">`;
   // an ordered on/off list: order at `op`, the hidden ones at `offp`
@@ -3579,7 +3583,7 @@ setDlg.addEventListener('change',e=>{const t=e.target;
   if(p==='followDays'){v=Math.max(1,Math.min(365,Math.round(+v||7)));t.value=v;}else if(typeof cur==='number')v=+v;
   if(p==='accent'){v=normHex(v)||SET.accent;}if(p==='currency'){v=String(v).trim().slice(0,6)||'$';}
   setP(SET,p,v);stChanged(t.type!=='text'&&t.type!=='email'&&t.type!=='number');});
-setDlg.addEventListener('input',e=>{const t=e.target,p=t.dataset.sp;if(!p||!['text','email'].includes(t.type)||p.startsWith('@'))return;setP(SET,p,t.value.slice(0,120));setSave();stSaved();if(p==='name')renderTopAcct();});
+setDlg.addEventListener('input',e=>{const t=e.target,p=t.dataset.sp;if(!p||!['text','email'].includes(t.type)||p.startsWith('@')||p==='currency')return;setP(SET,p,t.value.slice(0,120));setSave();stSaved();if(p==='name')renderTopAcct();});
 async function openSettings(sec){pageShown('settings');if(sec)ST.sec=sec;ST.sure=false;if(!setDlg.open)setDlg.showModal();renderSettings();}
 // one file with everything worth keeping
 function stBackup(){const J=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}};
@@ -3613,7 +3617,7 @@ function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.lis
   const ordered=th.filter(t=>t.root.status==='ordered'&&inP(t.root.upd,P,0)).length,pipe=th.filter(t=>['replied','interested','quoted'].includes(t.root.status)).reduce((a,t)=>a+(+t.root.value||0),0);
   // sends per week, 12 weeks (weeks start Monday)
   const wk0=new Date();wk0.setHours(0,0,0,0);wk0.setDate(wk0.getDate()-((wk0.getDay()+6)%7));const weeks=[];
-  for(let i=NW-1;i>=0;i--){const a=+wk0-i*7*DAY,b=a+7*DAY;weeks.push({a,n:L.filter(e=>e.at>=a&&e.at<b).length,r:th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length});}
+  for(let i=NW-1;i>=0;i--){const da=new Date(wk0);da.setDate(da.getDate()-7*i);const db=new Date(da);db.setDate(db.getDate()+7);const a=+da,b=+db;weeks.push({a,n:L.filter(e=>e.at>=a&&e.at<b).length,r:th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length});}
   // products by sends in 90 days
   const prod=new Map();for(const t of th){if(t.root.at<now-TD*DAY)continue;const k=t.root.sheet||'Untitled';const p=prod.get(k)||{name:k,n:0,r:0};p.n++;if(repOf(t))p.r++;prod.set(k,p);}
   const top=[...prod.values()].sort((a,b)=>b.n-a.n||b.r-a.r).slice(0,6);
@@ -3623,7 +3627,7 @@ function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.lis
   ev.sort((a,b)=>b.at-a.at);
   // per day over the period, for the tiles' trend lines
   const d0=new Date();d0.setHours(0,0,0,0);const days=Math.min(P,90),daily={s:[],r:[]};
-  for(let i=days-1;i>=0;i--){const a=+d0-i*DAY,b=a+DAY;daily.s.push(L.filter(e=>e.at>=a&&e.at<b).length);daily.r.push(th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length);}
+  for(let i=days-1;i>=0;i--){const da=new Date(d0);da.setDate(da.getDate()-i);const db=new Date(da);db.setDate(db.getDate()+1);const a=+da,b=+db;daily.s.push(L.filter(e=>e.at>=a&&e.at<b).length);daily.r.push(th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length);}
   const items=IV.items,on=items.filter(ivOn);
   return{now,daily,sent:sent.length,sentPrev:sentPrev.length,reached,reachedPrev,rep,repPrev,rate,ratePrev,thP:thP.length,due,fresh,recentRep,ordered,pipe,weeks,top,ev:ev.slice(0,10),
     inv:{n:items.length,on:on.length,off:items.length-on.length,pcs:on.reduce((a,x)=>a+(x.sum?.pcs||0),0),never:on.filter(x=>!ivSendStats(x).n).length,star:items.filter(x=>ivm(mk(x)).star&&ivOn(x))},
@@ -3636,7 +3640,7 @@ function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet(),H=S
   const K={sent:()=>kpi('Sell sheets sent'+pl,ivNF.format(D.sent),hmDelta(D.sent,D.sentPrev)+spark(D.daily.s,`Sent per day, last ${P} days`),'sent'),reached:()=>kpi('Customers reached'+pl,ivNF.format(D.reached),hmDelta(D.reached,D.reachedPrev)),
     replies:()=>kpi('Replies'+pl,ivNF.format(D.rep),hmDelta(D.rep,D.repPrev)+spark(D.daily.r,`Replies per day, last ${P} days`),'replies'),rate:()=>kpi('Reply rate'+pl,D.thP?D.rate+'%':'–',D.thP?hmDelta(D.rate,D.ratePrev,' pts'):'<span>Send a sheet to see it</span>'),
     due:()=>kpi('Follow-ups due',ivNF.format(D.due.length),`<span>${D.due.length?'No reply by their date':'Nothing waiting'}</span>`,'due',D.due.length?'alert':''),
-    orders:()=>kpi('Orders'+pl,ivNF.format(D.ordered),'<span>Marked Ordered</span>','pipe'),pipe:()=>kpi('Open pipeline',money(D.pipe)||SET.currency+'0','<span>Replied, interested and quoted</span>','pipe')};
+    orders:()=>kpi('Orders'+pl,ivNF.format(D.ordered),'<span>Marked Ordered</span>','pipe'),pipe:()=>kpi('Open pipeline',money(D.pipe)||esc(SET.currency)+'0','<span>Replied, interested and quoted</span>','pipe')};
   const steps=[[!!a,'Sign in with Google','signin'],[D.cust.n>0,'Add or import your customers','cust'],[!!IV.folder,'Connect your sell sheets folder (Inventory)','inv'],[D.total>0,'Email your first sell sheet','email'],[lsGet('ss-notify')==='1','Turn on desktop notifications for replies','sent']];
   const maxW=Math.max(1,...D.weeks.map(w=>w.n)),nice=(m=>{const p=Math.pow(10,Math.floor(Math.log10(m))),f=m/p;return Math.max(2,(f<=1?1:f<=2?2:f<=5?5:10)*p);})(maxW),ticks=Number.isInteger(nice/2)?[0,nice/2,nice]:[0,nice];
   const wkFmt=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short'}),maxTop=Math.max(1,...D.top.map(p=>p.n)),every=Math.max(1,Math.ceil(D.weeks.length/7));
@@ -3759,7 +3763,7 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
 function openCP(){pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
-function openCustomer(key){const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
+function openCustomer(key){if(custDlg.open&&CP.mode==='cust'&&CP.dirty&&CP.open!==key&&!closeCPDetail())return;const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
   if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
 const cpShown=()=>{const q=CP.q.trim().toLowerCase();return cuSorted().filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel));};
 // the table draws 80 rows at a time (more as you scroll): with hundreds of customers, drawing them all is what made it slow
@@ -3870,7 +3874,7 @@ function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.ma
   if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
 // removing can be undone for a few seconds (restored customers count as just edited, so a sync can't remove them again)
 function undoCustomers(snap,msg){toast(msg,7000,{label:'Undo',fn:()=>{const s=JSON.parse(snap),now=Date.now();const back=new Set(s.list.map(c=>ck(c.email)));
-  CU.list=s.list.map(c=>CU.list.some(x=>ck(x.email)===ck(c.email))?CU.list.find(x=>ck(x.email)===ck(c.email)):{...c,upd:now});CU.deleted=CU.deleted.filter(d=>!back.has(d.email)||s.deleted.some(o=>o.email===d.email&&o.at===d.at));
+  CU.list=[...s.list.map(c=>CU.list.find(x=>ck(x.email)===ck(c.email))||{...c,upd:now}),...CU.list.filter(x=>!back.has(ck(x.email)))];CU.deleted=CU.deleted.filter(d=>!back.has(d.email)||s.deleted.some(o=>o.email===d.email&&o.at===d.at));
   cuSave();if(custDlg.open)renderCP();if(mailDlg.open)renderCust();toast('Restored');}});}
 function removeCustomers(list,msg){const snap=JSON.stringify({list:CU.list,deleted:CU.deleted});const now=Date.now();for(const c of list){CU.list=CU.list.filter(x=>x!==c);CU.sel.delete(ck(c.email));CU.deleted.push({email:ck(c.email),at:now});}cuSave();if(mailDlg.open)renderCust();undoCustomers(snap,msg||(list.length>1?`Removed ${list.length} customers`:'Customer removed'));}
 custDlg.addEventListener('input',e=>{const t=e.target,W=CP.W;if(!W||CP.mode!=='cust')return;
@@ -3925,7 +3929,7 @@ custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNe
   else if(e.key==='Enter'&&e.target.id==='cpdNewGrp'){e.preventDefault();$('#cpDetail [data-cpd=gadd]').click();}});
 // Esc closes the customer tab first, then the page
 custDlg.addEventListener('cancel',e=>{if(CP.mode){e.preventDefault();closeCPDetail();}});
-custDlg.addEventListener('close',()=>{CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;$('#gSug').classList.add('hide');if(mailDlg.open)renderCust();});
+custDlg.addEventListener('close',()=>{if(CP.mode==='cust'&&CP.dirty&&CP.W&&!saveCustomer())toast('Your customer changes weren\'t saved: add an email address first.',6000);CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;$('#gSug').classList.add('hide');if(mailDlg.open)renderCust();});
 let cpQt=0;$('#cpQ').addEventListener('input',e=>{CP.q=e.target.value;clearTimeout(cpQt);cpQt=setTimeout(()=>{renderCPTable(false);renderCPFoot();},90);});
 groupSuggest($('#cpQ'),{selected:()=>CP.gsel,pick:k=>{CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);CP.q='';renderCP(true);}});
 $('#cpAdd').onclick=()=>openCustomer('new');
@@ -3953,7 +3957,7 @@ const PG={hold:false,routing:false};
 const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAGES[h]?h:'';};
 // a page is being shown: close the other pages and put its address in the bar
 function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
-  if(pageNow()!==name)history[location.hash?'pushState':'replaceState'](null,'','#'+name);
+  if(pageNow()!==name)history[location.hash&&!PG.inRoute?'pushState':'replaceState'](null,'','#'+name);
   navCur(name);}
 const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',settings:'Settings','line-sheet':'Line sheet'};
 function navCur(name){document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Sell Sheet Studio';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
@@ -3965,9 +3969,10 @@ for(const[name,[id]]of Object.entries(PAGES)){const d=$('#'+id);d.classList.add(
   const x=top.querySelector('button[aria-label=Close]');if(x){x.setAttribute('aria-label','Back to the editor');x.title='Back to the sell sheet editor';x.insertAdjacentHTML('beforebegin',PG_RIGHT);}
   // Esc doesn't leave a page (it still closes panels inside it)
   d.addEventListener('cancel',e=>{e.preventDefault();});
+  d.addEventListener('keydown',e=>{if(e.key!=='Escape'||e.defaultPrevented||e.target.closest('dialog')!==d)return;e.preventDefault();d.dispatchEvent(new Event('cancel',{cancelable:true}));});
   // closed (✕, or a button that goes back to the editor): the address follows, unless another page is opening
-  d.addEventListener('close',()=>{if(PG.routing||PG.hold)return;setTimeout(()=>{if(PG.hold||Object.values(PAGES).some(([i])=>$('#'+i).open))return;if(pageNow()===name)history.pushState(null,'','#editor');},0);});}
-function route(){const n=pageNow();if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&SET.start!=='editor'&&PAGES[SET.start]){PAGES[SET.start][2]();return;}navCur('editor');if(Object.values(PAGES).some(([i])=>$('#'+i).open)){const ap=$('#app');ap.classList.remove('pg-enter');void ap.offsetWidth;ap.classList.add('pg-enter');setTimeout(()=>ap.classList.remove('pg-enter'),400);}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
+  d.addEventListener('close',()=>{if(PG.routing||PG.hold)return;setTimeout(()=>{if(PG.hold||Object.values(PAGES).some(([i])=>$('#'+i).open))return;if(pageNow()===name)history.pushState(null,'','#editor');navCur('editor');},0);});}
+function route(){const n=pageNow();PG.inRoute=true;try{if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&SET.start!=='editor'&&PAGES[SET.start]){PAGES[SET.start][2]();return;}}finally{PG.inRoute=false;}if(!location.hash)history.replaceState(null,'','#editor');navCur('editor');if(Object.values(PAGES).some(([i])=>$('#'+i).open)){const ap=$('#app');ap.classList.remove('pg-enter');void ap.offsetWidth;ap.classList.add('pg-enter');setTimeout(()=>ap.classList.remove('pg-enter'),400);}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
 window.addEventListener('popstate',route);
 // the tabs: plain links, so Ctrl/⌘-click or middle-click opens a page in a new browser tab
 document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
