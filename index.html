@@ -37,7 +37,7 @@ svg{flex:none}
 .nav-h{display:flex;align-items:center;gap:10px;padding:14px 14px 10px 16px;font-size:16px}.nav-h b{flex:1}
 .nav-list{display:grid;align-content:start;gap:2px;padding:6px 10px;overflow:auto}
 .nav-it{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:none;border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink);font:inherit}
-.nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
+.nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it[aria-current=page]{background:var(--accent-soft)}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
 .nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
 #invDlg{width:min(1500px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
@@ -65,7 +65,7 @@ svg{flex:none}
 .pl-empty{color:var(--muted);font-size:12.5px;text-align:center;padding:14px 6px;border:1px dashed var(--line2);border-radius:8px}
 #homeDlg{width:min(1320px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
 .hm-wrap{grid-template-rows:auto minmax(0,1fr)}.hm-scroll{overflow:auto;min-height:0;background:var(--bg)}
-.hm{max-width:1240px;margin:0 auto;padding:20px 20px 32px;display:grid;gap:16px}
+.hm{max-width:1240px;margin:0 auto;padding:20px 20px 32px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
 .hm-hello h3{margin:0;font:700 24px/1.2 var(--ui)}.hm-hello p{margin:4px 0 0;color:var(--muted)}
 .hm-actions{display:flex;flex-wrap:wrap;gap:8px}.hm-actions .btn svg{width:16px;height:16px}
 .hm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
@@ -92,7 +92,7 @@ svg{flex:none}
 .hm-steps{display:grid;gap:8px}.hm-step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}.hm-step .ck{width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;font-size:12px;color:#fff}.hm-step.done .ck{background:var(--accent);border-color:var(--accent)}.hm-step.done span{color:var(--muted);text-decoration:line-through}
 .hm-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hm-mini div{background:var(--raise);border-radius:10px;padding:10px}.hm-mini small{display:block;color:var(--muted);font-size:12px;font-weight:600}.hm-mini b{font:700 18px var(--ui);font-variant-numeric:tabular-nums}
 .hm-foot{display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.hm-foot input{accent-color:var(--accent)}
-@media (max-width:900px){.hm-grid{grid-template-columns:1fr}.hm{padding:14px}.hm-kpis{grid-template-columns:repeat(2,1fr)}.hm-kpi b{font-size:24px}}
+@media (max-width:900px){.hm-grid{grid-template-columns:1fr}.hm{padding:14px}.hm-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hm-kpi b{font-size:24px}}
 /* inventory extras */
 .iv-card{position:relative}.iv-card.off .iv-img img,.iv-card.off .iv-img .iv-ph{filter:grayscale(1);opacity:.55}.iv-card.off h4{color:var(--muted)}
 .iv-selbox{position:absolute;top:10px;left:10px;z-index:2;width:22px;height:22px;margin:0;accent-color:var(--accent);opacity:0;transition:opacity .15s}.iv-card:hover .iv-selbox,.iv-selbox:checked,.iv-grid.selecting .iv-selbox,.iv-selbox:focus-visible{opacity:1}
@@ -444,6 +444,17 @@ textarea.np-in{display:block;overflow:hidden}
 dialog{border:0;padding:0;border-radius:18px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow-lg);width:min(980px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:hidden}
 dialog::backdrop{background:rgba(10,14,22,.55);backdrop-filter:blur(3px)}
 dialog[open]{animation:pop .22s var(--ease)}
+/* pages: Home, Inventory, Pipeline, Sent, Customers fill the window and have their own address (#home, #inventory…) */
+dialog.page{width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0;border-radius:0!important;box-shadow:none}
+dialog.page[open]{animation:none}dialog.page::backdrop{background:var(--bg);backdrop-filter:none}
+dialog.page .ml-top{padding:8px 12px;gap:8px;flex-wrap:nowrap;background:var(--panel)}dialog.page .lg-wrap{grid-template-columns:minmax(0,1fr)}
+.vh{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
+.pg-nav{display:flex;align-items:center;gap:2px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}.pg-nav::-webkit-scrollbar{display:none}.pg-nav:focus{outline:none}
+.pg-nav a{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;color:var(--muted);font:600 14px var(--ui);text-decoration:none;white-space:nowrap;position:relative}
+.pg-nav a:hover{background:var(--raise);color:var(--ink)}.pg-nav a[aria-current=page]{background:var(--accent-soft);color:var(--accent)}
+.pg-nav .pg-brand{display:inline-flex;align-items:center;gap:8px;border:0;background:none;cursor:pointer;color:var(--ink);font:700 15px var(--ui);padding:5px 8px 5px 4px;margin-right:6px;border-radius:9px;white-space:nowrap}.pg-nav .pg-brand:hover{background:var(--raise)}.pg-nav .pg-brand span.logo{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:#fff}.pg-nav .pg-brand span.logo svg{width:17px;height:17px}
+.pg-nav a i{font-style:normal;min-width:18px;height:18px;border-radius:9px;background:var(--warn);color:#fff;font:700 11px/18px var(--ui);text-align:center;padding:0 5px}.pg-nav a i.rp{background:var(--accent)}.pg-nav a i[hidden]{display:none}
+@media (max-width:760px){.pg-nav a{padding:7px 9px;font-size:13.5px}.pg-nav .pg-brand b{display:none}dialog.page .ml-top .note{display:none}}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
 #editor{height:min(920px,calc(100vh - 24px));width:min(1180px,calc(100vw - 24px))}
 .ed-wrap{display:grid;grid-template-rows:auto auto minmax(min(280px,50vh),1fr) auto;height:100%;overflow:auto}
@@ -804,6 +815,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span><b>Home</b><small id="navHome">Today at a glance</small></span></button>
+      <button type="button" class="nav-it" data-nav="editor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span><b>Sell sheet editor</b><small id="navEd">Make and edit sell sheets</small></span></button>
       <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><span><b>Inventory</b><small id="navInv"></small></span></button>
       <button type="button" class="nav-it" data-nav="pipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/></svg><span><b>Pipeline</b><small id="navPipe">Customers from first send to order</small></span></button>
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
@@ -2300,6 +2312,7 @@ const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + atta
 function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.filter(t=>t.root.reply&&!t.root.reply.seen).length,b=$('#sentBadge'),rb=$('#replyBadge');
   b.hidden=!n;b.textContent=n>99?'99+':n;rb.hidden=!r;rb.textContent=r>99?'99+':r;rb.title=r?`${r} new repl${r>1?'ies':'y'}`:'';b.title=n?`${n} need${n>1?'':'s'} a follow-up`:'';
   $('#sentBtn').title=[r&&`${r} new repl${r>1?'ies':'y'} from customers`,n&&`${n} sent sell sheet${n>1?'s':''} need${n>1?'':'s'} a follow-up`].filter(Boolean).join(' · ')||'Sell sheets you\'ve emailed, and how customers responded';
+  $$('.pg-nav a[href="#sent"] i').forEach(i=>{i.hidden=!(r+n);i.textContent=r+n>99?'99+':r+n;i.className=r?'rp':'';});
   const base=document.title.replace(/^\(\d+\+?\) /,'');document.title=r+n?`(${r+n>99?'99+':r+n}) ${base}`:base;}
 // called after each successful email
 function logSent(m,prov,from,kinds,parts,res){lgLoad();const now=Date.now(),ppl=m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}];
@@ -2358,7 +2371,7 @@ function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'Int
 function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
   mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
 $('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
-function openLog(){LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
+function openLog(){pageShown('sent');LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
   if(LG.fresh.size){for(const t of threads())if(LG.fresh.has(t.root.id)){t.root.reply.seen=true;t.root.upd=Date.now();}lgSave();}
   if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
@@ -2845,7 +2858,7 @@ async function pickFile(t,o){await loadScript('gapi');await new Promise((res,rej
 // pick a file in Drive and download it; returns a File (or null if cancelled)
 async function driveOpen(kind){const o=DRIVE_OPEN[kind];
   if(!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey){toast(EMAIL_SETUP.google?'Opening from Google Drive needs a Google API key. Add it under Sign in → Sign-in setup (see SETUP-EMAIL.md).':'Opening from Google Drive needs Google sign-in, which isn\'t set up yet. Click Sign in → Set up sign-in.',6000);return null;}
-  const open=[...document.querySelectorAll('dialog[open]')].filter(d=>d.id!=='navDlg');open.forEach(d=>d.close()); // Google's picker can't show above an open window
+  const open=[...document.querySelectorAll('dialog[open]')].filter(d=>d.id!=='navDlg');PG.hold=true;open.forEach(d=>d.close()); // Google's picker can't show above an open window
   try{const t=await driveToken();const f=await pickFile(t,o);if(!f)return null;
     const ex=DRIVE_EXPORT[f.mimeType];if(f.mimeType&&!ex&&!o.mimes.includes(f.mimeType))throw new Error(`“${f.name}” isn't ${o.what}.`);
     toast(`Downloading ${f.name}…`,20000);
@@ -2855,7 +2868,7 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
     const blob=await r.blob(),name=ex&&!f.name.toLowerCase().endsWith(ex[1])?f.name+ex[1]:f.name;
     return new File([blob],name,{type:ex?ex[0]:(f.mimeType||blob.type)});}
   catch(e){console.error(e);toast(e.message||'Could not open that file from Google Drive.',6000);return null;}
-  finally{open.forEach(d=>{if(!d.open)d.showModal();});if(custDlg.open)renderCP();}}
+  finally{open.forEach(d=>{if(!d.open)d.showModal();});PG.hold=false;if(custDlg.open)renderCP();}}
 
 /* ---------- inventory: a Google Drive folder of sell sheets, shown as products ----------
    Reads every sell sheet (PDF, Word, Google Docs, JPG/PNG) in the chosen folder and its subfolders (subfolders become categories).
@@ -3017,7 +3030,7 @@ async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.items=[];IV.full.clea
 async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn\'t set up yet. Click Sign in → Set up sign-in.',5000);return;}
   let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
   if(!EMAIL_SETUP.googleApiKey){$('#ivLink')?.focus();toast('Paste the folder\'s link from Google Drive (the picker needs a Google API key).',5000);return;}
-  invDlg.close();let f=null;
+  PG.hold=true;invDlg.close();let f=null;
   try{await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
     const P=google.picker,view=(label,fn)=>{let v=new P.DocsView(P.ViewId.FOLDERS).setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(FOLDER_MIME);v=fn(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
     f=await new Promise(res=>{new P.PickerBuilder().setTitle('Choose the folder with your sell sheets')
@@ -3025,7 +3038,7 @@ async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn
       .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
       .setCallback(d=>{if(d.action===P.Action.PICKED){const x=d.docs?.[0];res(x?{id:x.id,name:x.name}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
   catch(e){toast(e.message,5000);}
-  finally{if(!invDlg.open)invDlg.showModal();}
+  finally{if(!invDlg.open)invDlg.showModal();PG.hold=false;}
   if(f)await invSetFolder(f);}
 async function invUseLink(v){const id=folderIdFrom(v);if(!id){toast('That doesn\'t look like a Google Drive folder link.',4000);return;}
   let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
@@ -3122,7 +3135,7 @@ async function invOpenSheet(x,thenEmail,pick){let t;try{t=await invToken(true);}
   const f=x.files.find(f=>f.kind!=='JPG'&&f.kind!=='PNG');if(!f)return;toast('Opening '+invTitle(x)+'…',20000);
   try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail){openMail();if(pick){CU.sel=new Set(pick);renderCust(true);toast(`${pick.length} customer${pick.length>1?'s':''} ticked: everyone who hasn't had this sell sheet. Untick anyone you don't want, then Send.`,7000);}}}
   catch(e){toast(e.message||'Couldn\'t open that sell sheet.',5000);}}
-async function openInv(){if(!invDlg.open)invDlg.showModal();if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
+async function openInv(){pageShown('inventory');if(!invDlg.open)invDlg.showModal();if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
   renderInv();if(IV.folder&&!IV.busy&&Date.now()-IV.last>3*60e3){const t=await invToken(false);if(t)invSync(false);else{IV.err='signin';renderInv();}}}
 invDlg.addEventListener('click',async e=>{const t=e.target;
   const sb=t.closest('[data-ivsel]');if(sb){sb.checked?IV.sel.add(sb.dataset.ivsel):IV.sel.delete(sb.dataset.ivsel);renderInv();return;}
@@ -3185,7 +3198,7 @@ function openLine(keys){LN.keys=[...new Set(keys)].filter(k=>{const x=IV.items.f
   if(!LN.keys.length){toast('Pick some products first: tick their cards, or filter the list to what you want.',5000);return;}
   if(!LN.sub)LN.sub=new Intl.DateTimeFormat(undefined,{month:'long',year:'numeric'}).format(new Date());
   if(!LN.contact)LN.contact=S?.email||meFor('google')||'';
-  invDlg.close();if(!lineDlg.open)lineDlg.showModal();renderLineForm();lnBuild();}
+  pageShown('line-sheet');if(!lineDlg.open)lineDlg.showModal();renderLineForm();lnBuild();}
 function renderLineForm(){const its=lnItems();$('#lnSum').textContent=`${its.length} product${its.length===1?'':'s'} · ${Math.ceil(its.length/LN.per)} page${Math.ceil(its.length/LN.per)===1?'':'s'}`;
   $('#lnForm').innerHTML=`<label class="field"><span>Title</span><input class="in" data-ln="title" value="${esc(LN.title)}" maxlength="80"></label>
     <div class="ln-row"><label class="field"><span>Subtitle</span><input class="in" data-ln="sub" value="${esc(LN.sub)}" placeholder="e.g. Fall 2026" maxlength="80"></label><label class="field"><span>Colour</span><input class="in" type="color" data-ln="color" value="${esc(LN.color)}" style="padding:2px;height:44px"></label></div>
@@ -3270,7 +3283,7 @@ function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_C
     <div class="pl-cards">${l.length?l.slice(0,150).map(card).join(''):'<div class="pl-empty">Drag a customer here</div>'}${l.length>150?`<div class="pl-empty">and ${l.length-150} more: search to narrow down</div>`:''}</div></section>`;}).join('');
   $('#plBoard').scrollLeft=sc;}
 function plSet(id,patch){lgLoad();const e=LG.list.find(x=>x.id===id);if(!e)return;Object.assign(e,patch,{upd:Date.now()});lgSave();}
-async function openPipe(){if(!plDlg.open)plDlg.showModal();renderPipe();}
+async function openPipe(){pageShown('pipeline');if(!plDlg.open)plDlg.showModal();renderPipe();}
 plDlg.addEventListener('input',e=>{if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}});
 plDlg.addEventListener('change',e=>{const t=e.target;
   if(t.id==='plDays'){PL.days=+t.value;renderPipe();}else if(t.id==='plSheet'){PL.sheet=t.value;renderPipe();}
@@ -3344,8 +3357,8 @@ function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet();
       :'<p class="hm-empty">Connect the Google Drive folder with your sell sheets to see your products here.</p><p style="margin:10px 0 0"><button class="btn sm" type="button" data-hm="inv">Connect folder</button></p>'}</div>
     <div class="hm-card"><h4>Customers<button class="lnk" type="button" data-hm="cust">Open</button></h4><div class="hm-mini"><div><small>Customers</small><b>${ivNF.format(D.cust.n)}</b></div><div><small>Groups</small><b>${ivNF.format(D.cust.groups)}</b></div><div><small>Without a name</small><b>${ivNF.format(D.cust.nn)}</b></div></div></div>
   </div></div>
-  <label class="hm-foot"><input type="checkbox" id="hmStart" ${lsGet('ss-home-start')==='1'?'checked':''}> Show Home when the site opens</label>`;}
-async function openHome(){if(!homeDlg.open)homeDlg.showModal();if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}renderHome();}
+  <label class="hm-foot"><input type="checkbox" id="hmStart" ${lsGet('ss-home-start')!=='0'?'checked':''}> Open on Home (untick to open on the sell sheet editor)</label>`;}
+async function openHome(){pageShown('home');if(!homeDlg.open)homeDlg.showModal();if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}renderHome();}
 homeDlg.addEventListener('click',e=>{const t=e.target,b=t.closest('[data-hm]');
   const w=t.closest('[data-hmwho]');if(w){lgF.q=w.dataset.hmwho;lgF.status='';homeDlg.close();openLog();return;}
   const sh=t.closest('[data-hmsheet]');if(sh){lgF.q=sh.dataset.hmsheet;lgF.status='';homeDlg.close();openLog();return;}
@@ -3366,7 +3379,7 @@ homeDlg.addEventListener('focusin',e=>{const b=e.target.closest('[data-tip]');if
 
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
-function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
+function openNav(){lgLoad();cuLoad();$('#navEd').textContent=S?'Open: '+sheetName(S):'Make and edit sell sheets';$$('#navDlg [data-nav]').forEach(b=>{const cur=b.dataset.nav===({inventory:'inv',pipeline:'pipe',sent:'sent',customers:'cust',home:'home'}[pageNow()]||(pageNow()?'':'editor'));cur?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
   const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
   $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   {const d=th.filter(needsFollow).length;$('#navHome').textContent=nr||d?[nr&&`${nr} new repl${nr>1?'ies':'y'}`,d&&`${d} follow-up${d>1?'s':''} due`].filter(Boolean).join(' · '):'Today at a glance';}
@@ -3375,7 +3388,7 @@ function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollo
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='editor')goEditor();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
@@ -3428,7 +3441,7 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 
 /* ---------- Customers page: every customer with every detail; opens each one in a large tab ---------- */
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
-function openCP(){if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
+function openCP(){pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
 function openCustomer(key){const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
   if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
@@ -3610,6 +3623,34 @@ $('#cpTickGrp').onclick=e=>{const btn=e.currentTarget,gs=allGroups();
   if(m)m.querySelector('#tgNew').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();m.querySelector('[data-tgnew]').click();}});};
 $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())return;custDlg.close();};
 
+/* ---------- pages and addresses ----------
+   Each page has its own address (#home, #inventory, #pipeline, #sent, #customers), so Back works, a refresh stays on the page,
+   and a page can be opened in its own browser tab. The sell sheet editor is the site with no #. */
+const PAGES={home:['homeDlg','Home',()=>openHome()],inventory:['invDlg','Inventory',()=>openInv()],pipeline:['plDlg','Pipeline',()=>openPipe()],sent:['logDlg','Sent',()=>openLog()],customers:['custDlg','Customers',()=>openCP()],
+  'line-sheet':['lineDlg','Line sheet',()=>LN.keys.length?(pageShown('line-sheet'),lineDlg.open||lineDlg.showModal()):openInv()]};
+const PG={hold:false,routing:false};
+const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAGES[h]?h:'';};
+// a page is being shown: close the other pages and put its address in the bar
+function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
+  if(pageNow()!==name)history[location.hash?'pushState':'replaceState'](null,'','#'+name);
+  $$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
+const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b></button>${['home','editor','inventory','pipeline','sent','customers'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
+for(const[name,[id]]of Object.entries(PAGES)){const d=$('#'+id);d.classList.add('page');const top=d.querySelector('.ml-top'),h=top.querySelector('h2');h.classList.add('vh');h.insertAdjacentHTML('afterend',NAV_HTML);
+  const x=top.querySelector('button[aria-label=Close]');if(x){x.setAttribute('aria-label','Back to the editor');x.title='Back to the sell sheet editor';}
+  // Esc doesn't leave a page (it still closes panels inside it)
+  d.addEventListener('cancel',e=>{e.preventDefault();});
+  // closed (✕, or a button that goes back to the editor): the address follows, unless another page is opening
+  d.addEventListener('close',()=>{if(PG.routing||PG.hold)return;setTimeout(()=>{if(PG.hold||Object.values(PAGES).some(([i])=>$('#'+i).open))return;if(pageNow()===name)history.pushState(null,'','#editor');},0);});}
+function route(){const n=pageNow();if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&lsGet('ss-home-start')!=='0'){openHome();return;}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
+window.addEventListener('popstate',route);
+// the tabs: plain links, so Ctrl/⌘-click or middle-click opens a page in a new browser tab
+document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
+  if(n==='editor'){goEditor();return;}if(n!==pageNow())PAGES[n][2]();});
+// the top-left logo on every page opens the side panel
+document.addEventListener('click',e=>{if(e.target.closest('[data-pgmenu]'))openNav();});
+// the sell sheet editor: its own address (#editor), all pages closed
+function goEditor(){if(location.hash!=='#editor')history.pushState(null,'','#editor');route();}
+
 /* ---------- boot ---------- */
 (async()=>{
   applyAppear();renderRail();
@@ -3622,7 +3663,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
   S=sheets.find(s=>s.id===lsGet('ss-last'))||sheets[0];loadFont(S.style.font);
   refreshPicker();renderPanel();renderSheet();fit();moveInd();renderTopAcct();lgLoad();renderBadge();if(authGet())syncNow();
   setTimeout(()=>$('#app').classList.remove('intro'),1200);
-  if(lsGet('ss-home-start')==='1')openHome();
+  route();renderBadge();
 })();
 })();
 </script>
