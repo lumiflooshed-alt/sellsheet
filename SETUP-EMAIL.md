@@ -37,7 +37,9 @@ Your site addresses (add every one you use):
    - To remove that screen for everyone you'd have to submit the app for Google's verification. That's only needed if you open it to the public.
 5b. Go to **Data Access → Add or remove scopes** and tick **Gmail API · `.../auth/gmail.readonly`** (paste `https://www.googleapis.com/auth/gmail.readonly` into **Manually add scopes** if it isn't listed). Click **Update**, then **Save**.
    - This lets the Sent list spot replies from customers (see "Reply checking" below). The site only looks at emails from people you've sent sell sheets to.
-   - Google calls this a *restricted* scope. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
+   - Also add **Google Drive API · `.../auth/drive.readonly`** (`https://www.googleapis.com/auth/drive.readonly`). It's for the **Inventory** page, which reads the sell sheets in a folder you choose. It's only asked for the first time you open Inventory. Nothing in your Drive is changed.
+   - To let Inventory make folders, add files and move sheets between your Active and Inactive folders, also add **`https://www.googleapis.com/auth/drive`**. It's only asked for the first time you do one of those.
+   - Google calls these *restricted* scopes. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
 6. Go to **Clients → Create client**:
    - Application type: **Web application**. Name: `Sell Sheet Studio`.
    - **Authorized JavaScript origins**: click **Add URI** and enter `https://lumiflooshed-alt.github.io`. Add your Cloudflare address too if you have one, e.g. `https://YOUR-NAME.pages.dev`.
@@ -163,3 +165,55 @@ Client IDs are not passwords. They're meant to be public and only work from the 
   - Checks only run while the site is open in a tab.
   - Google's sign-in lasts an hour and can only be renewed with a click. After that, checking pauses until you send an email, sign in, or click **Sent → Check now**.
   - Follow-up date reminders don't need Gmail, so they keep working.
+
+## Inventory (Google Drive folder)
+
+- Open the logo menu → **Inventory**, then choose the Drive folder where you keep your sell sheets. You can also paste the folder's link.
+- Every sell sheet in that folder and its subfolders becomes a product card: picture, item code, price, pieces, boxes and colours.
+  - Subfolders become categories, e.g. *Mens* and *Ladies*.
+  - Files with the same name in different formats (PDF, Word, JPG) are shown as one product.
+- Sell sheets made with this site are read exactly. Other PDF and Word sheets are read as well as their layout allows. Pictures (JPG/PNG) are shown as they are.
+- What's read is kept in this browser, so the page opens instantly and works offline. **Refresh** reads only files that changed.
+- Click a product to see its colours and sizes table and details. From there, **Open in editor** or **Email this sell sheet**.
+- **Active / Inactive:** mark products inactive to hide them from the active list (nothing is deleted). Do it in the product panel, or tick several cards and use the bar that appears.
+- **★ Star** products to keep them first. Add a private **note** to each product.
+- **Sent to:** each product shows who it was emailed to, who replied, and when. **Email it to customers who haven't had it** ticks everyone else in the Email window, so you can review the list before sending.
+- **Export** downloads the inventory as a spreadsheet (CSV).
+- Active/inactive, stars and notes sync between your devices when you're signed in.
+
+### Your Drive folders decide status and type
+- A folder whose name starts with **Active** (or Current) makes everything inside it active.
+- A folder starting with **Inactive** (or Discontinued, Archive) makes everything inside it inactive.
+- The folder just inside one of those is the **type**, e.g. *Stock* or *Inventory Item*. Inventory gets a filter for each type.
+- Any deeper folders are **categories**.
+- Switching a product between active and inactive **moves its files** to the matching folder on the other side, e.g. *Active / Stock / Mens* → *Inactive / Stock / Mens*. Missing folders are made.
+- **＋ Add** in Inventory, all done in your Drive:
+  - make a new folder
+  - save the sell sheet open in the editor into a folder
+  - upload PDF, Word or picture files into a folder
+- **Move to another folder…** in a product's panel moves its files in Drive.
+
+### Line sheets
+- Tick products in Inventory, or filter to what you want, then click **Line sheet**.
+- Set the title, subtitle, colour, contact, a note, products per page (4, 6, 9 or 12), the picture (photo or sell sheet page) and what to show. Reorder or remove products as you go.
+- The preview updates as you change things.
+- Then **Download PDF**, **Save to Google Drive** (a *Line Sheets* folder), or **Email it**.
+- An emailed line sheet counts as "sent" for every product in it.
+
+### Pipeline
+The logo menu → **Pipeline** shows every customer and sell sheet as a card in columns:
+*Sent, no reply → Replied → Interested → Quoted → Ordered → Not interested*.
+- Drag cards between columns, or use the menu on a card.
+- Type an order value on a card. The board shows open pipeline value, won value and win rate.
+- Columns update automatically when a reply is spotted.
+
+## Home
+
+The logo menu → **Home** shows today at a glance:
+- sheets sent, customers reached, replies, reply rate and follow-ups due (last 30 days compared with the 30 before)
+- what needs your attention
+- sends per week
+- top products, recent activity, and inventory and customer counts
+- a setup checklist
+
+Tick **Show Home when the site opens** to start there.
