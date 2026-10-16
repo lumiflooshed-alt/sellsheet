@@ -345,6 +345,7 @@ textarea.np-in{display:block;overflow:hidden}
 .sheet{--p:#1F2A44;--a:#4F8FD6;--tint:#EEF2F8;--line:#DDE3EC;--pale:#9FB4D6;--ink2:#222222;
   width:816px;height:1056px;background:#fff;color:var(--ink2);padding:35px 58px;font-family:var(--f,Arial),Arial,Helvetica,sans-serif;box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
 .sheet .hd{background:var(--p);border-bottom:4px solid var(--a);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 20px 15px 20px}
+.sheet .ed.up{text-transform:uppercase}
 .sheet .hd .t{color:#fff;font-weight:700;font-size:var(--s-title);line-height:1.15;min-width:0}
 .sheet .hd .c{text-align:right;flex:none;max-width:45%}
 .sheet .hd .c small{display:block;color:var(--pale);font-weight:700;font-size:10px;letter-spacing:.02em}
@@ -1125,7 +1126,7 @@ const editStates=new Map(); // photo id -> in-memory editing data (not saved)
 
 /* ---------- storage (IndexedDB, per device) ---------- */
 let dbp=null;
-function db(){return dbp||(dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('sellsheets',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('sheets',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));}
+function db(){return dbp||(dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('sellsheets',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('sheets',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}).catch(e=>{dbp=null;throw e;}));}
 async function dbAll(){try{const d=await db();return await new Promise(res=>{const q=d.transaction('sheets').objectStore('sheets').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);});}catch(e){return null;}}
 async function dbPut(s){try{const d=await db();await new Promise((res,rej)=>{const t=d.transaction('sheets','readwrite'),os=t.objectStore('sheets');
     // the sheet is plain data, so it can be stored directly (no extra JSON copy of all the photo text); fall back to a clean copy if something isn't storable
@@ -1133,14 +1134,19 @@ async function dbPut(s){try{const d=await db();await new Promise((res,rej)=>{con
     t.oncomplete=res;t.onerror=()=>rej(t.error);});return true;}catch(e){return false;}}
 async function dbDel(id){try{const d=await db();await new Promise(res=>{const t=d.transaction('sheets','readwrite');t.objectStore('sheets').delete(id);t.oncomplete=res;t.onerror=res;});}catch(e){}}
 const lsGet=k=>{try{return localStorage.getItem(k);}catch(e){return null;}}, lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
-let saveT=0;
-function touch(){S.updated=Date.now();$('#status').innerHTML='<i style="background:var(--faint)"></i>Saving…';clearTimeout(saveT);saveT=setTimeout(async()=>{const ok=await dbPut(S);$('#status').innerHTML=ok?'<i class="pulse"></i>Saved on this device':'<i style="background:var(--bad)"></i>Not saved';refreshPicker();},500);}
+let saveT=0,saveS=null;
+// saves the sheet that was edited (not whichever one is open when the timer fires)
+async function flushSave(){clearTimeout(saveT);const s=saveS;if(!s)return;saveS=null;const ok=await dbPut(s);if(saveS)return;$('#status').innerHTML=ok?'<i class="pulse"></i>Saved on this device':'<i style="background:var(--bad)"></i>Not saved';refreshPicker();}
+function touch(){S.updated=Date.now();$('#status').innerHTML='<i style="background:var(--faint)"></i>Saving…';if(saveS&&saveS!==S)dbPut(saveS);clearTimeout(saveT);saveS=S;saveT=setTimeout(flushSave,500);}
+window.addEventListener('pagehide',()=>{flushSave();});document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();});
 const sheetName=s=>[s.code,s.title].filter(Boolean).join(' · ')||'Untitled sheet';
 function refreshPicker(){const sel=$('#sheetSel');const i=sheets.findIndex(x=>x.id===S.id);if(i<0)sheets.unshift(S);else sheets[i]=S;
   sel.innerHTML=sheets.map(s=>`<option value="${s.id}"${s.id===S.id?' selected':''}>${esc(sheetName(s))}</option>`).join('')+'<option value="__del">Delete this sheet…</option>';}
 
 /* ---------- derived values ---------- */
-const priceText=()=>{const a=String(S.price.amount).trim();if(!a)return'';const n=parseFloat(a.replace(/[^0-9.]/g,''));return (isFinite(n)?SET.currency+n.toFixed(2):a)+' per '+S.price.unit;};
+const numText=a=>{const t=String(a??'').trim().replace(/^[^\d.,-]{0,4}/,'').replace(/\s+/g,'');let n=NaN;
+  if(t&&/^(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?$/.test(t))n=parseFloat(t.replace(/,/g,''));else if(/^(\d{1,3}(\.\d{3})+|\d+),\d{1,2}$/.test(t))n=parseFloat(t.replace(/\./g,'').replace(',','.'));return isFinite(n)?n:NaN;};
+const priceText=()=>{const a=String(S.price.amount).trim();if(!a)return'';const n=numText(a);return (isFinite(n)?SET.currency+n.toFixed(2):a)+' per '+S.price.unit;};
 const rowVal=r=>r.auto==='price'?priceText():r.auto==='sizes'?S.sizes.filter(Boolean).join(', '):r.auto==='packing'?`${S.perBox} pcs per box`:r.value;
 function calc(){
   const n=S.sizes.length, rs=S.ratio.slice(0,n).reduce((a,b)=>a+(+b||0),0);
@@ -1160,7 +1166,7 @@ const szKey=k=>k==='title'?'title':k==='code'?'code':k==='email'?'email':k==='he
 const effFmt=(k,g)=>Object.assign({},(S.gfmt||{})[g||szKey(k)]||{},k?(S.fmt||{})[k]||{}:{});
 function fmtCss(f){let c='';if(f.color)c+=`color:${f.color};`;if(f.size)c+=`font-size:${f.size}px;`;if(f.bold!=null)c+=`font-weight:${f.bold?700:400};`;if(f.italic)c+='font-style:italic;';if(f.underline)c+='text-decoration:underline;';
   if(f.font)c+=`font-family:'${f.font.replace(/'/g,'')}',Arial,sans-serif;`;if(f.align)c+=`display:block;text-align:${f.align};`;return c;}
-const ed=(k,v,ph)=>`<span class="ed" contenteditable="true" spellcheck="false" data-edit="${k}" data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
+const ed=(k,v,ph,up)=>`<span class="ed${up?' up':''}" contenteditable="true" spellcheck="false" data-edit="${k}" data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
 function styleVars(){const st=S.style;return `--f:'${st.font.replace(/'/g,'')}';--phH:${st.phH}px;--lw:${st.lw}px;--gap:${st.gap}px;`+Object.entries(st.sz).map(([k,v])=>`--s-${k}:${v}px`).join(';');}
 // Photos are stored as base64 text (often 300 KB-1 MB each). The sheet is rebuilt on every keystroke, so each photo is turned into a short
 // blob: address once; putting megabytes of text through the HTML parser on every key made typing lag when a sheet had several photos.
@@ -1183,11 +1189,11 @@ function sheetHTML(forExport){
   const rows=S.rows.map(r=>`<tr class="${r.auto==='price'?'price':''}"><td>${ed('row:'+r.id+':label',r.label,'Label')}</td><td>${ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
   const rh=n=>B[n].h?`--rh:${B[n].h}px;`:'';
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
-    ${blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}"><div class="t">${ed('title',S.title.toUpperCase(),'PRODUCT NAME')}</div><div class="c"><small>ITEM CODE</small><b>${ed('code',S.code.toUpperCase(),'CODE')}</b></div></div>`)}
+    ${blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}"><div class="t">${ed('title',S.title,'PRODUCT NAME',1)}</div><div class="c"><small>ITEM CODE</small><b>${ed('code',S.code,'CODE',1)}</b></div></div>`)}
     ${photos}
-    ${showCt?blk('colours',`<div class="sh">${ed('heading:colours',S.headings.colours.toUpperCase(),'HEADING')}</div><table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours')):''}
-    ${blk('details',`<div class="sh">${ed('heading:details',S.headings.details.toUpperCase(),'HEADING')}</div><div class="dtw" style="position:relative"><table class="dt"><tbody>${rows}</tbody></table>${forExport?'':'<span class="rz rz-x" data-rz="lw" style="left:var(--lw)" title="Drag to resize the label column"></span>'}</div>`,rh('details'))}
-    ${blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}"><div class="h">${ed('heading:contact',S.headings.contact.toUpperCase(),'CONTACT US')}</div><div class="e">${ed('email',S.email,'sales@yourcompany.com')}</div></div>`)}
+    ${showCt?blk('colours',`<div class="sh">${ed('heading:colours',S.headings.colours,'HEADING',1)}</div><table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours')):''}
+    ${blk('details',`<div class="sh">${ed('heading:details',S.headings.details,'HEADING',1)}</div><div class="dtw" style="position:relative"><table class="dt"><tbody>${rows}</tbody></table>${forExport?'':'<span class="rz rz-x" data-rz="lw" style="left:var(--lw)" title="Drag to resize the label column"></span>'}</div>`,rh('details'))}
+    ${blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}"><div class="h">${ed('heading:contact',S.headings.contact,'CONTACT US',1)}</div><div class="e">${ed('email',S.email,'sales@yourcompany.com')}</div></div>`)}
   </div>`;
 }
 const frame=n=>`<div class="frame" aria-hidden="true"><span class="flbl">${BLOCK_NAMES[n]}</span>${['w','e','s','sw','se'].map(d=>`<span class="bh bh-${d}" data-bh="${d}"></span>`).join('')}</div>`;
@@ -1298,7 +1304,7 @@ function renderPanel(){
   }
   else if(tab==='details'){
     h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them. Leave a row empty or remove it if you don't need it.</p>
-    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Shown in the Price row below.</p><div class="row2">${fld('Amount ($)',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
+    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Shown in the Price row below.</p><div class="row2">${fld('Amount ('+esc(SET.currency)+')',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
       <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit"><option value="piece"${S.price.unit==='piece'?' selected':''}>piece</option><option value="box"${S.price.unit==='box'?' selected':''}>box</option></select></label></div></div>
     <div class="list">${S.rows.map((r,i)=>`<div class="item"><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:'Label',label:'Row label'})}
       ${r.auto?`<div class="in" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--raise)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rowVal(r))||'<span style=color:var(--faint)>Filled in automatically</span>'}</span><button class="btn sm ghost" data-unauto="${r.id}">Edit</button></div>`
@@ -1406,7 +1412,7 @@ const BH_LIM={header:[40,260],photos:[100,460],colours:[18,64],details:[18,64],f
 let bdrag=null;
 paper.addEventListener('pointerdown',e=>{const bh=e.target.closest('.bh');if(!bh)return;e.preventDefault();e.stopPropagation();
   const el=bh.closest('.blk'),n=el.dataset.block,st=S.style.blocks[n];let h0;
-  if(n==='photos')h0=S.style.phH;else if(n==='header')h0=st.h||el.querySelector('.hd').offsetHeight;else if(n==='footer')h0=st.h||el.querySelector('.ft').offsetHeight;else h0=st.h||el.querySelector('tbody td').offsetHeight;
+  if(n==='photos')h0=S.style.phH;else if(n==='header')h0=st.h||el.querySelector('.hd').offsetHeight;else if(n==='footer')h0=st.h||el.querySelector('.ft').offsetHeight;else h0=st.h||(el.querySelector('tbody td')?.offsetHeight||30);
   bdrag={n,dir:bh.dataset.bh,el,sx:e.clientX,sy:e.clientY,w0:st.w,h0,lbl:el.querySelector('.flbl')};try{bh.setPointerCapture(e.pointerId);}catch(_){}});
 window.addEventListener('pointermove',e=>{if(!bdrag)return;const{n,dir,el}=bdrag,st=S.style.blocks[n],dx=(e.clientX-bdrag.sx)/zoom,dy=(e.clientY-bdrag.sy)/zoom;
   if(dir.includes('e')||dir.includes('w')){st.w=Math.round(Math.min(100,Math.max(30,bdrag.w0+(dir.includes('e')?1:-1)*2*dx/7)));el.style.width=st.w+'%';}
@@ -1416,7 +1422,7 @@ window.addEventListener('pointermove',e=>{if(!bdrag)return;const{n,dir,el}=bdrag
     else if(n==='footer'){st.h=h;const f=el.querySelector('.ft');f.style.minHeight=h+'px';f.style.display='grid';f.style.alignContent='center';}
     else{st.h=h;el.style.setProperty('--rh',h+'px');}}
   bdrag.lbl.textContent=`${BLOCK_NAMES[n]} · ${st.w}% wide`+(h!=null?` · ${n==='colours'||n==='details'?'rows ':''}${h}px tall`:'');});
-window.addEventListener('pointerup',()=>{if(!bdrag)return;bdrag=null;renderSheet();touch();renderPanelIf('style');});
+for(const ev of['pointerup','pointercancel'])window.addEventListener(ev,()=>{if(!bdrag)return;bdrag=null;renderSheet();touch();renderPanelIf('style');});
 
 /* ---------- right-click formatting menu ---------- */
 const BOLD_DEF={title:1,code:1,heading:1,thead:1,label:1,contactH:1,email:1};
@@ -1482,18 +1488,19 @@ paper.addEventListener('pointerdown',e=>{const h=e.target.closest('.rz');if(!h)r
   try{h.setPointerCapture(e.pointerId);}catch(_){}});
 window.addEventListener('pointermove',e=>{if(!rz)return;const[mn,mx,nm]=RZ[rz.k];const d=(rz.k==='lw'?e.clientX-rz.sx:e.clientY-rz.sy)/zoom;
   S.style[rz.k]=Math.round(Math.min(mx,Math.max(mn,rz.v+d)));$('#paper .sheet').style.setProperty('--'+rz.k,S.style[rz.k]+'px');rz.t.textContent=nm+': '+S.style[rz.k]+' px';});
-window.addEventListener('pointerup',()=>{if(!rz)return;rz=null;renderSheet();touch();renderPanelIf('style');});
+for(const ev of['pointerup','pointercancel'])window.addEventListener(ev,()=>{if(!rz)return;rz=null;renderSheet();touch();renderPanelIf('style');});
 
 /* ---------- sheets ---------- */
-async function switchTo(s){S=ensureStyle(s);loadFont(S.style.font);editStates.clear();lsSet('ss-last',S.id);refreshPicker();renderPanel();renderSheet();}
+let making=0;const madeBusy=()=>{if(!making)return false;toast('One moment, the file for this sheet is still being made.');refreshPicker();return true;};
+async function switchTo(s){if(madeBusy())return false;flushSave();S=ensureStyle(s);loadFont(S.style.font);editStates.clear();lsSet('ss-last',S.id);refreshPicker();renderPanel();renderSheet();return true;}
 $('#sheetSel').addEventListener('change',async e=>{const v=e.target.value;
   if(v==='__del'){e.target.value=S.id;$('#delBar')?.remove();const bar=document.createElement('div');bar.id='delBar';bar.className='pane';bar.style.cssText='padding:16px 20px;border-bottom:1px solid var(--line);background:var(--raise)';
     bar.innerHTML=`<strong>Delete “${esc(sheetName(S))}”?</strong><p class="note">This removes it from this device.</p><div style="display:flex;gap:8px"><button class="btn sm danger" id="delYes">Delete</button><button class="btn sm" id="delNo">Keep it</button></div>`;
     $('#panel').prepend(bar);$('#delNo').onclick=()=>bar.remove();
-    $('#delYes').onclick=async()=>{await dbDel(S.id);sheets=sheets.filter(x=>x.id!==S.id);bar.remove();switchTo(sheets[0]||blankSheet());touch();toast('Sheet deleted');};return;}
+    $('#delYes').onclick=async()=>{if(madeBusy())return;await dbDel(S.id);sheets=sheets.filter(x=>x.id!==S.id);bar.remove();switchTo(sheets[0]||blankSheet());touch();toast('Sheet deleted');};return;}
   const s=sheets.find(x=>x.id===v);if(s)switchTo(s);});
-$('#newSheet').onclick=()=>{const s=blankSheet();s.theme={...S.theme};s.style=JSON.parse(JSON.stringify(S.style));s.email=S.email;s.headings={...S.headings};sheets.unshift(s);switchTo(s);tab='product';renderRail();renderPanel();touch();setTimeout(()=>$('#f-title')?.focus(),50);toast('New sheet started');};
-$('#dupSheet').onclick=()=>{const s=JSON.parse(JSON.stringify(S));s.id=uid();s.code=s.code?s.code+' copy':'';s.rows.forEach(r=>{const o=r.id;r.id=uid();for(const k of Object.keys(s.fmt||{}))if(k.startsWith('row:'+o+':')){s.fmt[k.replace('row:'+o+':','row:'+r.id+':')]=s.fmt[k];delete s.fmt[k];}});sheets.unshift(s);switchTo(s);touch();toast('Copy made');};
+$('#newSheet').onclick=()=>{if(madeBusy())return;const s=blankSheet();s.theme={...S.theme};s.style=JSON.parse(JSON.stringify(S.style));s.email=S.email;s.headings={...S.headings};sheets.unshift(s);switchTo(s);tab='product';renderRail();renderPanel();touch();setTimeout(()=>$('#f-title')?.focus(),50);toast('New sheet started');};
+$('#dupSheet').onclick=()=>{if(madeBusy())return;const s=JSON.parse(JSON.stringify(S));s.id=uid();s.code=s.code?s.code+' copy':'';s.rows.forEach(r=>{const o=r.id;r.id=uid();for(const k of Object.keys(s.fmt||{}))if(k.startsWith('row:'+o+':')){s.fmt[k.replace('row:'+o+':','row:'+r.id+':')]=s.fmt[k];delete s.fmt[k];}});sheets.unshift(s);switchTo(s);touch();toast('Copy made');};
 
 /* ---------- mobile view toggle ---------- */
 $$('.mtoggle [data-view]').forEach(b=>b.onclick=()=>{$('#app').dataset.view=b.dataset.view;$$('.mtoggle [data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(fitMode)requestAnimationFrame(fit);});
@@ -1567,13 +1574,14 @@ async function pasteFromClipboard(){try{if(!navigator.clipboard?.read)throw 0;co
     for(const it of items){const ty=it.types.find(x=>/^image\//.test(x));if(ty){const b=await it.getType(ty);addPhotoFile(new File([b],'pasted-image.'+(ty.split('/')[1]||'png'),{type:ty}));return;}}
     toast('There\'s no picture on the clipboard. Copy an image first (right-click it → Copy image).',5000);}
   catch(_){toast(`Press ${/Mac|iP/.test(navigator.platform)?'⌘':'Ctrl'}+V to paste the image.`,4000);}}
-async function startEdit(img,photoId,url){
+let edGen=0;
+async function startEdit(img,photoId,url){const tok=++edGen;E=null;
   openDlg();$('#edBody').innerHTML=`<div class="wait" style="margin:auto"><div class="spin"></div>${session?'Removing the background…':'Preparing the photo cleaner (first time takes a few seconds)…'}</div>`;
-  try{const st=await cleanImage(img);if(url)URL.revokeObjectURL(url);st.photoId=photoId;E=st;mountStage();}
-  catch(e){$('#edBody').innerHTML=`<div class="wait" style="margin:auto;color:var(--bad)">${esc(e.message==='model'||e.message==='engine'||/load/.test(e.message)?'The photo cleaner could not start in this browser.':e.message)}</div>`;}
+  try{const st=await cleanImage(img);if(url)URL.revokeObjectURL(url);if(tok!==edGen||!dlg.open)return;st.photoId=photoId;st.sheet=S.id;E=st;mountStage();}
+  catch(e){if(tok!==edGen)return;$('#edBody').innerHTML=`<div class="wait" style="margin:auto;color:var(--bad)">${esc(e.message==='model'||e.message==='engine'||/load/.test(e.message)?'The photo cleaner could not start in this browser.':e.message)}</div>`;}
 }
 function openEditorFor(id){const p=S.photos.find(p=>p.id===id);if(!p)return;const st=editStates.get(id);
-  if(st){E=st;E.photoId=id;E.undo=[];E.redo=[];openDlg();mountStage();return;}
+  if(st){++edGen;E=st;E.photoId=id;E.undo=[];E.redo=[];openDlg();mountStage();return;}
   const img=new Image();img.onload=()=>startEdit(img,id);img.src=p.url;}
 function openDlg(){setTool('crop');updHist();if(!dlg.open)dlg.showModal();}
 function mountStage(){
@@ -1704,8 +1712,8 @@ $('#edBody').addEventListener('wheel',e=>{if(!E||!(e.ctrlKey||e.metaKey))return;
 new ResizeObserver(()=>{if(dlg.open&&E&&E.cv)applyZoom();}).observe($('#edBody'));
 
 $('#edCancel').onclick=()=>dlg.close();
-dlg.addEventListener('close',()=>{if(stroke)finishStroke(false);if(E&&!E.photoId)E=null;});
-$('#edDone').onclick=async()=>{if(!E)return;if(stroke)finishStroke(true);const c=E.crop;const sc=Math.min(1,1400/Math.max(c.w,c.h));const o=document.createElement('canvas');o.width=Math.round(c.w*sc);o.height=Math.round(c.h*sc);
+dlg.addEventListener('close',()=>{if(stroke)finishStroke(false);if(E&&!E.photoId)E=null;++edGen;});
+$('#edDone').onclick=async()=>{if(!E||!E.cv||!$('#ecv')){return;}if(E.sheet&&E.sheet!==S.id){toast('This photo belongs to another sheet. Switch back to it to use the photo.');return;}if(stroke)finishStroke(true);const c=E.crop;const sc=Math.min(1,1400/Math.max(c.w,c.h));const o=document.createElement('canvas');o.width=Math.round(c.w*sc);o.height=Math.round(c.h*sc);
   const ox=o.getContext('2d');ox.imageSmoothingQuality='high';ox.drawImage(E.cv,Math.round(c.x),Math.round(c.y),Math.round(c.w),Math.round(c.h),0,0,o.width,o.height);
   const url=o.toDataURL('image/jpeg',.9);
   if(E.photoId){const p=S.photos.find(p=>p.id===E.photoId);if(p)p.url=url;}else{const id=uid();S.photos.push({id,url});E.photoId=id;}freshPhoto=E.photoId;
@@ -1778,7 +1786,8 @@ async function sheetCanvas(scale=2.5){await loadScript('h2c');
   // html2canvas clones the whole page before drawing; skipping every other part of the page (windows, lists, scripts; styles are kept) keeps that fast
   try{return await html2canvas(el,{scale,backgroundColor:'#ffffff',logging:false,width:816,height:1056,ignoreElements:n=>n.parentNode===document.body&&n!==host&&n.nodeName!=='STYLE'&&n.nodeName!=='LINK'});}finally{host.remove();}}
 // kind: 'pdf' | 'docx' | 'jpg'. PDF and Word carry the sheet's data so they can be re-opened here.
-async function makeFile(kind,cv){
+async function makeFile(kind,cv){making++;try{return await makeFile_(kind,cv);}finally{making--;}}
+async function makeFile_(kind,cv){
   if(kind==='docx'){await Promise.all([loadScript('docx'),loadScript('jszip')]);return embedDocx(await buildDocx());}
   const own=!cv;if(own)cv=await sheetCanvas();
   try{if(kind==='jpg')return await new Promise(r=>cv.toBlob(r,'image/jpeg',.92));
@@ -1911,7 +1920,7 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
   t.title=str(r.title,200);t.code=str(r.code,100);t.email=str(r.email,200);
   t.price={amount:str(r.price?.amount,40),unit:r.price?.unit==='box'?'box':'piece'};
   const sz=arr(r.sizes).slice(0,20).map(x=>str(x,20));if(sz.length){t.sizes=sz;t.ratio=sz.map((_,j)=>num(arr(r.ratio)[j],1,0,9999));}
-  t.perBox=num(r.perBox,24,0,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;
+  t.perBox=num(r.perBox,24,1,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;
   const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999))}));if(co.length)t.colours=co;
   const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto)}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
   const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
@@ -1924,7 +1933,7 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
     if(fontOk(f.font))o.font=f.font;if(['left','center','right'].includes(f.align))o.align=f.align;return o;};
   for(const [src,dst] of[[r.fmt,t.fmt],[r.gfmt,t.gfmt]])for(const [k,v] of Object.entries(obj(src)).slice(0,500))if(/^[\w:.-]{1,60}$/.test(k))dst[k]=cf(v);
   t.updated=Date.now();return t;}
-async function openSheetFile(f){toast('Opening '+f.name+'…',20000);
+async function openSheetFile(f){if(madeBusy())return;toast('Opening '+f.name+'…',20000);
   try{const s=await readSheetFile(f),how=s._how,read=s._read;delete s._how;delete s._read;loadFont(s.style.font);sheets.unshift(s);await switchTo(s);touch();
     toast(how==='exact'?`Opened “${sheetName(s)}”`:`Read from the ${how} file: ${read.join(', ')}. Check it over and add anything missing${how==='PDF'?' (photos can\'t be taken from a PDF)':''}.`,how==='exact'?2600:9000);}
   catch(e){console.error(e);const m=e.message,msg={type:'That isn\'t a sell sheet file. Choose a PDF or Word (.docx) file.',olddoc:'This is an old Word .doc file. Open it in Word, choose File → Save As → Word Document (.docx), then open that here.',
@@ -1935,7 +1944,7 @@ async function openSheetFile(f){toast('Opening '+f.name+'…',20000);
 $('#openSheet').onclick=e=>srcMenu(e.currentTarget,'Open a sell sheet',()=>$('#openFile').click(),async()=>{const f=await driveOpen('sheet');if(f)openSheetFile(f);});
 $('#openFile').addEventListener('change',()=>{const f=$('#openFile').files[0];$('#openFile').value='';if(f)openSheetFile(f);});
 window.addEventListener('dragover',e=>{if([...(e.dataTransfer?.items||[])].some(i=>i.kind==='file'))e.preventDefault();});
-window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(/\.(pdf|docx?)$/i.test(f.name))openSheetFile(f);else if(/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name))addPhotoFile(f);else toast('Drop a picture to add it as a photo, or a PDF or Word file to open a sell sheet.');});
+window.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(!f)return;e.preventDefault();if(document.querySelector('dialog[open]:not(.page)')){toast('Close this window first, then drop the file.');return;}if(/\.(pdf|docx?)$/i.test(f.name))openSheetFile(f);else if(/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name))addPhotoFile(f);else toast('Drop a picture to add it as a photo, or a PDF or Word file to open a sell sheet.');});
 async function buildDocx(){
   const D=window.docx,{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ShadingType,BorderStyle,AlignmentType,VerticalAlign,HeightRule,ImageRun,TableLayoutType}=D;
   const tv=themeVars(),h6=x=>x.replace('#','').toUpperCase(),P=h6(tv.p),A=h6(tv.a),T=h6(tv.tint),L=h6(tv.line),PA=h6(tv.pale),INK='222222';
@@ -2536,7 +2545,7 @@ $('#lgExport').onclick=()=>{const th=lgShown();if(!th.length){toast('Nothing to 
 // follow up: opens the Email window for the chosen entries' sell sheet, with those people already filled in
 $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.root.id)).map(t=>t.root);if(!picked.length)return;const ids=[...new Set(picked.map(e=>e.sheetId))];
   if(ids.length>1){toast('Pick entries for one sell sheet at a time to follow up together');return;}
-  if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}await switchTo(sh);}
+  if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}if(!await switchTo(sh))return;}
   logDlg.close();openMail();cuLoad();CU.sel.clear();const typed=[];
   for(const e of picked){const c=e.cust&&CU.list.find(c=>ck(c.email)===e.cust);if(c)CU.sel.add(ck(c.email));else typed.push(...(e.emails.length?e.emails:[e.email]).filter(Boolean));}
   $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();
@@ -3013,7 +3022,7 @@ const IV={folder:(()=>{try{const f=JSON.parse(lsGet('ss-inv-folder')||'null');re
 const INV_MIMES={'application/pdf':'PDF','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'Word','application/vnd.google-apps.document':'Doc','image/jpeg':'JPG','image/png':'PNG'};
 const INV_RANK={PDF:0,Word:1,Doc:2,JPG:3,PNG:4};
 let invDbp=null;
-function invDb(){return invDbp||(invDbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('ss-inv',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('items',{keyPath:'key'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));}
+function invDb(){return invDbp||(invDbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('ss-inv',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('items',{keyPath:'key'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}).catch(e=>{invDbp=null;throw e;}));}
 async function invAll(){try{const d=await invDb();return await new Promise(res=>{const q=d.transaction('items').objectStore('items').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);});}catch(_){return[];}}
 async function invPut(list,dropKeys=[]){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite'),os=t.objectStore('items');for(const x of list)os.put(x);for(const k of dropKeys)os.delete(k);t.oncomplete=res;t.onerror=res;t.onabort=res;});}catch(_){}}
 async function invClear(){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite');t.objectStore('items').clear();t.oncomplete=res;t.onerror=res;});}catch(_){}}
@@ -3062,7 +3071,8 @@ function ivAddHTML(){if(IV.add.mode==='fields')return ivFieldsHTML();const A=IV.
     :`<h3>Move ${esc(invTitle(x||{name:''}))}</h3><p class="iv-sync">Moves ${x&&x.files.length>1?`all ${x.files.length} files (${x.files.map(f=>f.kind).join(', ')})`:'the file'} to another folder in Google Drive.</p>${sel('Move to','ivDest')}`;
   return`<div class="ivd-b" style="grid-template-columns:1fr;max-width:560px">${body.replace('<h3>','<div style="display:grid;gap:12px"><h3 style="margin:0;font:700 20px var(--ui)">')}</div></div>
     <div class="ivd-f"><button class="btn sm primary" type="button" data-ivgo>${A.mode==='folder'?'Create folder':A.mode==='move'?'Move':A.mode==='upload'?'Upload':'Save to Drive'}</button><span class="iv-sync" id="ivAddMsg"></span><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivaddx>Cancel</button></div>`;}
-async function ivAddGo(){const A=IV.add,dest=$('#ivDest')?.value||IV.folder.id,msg=t=>{const m=$('#ivAddMsg');if(m)m.textContent=t;};lsSet('ss-inv-dest',dest);
+async function ivAddGo(){if(IV.adding)return;IV.adding=true;const bs=$$('[data-ivgo]');bs.forEach(b=>b.disabled=true);try{await ivAddGo_();}finally{IV.adding=false;bs.forEach(b=>b.disabled=false);}}
+async function ivAddGo_(){const A=IV.add,dest=$('#ivDest')?.value||IV.folder.id,msg=t=>{const m=$('#ivAddMsg');if(m)m.textContent=t;};lsSet('ss-inv-dest',dest);
   let t;try{t=await invEditToken();}catch(e){msg(e.message);return;}
   try{if(A.mode==='folder'){const name=$('#ivNewName').value.trim().replace(/\s+/g,' ');if(!name){$('#ivNewName').focus();return;}
       const dup=[...IV.tree].find(([,f])=>f.parent===dest&&f.name.trim().toLowerCase()===name.toLowerCase());if(dup){msg('There\'s already a folder with that name there.');return;}
@@ -3119,7 +3129,7 @@ function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
       details:sh.rows.map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
   catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
 const ivFile=x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name,parent:x.parent});
-const ivPlace=g=>({cat:g.cat,path:g.path,fst:g.fst,type:g.type,ids:g.ids,fsi:g.fsi});
+const ivPlace=g=>({cat:g.cat,cats:g.cats,path:g.path,fst:g.fst,type:g.type,ids:g.ids,fsi:g.fsi});
 async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f.id,mod:f.modifiedTime,...ivPlace(group),name:group.name,files:group.files.map(ivFile),updated:Math.max(...group.files.map(x=>Date.parse(x.modifiedTime)||0))};
   try{const file=await invDownload(t,f),kind=INV_MIMES[f.mimeType];
     if(kind==='JPG'||kind==='PNG'){out.thumb=await shrink(file,480);out.kind='image';return out;}
@@ -3129,26 +3139,28 @@ async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f
     catch(e){out.bad=e.message==='notsheet'||e.message==='nodata'?'Not recognised as a sell sheet':e.message==='notext'?'A picture-only PDF: nothing to read':'Couldn\'t be read';}
     return out;}
   catch(e){out.bad=e.status===401?'Sign-in expired':'Couldn\'t download';out.retry=true;return out;}}
-async function invSync(interactive){if(IV.busy||!IV.folder)return;let t;
+async function invSync(interactive){if(!IV.folder)return;if(IV.busy){IV.again=true;return;}const gen=IV.gen=IV.gen||1;let t;
   try{t=await invToken(interactive);}catch(e){IV.err=e.message;renderInv(true);return;}
   if(!t){IV.err='signin';renderInv(true);return;}
-  IV.busy=true;IV.err='';IV.prog={done:0,total:0,phase:'list'};renderInv(true);
-  try{const files=await invList(t,IV.folder),groups=new Map();
+  IV.busy=true;IV.again=false;IV.err='';IV.prog={done:0,total:0,phase:'list'};renderInv(true);
+  try{const files=await invList(t,IV.folder),groups=new Map();if(gen!==IV.gen)return;
     for(const f of files){const base=invBase(f.name),k=(f.names.join('/')+'|'+base).toLowerCase();if(!groups.has(k))groups.set(k,{key:k,name:base||f.name,...ivPlace(f),files:[]});groups.get(k).files.push(f);}
     for(const g of groups.values())g.files.sort((a,b)=>INV_RANK[INV_MIMES[a.mimeType]]-INV_RANK[INV_MIMES[b.mimeType]]);
     const cached=new Map(IV.items.map(x=>[x.key,x])),byFile=new Map(IV.items.filter(x=>x.file).map(x=>[x.file+'|'+x.mod,x])),keep=[],todo=[];
     for(const g of groups.values()){const f=g.files[0],c=byFile.get(f.id+'|'+f.modifiedTime);
-      if(c&&!c.retry){keep.push({...c,key:g.key,name:g.name,...ivPlace(g),files:g.files.map(ivFile),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0))});}else todo.push(g);}
+      if(c&&!c.retry){keep.push({...c,_loading:undefined,key:g.key,name:g.name,...ivPlace(g),files:g.files.map(ivFile),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0))});}else todo.push(g);}
     const gone=[...cached.keys()].filter(k=>!groups.has(k));
     IV.items=[...keep,...todo.map(g=>({key:g.key,name:g.name,...ivPlace(g),files:g.files.map(ivFile),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0)),pending:true}))];
     IV.prog={done:0,total:todo.length,phase:'read'};renderInv(true);await invPut(keep,gone);
-    let i=0;const next=async()=>{while(i<todo.length){const g=todo[i++],it=await invRead(t,g);const at=IV.items.findIndex(x=>x.key===g.key);if(at>=0)IV.items[at]=it;await invPut([it]);IV.prog.done++;invSoon();}};
-    await Promise.all([next(),next(),next()]);
+    let i=0;const next=async()=>{while(i<todo.length){const g=todo[i++],it=await invRead(t,g);if(gen!==IV.gen)return;
+      const nk='n:'+nrm(it.name),ck_=mk(it),mm=ivMetaAll();if(ck_!==nk&&mm[nk]&&!mm[ck_])ivmSet([ck_],{active:mm[nk].active,star:mm[nk].star,note:mm[nk].note}); // a star or note set while it was still being read
+      const at=IV.items.findIndex(x=>x.key===g.key);if(at>=0)IV.items[at]=it;await invPut([it]);IV.prog.done++;invSoon();}};
+    await Promise.all([next(),next(),next()]);if(gen!==IV.gen)return;
     IV.last=Date.now();lsSet('ss-inv-sync',String(IV.last));}
-  catch(e){console.error(e);IV.err=e.status===404?'That folder can\'t be found. It may have been moved or deleted, or shared with a different Google account.':e.message||'Couldn\'t read the folder.';}
-  finally{IV.busy=false;IV.prog=null;renderInv(true);}}
+  catch(e){console.error(e);if(gen===IV.gen)IV.err=e.status===404?'That folder can\'t be found. It may have been moved or deleted, or shared with a different Google account.':e.message||'Couldn\'t read the folder.';}
+  finally{IV.busy=false;IV.prog=null;renderInv(true);if(IV.again){IV.again=false;invSync(false);}}}
 let invT=0;const invSoon=()=>{clearTimeout(invT);invT=setTimeout(()=>renderInv(true),120);};
-async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.items=[];IV.full.clear();IV.tree=new Map();await invClear();}IV.folder={id:f.id,name:f.name};lsSet('ss-inv-folder',JSON.stringify(IV.folder));IV.cat='';IV.open=null;await invSync(true);}
+async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.gen=(IV.gen||1)+1;IV.items=[];IV.full.clear();IV.tree=new Map();await invClear();}IV.folder={id:f.id,name:f.name};lsSet('ss-inv-folder',JSON.stringify(IV.folder));IV.cat='';IV.open=null;await invSync(true);}
 async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn\'t set up yet. Click Sign in → Set up sign-in.',5000);return;}
   let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
   if(!EMAIL_SETUP.googleApiKey){$('#ivLink')?.focus();toast('Paste the folder\'s link from Google Drive (the picker needs a Google API key).',5000);return;}
@@ -3231,7 +3243,7 @@ function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(
   const by={name:(a,b)=>COLL.compare(invTitle(a),invTitle(b)),code:(a,b)=>COLL.compare(a.sum?.code||'~',b.sum?.code||'~'),pcs:(a,b)=>(b.sum?.pcs||0)-(a.sum?.pcs||0),updated:(a,b)=>b.updated-a.updated,
     sent:(a,b)=>ivSendStats(b).n-ivSendStats(a).n,replies:(a,b)=>ivSendStats(b).rep-ivSendStats(a).rep,lastsent:(a,b)=>ivSendStats(b).last-ivSendStats(a).last}[IV.sort]||((a,b)=>b.updated-a.updated);
   // starred first, then the chosen order
-  return l.sort((a,b)=>(+!!ivm(b.key).star)-(+!!ivm(a.key).star)||by(a,b));}
+  return l.sort((a,b)=>(+!!ivm(mk(b)).star)-(+!!ivm(mk(a)).star)||by(a,b));}
 function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;IVM=ivMetaAll();lgLoad();
   const nOn=items.filter(ivOn).length,nOff=items.length-nOn,nStar=items.filter(x=>ivm(mk(x)).star).length,base=IV.status==='all'?items:items.filter(x=>(IV.status==='active')===ivOn(x));
   IV.sel=new Set([...IV.sel].filter(k=>items.some(x=>x.key===k)));
@@ -3249,7 +3261,7 @@ function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;I
     <h3>Your sell sheets, as an inventory</h3><p>Choose the Google Drive folder where you keep your sell sheets. Every sheet in it (PDF, Word, Google Docs or image) is shown here as a product with its picture, item code, price, colours and quantities. Subfolders become categories.</p>
     <button class="btn primary" type="button" id="ivPick">Choose folder in Google Drive</button><small class="iv-sync">or paste the folder's link</small>
     <div class="row"><input class="in" id="ivLink" placeholder="https://drive.google.com/drive/folders/…" aria-label="Folder link"><button class="btn" type="button" id="ivLinkGo">Use folder</button></div>
-    <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail(!bg);return;}
+    <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail(!bg&&!IV.add);return;}
   const types=[...items.reduce((m,x)=>x.type?m.set(x.type,(m.get(x.type)||0)+1):m,new Map())].sort((a,b)=>COLL.compare(a[0],b[0]));if(IV.type&&!types.some(t=>t[0]===IV.type))IV.type='';
   const catM=items.reduce((m,x)=>m.set(x.cat,(m.get(x.cat)||0)+1),new Map());for(const fo of ivFolders()){const c=ivClassify(fo.names);if(c.cats[0]&&!catM.has(c.cats[0])&&(!IV.type||c.type===IV.type))catM.set(c.cats[0],0);}
   const cats=[...catM].filter(([c])=>c).sort((a,b)=>COLL.compare(a[0],b[0]));
@@ -3271,12 +3283,12 @@ function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;I
       :!shown.length?`<div class="iv-empty"><p>${IV.status==='inactive'&&!nOff?'No inactive products. Mark a product inactive (in its panel, or tick several) to hide it from the active list without deleting anything.':'Nothing matches.'}</p></div>`
       :IV.view==='list'?ivListHTML(shown):ivCardsHTML(shown)}`;
   $('#ivScroll').scrollTop=scroll;if(focus==='ivQ'){const q=$('#ivQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
-  renderInvDetail(!bg);}
+  renderInvDetail(!bg&&!IV.add);}
 function renderInvDetail(force){const d=$('#ivDetail');
   // a background refresh mustn't wipe a form being filled in, or a note being typed
   const sig=IV.add?'add:'+IV.add.mode+':'+(IV.add.key||''):'item:'+IV.open;if(!force&&d.dataset.sig===sig&&!d.hidden&&(IV.add||d.contains(document.activeElement)))return;d.dataset.sig=sig;
   if(IV.add){d.hidden=false;d.innerHTML=ivAddHTML();return;}const x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';d.dataset.sig='';return;}d.hidden=false;
-  const s=x.sum,full=IV.full.get(x.key),sz=s?.showSizes&&s?.sizes?.length;
+  const s=x.sum,full=IV.full.get(x.file+'|'+x.mod),sz=s?.showSizes&&s?.sizes?.length;
   const pv=full||x.thumb||x.photo;
   d.innerHTML=`<div class="ivd-b"><div><div class="ivd-pv">${pv?`<img src="${pv}" alt="Sell sheet ${esc(invTitle(x))}">`:`<div class="iv-ph" style="--c:${esc(s?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`}</div>
       ${x.photos?.length>1||(x.photo&&x.thumb)?`<div class="ivd-photos">${x.thumb?`<img src="${x.thumb}" alt="Sell sheet" data-ivpv="sheet" title="The sell sheet">`:''}${(x.photos||[]).map((p,i)=>`<img src="${p}" alt="Photo ${i+1}" data-ivpv="${i}" title="Photo ${i+1}">`).join('')}</div>`:''}</div>
@@ -3288,7 +3300,7 @@ function renderInvDetail(force){const d=$('#ivDetail');
       ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
         <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
       ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
-      ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const never=CU.list.filter(c=>!l.some(t=>t.root.cust===ck(c.email)||[t.root.email,...(t.root.emails||[])].map(ck).includes(ck(c.email))));
+      ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck))),never=CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m))));
         return`<div class="ivd-sec"><h4>Sent to${z.n?` (${z.n})`:''}</h4>${z.n?`<p class="ivd-sentsum"><b>${z.n}</b> customer${z.n>1?'s':''} · <b>${z.rep}</b> replied${z.ord?` · <b>${z.ord}</b> ordered`:''} · last sent ${esc(ago(z.last))}</p>
           <div class="ivd-sent">${l.map(t=>{const e=t.root,rp=e.reply||['replied','interested','ordered'].includes(e.status);return`<div class="r" data-ivwho="${esc(e.email||e.name)}" title="Show in Sent"><span><b>${esc(e.name||e.company||e.email)}</b><small>${esc([e.company&&e.name?e.company:'',e.email].filter(Boolean).join(' · '))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></span><span class="st${rp?' rp':''}">${esc(e.reply&&e.status==='none'?'Replied':ST_NAME[e.status||'none'])}</span><em class="iv-sync">${esc(ago(t.last))}</em></div>`;}).join('')}</div>`
           :'<p class="hm-empty">Not emailed to anyone yet.</p>'}${never.length&&x.kind!=='image'?`<p style="margin:10px 0 0"><button class="btn sm" type="button" data-ivd="sendnew">Email it to customers who haven't had it (${never.length})</button></p>`:''}</div>`;})()}
@@ -3297,7 +3309,7 @@ function renderInvDetail(force){const d=$('#ivDetail');
       <div class="ivd-sec"><h4>Files in Drive</h4><div class="ivd-files">${x.files.map(f=>`<a href="${esc(f.link||'https://drive.google.com/file/d/'+encodeURIComponent(f.id)+'/view')}" target="_blank" rel="noopener" title="${esc(f.name)}">${esc(f.kind)} ↗</a>`).join('')}</div><p class="iv-sync" style="margin:8px 0 0">Updated ${esc(DTF_WHEN.format(x.updated))}</p></div></div></div>
     <div class="ivd-f"><button class="btn sm primary" type="button" data-ivd="edit"${x.kind==='image'?' disabled title="Pictures can\'t be opened in the editor"':''}>Open in editor</button><button class="btn sm" type="button" data-ivd="email"${x.kind==='image'?' disabled':''}>Email this sell sheet</button><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivd="close">Close</button></div>`;
   // a sharper picture of the sell sheet for the large preview
-  if(!full&&x.files[0]?.kind==='PDF'&&!x.pending&&!x._loading){x._loading=true;invToken(false).then(async t=>{if(!t)return;const f=await invDownload(t,{id:x.files[0].id,name:x.files[0].name,mimeType:'application/pdf'});const u=await pdfPage1(await f.arrayBuffer(),900);if(u){IV.full.set(x.key,u);if(IV.open===x.key){const im=$('#ivDetail .ivd-pv img');if(im)im.src=u;}}}).catch(()=>{}).finally(()=>{x._loading=false;});}}
+  if(!full&&x.files[0]?.kind==='PDF'&&!x.pending&&!x._loading){x._loading=true;const fk=x.file+'|'+x.mod;invToken(false).then(async t=>{if(!t)return;const f=await invDownload(t,{id:x.files[0].id,name:x.files[0].name,mimeType:'application/pdf'});const u=await pdfPage1(await f.arrayBuffer(),900);if(u){IV.full.set(fk,u);if(IV.open===x.key){const im=$('#ivDetail .ivd-pv img');if(im)im.src=u;}}}).catch(()=>{}).finally(()=>{x._loading=false;});}}
 async function invOpenSheet(x,thenEmail,pick){let t;try{t=await invToken(true);}catch(e){toast(e.message,5000);return;}
   const f=x.files.find(f=>f.kind!=='JPG'&&f.kind!=='PNG');if(!f)return;toast('Opening '+invTitle(x)+'…',20000);
   try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail){openMail();if(pick){CU.sel=new Set(pick);renderCust(true);toast(`${pick.length} customer${pick.length>1?'s':''} ticked: everyone who hasn't had this sell sheet. Untick anyone you don't want, then Send.`,7000);}}}
@@ -3324,8 +3336,9 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
     if(a==='clear')IV.sel.clear();else if(a==='all')invShown().forEach(x=>IV.sel.add(x.key));
     else if(a==='line'){openLine(keys);return;}
     else if(a==='on'||a==='off'){const its=keys.map(k=>IV.items.find(x=>x.key===k)).filter(Boolean),inF=its.filter(x=>x.fst&&(x.fst==='on')!==(a==='on')),loose=its.filter(x=>!x.fst);
+      if(inF.length&&!confirm(`Move ${inF.length} sell sheet${inF.length>1?'s':''} to your ${a==='on'?'Active':'Inactive'} folder in Google Drive?`)){renderInv();return;}
       if(loose.length)ivmSet(loose.map(mk),{active:a==='on'});
-      if(inF.length){if(!confirm(`Move ${inF.length} sell sheet${inF.length>1?'s':''} to your ${a==='on'?'Active':'Inactive'} folder in Google Drive?`)){renderInv();return;}await ivMove(inF,a==='on');}
+      if(inF.length)await ivMove(inF,a==='on');
       else toast(`${keys.length} product${keys.length>1?'s':''} marked ${a==='on'?'active':'inactive'}`);IV.sel.clear();}
     else{ivmSet(keys.map(mkOf),{star:a==='star'});toast(`${keys.length} product${keys.length>1?'s':''} ${a==='star'?'starred':'unstarred'}`);}
     renderInv();return;}
@@ -3335,7 +3348,7 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
   const card=t.closest('[data-iv]');if(card){IV.add=null;IV.open=IV.open===card.dataset.iv?null:card.dataset.iv;$$('#ivBody [data-iv]').forEach(c=>c.classList.toggle('on',c.dataset.iv===IV.open));renderInvDetail();return;}
   const v=t.closest('[data-ivview]');if(v){IV.view=v.dataset.ivview;lsSet('ss-inv-view',IV.view);renderInv();return;}
   const c=t.closest('[data-ivcat]');if(c){IV.cat=c.dataset.ivcat;renderInv();return;}
-  const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?(IV.full.get(IV.open)||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
+  const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?((x=>x&&IV.full.get(x.file+'|'+x.mod))(IV.items.find(i=>i.key===IV.open))||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
   const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}
     else if(x&&a.dataset.ivd==='sendnew'){const l=ivSends(x),had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck)));invOpenSheet(x,true,CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m)))).map(c=>ck(c.email)));}
     else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
@@ -3344,7 +3357,7 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
 invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
   else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv],.iv-card[data-iv]')){e.preventDefault();e.target.click();}});
 // spreadsheet of the inventory
-function invExport(){const q=v=>`"${String(v??'').replace(/"/g,'""')}"`,rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),s=x.sum||{};
+function invExport(){const q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v)&&!/^-?\d[\d.,]*$/.test(v))v="'"+v;return`"${v.replace(/"/g,'""')}"`;},rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),s=x.sum||{};
     return[invTitle(x),s.code,x.type||'',x.cats?x.cats.join(' / '):x.cat,ivOn(x)?'Active':'Inactive',m.star?'Yes':'',s.price,s.pcs,s.boxes,(s.colours||[]).map(c=>c.name).join('; '),(s.sizes||[]).join(' '),z.n,z.rep,z.last?dayStr(z.last):'',dayStr(x.updated),m.note,x.files.map(f=>f.link||'').join(' ')].map(q).join(',');});
   save(`Inventory ${dayStr(Date.now())}.csv`,new Blob(['\uFEFF'+['Product,Item code,Type,Category,Status,Starred,Price,Pieces,Boxes,Colours,Sizes,Sent to,Replies,Last sent,Updated,Note,Drive files',...rows].join('\r\n')],{type:'text/csv'}));}
 let ivNt=0;
@@ -3408,8 +3421,8 @@ async function lnMake(){await loadScript('jspdf');const {jsPDF}=window.jspdf,doc
       if(sh('sizes'))line(s.sizes?.length&&s.showSizes?`Sizes: ${s.sizes.join(' ')}`:'',{c:[110,110,110]});
       if(sh('type'))line([x.type,x.cat].filter(Boolean).join(' · '),{c:[110,110,110]});}}
   return doc.output('blob');}
-let lnT=0;function lnBuild(){clearTimeout(lnT);lnT=setTimeout(async()=>{const seq=++LN.seq;$('#lnWait').hidden=false;
-  try{const blob=await lnMake();if(seq!==LN.seq)return;LN.blob=blob;await lnShow(blob,seq);$('#lnStatus').textContent='';}
+let lnT=0;function lnBuild(){clearTimeout(lnT);const seq=++LN.seq;LN.blob=null;LN.p=null;lnT=setTimeout(async()=>{if(seq!==LN.seq)return;$('#lnWait').hidden=false;
+  try{const p=LN.p=lnMake(),blob=await p;if(seq!==LN.seq)return;LN.blob=blob;await lnShow(blob,seq);$('#lnStatus').textContent='';}
   catch(e){console.error(e);$('#lnStatus').textContent='Couldn\'t make the PDF: '+(e.message||e);}finally{if(seq===LN.seq)$('#lnWait').hidden=true;}},350);}
 // the preview: each page drawn with pdf.js (works the same in every browser, phones included)
 async function lnShow(blob,seq){await loadScript('pdfjs');const L=window.pdfjsLib;L.GlobalWorkerOptions.workerSrc=LIBS.pdfjs.replace(/pdf(\.min)?\.js$/,'pdf.worker$1.js');
@@ -3424,7 +3437,7 @@ lineDlg.addEventListener('click',async e=>{const mv=e.target.closest('[data-lnmv
   if(mv){const[i,d]=mv.dataset.lnmv.split('|').map(Number),j=i+d;[LN.keys[i],LN.keys[j]]=[LN.keys[j],LN.keys[i]];renderLineForm();lnBuild();return;}
   if(rm){LN.keys.splice(+rm.dataset.lnrm,1);if(!LN.keys.length){lineDlg.close();openInv();return;}renderLineForm();lnBuild();return;}
   if(e.target.id==='lnMore'){lineDlg.close();IV.sel=new Set(LN.keys);openInv();}});
-const lnReady=async()=>{if(LN.seq&&!LN.blob||$('#lnWait').hidden===false){await new Promise(r=>setTimeout(r,400));}if(!LN.blob)LN.blob=await lnMake();return LN.blob;};
+const lnReady=async()=>{if(LN.blob)return LN.blob;const seq=LN.seq,p=LN.p;if(p){const b=await p.catch(()=>null);if(b&&seq===LN.seq)return b;}const b=await lnMake();if(seq===LN.seq)LN.blob=b;return b;};
 $('#lnDl').onclick=async()=>save(lnName(),await lnReady());
 $('#lnEmail').onclick=async()=>{const blob=await lnReady(),its=lnItems();lineDlg.close();openMail({line:{id:hashStr(LN.keys.join('|')),name:lnName(),blob,title:[LN.title,LN.sub].filter(Boolean).join(' · '),items:its.map(x=>[x.sum?.code,invTitle(x)].filter(Boolean).join(' · '))}});};
 $('#lnDrive').onclick=async()=>{const st=$('#lnStatus');st.textContent='Saving to Google Drive…';
@@ -3441,14 +3454,15 @@ function plThreads(){lgLoad();const q=PL.q.trim().toLowerCase(),cut=PL.days?Date
   return threads().filter(t=>{const e=t.root,last=Math.max(t.last,e.reply?.at||0,e.upd||0);return last>=cut&&(!PL.sheet||e.sheet===PL.sheet)&&(!q||[e.name,e.company,e.email,e.sheet,e.note].some(v=>String(v||'').toLowerCase().includes(q)));});}
 function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_COLS.map(c=>[c[0],[]]));for(const t of th)(by.get(t.root.status||'none')||by.get('none')).push(t);
   const sum=k=>by.get(k).reduce((a,t)=>a+(+t.root.value||0),0),open=['replied','interested','quoted'].reduce((a,k)=>a+sum(k),0),won=sum('ordered'),nW=by.get('ordered').length,nL=by.get('declined').length;
-  $('#plSum').textContent=`${th.length} in the last ${PL.days?PL.days+' days':'all time'}`;
+  const off=PL_COLS.filter(c=>SET.pipe.colsOff.includes(c[0])),nOff=off.reduce((a,c)=>a+by.get(c[0]).length,0);
+  $('#plSum').textContent=`${th.length} in the last ${PL.days?PL.days+' days':'all time'}${nOff?` · ${nOff} in hidden columns (${off.map(c=>c[1]).join(', ')})`:''}`;
   const sheets=[...new Set(threads().map(t=>t.root.sheet))].sort((a,b)=>COLL.compare(a,b));
   if(!$('#plQ'))$('#plBar').innerHTML=`<input class="in" id="plQ" type="search" placeholder="Search customer or sell sheet" aria-label="Search pipeline"><select class="in" id="plDays" aria-label="Period">${[[30,'Last 30 days'],[90,'Last 90 days'],[365,'Last 12 months'],[0,'All time']].map(([v,n])=>`<option value="${v}"${PL.days===v?' selected':''}>${n}</option>`).join('')}</select><select class="in" id="plSheet" aria-label="Sell sheet"></select><span class="pl-kpis" id="plKpis"></span>`;
   $('#plSheet').innerHTML=`<option value="">All sell sheets</option>${sheets.map(n=>`<option value="${esc(n)}"${PL.sheet===n?' selected':''}>${esc(n)}</option>`).join('')}`;
-  $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||'$0'}</b></span><span>Won: <b>${money(won)||'$0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>`;
+  $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||SET.currency+'0'}</b></span><span>Won: <b>${money(won)||SET.currency+'0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>`;
   const card=t=>{const e=t.root;return`<div class="pl-card" draggable="true" data-pl="${esc(e.id)}"><button class="who" type="button" data-plwho="${esc(e.email||e.name)}" title="Show in Sent">${esc(e.name||e.company||e.email||'(no name)')}</button>${e.company&&e.name?`<span class="pl-sub">${esc(e.company)}</span>`:''}
     <span class="pl-sheet" title="${esc(e.sheet)}">${esc(e.sheet)}</span><span class="pl-sub">${e.reply?'<span class="pl-rp">Replied</span> ':''}Sent ${esc(ago(e.at))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</span>
-    <div class="pl-row"><input class="pl-val" data-plval="${esc(e.id)}" inputmode="decimal" placeholder="$ value" value="${e.value?esc(String(e.value)):''}" aria-label="Order value"><span class="spacer"></span><select class="pl-mv" data-plmv="${esc(e.id)}" aria-label="Move to">${PL_COLS.map(([k,n])=>`<option value="${k}"${(e.status||'none')===k?' selected':''}>${n}</option>`).join('')}</select></div></div>`;};
+    <div class="pl-row"><input class="pl-val" data-plval="${esc(e.id)}" inputmode="decimal" placeholder="$ value" value="${e.value?esc(String(e.value)):''}" aria-label="Order value"><span class="spacer"></span><select class="pl-mv" data-plmv="${esc(e.id)}" aria-label="Move to">${PL_COLS.filter(([k])=>!SET.pipe.colsOff.includes(k)||(e.status||'none')===k).map(([k,n])=>`<option value="${k}"${(e.status||'none')===k?' selected':''}>${n}</option>`).join('')}</select></div></div>`;};
   const sc=$('#plBoard').scrollLeft;
   $('#plBoard').innerHTML=PL_COLS.filter(c=>!SET.pipe.colsOff.includes(c[0])).map(([k,n,c])=>{const l=by.get(k).sort((a,b)=>b.last-a.last),v=sum(k);return`<section class="pl-col" data-plcol="${k}" aria-label="${n}"><div class="pl-ch"><b><i style="--c:${c}"></i>${n}<span>${l.length}</span></b><small>${v?money(v):'&nbsp;'}</small></div>
     <div class="pl-cards">${l.length?l.slice(0,150).map(card).join(''):'<div class="pl-empty">Drag a customer here</div>'}${l.length>150?`<div class="pl-empty">and ${l.length-150} more: search to narrow down</div>`:''}</div></section>`;}).join('');
@@ -3459,7 +3473,7 @@ plDlg.addEventListener('input',e=>{if(e.target.id==='plQ'){PL.q=e.target.value;c
 plDlg.addEventListener('change',e=>{const t=e.target;
   if(t.id==='plDays'){PL.days=+t.value;renderPipe();}else if(t.id==='plSheet'){PL.sheet=t.value;renderPipe();}
   else if(t.dataset.plmv){plSet(t.dataset.plmv,{status:t.value});renderPipe();toast(`Moved to ${ST_NAME[t.value]}`);}
-  else if(t.dataset.plval){const v=parseFloat(String(t.value).replace(/[^0-9.]/g,''))||0;plSet(t.dataset.plval,{value:v||undefined});renderPipe();}});
+  else if(t.dataset.plval){const raw=String(t.value).trim(),k=/k$/i.test(raw),v=(numText(raw.replace(/k$/i,''))||0)*(k?1000:1);plSet(t.dataset.plval,{value:v||undefined});renderPipe();}});
 plDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.plval)e.target.blur();});
 plDlg.addEventListener('click',e=>{const w=e.target.closest('[data-plwho]');if(w){lgF.q=w.dataset.plwho;lgF.status='';plDlg.close();openLog();}});
 // drag and drop between columns
