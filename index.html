@@ -41,6 +41,50 @@ svg{flex:none}
 .nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
 #invDlg{width:min(1500px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+#homeDlg{width:min(1320px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+.hm-wrap{grid-template-rows:auto minmax(0,1fr)}.hm-scroll{overflow:auto;min-height:0;background:var(--bg)}
+.hm{max-width:1240px;margin:0 auto;padding:20px 20px 32px;display:grid;gap:16px}
+.hm-hello h3{margin:0;font:700 24px/1.2 var(--ui)}.hm-hello p{margin:4px 0 0;color:var(--muted)}
+.hm-actions{display:flex;flex-wrap:wrap;gap:8px}.hm-actions .btn svg{width:16px;height:16px}
+.hm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.hm-kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;font:inherit;color:inherit}button.hm-kpi{cursor:pointer}button.hm-kpi:hover{border-color:var(--line2)}
+.hm-kpi small{display:block;color:var(--muted);font:600 12.5px var(--ui)}.hm-kpi b{display:block;font:700 30px/1.15 var(--ui);margin:6px 0 2px;font-variant-numeric:tabular-nums}.hm-kpi span{font-size:12.5px;color:var(--muted)}
+.hm-kpi .up::before{content:'▲ ';font-size:10px}.hm-kpi .down::before{content:'▼ ';font-size:10px}.hm-kpi.alert{border-color:var(--warn)}.hm-kpi.alert b{color:var(--warn)}
+.hm-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}.hm-col{display:grid;gap:16px;min-width:0}
+.hm-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.hm-card h4{display:flex;align-items:center;gap:8px;margin:0 0 12px;font:700 15px var(--ui)}.hm-card h4 .n{background:var(--raise);border-radius:999px;padding:1px 8px;font-size:12px;color:var(--muted)}.hm-card h4 .lnk{margin-left:auto;font-size:13px}
+.hm-empty{color:var(--muted);font-size:14px;margin:0}
+.hm-list{display:grid;gap:2px}.hm-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 6px;border-radius:8px;text-align:left;border:0;background:none;font:inherit;color:inherit;cursor:pointer;width:100%}
+.hm-item:hover{background:var(--raise)}.hm-item .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--ui);color:#fff;background:var(--c,var(--accent))}
+.hm-item b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hm-item small{display:block;color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hm-item em{font-style:normal;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.hm-chart{position:relative;height:220px;display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px}
+.hm-yax{position:relative;font:12px var(--ui);color:var(--muted);font-variant-numeric:tabular-nums}.hm-yax span{position:absolute;right:0;transform:translateY(50%)}
+.hm-plot{position:relative;border-bottom:1px solid var(--line2)}.hm-plot .gl{position:absolute;left:0;right:0;border-top:1px solid var(--line)}
+.hm-bars{position:absolute;inset:0;display:flex;align-items:flex-end;gap:2px}.hm-bar{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;cursor:default;position:relative}
+.hm-bar i{display:block;width:min(70%,34px);background:var(--accent);border-radius:4px 4px 0 0;min-height:0}.hm-bar:hover i,.hm-bar:focus i{filter:brightness(1.12)}.hm-bar:hover,.hm-bar:focus{background:var(--raise);outline:none}
+.hm-xax{display:flex;gap:2px;margin-left:40px;margin-top:6px;font:12px var(--ui);color:var(--muted)}.hm-xax span{flex:1;text-align:center;white-space:nowrap;overflow:hidden}
+.hm-tip{position:fixed;z-index:1000;pointer-events:none;background:var(--ink);color:var(--panel);border-radius:8px;padding:7px 10px;font:13px/1.4 var(--ui);box-shadow:0 6px 20px rgba(0,0,0,.2);white-space:nowrap}.hm-tip b{font-weight:700}
+.hm-top{display:grid;gap:10px}.hm-top .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;font-size:14px;cursor:pointer;border-radius:8px;padding:4px 6px}.hm-top .r:hover{background:var(--raise)}
+.hm-top .r b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.hm-top .r em{font-style:normal;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.hm-top .track{grid-column:1/-1;height:8px;border-radius:4px;background:var(--raise);overflow:hidden}.hm-top .track i{display:block;height:100%;border-radius:4px;background:var(--accent)}
+.hm-steps{display:grid;gap:8px}.hm-step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}.hm-step .ck{width:22px;height:22px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;font-size:12px;color:#fff}.hm-step.done .ck{background:var(--accent);border-color:var(--accent)}.hm-step.done span{color:var(--muted);text-decoration:line-through}
+.hm-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hm-mini div{background:var(--raise);border-radius:10px;padding:10px}.hm-mini small{display:block;color:var(--muted);font-size:12px;font-weight:600}.hm-mini b{font:700 18px var(--ui);font-variant-numeric:tabular-nums}
+.hm-foot{display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.hm-foot input{accent-color:var(--accent)}
+@media (max-width:900px){.hm-grid{grid-template-columns:1fr}.hm{padding:14px}.hm-kpis{grid-template-columns:repeat(2,1fr)}.hm-kpi b{font-size:24px}}
+/* inventory extras */
+.iv-card{position:relative}.iv-card.off .iv-img img,.iv-card.off .iv-img .iv-ph{filter:grayscale(1);opacity:.55}.iv-card.off h4{color:var(--muted)}
+.iv-selbox{position:absolute;top:10px;left:10px;z-index:2;width:22px;height:22px;margin:0;accent-color:var(--accent);opacity:0;transition:opacity .15s}.iv-card:hover .iv-selbox,.iv-selbox:checked,.iv-grid.selecting .iv-selbox,.iv-selbox:focus-visible{opacity:1}
+.iv-star{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#9aa09c;font-size:16px;line-height:30px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}.iv-star.on{color:#E8A600}
+.iv-off{position:absolute;top:44px;right:8px;z-index:2;background:rgba(10,10,10,.75);color:#fff;border-radius:6px;padding:2px 7px;font:700 11px var(--ui)}
+.iv-sent{font-size:12.5px;color:var(--muted)}.iv-sent b{color:var(--ink)}.iv-sent .rp{color:var(--accent);font-weight:600}
+.iv-seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}.iv-seg button{border:0;background:var(--panel);padding:0 12px;height:36px;font:600 13px var(--ui);color:var(--muted);cursor:pointer;white-space:nowrap}.iv-seg button small{font-weight:500;margin-left:4px;opacity:.8}.iv-seg button[aria-pressed=true]{background:var(--ink);color:var(--panel)}
+.iv-chip{border:1px solid var(--line2);background:var(--panel);border-radius:10px;height:38px;padding:0 12px;font:600 13px var(--ui);color:var(--ink);cursor:pointer}.iv-chip[aria-pressed=true]{background:#FFF4D6;border-color:#E8A600;color:#7A5500}
+.iv-bulk{position:sticky;top:-18px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--ink);color:var(--panel);border-radius:12px;padding:8px 12px;margin-bottom:12px;font-size:14px}.iv-bulk .btn{background:transparent;color:inherit;border-color:rgba(255,255,255,.35)}.iv-bulk .btn:hover{background:rgba(255,255,255,.12)}.iv-bulk .spacer{flex:1}
+.ivd-state{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0}.ivd-state .switch{margin:0}
+.ivd-note{width:100%;min-height:70px;resize:vertical;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;font:14px/1.45 var(--ui);background:var(--panel);color:var(--ink)}
+.ivd-sent{display:grid;gap:2px;max-height:320px;overflow:auto}.ivd-sent .r{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 8px;border-radius:8px;font-size:13.5px;cursor:pointer}.ivd-sent .r:hover{background:var(--raise)}
+.ivd-sent .r b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ivd-sent .r small{display:block;color:var(--muted);font-size:12px}.ivd-sent .st{font-size:12px;border-radius:6px;padding:2px 7px;background:var(--raise);color:var(--muted);white-space:nowrap}.ivd-sent .st.rp{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.ivd-sentsum{font-size:13.5px;color:var(--muted);margin:0 0 8px}.ivd-sentsum b{color:var(--ink)}
 .iv-wrap{grid-template-rows:auto auto minmax(0,1fr)}
 .iv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise);font-size:13.5px}.iv-bar:empty{display:none}
 .iv-bar .spacer{flex:1 1 0}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
@@ -57,7 +101,7 @@ svg{flex:none}
 .iv-card:hover,.iv-card:focus-visible{transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,14,22,.12);border-color:var(--line2);outline:none}.iv-card.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
 .iv-img{position:relative;aspect-ratio:4/5;background:var(--raise);display:grid;place-items:center;overflow:hidden;border-bottom:1px solid var(--line)}.iv-img img{width:100%;height:100%;object-fit:cover;object-position:top}.iv-img img.contain{object-fit:contain;background:#fff}
 .iv-ph{display:grid;place-items:center;width:100%;height:100%;font:700 34px var(--ui);color:#fff;background:var(--c,#1F2A44);letter-spacing:.04em}
-.iv-img .iv-tag{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);color:#111;border-radius:999px;padding:3px 9px;font:600 11.5px var(--ui);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.iv-img .iv-tag{position:absolute;bottom:10px;left:10px;background:rgba(255,255,255,.92);color:#111;border-radius:999px;padding:3px 9px;font:600 11.5px var(--ui);box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .iv-img .iv-fmt{position:absolute;bottom:10px;right:10px;display:flex;gap:4px}.iv-img .iv-fmt span{background:rgba(10,10,10,.72);color:#fff;border-radius:6px;padding:2px 6px;font:700 10.5px var(--mono)}
 .iv-skel{width:100%;height:100%;background:linear-gradient(100deg,var(--raise) 30%,var(--line) 50%,var(--raise) 70%);background-size:300% 100%;animation:ivsk 1.3s linear infinite}@keyframes ivsk{to{background-position:-100% 0}}
 .iv-info{padding:12px 14px 14px;display:grid;gap:6px}.iv-info h4{margin:0;font:700 15px/1.3 var(--ui);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -735,6 +779,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
   <div class="nav-wrap">
     <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
     <nav class="nav-list" aria-label="Pages">
+      <button type="button" class="nav-it" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span><b>Home</b><small id="navHome">Today at a glance</small></span></button>
       <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><span><b>Inventory</b><small id="navInv"></small></span></button>
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
@@ -745,6 +790,13 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
     </nav>
   </div>
 </dialog>
+<dialog id="homeDlg" aria-label="Home">
+  <div class="lg-wrap hm-wrap">
+    <div class="ml-top"><h2 id="hmTitle">Home</h2><span class="note" id="hmDate"></span><button class="btn icon sm ghost" id="hmClose" type="button" aria-label="Close">✕</button></div>
+    <div class="hm-scroll"><div class="hm" id="hmBody"></div></div>
+  </div>
+</dialog>
+<div class="hm-tip" id="hmTip" role="tooltip" hidden></div>
 <dialog id="invDlg" aria-label="Inventory">
   <div class="lg-wrap iv-wrap">
     <div class="ml-top"><h2>Inventory</h2><span class="note" id="ivSum"></span><button class="btn icon sm ghost" id="ivClose" type="button" aria-label="Close">✕</button></div>
@@ -2128,8 +2180,11 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
         if(w.text)W8[rk]={text:String(w.text),upd:+w.upd||0};}
       if(wChanged){updMsgPrev();updMode();schedPreview();}
       lsSet(key,JSON.stringify(m));
-      if(JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[]]))
-        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,updated:Date.now()})});
+      // inventory: active / starred / notes per product, newest change wins
+      const im=mergeInvMeta(ivMetaAll(),rd.invMeta);lsSet('ss-inv-meta',JSON.stringify(im));
+      if(JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}]))
+        await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,updated:Date.now()})});
+      if(invDlg.open)renderInv();
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';}
@@ -2761,8 +2816,22 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
    What's read is kept in this browser (IndexedDB "ss-inv"), so the page opens instantly and works offline; only changed files are read again.
    Needs read-only Drive access (asked for the first time the page connects). */
 const invDlg=$('#invDlg');
+// per product (by its folder path + name): {active:false} when inactive, star, note, upd. Kept in this browser and synced.
+const ivMetaAll=()=>{try{const m=JSON.parse(lsGet('ss-inv-meta')||'{}');return m&&typeof m==='object'&&!Array.isArray(m)?m:{};}catch(_){return{};}};
+function mergeInvMeta(...srcs){const out={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object'||String(k).length>400)continue;
+    if(!out[k]||(+v.upd||0)>(+out[k].upd||0))out[k]={active:v.active!==false,star:!!v.star,note:String(v.note||'').slice(0,2000),upd:+v.upd||0};}return out;}
+let IVM=ivMetaAll();
+const ivm=k=>IVM[k]||{active:true,star:false,note:''};
+function ivmSet(keys,patch){const now=Date.now();IVM=ivMetaAll();for(const k of keys)IVM[k]={...ivm(k),...patch,upd:now};lsSet('ss-inv-meta',JSON.stringify(IVM));scheduleSync();}
+// who each product was sent to: the Sent list stores the sheet as "CODE · Title"
+const sheetParts=n=>{const p=String(n||'').split(' · ');return p.length>1?{code:nrm(p[0]),title:nrm(p.slice(1).join(' · '))}:{code:nrm(p[0]),title:nrm(p[0])};};
+let ivSendC=null;
+function ivSendIndex(){if(ivSendC&&ivSendC.v===lgV&&ivSendC.n===LG.list.length)return ivSendC.m;const m=new Map(),add=(k,t)=>{if(!k)return;if(!m.has(k))m.set(k,[]);m.get(k).push(t);};
+  for(const t of threads()){const p=sheetParts(t.root.sheet);add('c:'+p.code,t);if(p.title!==p.code)add('t:'+p.title,t);}ivSendC={v:lgV,n:LG.list.length,m};return m;}
+function ivSends(x){const m=ivSendIndex(),code=nrm(x.sum?.code),title=nrm(invTitle(x));const l=(code&&m.get('c:'+code))||(title&&(m.get('t:'+title)||m.get('c:'+title)))||[];return l;}
+const ivSendStats=x=>{const l=ivSends(x);return{n:l.length,rep:l.filter(t=>t.root.reply||['replied','interested','ordered'].includes(t.root.status)).length,ord:l.filter(t=>t.root.status==='ordered').length,last:l.length?Math.max(...l.map(t=>t.last)):0,list:l};};
 const IV={folder:(()=>{try{const f=JSON.parse(lsGet('ss-inv-folder')||'null');return f&&f.id?f:null;}catch(_){return null;}})(),items:[],busy:false,prog:null,err:'',last:+lsGet('ss-inv-sync')||0,
-  q:'',cat:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map()};
+  q:'',cat:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map(),status:'active',star:false,sel:new Set()};
 const INV_MIMES={'application/pdf':'PDF','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'Word','application/vnd.google-apps.document':'Doc','image/jpeg':'JPG','image/png':'PNG'};
 const INV_RANK={PDF:0,Word:1,Doc:2,JPG:3,PNG:4};
 let invDbp=null;
@@ -2859,12 +2928,17 @@ const invTitle=x=>x.sum?.title||x.name,invPic=x=>x.photo||x.thumb||'';
 function invPicHTML(x,cls=''){const p=invPic(x);if(x.pending)return'<div class="iv-skel"></div>';
   return p?`<img src="${p}" alt="" loading="lazy"${!x.photo&&x.kind!=='image'?` class="contain${cls}"`:''}>`:`<div class="iv-ph" style="--c:${esc(x.sum?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`;}
 const ivNF=new Intl.NumberFormat();
-function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(!IV.cat||x.cat===IV.cat)&&(!q||[invTitle(x),x.name,x.sum?.code,x.cat,x.path,...(x.sum?.colours||[]).map(c=>c.name),...(x.sum?.details||[]).map(d=>d.value)].some(v=>String(v||'').toLowerCase().includes(q))));
-  const by={name:(a,b)=>COLL.compare(invTitle(a),invTitle(b)),code:(a,b)=>COLL.compare(a.sum?.code||'~',b.sum?.code||'~'),pcs:(a,b)=>(b.sum?.pcs||0)-(a.sum?.pcs||0),updated:(a,b)=>b.updated-a.updated}[IV.sort]||((a,b)=>b.updated-a.updated);
-  return l.sort(by);}
-function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;
-  const sum=items.reduce((a,x)=>(a.pcs+=x.sum?.pcs||0,a.boxes+=x.sum?.boxes||0,(x.sum?.colours||[]).forEach(c=>a.cols.add(c.name.toLowerCase())),a),{pcs:0,boxes:0,cols:new Set()});
-  $('#ivSum').textContent=F?`${items.length} product${items.length===1?'':'s'}`:'';
+const ivOn=x=>ivm(x.key).active!==false;
+function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(IV.status==='all'||(IV.status==='active')===ivOn(x))&&(!IV.star||ivm(x.key).star)&&(!IV.cat||x.cat===IV.cat)&&(!q||ivm(x.key).note.toLowerCase().includes(q)||[invTitle(x),x.name,x.sum?.code,x.cat,x.path,...(x.sum?.colours||[]).map(c=>c.name),...(x.sum?.details||[]).map(d=>d.value)].some(v=>String(v||'').toLowerCase().includes(q))));
+  const by={name:(a,b)=>COLL.compare(invTitle(a),invTitle(b)),code:(a,b)=>COLL.compare(a.sum?.code||'~',b.sum?.code||'~'),pcs:(a,b)=>(b.sum?.pcs||0)-(a.sum?.pcs||0),updated:(a,b)=>b.updated-a.updated,
+    sent:(a,b)=>ivSendStats(b).n-ivSendStats(a).n,replies:(a,b)=>ivSendStats(b).rep-ivSendStats(a).rep,lastsent:(a,b)=>ivSendStats(b).last-ivSendStats(a).last}[IV.sort]||((a,b)=>b.updated-a.updated);
+  // starred first, then the chosen order
+  return l.sort((a,b)=>(+!!ivm(b.key).star)-(+!!ivm(a.key).star)||by(a,b));}
+function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;IVM=ivMetaAll();lgLoad();
+  const nOn=items.filter(ivOn).length,nOff=items.length-nOn,nStar=items.filter(x=>ivm(x.key).star).length,base=IV.status==='all'?items:items.filter(x=>(IV.status==='active')===ivOn(x));
+  IV.sel=new Set([...IV.sel].filter(k=>items.some(x=>x.key===k)));
+  const sum=base.reduce((a,x)=>(a.pcs+=x.sum?.pcs||0,a.boxes+=x.sum?.boxes||0,(x.sum?.colours||[]).forEach(c=>a.cols.add(c.name.toLowerCase())),a),{pcs:0,boxes:0,cols:new Set()});
+  $('#ivSum').textContent=F?`${nOn} active · ${nOff} inactive`:'';
   // bar: folder, sync state
   const fic='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
   const P=IV.prog;
@@ -2879,19 +2953,24 @@ function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;
     <div class="row"><input class="in" id="ivLink" placeholder="https://drive.google.com/drive/folders/…" aria-label="Folder link"><button class="btn" type="button" id="ivLinkGo">Use folder</button></div>
     <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail();return;}
   const cats=[...items.reduce((m,x)=>m.set(x.cat,(m.get(x.cat)||0)+1),new Map())].filter(([c])=>c).sort((a,b)=>COLL.compare(a[0],b[0]));
-  const shown=invShown(),stat=(l,v)=>`<div class="iv-stat"><small>${l}</small><b>${v}</b></div>`;
+  const shown=invShown(),stat=(l,v)=>`<div class="iv-stat"><small>${l}</small><b>${v}</b></div>`,st=items.reduce((a,x)=>{const z=ivSendStats(x);a.sent+=z.n;a.rep+=z.rep;a.never+=z.n?0:ivOn(x)?1:0;return a;},{sent:0,rep:0,never:0});
   const scroll=$('#ivScroll').scrollTop,focus=document.activeElement?.id;
-  $('#ivBody').innerHTML=`<div class="iv-stats">${stat('Products',ivNF.format(items.length))}${stat('Total pieces',ivNF.format(sum.pcs))}${stat('Total boxes',ivNF.format(sum.boxes))}${stat('Colours',ivNF.format(sum.cols.size))}${cats.length?stat('Categories',cats.length):''}</div>
+  const lab=IV.status==='inactive'?'Inactive':IV.status==='all'?'All':'Active';
+  $('#ivBody').innerHTML=`<div class="iv-stats">${stat(lab+' products',ivNF.format(base.length))}${stat('Total pieces',ivNF.format(sum.pcs))}${stat('Total boxes',ivNF.format(sum.boxes))}${stat('Colours',ivNF.format(sum.cols.size))}${stat('Times sent',ivNF.format(st.sent))}${stat('Replies',`${ivNF.format(st.rep)}${st.sent?` <small style="display:inline;font-size:13px">(${Math.round(st.rep/st.sent*100)}%)</small>`:''}`)}${st.never?stat('Active, never sent',ivNF.format(st.never)):''}</div>
     <div class="iv-tools"><input class="in" id="ivQ" type="search" placeholder="Search name, item code, colour…" value="${esc(IV.q)}" aria-label="Search inventory">
-      <select class="in" id="ivSort" aria-label="Sort">${[['updated','Recently updated'],['name','Name A–Z'],['code','Item code'],['pcs','Most pieces']].map(([v,n])=>`<option value="${v}"${IV.sort===v?' selected':''}>${n}</option>`).join('')}</select>
-      <span class="iv-view" role="group" aria-label="View"><button type="button" data-ivview="grid" aria-pressed="${IV.view==='grid'}">Cards</button><button type="button" data-ivview="list" aria-pressed="${IV.view==='list'}">List</button></span></div>
+      <span class="iv-seg" role="group" aria-label="Show">${[['active','Active',nOn],['inactive','Inactive',nOff],['all','All',items.length]].map(([v,n,c])=>`<button type="button" data-ivst="${v}" aria-pressed="${IV.status===v}">${n}<small>${c}</small></button>`).join('')}</span>
+      <button class="iv-chip" type="button" data-ivstar-f aria-pressed="${IV.star}" title="Only starred products">★ Starred${nStar?` (${nStar})`:''}</button>
+      <select class="in" id="ivSort" aria-label="Sort">${[['updated','Recently updated'],['name','Name A–Z'],['code','Item code'],['pcs','Most pieces'],['sent','Most sent'],['replies','Most replies'],['lastsent','Recently sent']].map(([v,n])=>`<option value="${v}"${IV.sort===v?' selected':''}>${n}</option>`).join('')}</select>
+      <span class="iv-view" role="group" aria-label="View"><button type="button" data-ivview="grid" aria-pressed="${IV.view==='grid'}">Cards</button><button type="button" data-ivview="list" aria-pressed="${IV.view==='list'}">List</button></span>
+      <button class="btn sm ghost" type="button" id="ivExport" title="Download the inventory as a spreadsheet (CSV)">Export</button></div>
+    ${IV.sel.size?`<div class="iv-bulk" role="toolbar" aria-label="Selected products"><b>${IV.sel.size} selected</b><span class="spacer"></span><button class="btn sm" type="button" data-ivbulk="on">Mark active</button><button class="btn sm" type="button" data-ivbulk="off">Mark inactive</button><button class="btn sm" type="button" data-ivbulk="star">★ Star</button><button class="btn sm" type="button" data-ivbulk="unstar">Unstar</button><button class="btn sm" type="button" data-ivbulk="all">Select all shown</button><button class="btn sm" type="button" data-ivbulk="clear">Clear</button></div>`:''}
     <div class="iv-cats">${cats.length?`<button class="iv-cat" type="button" data-ivcat="" aria-pressed="${!IV.cat}">All<small>${items.length}</small></button>${cats.map(([c,n])=>`<button class="iv-cat" type="button" data-ivcat="${esc(c)}" aria-pressed="${IV.cat===c}">${esc(c)}<small>${n}</small></button>`).join('')}`:''}</div>
     ${!items.length&&!IV.busy?'<div class="iv-empty"><h3>No sell sheets in this folder yet</h3><p>Add PDF or Word sell sheets to the folder in Google Drive (Save to Drive from this site works too), then click Refresh.</p></div>'
-      :!shown.length?'<div class="iv-empty"><p>Nothing matches this search.</p></div>'
-      :IV.view==='list'?`<table class="iv-list"><thead><tr><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"><td><div class="th">${invPicHTML(x)}</div></td><td><b>${esc(invTitle(x))}</b>${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc(x.cat||'')}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`).join('')}</tbody></table>`
-      :`<div class="iv-grid">${shown.map(x=>`<button class="iv-card${IV.open===x.key?' on':''}" type="button" data-iv="${esc(x.key)}"><div class="iv-img">${invPicHTML(x)}${x.cat?`<span class="iv-tag">${esc(x.cat)}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
+      :!shown.length?`<div class="iv-empty"><p>${IV.status==='inactive'&&!nOff?'No inactive products. Mark a product inactive (in its panel, or tick several) to hide it from the active list without deleting anything.':'Nothing matches.'}</p></div>`
+      :IV.view==='list'?`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="num">Sent</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>{const z=ivSendStats(x),m=ivm(x.key);return`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"${ivOn(x)?'':' style="opacity:.6"'}><td><input type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"></td><td><div class="th">${invPicHTML(x)}</div></td><td><b>${m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${ivOn(x)?'':' <span class="iv-sync">· Inactive</span>'}${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc(x.cat||'')}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="num">${z.n?`${z.n}${z.rep?` <span class="iv-sync">· ${z.rep} ↩</span>`:''}`:'<span class="iv-sync">–</span>'}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`;}).join('')}</tbody></table>`
+      :`<div class="iv-grid${IV.sel.size?' selecting':''}">${shown.map(x=>{const z=ivSendStats(x),m=ivm(x.key),on=ivOn(x);return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"><button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>${on?'':'<span class="iv-off">Inactive</span>'}<div class="iv-img">${invPicHTML(x)}${x.cat?`<span class="iv-tag">${esc(x.cat)}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
         <div class="iv-info">${x.sum?.code?`<span class="iv-code">${esc(x.sum.code)}</span>`:''}<h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}
-          ${x.sum?.price?`<span class="iv-price">${esc(x.sum.price)}</span>`:''}${x.sum&&(x.sum.pcs||x.sum.boxes)?`<span class="iv-meta"><span><b>${ivNF.format(x.sum.pcs)}</b> pcs</span><span><b>${ivNF.format(x.sum.boxes)}</b> box${x.sum.boxes===1?'':'es'}</span>${x.sum.sizes?.length&&x.sum.showSizes?`<span>${esc(x.sum.sizes.join(' · '))}</span>`:''}</span>`:''}${swDots(x.sum?.colours||[])}</div></button>`).join('')}</div>`}`;
+          ${x.sum?.price?`<span class="iv-price">${esc(x.sum.price)}</span>`:''}${x.sum&&(x.sum.pcs||x.sum.boxes)?`<span class="iv-meta"><span><b>${ivNF.format(x.sum.pcs)}</b> pcs</span><span><b>${ivNF.format(x.sum.boxes)}</b> box${x.sum.boxes===1?'':'es'}</span>${x.sum.sizes?.length&&x.sum.showSizes?`<span>${esc(x.sum.sizes.join(' · '))}</span>`:''}</span>`:''}${swDots(x.sum?.colours||[])}<span class="iv-sent">${z.n?`Sent to <b>${z.n}</b> · ${z.rep?`<span class="rp">${z.rep} replied</span>`:'no replies yet'}`:'Not sent yet'}</span></div></div>`;}).join('')}</div>`}`;
   $('#ivScroll').scrollTop=scroll;if(focus==='ivQ'){const q=$('#ivQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
   renderInvDetail();}
 function renderInvDetail(){const d=$('#ivDetail'),x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';return;}d.hidden=false;
@@ -2900,49 +2979,156 @@ function renderInvDetail(){const d=$('#ivDetail'),x=IV.items.find(i=>i.key===IV.
   d.innerHTML=`<div class="ivd-b"><div><div class="ivd-pv">${pv?`<img src="${pv}" alt="Sell sheet ${esc(invTitle(x))}">`:`<div class="iv-ph" style="--c:${esc(s?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`}</div>
       ${x.photos?.length>1||(x.photo&&x.thumb)?`<div class="ivd-photos">${x.thumb?`<img src="${x.thumb}" alt="Sell sheet" data-ivpv="sheet" title="The sell sheet">`:''}${(x.photos||[]).map((p,i)=>`<img src="${p}" alt="Photo ${i+1}" data-ivpv="${i}" title="Photo ${i+1}">`).join('')}</div>`:''}</div>
     <div><div class="ivd-h">${x.cat?`<span class="iv-sync">${esc(x.path||x.cat)}</span>`:''}<h3>${esc(invTitle(x))}</h3>${s?.code?`<span class="iv-code">ITEM CODE · ${esc(s.code)}</span>`:''}${s?.price?`<span class="iv-price">${esc(s.price)}</span>`:''}</div>
+      <div class="ivd-state"><label class="switch"><input type="checkbox" data-ivd-active ${ivOn(x)?'checked':''}><span class="sw-ui" aria-hidden="true"></span><span><b>${ivOn(x)?'Active':'Inactive'}</b><small>${ivOn(x)?'Shown in the active list':'Hidden from the active list; nothing is deleted'}</small></span></label>
+        <button class="iv-chip" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!ivm(x.key).star}">${ivm(x.key).star?'★ Starred':'☆ Star'}</button></div>
       ${x.bad?`<p class="iv-bad">${esc(x.bad)}. You can still open it in Drive.</p>`:''}
       ${s?`<div class="ivd-kpis"><div><small>Total pieces</small><b>${ivNF.format(s.pcs||0)}</b></div><div><small>Boxes</small><b>${ivNF.format(s.boxes||0)}</b></div><div><small>Colours</small><b>${(s.colours||[]).length}</b></div></div>`:''}
       ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
         <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
       ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
+      ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const never=CU.list.filter(c=>!l.some(t=>t.root.cust===ck(c.email)||[t.root.email,...(t.root.emails||[])].map(ck).includes(ck(c.email))));
+        return`<div class="ivd-sec"><h4>Sent to${z.n?` (${z.n})`:''}</h4>${z.n?`<p class="ivd-sentsum"><b>${z.n}</b> customer${z.n>1?'s':''} · <b>${z.rep}</b> replied${z.ord?` · <b>${z.ord}</b> ordered`:''} · last sent ${esc(ago(z.last))}</p>
+          <div class="ivd-sent">${l.map(t=>{const e=t.root,rp=e.reply||['replied','interested','ordered'].includes(e.status);return`<div class="r" data-ivwho="${esc(e.email||e.name)}" title="Show in Sent"><span><b>${esc(e.name||e.company||e.email)}</b><small>${esc([e.company&&e.name?e.company:'',e.email].filter(Boolean).join(' · '))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></span><span class="st${rp?' rp':''}">${esc(e.reply&&e.status==='none'?'Replied':ST_NAME[e.status||'none'])}</span><em class="iv-sync">${esc(ago(t.last))}</em></div>`;}).join('')}</div>`
+          :'<p class="hm-empty">Not emailed to anyone yet.</p>'}${never.length&&x.kind!=='image'?`<p style="margin:10px 0 0"><button class="btn sm" type="button" data-ivd="sendnew">Email it to customers who haven't had it (${never.length})</button></p>`:''}</div>`;})()}
+      <div class="ivd-sec"><h4>My note</h4><textarea class="ivd-note" data-ivnote="${esc(x.key)}" placeholder="Anything to remember: reorder date, supplier, minimums…">${esc(ivm(x.key).note)}</textarea></div>
       <div class="ivd-sec"><h4>Files in Drive</h4><div class="ivd-files">${x.files.map(f=>`<a href="${esc(f.link||'https://drive.google.com/file/d/'+encodeURIComponent(f.id)+'/view')}" target="_blank" rel="noopener" title="${esc(f.name)}">${esc(f.kind)} ↗</a>`).join('')}</div><p class="iv-sync" style="margin:8px 0 0">Updated ${esc(DTF_WHEN.format(x.updated))}</p></div></div></div>
     <div class="ivd-f"><button class="btn sm primary" type="button" data-ivd="edit"${x.kind==='image'?' disabled title="Pictures can\'t be opened in the editor"':''}>Open in editor</button><button class="btn sm" type="button" data-ivd="email"${x.kind==='image'?' disabled':''}>Email this sell sheet</button><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivd="close">Close</button></div>`;
   // a sharper picture of the sell sheet for the large preview
   if(!full&&x.files[0]?.kind==='PDF'&&!x.pending&&!x._loading){x._loading=true;invToken(false).then(async t=>{if(!t)return;const f=await invDownload(t,{id:x.files[0].id,name:x.files[0].name,mimeType:'application/pdf'});const u=await pdfPage1(await f.arrayBuffer(),900);if(u){IV.full.set(x.key,u);if(IV.open===x.key){const im=$('#ivDetail .ivd-pv img');if(im)im.src=u;}}}).catch(()=>{}).finally(()=>{x._loading=false;});}}
-async function invOpenSheet(x,thenEmail){let t;try{t=await invToken(true);}catch(e){toast(e.message,5000);return;}
+async function invOpenSheet(x,thenEmail,pick){let t;try{t=await invToken(true);}catch(e){toast(e.message,5000);return;}
   const f=x.files.find(f=>f.kind!=='JPG'&&f.kind!=='PNG');if(!f)return;toast('Opening '+invTitle(x)+'…',20000);
-  try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail)openMail();}
+  try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail){openMail();if(pick){CU.sel=new Set(pick);renderCust(true);toast(`${pick.length} customer${pick.length>1?'s':''} ticked: everyone who hasn't had this sell sheet. Untick anyone you don't want, then Send.`,7000);}}}
   catch(e){toast(e.message||'Couldn\'t open that sell sheet.',5000);}}
 async function openInv(){if(!invDlg.open)invDlg.showModal();if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
   renderInv();if(IV.folder&&!IV.busy&&Date.now()-IV.last>3*60e3){const t=await invToken(false);if(t)invSync(false);else{IV.err='signin';renderInv();}}}
 invDlg.addEventListener('click',async e=>{const t=e.target;
+  const sb=t.closest('[data-ivsel]');if(sb){sb.checked?IV.sel.add(sb.dataset.ivsel):IV.sel.delete(sb.dataset.ivsel);renderInv();return;}
+  if(t.closest('[data-ivselall]')){const sh=invShown(),all=sh.every(x=>IV.sel.has(x.key));sh.forEach(x=>all?IV.sel.delete(x.key):IV.sel.add(x.key));renderInv();return;}
+  const sr=t.closest('[data-ivstar]');if(sr){const k=sr.dataset.ivstar;ivmSet([k],{star:!ivm(k).star});renderInv();return;}
+  if(t.closest('[data-ivstar-f]')){IV.star=!IV.star;renderInv();return;}
+  const stb=t.closest('[data-ivst]');if(stb){IV.status=stb.dataset.ivst;IV.sel.clear();renderInv();return;}
+  const bk=t.closest('[data-ivbulk]');if(bk){const a=bk.dataset.ivbulk,keys=[...IV.sel];
+    if(a==='clear')IV.sel.clear();else if(a==='all')invShown().forEach(x=>IV.sel.add(x.key));
+    else{ivmSet(keys,a==='on'?{active:true}:a==='off'?{active:false}:{star:a==='star'});toast(`${keys.length} product${keys.length>1?'s':''} ${a==='on'?'marked active':a==='off'?'marked inactive':a==='star'?'starred':'unstarred'}`);if(a==='on'||a==='off')IV.sel.clear();}
+    renderInv();return;}
+  const who=t.closest('[data-ivwho]');if(who){lgF.q=who.dataset.ivwho;lgF.status='';invDlg.close();openLog();return;}
+  if(t.id==='ivExport'){invExport();return;}
+  if(t.closest('[data-ivd-active]'))return;
   const card=t.closest('[data-iv]');if(card){IV.open=IV.open===card.dataset.iv?null:card.dataset.iv;$$('#ivBody [data-iv]').forEach(c=>c.classList.toggle('on',c.dataset.iv===IV.open));renderInvDetail();return;}
   const v=t.closest('[data-ivview]');if(v){IV.view=v.dataset.ivview;lsSet('ss-inv-view',IV.view);renderInv();return;}
   const c=t.closest('[data-ivcat]');if(c){IV.cat=c.dataset.ivcat;renderInv();return;}
   const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?(IV.full.get(IV.open)||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
-  const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
+  const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}
+    else if(x&&a.dataset.ivd==='sendnew'){const l=ivSends(x),had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck)));invOpenSheet(x,true,CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m)))).map(c=>ck(c.email)));}
+    else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
   const id=t.closest('button')?.id;
   if(id==='ivPick'||id==='ivChange')invPickFolder();else if(id==='ivSync')invSync(true);else if(id==='ivLinkGo')invUseLink($('#ivLink').value);});
 invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
-  else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv]')){e.preventDefault();e.target.click();}});
-let ivQt=0;invDlg.addEventListener('input',e=>{if(e.target.id==='ivQ'){IV.q=e.target.value;clearTimeout(ivQt);ivQt=setTimeout(renderInv,90);}});
-invDlg.addEventListener('change',e=>{if(e.target.id==='ivSort'){IV.sort=e.target.value;lsSet('ss-inv-sort',IV.sort);renderInv();}});
+  else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv],.iv-card[data-iv]')){e.preventDefault();e.target.click();}});
+// spreadsheet of the inventory
+function invExport(){const q=v=>`"${String(v??'').replace(/"/g,'""')}"`,rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(x.key),s=x.sum||{};
+    return[invTitle(x),s.code,x.path||x.cat,ivOn(x)?'Active':'Inactive',m.star?'Yes':'',s.price,s.pcs,s.boxes,(s.colours||[]).map(c=>c.name).join('; '),(s.sizes||[]).join(' '),z.n,z.rep,z.last?dayStr(z.last):'',dayStr(x.updated),m.note,x.files.map(f=>f.link||'').join(' ')].map(q).join(',');});
+  save(`Inventory ${dayStr(Date.now())}.csv`,new Blob(['\uFEFF'+['Product,Item code,Category,Status,Starred,Price,Pieces,Boxes,Colours,Sizes,Sent to,Replies,Last sent,Updated,Note,Drive files',...rows].join('\r\n')],{type:'text/csv'}));}
+let ivNt=0;
+let ivQt=0;invDlg.addEventListener('input',e=>{if(e.target.dataset.ivnote!==undefined){const k=e.target.dataset.ivnote,v=e.target.value;clearTimeout(ivNt);ivNt=setTimeout(()=>ivmSet([k],{note:v.slice(0,2000)}),400);return;}
+  if(e.target.id==='ivQ'){IV.q=e.target.value;clearTimeout(ivQt);ivQt=setTimeout(renderInv,90);}});
+invDlg.addEventListener('change',e=>{if(e.target.matches('[data-ivd-active]')&&IV.open){ivmSet([IV.open],{active:e.target.checked});toast(e.target.checked?'Marked active':'Marked inactive. Find it under Inactive.');renderInv();return;}
+  if(e.target.id==='ivSort'){IV.sort=e.target.value;lsSet('ss-inv-sort',IV.sort);renderInv();}});
 invDlg.addEventListener('cancel',e=>{if(IV.open){e.preventDefault();IV.open=null;renderInv();}});
 $('#ivClose').onclick=()=>invDlg.close();
 // what was read last time, for the sidebar count
 if(IV.folder)invAll().then(a=>{if(!IV.items.length)IV.items=a.filter(x=>x&&x.key);});
+
+/* ---------- home: today at a glance ---------- */
+const homeDlg=$('#homeDlg'),DAY=864e5;
+const hmPct=(a,b)=>b?Math.round(a/b*100):0;
+const hmDelta=(cur,prev,unit='')=>{if(!prev&&!cur)return'<span>No change</span>';if(!prev)return'<span class="up">New this month</span>';const d=cur-prev;return d===0?'<span>Same as the 30 days before</span>':`<span class="${d>0?'up':'down'}">${Math.abs(d)}${unit} vs the 30 days before</span>`;};
+const hmIc=(t,c)=>`<span class="ic" style="--c:${c||'var(--accent)'}">${esc(initials(t))}</span>`;
+const hmHello=()=>{const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';};
+function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.list;
+  const inP=(t,a,b)=>t>=now-a*DAY&&t<now-b*DAY;
+  const sent=L.filter(e=>inP(e.at,30,0)),sentPrev=L.filter(e=>inP(e.at,60,30));
+  const reached=new Set(sent.map(recipKey)).size,reachedPrev=new Set(sentPrev.map(recipKey)).size;
+  const repOf=t=>t.root.reply?t.root.reply.at:(['replied','interested','ordered'].includes(t.root.status)?t.root.upd:0);
+  const rep=th.filter(t=>{const r=repOf(t);return r&&inP(r,30,0);}).length,repPrev=th.filter(t=>{const r=repOf(t);return r&&inP(r,60,30);}).length;
+  const thP=th.filter(t=>inP(t.root.at,30,0)),rate=hmPct(thP.filter(repOf).length,thP.length),thPP=th.filter(t=>inP(t.root.at,60,30)),ratePrev=hmPct(thPP.filter(repOf).length,thPP.length);
+  const due=th.filter(needsFollow).sort((a,b)=>(a.root.follow||'9')<(b.root.follow||'9')?-1:1),fresh=th.filter(t=>t.root.reply&&!t.root.reply.seen).sort((a,b)=>b.root.reply.at-a.root.reply.at);
+  const recentRep=th.filter(t=>t.root.reply).sort((a,b)=>b.root.reply.at-a.root.reply.at).slice(0,6);
+  const ordered=th.filter(t=>t.root.status==='ordered'&&inP(t.root.upd,30,0)).length;
+  // sends per week, 12 weeks (weeks start Monday)
+  const wk0=new Date();wk0.setHours(0,0,0,0);wk0.setDate(wk0.getDate()-((wk0.getDay()+6)%7));const weeks=[];
+  for(let i=11;i>=0;i--){const a=+wk0-i*7*DAY,b=a+7*DAY;weeks.push({a,n:L.filter(e=>e.at>=a&&e.at<b).length,r:th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length});}
+  // products by sends in 90 days
+  const prod=new Map();for(const t of th){if(t.root.at<now-90*DAY)continue;const k=t.root.sheet||'Untitled';const p=prod.get(k)||{name:k,n:0,r:0};p.n++;if(repOf(t))p.r++;prod.set(k,p);}
+  const top=[...prod.values()].sort((a,b)=>b.n-a.n||b.r-a.r).slice(0,6);
+  // activity: sends grouped by sheet and minute, replies
+  const ev=[],grp=new Map();for(const e of L.slice().sort((a,b)=>b.at-a.at).slice(0,200)){const k=e.sheet+'|'+Math.floor(e.at/60e3);if(!grp.has(k)){grp.set(k,{kind:'sent',at:e.at,sheet:e.sheet,who:[]});ev.push(grp.get(k));}grp.get(k).who.push(e.name||e.company||e.email);}
+  for(const t of th)if(t.root.reply)ev.push({kind:'reply',at:t.root.reply.at,sheet:t.root.sheet,who:[t.root.name||t.root.company||t.root.email],snip:t.root.reply.snip});
+  ev.sort((a,b)=>b.at-a.at);
+  const items=IV.items,on=items.filter(ivOn);
+  return{now,sent:sent.length,sentPrev:sentPrev.length,reached,reachedPrev,rep,repPrev,rate,ratePrev,thP:thP.length,due,fresh,recentRep,ordered,weeks,top,ev:ev.slice(0,10),
+    inv:{n:items.length,on:on.length,off:items.length-on.length,pcs:on.reduce((a,x)=>a+(x.sum?.pcs||0),0),never:on.filter(x=>!ivSendStats(x).n).length,star:items.filter(x=>ivm(x.key).star&&ivOn(x))},
+    cust:{n:CU.list.length,nn:nnCount(),groups:allGroups().length},total:L.length};}
+function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet();
+  $('#hmDate').textContent=DTF_LONG.format(D.now);
+  const kpi=(l,v,sub,go,cls='')=>`<${go?`button type="button" data-hm="${go}"`:'div'} class="hm-kpi ${cls}"><small>${l}</small><b>${v}</b>${sub}</${go?'button':'div'}>`;
+  const steps=[[!!a,'Sign in with Google','signin'],[D.cust.n>0,'Add or import your customers','cust'],[!!IV.folder,'Connect your sell sheets folder (Inventory)','inv'],[D.total>0,'Email your first sell sheet','email'],[lsGet('ss-notify')==='1','Turn on desktop notifications for replies','sent']];
+  const showSteps=steps.some(s=>!s[0])&&lsGet('ss-home-steps')!=='hide';
+  const maxW=Math.max(1,...D.weeks.map(w=>w.n)),nice=(m=>{const p=Math.pow(10,Math.floor(Math.log10(m))),f=m/p;return Math.max(2,(f<=1?1:f<=2?2:f<=5?5:10)*p);})(maxW),ticks=Number.isInteger(nice/2)?[0,nice/2,nice]:[0,nice];
+  const wkFmt=new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short'});
+  const maxTop=Math.max(1,...D.top.map(p=>p.n));
+  $('#hmBody').innerHTML=`<div class="hm-hello"><h3>${hmHello()}${a?.email?', '+esc(a.email.split('@')[0]):''}</h3><p>${D.fresh.length||D.due.length?`You have ${[D.fresh.length&&`<b>${D.fresh.length} new repl${D.fresh.length>1?'ies':'y'}</b>`,D.due.length&&`<b>${D.due.length} follow-up${D.due.length>1?'s':''}</b> due`].filter(Boolean).join(' and ')}.`:'You\'re all caught up.'}</p></div>
+  <div class="hm-actions"><button class="btn sm primary" type="button" data-hm="newsheet">＋ New sell sheet</button><button class="btn sm" type="button" data-hm="email">Email this sell sheet</button><button class="btn sm" type="button" data-hm="inv">Inventory</button><button class="btn sm" type="button" data-hm="cust">Customers</button><button class="btn sm" type="button" data-hm="sent">Sent</button></div>
+  <div class="hm-kpis">${kpi('Sell sheets sent · 30 days',ivNF.format(D.sent),hmDelta(D.sent,D.sentPrev),'sent')}${kpi('Customers reached · 30 days',ivNF.format(D.reached),hmDelta(D.reached,D.reachedPrev))}${kpi('Replies · 30 days',ivNF.format(D.rep),hmDelta(D.rep,D.repPrev),'replies')}
+    ${kpi('Reply rate · 30 days',D.thP?D.rate+'%':'–',D.thP?hmDelta(D.rate,D.ratePrev,' pts'):'<span>Send a sheet to see it</span>')}${kpi('Follow-ups due',ivNF.format(D.due.length),`<span>${D.due.length?'No reply by their date':'Nothing waiting'}</span>`,'due',D.due.length?'alert':'')}${D.ordered?kpi('Orders · 30 days',ivNF.format(D.ordered),'<span>Marked Ordered in Sent</span>','sent'):''}</div>
+  <div class="hm-grid"><div class="hm-col">
+    ${showSteps?`<div class="hm-card"><h4>Get set up<span class="n">${steps.filter(s=>s[0]).length} of ${steps.length}</span><button class="lnk" type="button" data-hm="hidesteps">Hide</button></h4><div class="hm-steps">${steps.map(([ok,t,go])=>`<div class="hm-step${ok?' done':''}"><i class="ck">${ok?'✓':''}</i><span>${t}</span>${ok?'':`<button class="btn sm ghost" type="button" data-hm="${go}">Start</button>`}</div>`).join('')}</div></div>`:''}
+    <div class="hm-card"><h4>Needs your attention${D.fresh.length+D.due.length?`<span class="n">${D.fresh.length+D.due.length}</span>`:''}<button class="lnk" type="button" data-hm="sent">Open Sent</button></h4>
+      ${D.fresh.length+D.due.length?`<div class="hm-list">${D.fresh.slice(0,6).map(t=>`<button class="hm-item" type="button" data-hmwho="${esc(t.root.email)}">${hmIc(t.root.name||t.root.email)}<span><b>${esc(t.root.name||t.root.company||t.root.email)} replied</b><small>${esc(t.root.sheet)}${t.root.reply.snip?' · “'+esc(t.root.reply.snip)+'”':''}</small></span><em>${esc(ago(t.root.reply.at))}</em></button>`).join('')}
+        ${D.due.slice(0,8).map(t=>`<button class="hm-item" type="button" data-hmwho="${esc(t.root.email)}">${hmIc(t.root.name||t.root.email,'var(--warn)')}<span><b>Follow up with ${esc(t.root.name||t.root.company||t.root.email)}</b><small>${esc(t.root.sheet)} · ${t.root.follow?'no reply by '+esc(DTF_DAY.format(new Date(t.root.follow+'T12:00'))):'sent '+esc(ago(t.last))+', no reply'}</small></span><em>Follow up</em></button>`).join('')}</div>`:'<p class="hm-empty">Nothing needs you right now. New replies and follow-ups that are due show here.</p>'}</div>
+    <div class="hm-card"><h4>Sell sheets sent per week<span class="n">last 12 weeks</span></h4>${D.total?`<div class="hm-chart" role="img" aria-label="Sell sheets sent per week for the last 12 weeks: ${D.weeks.map(w=>w.n).join(', ')}"><div class="hm-yax">${ticks.map(v=>`<span style="bottom:${v/nice*100}%">${v}</span>`).join('')}</div>
+      <div class="hm-plot">${ticks.slice(1).map(v=>`<div class="gl" style="bottom:${v/nice*100}%"></div>`).join('')}<div class="hm-bars">${D.weeks.map(w=>`<div class="hm-bar" tabindex="0" data-tip="<b>Week of ${esc(wkFmt.format(w.a))}</b><br>${w.n} sent · ${w.r} repl${w.r===1?'y':'ies'}"><i style="height:${w.n/nice*100}%"></i></div>`).join('')}</div></div></div>
+      <div class="hm-xax">${D.weeks.map((w,i)=>`<span>${i%2?'':esc(wkFmt.format(w.a))}</span>`).join('')}</div>`:'<p class="hm-empty">Your weekly sending shows here once you email a sell sheet.</p>'}</div>
+    <div class="hm-card"><h4>Recent activity</h4>${D.ev.length?`<div class="hm-list">${D.ev.map(e=>`<button class="hm-item" type="button" data-hm="sent">${hmIc(e.kind==='reply'?e.who[0]:'↗',e.kind==='reply'?'var(--accent)':'#4B5563')}<span><b>${e.kind==='reply'?`${esc(e.who[0])} replied`:`Sent to ${e.who.length>2?`${esc(e.who[0])} and ${e.who.length-1} others`:esc(e.who.join(' and '))}`}</b><small>${esc(e.sheet)}${e.snip?' · “'+esc(e.snip)+'”':''}</small></span><em>${esc(agoMin(e.at))}</em></button>`).join('')}</div>`:'<p class="hm-empty">Emails you send and replies you get show here.</p>'}</div>
+  </div><div class="hm-col">
+    <div class="hm-card"><h4>Top products<span class="n">90 days</span></h4>${D.top.length?`<div class="hm-top">${D.top.map(p=>`<div class="r" data-hmsheet="${esc(p.name)}" title="Show in Sent"><b>${esc(p.name)}</b><em>${p.n} sent · ${p.r} replied</em><span class="track"><i style="width:${p.n/maxTop*100}%"></i></span></div>`).join('')}</div>`:'<p class="hm-empty">The sell sheets you send most show here.</p>'}</div>
+    <div class="hm-card"><h4>Inventory<button class="lnk" type="button" data-hm="inv">Open</button></h4>${IV.folder?`<div class="hm-mini"><div><small>Active products</small><b>${ivNF.format(D.inv.on)}</b></div><div><small>Pieces</small><b>${ivNF.format(D.inv.pcs)}</b></div><div><small>Never sent</small><b>${ivNF.format(D.inv.never)}</b></div></div>
+      ${D.inv.star.length?`<div class="hm-list" style="margin-top:10px">${D.inv.star.slice(0,5).map(x=>`<button class="hm-item" type="button" data-hminv="${esc(x.key)}">${hmIc('★','#E8A600')}<span><b>${esc(invTitle(x))}</b><small>${esc([x.sum?.code,x.sum?.price].filter(Boolean).join(' · '))}</small></span><em>${ivSendStats(x).n} sent</em></button>`).join('')}</div>`:''}`
+      :'<p class="hm-empty">Connect the Google Drive folder with your sell sheets to see your products here.</p><p style="margin:10px 0 0"><button class="btn sm" type="button" data-hm="inv">Connect folder</button></p>'}</div>
+    <div class="hm-card"><h4>Customers<button class="lnk" type="button" data-hm="cust">Open</button></h4><div class="hm-mini"><div><small>Customers</small><b>${ivNF.format(D.cust.n)}</b></div><div><small>Groups</small><b>${ivNF.format(D.cust.groups)}</b></div><div><small>Without a name</small><b>${ivNF.format(D.cust.nn)}</b></div></div></div>
+  </div></div>
+  <label class="hm-foot"><input type="checkbox" id="hmStart" ${lsGet('ss-home-start')==='1'?'checked':''}> Show Home when the site opens</label>`;}
+async function openHome(){if(!homeDlg.open)homeDlg.showModal();if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}renderHome();}
+homeDlg.addEventListener('click',e=>{const t=e.target,b=t.closest('[data-hm]');
+  const w=t.closest('[data-hmwho]');if(w){lgF.q=w.dataset.hmwho;lgF.status='';homeDlg.close();openLog();return;}
+  const sh=t.closest('[data-hmsheet]');if(sh){lgF.q=sh.dataset.hmsheet;lgF.status='';homeDlg.close();openLog();return;}
+  const iv=t.closest('[data-hminv]');if(iv){homeDlg.close();IV.open=iv.dataset.hminv;openInv();return;}
+  if(!b)return;const v=b.dataset.hm;
+  if(v==='hidesteps'){lsSet('ss-home-steps','hide');renderHome();return;}
+  homeDlg.close();
+  if(v==='sent'){lgF.q='';lgF.status='';openLog();}else if(v==='replies'){lgF.q='';lgF.status='reply';openLog();}else if(v==='due'){lgF.q='';lgF.status='follow';openLog();}
+  else if(v==='inv')openInv();else if(v==='cust')openCP();else if(v==='email')openMail();else if(v==='newsheet')$('#newSheet')?.click();
+  else if(v==='signin'){if(EMAIL_SETUP.google)login('google',false).then(()=>{toast('Signed in');openHome();}).catch(err=>toast(err.message));else openSetup();}});
+homeDlg.addEventListener('change',e=>{if(e.target.id==='hmStart')lsSet('ss-home-start',e.target.checked?'1':'0');});
+$('#hmClose').onclick=()=>homeDlg.close();
+// bar tooltips (also on keyboard focus)
+const hmTip=$('#hmTip');
+const tipShow=el=>{hmTip.innerHTML=el.dataset.tip;hmTip.hidden=false;const r=el.getBoundingClientRect(),w=hmTip.offsetWidth;hmTip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+'px';hmTip.style.top=Math.max(8,r.top-hmTip.offsetHeight-8)+'px';};
+homeDlg.addEventListener('pointerover',e=>{const b=e.target.closest('[data-tip]');if(b)tipShow(b);});homeDlg.addEventListener('pointerout',e=>{if(e.target.closest('[data-tip]'))hmTip.hidden=true;});
+homeDlg.addEventListener('focusin',e=>{const b=e.target.closest('[data-tip]');if(b)tipShow(b);});homeDlg.addEventListener('focusout',()=>{hmTip.hidden=true;});homeDlg.addEventListener('close',()=>{hmTip.hidden=true;});
 
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
 function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
   const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
   $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
+  {const d=th.filter(needsFollow).length;$('#navHome').textContent=nr||d?[nr&&`${nr} new repl${nr>1?'ies':'y'}`,d&&`${d} follow-up${d>1?'s':''} due`].filter(Boolean).join(' · '):'Today at a glance';}
   {const n=IV.items.length;$('#navInv').textContent=IV.folder?`${n} product${n===1?'':'s'} · ${IV.folder.name}`:'Your sell sheets folder in Google Drive';}
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
@@ -3189,6 +3375,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
   S=sheets.find(s=>s.id===lsGet('ss-last'))||sheets[0];loadFont(S.style.font);
   refreshPicker();renderPanel();renderSheet();fit();moveInd();renderTopAcct();lgLoad();renderBadge();if(authGet())syncNow();
   setTimeout(()=>$('#app').classList.remove('intro'),1200);
+  if(lsGet('ss-home-start')==='1')openHome();
 })();
 })();
 </script>

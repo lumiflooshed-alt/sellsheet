@@ -174,3 +174,19 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 - Sell sheets made with this site are read exactly. Other PDF and Word sheets are read as well as their layout allows. Pictures (JPG/PNG) are shown as they are.
 - What's read is kept in this browser, so the page opens instantly and works offline. **Refresh** reads only files that changed.
 - Click a product to see its colours and sizes table and details. From there, **Open in editor** or **Email this sell sheet**.
+- **Active / Inactive:** mark products inactive to hide them from the active list (nothing is deleted). Do it in the product panel, or tick several cards and use the bar that appears.
+- **★ Star** products to keep them first. Add a private **note** to each product.
+- **Sent to:** each product shows who it was emailed to, who replied, and when. **Email it to customers who haven't had it** ticks everyone else in the Email window, so you can review the list before sending.
+- **Export** downloads the inventory as a spreadsheet (CSV).
+- Active/inactive, stars and notes sync between your devices when you're signed in.
+
+## Home
+
+The logo menu → **Home** shows today at a glance:
+- sheets sent, customers reached, replies, reply rate and follow-ups due (last 30 days compared with the 30 before)
+- what needs your attention
+- sends per week
+- top products, recent activity, and inventory and customer counts
+- a setup checklist
+
+Tick **Show Home when the site opens** to start there.
