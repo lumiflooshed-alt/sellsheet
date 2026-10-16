@@ -250,7 +250,7 @@ textarea.np-in{display:block;overflow:hidden}
 .btn.ghost{border-color:transparent;background:transparent}
 .btn.ghost:hover{background:var(--raise)}
 .btn.icon{width:44px;padding:0}
-#themeBtn .i-sun,.dark #themeBtn .i-moon{display:none}.dark #themeBtn .i-sun{display:block}
+#themeBtn .i-sun,.dark #themeBtn .i-moon,.pg-theme .i-sun,.dark .pg-theme .i-moon{display:none}.dark #themeBtn .i-sun,.dark .pg-theme .i-sun{display:block}
 #themeBtn svg{transition:transform .35s var(--spring)}#themeBtn:active svg{transform:rotate(-30deg)}
 .btn.sm{height:36px;padding:0 12px;font-size:14px;border-radius:9px}
 .btn.danger{color:var(--bad)}
@@ -402,7 +402,7 @@ textarea.np-in{display:block;overflow:hidden}
 .rail .tab{position:relative;z-index:1}
 .rail .tab[aria-selected="true"]{background:transparent}
 .tab svg{transition:transform .25s var(--spring)}.tab:hover svg{transform:translateY(-2px)}
-.btn:not(.icon):not(:disabled):hover{transform:translateY(-1px)}
+.btn:not(.icon):not(:disabled):hover{transform:translateY(-1px) scale(1.04)}.btn:disabled:hover{transform:none}
 .btn.primary:not(:disabled):hover{box-shadow:0 2px 4px rgba(14,153,63,.25),0 10px 22px rgba(14,153,63,.28)}
 .intro .top{animation:drop .5s var(--ease) both}
 .intro .rail .tab{animation:fade .45s var(--ease) both;animation-delay:calc(var(--i) * 45ms + 120ms)}
@@ -447,7 +447,13 @@ dialog[open]{animation:pop .22s var(--ease)}
 /* pages: Home, Inventory, Pipeline, Sent, Customers fill the window and have their own address (#home, #inventory…) */
 dialog.page{width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0;border-radius:0!important;box-shadow:none}
 dialog.page[open]{animation:none}dialog.page::backdrop{background:var(--bg);backdrop-filter:none}
-dialog.page .ml-top{padding:8px 12px;gap:8px;flex-wrap:nowrap;background:var(--panel)}dialog.page .lg-wrap{grid-template-columns:minmax(0,1fr)}
+dialog.page .ml-top{padding:8px 12px;gap:8px;flex-wrap:nowrap;background:var(--panel)}dialog.page .lg-wrap{grid-template-columns:minmax(0,1fr)}dialog.page .lg-wrap:focus{outline:none}dialog.page .ml-top>button[aria-label="Back to the editor"]{display:none}#edClose{margin-left:4px}
+/* the page bar: on the editor too, with the editor's toolbar below it (the arrow hides the toolbar, like Google Docs) */
+.pg-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);min-width:0}
+.pg-bar .pg-nav .brand{margin:0 6px 0 0;padding:5px 8px 5px 4px;font-size:15px}.pg-bar .brand .brand-m{display:none}
+.pg-right{display:flex;align-items:center;gap:6px;flex:none}.pg-right .acct{height:38px}.pg-right .btn.icon{width:38px;height:38px}
+#tbToggle svg{transition:transform .2s var(--ease)}.tb-min #tbToggle svg{transform:rotate(180deg)}.tb-min .top{display:none}
+@media (max-width:760px){.pg-right .acct span{display:none}.pg-right .acct{padding:0 10px}.pg-bar .brand .brand-t{display:none}.pg-bar{padding:6px 8px;gap:4px}.pg-right .btn.icon{width:34px;height:34px}}
 .vh{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
 .pg-nav{display:flex;align-items:center;gap:2px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}.pg-nav::-webkit-scrollbar{display:none}.pg-nav:focus{outline:none}
 .pg-nav a{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;color:var(--muted);font:600 14px var(--ui);text-decoration:none;white-space:nowrap;position:relative}
@@ -627,6 +633,49 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .acct{max-width:230px}.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-menu{position:fixed;top:64px;right:16px;width:300px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:14px;display:grid;gap:8px;z-index:40;animation:fade .15s var(--ease)}
 .acct-menu p{margin:0 0 4px;font-size:14px;line-height:1.45}
+/* motion: things you can click grow a touch on hover and press in on click; pages and panels ease in */
+:root{--spring:cubic-bezier(.2,.8,.2,1)}
+.btn,.pg-nav a,.pg-nav .pg-brand,.brand,.nav-it,.iv-cat,.iv-chip,.iv-seg button,.iv-view button,.seg button,.tog,.chip,.np-dd,.np-add,.np-quick button,.hm-item,.hm-top .r,.ivd-sent .r,.ivd-files a,.ivd-photos img,.iv-star,.lnk,.tiny,.lg-dot,.gchip,.cdot,.cpd-dot,.menu button,.menu .mi,.pl-card .who,.ln-it .acts button,.iv-list tr,.cp-t tbody tr,.cu,.np-icon,.np-colbtn,.lg-row .who,button.hm-kpi{transition:transform .18s var(--spring),box-shadow .2s var(--ease),background-color .15s,border-color .15s,color .15s,opacity .15s}
+@media (hover:hover){
+  .btn:hover,.pg-nav .pg-brand:hover,.brand:hover,.iv-chip:hover,.iv-seg button:hover,.iv-view button:hover,.seg button:hover,.np-dd:hover,.np-add:hover,.np-quick button:hover,.ivd-files a:hover,.np-colbtn:hover,.lg-row .who:hover,.pl-card .who:hover{transform:scale(1.04)}
+  .pg-nav a:hover,.iv-cat:hover,.lnk:hover,.gchip:hover{transform:scale(1.06)}
+  .btn.icon:hover,.tiny:hover,.iv-star:hover,.lg-dot:hover,.cdot:hover,.cpd-dot:hover,.np-icon:hover,.ln-it .acts button:hover{transform:scale(1.12)}
+  .btn.primary:hover{box-shadow:0 6px 18px rgba(14,153,63,.28)}
+  .nav-it:hover,.hm-item:hover,.hm-top .r:hover,.ivd-sent .r:hover,.menu button:hover{transform:translateX(3px)}
+  /* toggles, chips and checkbox rows are labels: they light up instead of moving, so a click can't slip between them */
+  .tog:hover,.chip:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.menu .mi:hover,.cu:hover{background:var(--raise)}
+  .iv-card:hover,.iv-card:focus-visible{transform:translateY(-3px) scale(1.015)}
+  button.hm-kpi:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 26px rgba(10,14,22,.1)}
+  .hm-card,.iv-stat,.lg-row,.pl-card{transition:transform .2s var(--spring),box-shadow .2s var(--ease),border-color .15s}
+  .lg-row:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,14,22,.08)}
+  .pl-card:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 20px rgba(10,14,22,.12)}
+  .ivd-photos img:hover{transform:scale(1.08)}
+  .iv-list tr:hover td,.cp-t tbody tr:hover td{background:var(--raise)}}
+/* pressing: only buttons dip (a shrinking toggle could slip out from under the pointer and lose the click) */
+.btn:not(:disabled):active{transform:scale(.97)}
+/* a control growing on hover must never make its panel scroll sideways (that would shift the layout under the pointer) */
+.ml-pane,#mlWrite,#mlPrev,.cpd-b,.np-page,.iv-scroll,.hm-scroll,.lg-list,.ln-form,.pl-cards,.su-body,.panel,.side,.ivd-b,.cu-list{overflow-x:hidden}
+.ml-pane,#mlWrite,#mlPrev,.cpd-b,.np-page,.iv-scroll,.hm-scroll,.lg-list,.ln-form,.pl-cards,.su-body,.panel,.ivd-b,.cu-list{scrollbar-gutter:stable}
+/* pages fade up as they open; the editor too when you come back to it */
+@keyframes pgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
+.app.pg-enter>:not(.pg-bar){animation:pgIn .3s var(--ease) both}
+/* Home: tiles and cards arrive one after another */
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.hm.anim .hm-hello,.hm.anim .hm-actions,.hm.anim .hm-kpi,.hm.anim .hm-card{animation:cardIn .42s var(--ease) both}
+.hm.anim .hm-actions{animation-delay:.04s}.hm.anim .hm-kpi:nth-child(1){animation-delay:.06s}.hm.anim .hm-kpi:nth-child(2){animation-delay:.09s}.hm.anim .hm-kpi:nth-child(3){animation-delay:.12s}.hm.anim .hm-kpi:nth-child(4){animation-delay:.15s}.hm.anim .hm-kpi:nth-child(5){animation-delay:.18s}.hm.anim .hm-kpi:nth-child(6){animation-delay:.21s}
+.hm.anim .hm-col .hm-card:nth-child(1){animation-delay:.2s}.hm.anim .hm-col .hm-card:nth-child(2){animation-delay:.26s}.hm.anim .hm-col .hm-card:nth-child(3){animation-delay:.32s}.hm.anim .hm-col .hm-card:nth-child(4){animation-delay:.38s}
+.hm.anim .hm-bar i{animation:barUp .6s var(--ease) both;animation-delay:.35s;transform-origin:bottom}@keyframes barUp{from{transform:scaleY(0)}to{transform:none}}
+.hm.anim .hm-top .track i{animation:barX .7s var(--ease) both;animation-delay:.3s;transform-origin:left}@keyframes barX{from{transform:scaleX(0)}to{transform:none}}
+/* inventory cards and pipeline cards ease in when a view first opens */
+.iv-grid.anim .iv-card,.pl-board.anim .pl-card{animation:cardIn .36s var(--ease) both}
+.iv-grid.anim .iv-card:nth-child(2){animation-delay:.03s}.iv-grid.anim .iv-card:nth-child(3){animation-delay:.06s}.iv-grid.anim .iv-card:nth-child(4){animation-delay:.09s}.iv-grid.anim .iv-card:nth-child(5){animation-delay:.12s}.iv-grid.anim .iv-card:nth-child(6){animation-delay:.15s}.iv-grid.anim .iv-card:nth-child(n+7){animation-delay:.18s}
+/* panels and menus */
+.iv-detail,.cp-detail{animation:cpin .26s var(--ease)}
+.menu:not(.hide),.acct-menu:not(.hide){animation:menuIn .16s var(--ease)}@keyframes menuIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+.toast,#toast{transition:transform .25s var(--spring),opacity .2s}
+.pg-nav a[aria-current=page]{animation:tabOn .25s var(--spring)}@keyframes tabOn{from{transform:scale(.92)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.btn:hover,.pg-nav a:hover,.iv-card:hover,.nav-it:hover,.hm-item:hover,.pl-card:hover,button.hm-kpi:hover,.lg-row:hover{transform:none!important}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* phones / small tablets */
 @media (max-width:900px){
@@ -648,7 +697,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 
 <div class="app intro" id="app" data-view="edit">
   <header class="top">
-    <button class="brand" id="navBtn" type="button" aria-haspopup="dialog" aria-controls="navDlg" title="Menu: sent emails, customers, open a sell sheet"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="brand-t">Sell Sheet Studio</span><svg class="brand-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="brand" id="navBtn" type="button" aria-haspopup="dialog" aria-controls="navDlg" title="Menu: sent emails, customers, open a sell sheet"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span><svg class="brand-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="sheetpick">
       <select class="sel" id="sheetSel" aria-label="Choose a sell sheet"></select>
       <button class="btn icon ghost" id="newSheet" title="New sell sheet" aria-label="New sell sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -812,7 +861,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 </dialog>
 <dialog id="navDlg" class="nav-dlg" aria-label="Menu">
   <div class="nav-wrap">
-    <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
+    <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Menu</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
     <nav class="nav-list" aria-label="Pages">
       <button type="button" class="nav-it" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span><b>Home</b><small id="navHome">Today at a glance</small></span></button>
       <button type="button" class="nav-it" data-nav="editor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span><b>Sell sheet editor</b><small id="navEd">Make and edit sell sheets</small></span></button>
@@ -2252,15 +2301,16 @@ function renderSync(){const el=$('#cuSync');if(!el)return;const a=authGet();
     :(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Saved privately in this browser. <b>Sign in</b> (optional) to keep them on every device.':'Saved privately in this browser. Other people who open the site can\'t see your customers.');}
 
 /* account button in the top bar (optional sign-in) */
-function renderTopAcct(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft),a=authGet();
+function renderTopAcct(){renderTopAcct0();const l=$('#acctLbl')?.textContent||'Sign in',t=$('#acctBtn')?.title||'';$$('.pg-acct').forEach(b=>{b.title=t;const s=b.querySelector('.pg-acct-lbl');if(s)s.textContent=l;});}
+function renderTopAcct0(){const b=$('#acctBtn');if(!b)return;const on=!!(EMAIL_SETUP.google||EMAIL_SETUP.microsoft),a=authGet();
   if(!on){$('#acctLbl').textContent='Sign in';b.title='Sign-in needs a one-time setup';$('#acctMenu').innerHTML=`<p><b>Sign-in isn't set up yet</b><br><span class="note">It needs a free Client ID from Google and/or Microsoft, made once in your own account. Everything else on the site works without signing in.</span></p><button class="btn sm primary" type="button" data-am="setup">Set up sign-in</button>`;return;}
   $('#acctLbl').textContent=a?(a.email||'Signed in'):'Sign in';b.title=a?`Signed in as ${a.email} (${PROV_NAME[a.prov]})`:'Sign in (optional) to keep your customers on every device';
   $('#acctMenu').innerHTML=a?`<p>Signed in as <b>${esc(a.email||'')}</b><br><span class="note">${a.prov==='google'?'Google':'Microsoft'} account. Your customers sync to it${syncing?' (syncing…)':tokGet(a.prov)?(lastSync?' (up to date)':''):'. The site reconnects by itself when you send an email or save to Drive'}.</span></p>${!tokGet(a.prov)&&!syncing?'<button class="btn sm" type="button" data-am="re">Sync now</button>':''}<button class="btn sm" type="button" data-am="out">Sign out</button>`
     :`<p><b>Sign in (optional)</b><br><span class="note">Keeps your customers on every device and lets you email sell sheets. Everything else works without signing in.</span></p>
       ${['google','microsoft'].filter(p=>EMAIL_SETUP[p]).map(p=>`<button class="btn sm" type="button" data-am="${p}">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`).join('')}
       <button class="lnk" type="button" data-am="setup" style="justify-self:start">Sign-in setup${EMAIL_SETUP.google&&EMAIL_SETUP.microsoft?'':' (add '+(EMAIL_SETUP.google?'Microsoft':'Google')+')'}</button>`;}
-$('#acctBtn').onclick=e=>{e.stopPropagation();if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});renderTopAcct();$('#acctMenu').classList.toggle('hide');};
-document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn'))$('#acctMenu').classList.add('hide');});
+$('#acctBtn').onclick=e=>{e.stopPropagation();if(e.isTrusted&&$('#acctMenu').parentNode!==document.body)document.body.appendChild($('#acctMenu'));if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});renderTopAcct();$('#acctMenu').classList.toggle('hide');};
+document.addEventListener('click',e=>{if(!e.target.closest('#acctMenu,#acctBtn,.pg-acct'))$('#acctMenu').classList.add('hide');});
 $('#acctMenu').addEventListener('click',async e=>{const b=e.target.closest('[data-am]');if(!b)return;const v=b.dataset.am;
   if(v==='out'){signOut();$('#acctMenu').classList.add('hide');return;}
   if(v==='setup'){$('#acctMenu').classList.add('hide');openSetup();return;}
@@ -3100,7 +3150,7 @@ function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;I
     ${!items.length&&!IV.busy?'<div class="iv-empty"><h3>No sell sheets in this folder yet</h3><p>Add PDF or Word sell sheets to the folder in Google Drive (Save to Drive from this site works too), then click Refresh.</p></div>'
       :!shown.length?`<div class="iv-empty"><p>${IV.status==='inactive'&&!nOff?'No inactive products. Mark a product inactive (in its panel, or tick several) to hide it from the active list without deleting anything.':'Nothing matches.'}</p></div>`
       :IV.view==='list'?`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Type / category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="num">Sent</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>{const z=ivSendStats(x),m=ivm(mk(x));return`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"${ivOn(x)?'':' style="opacity:.6"'}><td><input type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"></td><td><div class="th">${invPicHTML(x)}</div></td><td><b>${m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${ivOn(x)?'':' <span class="iv-sync">· Inactive</span>'}${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc([x.type,x.cat].filter(Boolean).join(' · '))}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="num">${z.n?`${z.n}${z.rep?` <span class="iv-sync">· ${z.rep} ↩</span>`:''}`:'<span class="iv-sync">–</span>'}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`;}).join('')}</tbody></table>`
-      :`<div class="iv-grid${IV.sel.size?' selecting':''}">${shown.map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),on=ivOn(x);return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"><button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>${on?'':'<span class="iv-off">Inactive</span>'}<div class="iv-img">${invPicHTML(x)}${x.cat||x.type?`<span class="iv-tag">${esc([x.type,x.cat].filter(Boolean).join(' · '))}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
+      :`<div class="iv-grid${IV.sel.size?' selecting':''}${IV.anim?' anim':''}">${shown.map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),on=ivOn(x);return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"><button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>${on?'':'<span class="iv-off">Inactive</span>'}<div class="iv-img">${invPicHTML(x)}${x.cat||x.type?`<span class="iv-tag">${esc([x.type,x.cat].filter(Boolean).join(' · '))}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
         <div class="iv-info">${x.sum?.code?`<span class="iv-code">${esc(x.sum.code)}</span>`:''}<h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}
           ${x.sum?.price?`<span class="iv-price">${esc(x.sum.price)}</span>`:''}${x.sum&&(x.sum.pcs||x.sum.boxes)?`<span class="iv-meta"><span><b>${ivNF.format(x.sum.pcs)}</b> pcs</span><span><b>${ivNF.format(x.sum.boxes)}</b> box${x.sum.boxes===1?'':'es'}</span>${x.sum.sizes?.length&&x.sum.showSizes?`<span>${esc(x.sum.sizes.join(' · '))}</span>`:''}</span>`:''}${swDots(x.sum?.colours||[])}<span class="iv-sent">${z.n?`Sent to <b>${z.n}</b> · ${z.rep?`<span class="rp">${z.rep} replied</span>`:'no replies yet'}`:'Not sent yet'}</span></div></div>`;}).join('')}</div>`}`;
   $('#ivScroll').scrollTop=scroll;if(focus==='ivQ'){const q=$('#ivQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
@@ -3135,7 +3185,7 @@ async function invOpenSheet(x,thenEmail,pick){let t;try{t=await invToken(true);}
   const f=x.files.find(f=>f.kind!=='JPG'&&f.kind!=='PNG');if(!f)return;toast('Opening '+invTitle(x)+'…',20000);
   try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail){openMail();if(pick){CU.sel=new Set(pick);renderCust(true);toast(`${pick.length} customer${pick.length>1?'s':''} ticked: everyone who hasn't had this sell sheet. Untick anyone you don't want, then Send.`,7000);}}}
   catch(e){toast(e.message||'Couldn\'t open that sell sheet.',5000);}}
-async function openInv(){pageShown('inventory');if(!invDlg.open)invDlg.showModal();if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
+async function openInv(){pageShown('inventory');if(!invDlg.open){invDlg.showModal();IV.anim=true;setTimeout(()=>{IV.anim=false;$('#ivBody .iv-grid')?.classList.remove('anim');},900);}if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
   renderInv();if(IV.folder&&!IV.busy&&Date.now()-IV.last>3*60e3){const t=await invToken(false);if(t)invSync(false);else{IV.err='signin';renderInv();}}}
 invDlg.addEventListener('click',async e=>{const t=e.target;
   const sb=t.closest('[data-ivsel]');if(sb){sb.checked?IV.sel.add(sb.dataset.ivsel):IV.sel.delete(sb.dataset.ivsel);renderInv();return;}
@@ -3283,7 +3333,7 @@ function renderPipe(){if(!plDlg.open)return;const th=plThreads(),by=new Map(PL_C
     <div class="pl-cards">${l.length?l.slice(0,150).map(card).join(''):'<div class="pl-empty">Drag a customer here</div>'}${l.length>150?`<div class="pl-empty">and ${l.length-150} more: search to narrow down</div>`:''}</div></section>`;}).join('');
   $('#plBoard').scrollLeft=sc;}
 function plSet(id,patch){lgLoad();const e=LG.list.find(x=>x.id===id);if(!e)return;Object.assign(e,patch,{upd:Date.now()});lgSave();}
-async function openPipe(){pageShown('pipeline');if(!plDlg.open)plDlg.showModal();renderPipe();}
+async function openPipe(){pageShown('pipeline');const fresh=!plDlg.open;if(!plDlg.open)plDlg.showModal();renderPipe();if(fresh){const b=$('#plBoard');b.classList.add('anim');setTimeout(()=>b.classList.remove('anim'),900);}}
 plDlg.addEventListener('input',e=>{if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}});
 plDlg.addEventListener('change',e=>{const t=e.target;
   if(t.id==='plDays'){PL.days=+t.value;renderPipe();}else if(t.id==='plSheet'){PL.sheet=t.value;renderPipe();}
@@ -3358,7 +3408,7 @@ function renderHome(){if(!homeDlg.open)return;const D=homeData(),a=authGet();
     <div class="hm-card"><h4>Customers<button class="lnk" type="button" data-hm="cust">Open</button></h4><div class="hm-mini"><div><small>Customers</small><b>${ivNF.format(D.cust.n)}</b></div><div><small>Groups</small><b>${ivNF.format(D.cust.groups)}</b></div><div><small>Without a name</small><b>${ivNF.format(D.cust.nn)}</b></div></div></div>
   </div></div>
   <label class="hm-foot"><input type="checkbox" id="hmStart" ${lsGet('ss-home-start')!=='0'?'checked':''}> Open on Home (untick to open on the sell sheet editor)</label>`;}
-async function openHome(){pageShown('home');if(!homeDlg.open)homeDlg.showModal();if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}renderHome();}
+async function openHome(){pageShown('home');const fresh=!homeDlg.open;if(!homeDlg.open)homeDlg.showModal();if(fresh){const h=$('#hmBody');h.classList.remove('anim');requestAnimationFrame(()=>h.classList.add('anim'));setTimeout(()=>h.classList.remove('anim'),1400);}if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}renderHome();}
 homeDlg.addEventListener('click',e=>{const t=e.target,b=t.closest('[data-hm]');
   const w=t.closest('[data-hmwho]');if(w){lgF.q=w.dataset.hmwho;lgF.status='';homeDlg.close();openLog();return;}
   const sh=t.closest('[data-hmsheet]');if(sh){lgF.q=sh.dataset.hmsheet;lgF.status='';homeDlg.close();openLog();return;}
@@ -3633,19 +3683,36 @@ const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAG
 // a page is being shown: close the other pages and put its address in the bar
 function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
   if(pageNow()!==name)history[location.hash?'pushState':'replaceState'](null,'','#'+name);
-  $$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
-const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b></button>${['home','editor','inventory','pipeline','sent','customers'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
-for(const[name,[id]]of Object.entries(PAGES)){const d=$('#'+id);d.classList.add('page');const top=d.querySelector('.ml-top'),h=top.querySelector('h2');h.classList.add('vh');h.insertAdjacentHTML('afterend',NAV_HTML);
-  const x=top.querySelector('button[aria-label=Close]');if(x){x.setAttribute('aria-label','Back to the editor');x.title='Back to the sell sheet editor';}
+  navCur(name);}
+function navCur(name){$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
+const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span></button>${['home','editor','inventory','pipeline','sent','customers'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
+// light/dark and the account button, on every page (copies that work the editor's own buttons)
+const PG_RIGHT=`<span class="pg-right"><button class="btn icon ghost pg-theme" type="button" title="Switch light / dark" aria-label="Switch light / dark">${$('#themeBtn').innerHTML}</button><button class="btn ghost acct pg-acct" type="button">${$('#acctBtn').innerHTML.replace('id="acctLbl"','class="pg-acct-lbl"')}</button></span>`;
+for(const[name,[id]]of Object.entries(PAGES)){const d=$('#'+id);d.classList.add('page');const w=d.querySelector('.lg-wrap');w.tabIndex=-1;w.autofocus=true;const top=d.querySelector('.ml-top'),h=top.querySelector('h2');h.classList.add('vh');h.insertAdjacentHTML('afterend',NAV_HTML);
+  const x=top.querySelector('button[aria-label=Close]');if(x){x.setAttribute('aria-label','Back to the editor');x.title='Back to the sell sheet editor';x.insertAdjacentHTML('beforebegin',PG_RIGHT);}
   // Esc doesn't leave a page (it still closes panels inside it)
   d.addEventListener('cancel',e=>{e.preventDefault();});
   // closed (✕, or a button that goes back to the editor): the address follows, unless another page is opening
   d.addEventListener('close',()=>{if(PG.routing||PG.hold)return;setTimeout(()=>{if(PG.hold||Object.values(PAGES).some(([i])=>$('#'+i).open))return;if(pageNow()===name)history.pushState(null,'','#editor');},0);});}
-function route(){const n=pageNow();if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&lsGet('ss-home-start')!=='0'){openHome();return;}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
+function route(){const n=pageNow();if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&lsGet('ss-home-start')!=='0'){openHome();return;}navCur('editor');if(Object.values(PAGES).some(([i])=>$('#'+i).open)){const ap=$('#app');ap.classList.remove('pg-enter');void ap.offsetWidth;ap.classList.add('pg-enter');setTimeout(()=>ap.classList.remove('pg-enter'),400);}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
 window.addEventListener('popstate',route);
 // the tabs: plain links, so Ctrl/⌘-click or middle-click opens a page in a new browser tab
 document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
   if(n==='editor'){goEditor();return;}if(n!==pageNow())PAGES[n][2]();});
+// the editor gets the same bar: menu, tabs, light/dark, account, and the arrow that hides the toolbar
+(()=>{const bar=document.createElement('div');bar.className='pg-bar';bar.id='edBar';bar.innerHTML=NAV_HTML;const nav=bar.querySelector('.pg-nav');
+  nav.querySelector('[data-pgmenu]').replaceWith($('#navBtn'));
+  const right=document.createElement('span');right.className='pg-right';right.append($('#themeBtn'),$('#acctBtn'));
+  right.insertAdjacentHTML('beforeend','<button class="btn icon ghost" id="tbToggle" type="button" aria-controls="edTop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button>');
+  bar.append(right);const top=$('#app .top');top.id='edTop';top.before(bar);
+  const setTb=min=>{$('#app').classList.toggle('tb-min',min);const b=$('#tbToggle');b.setAttribute('aria-expanded',String(!min));b.title=min?'Show the toolbar (Ctrl+Shift+F)':'Hide the toolbar (Ctrl+Shift+F)';b.setAttribute('aria-label',min?'Show the toolbar':'Hide the toolbar');lsSet('ss-tb-min',min?'1':'0');};
+  setTb(lsGet('ss-tb-min')==='1');$('#tbToggle').onclick=()=>setTb(!$('#app').classList.contains('tb-min'));
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='f'&&!document.querySelector('dialog[open]')){e.preventDefault();setTb(!$('#app').classList.contains('tb-min'));}});})();
+document.addEventListener('click',e=>{if(e.target.closest('.pg-theme'))$('#themeBtn').click();
+  const a=e.target.closest('.pg-acct');if(a){e.stopPropagation();const m=$('#acctMenu'),host=a.closest('dialog')||document.body;if(m.parentNode!==host)host.appendChild(m);$('#acctBtn').click();}},true);
+// every pop-up has a ✕ top right; it closes the pop-up and leaves you on the page underneath
+$('#editor .ed-top').insertAdjacentHTML('beforeend','<button class="btn icon sm ghost" id="edClose" type="button" aria-label="Close" title="Close (keeps the photo as it was)">✕</button>');
+$('#edClose').onclick=()=>$('#edCancel').click();
 // the top-left logo on every page opens the side panel
 document.addEventListener('click',e=>{if(e.target.closest('[data-pgmenu]'))openNav();});
 // the sell sheet editor: its own address (#editor), all pages closed
