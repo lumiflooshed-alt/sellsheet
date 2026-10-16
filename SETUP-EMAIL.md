@@ -37,7 +37,8 @@ Your site addresses (add every one you use):
    - To remove that screen for everyone you'd have to submit the app for Google's verification. That's only needed if you open it to the public.
 5b. Go to **Data Access → Add or remove scopes** and tick **Gmail API · `.../auth/gmail.readonly`** (paste `https://www.googleapis.com/auth/gmail.readonly` into **Manually add scopes** if it isn't listed). Click **Update**, then **Save**.
    - This lets the Sent list spot replies from customers (see "Reply checking" below). The site only looks at emails from people you've sent sell sheets to.
-   - Google calls this a *restricted* scope. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
+   - Also add **Google Drive API · `.../auth/drive.readonly`** (`https://www.googleapis.com/auth/drive.readonly`). It's for the **Inventory** page, which reads the sell sheets in a folder you choose. It's only asked for the first time you open Inventory. Nothing in your Drive is changed.
+   - Google calls these *restricted* scopes. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
 6. Go to **Clients → Create client**:
    - Application type: **Web application**. Name: `Sell Sheet Studio`.
    - **Authorized JavaScript origins**: click **Add URI** and enter `https://lumiflooshed-alt.github.io`. Add your Cloudflare address too if you have one, e.g. `https://YOUR-NAME.pages.dev`.
@@ -163,3 +164,13 @@ Client IDs are not passwords. They're meant to be public and only work from the 
   - Checks only run while the site is open in a tab.
   - Google's sign-in lasts an hour and can only be renewed with a click. After that, checking pauses until you send an email, sign in, or click **Sent → Check now**.
   - Follow-up date reminders don't need Gmail, so they keep working.
+
+## Inventory (Google Drive folder)
+
+- Open the logo menu → **Inventory**, then choose the Drive folder where you keep your sell sheets. You can also paste the folder's link.
+- Every sell sheet in that folder and its subfolders becomes a product card: picture, item code, price, pieces, boxes and colours.
+  - Subfolders become categories, e.g. *Mens* and *Ladies*.
+  - Files with the same name in different formats (PDF, Word, JPG) are shown as one product.
+- Sell sheets made with this site are read exactly. Other PDF and Word sheets are read as well as their layout allows. Pictures (JPG/PNG) are shown as they are.
+- What's read is kept in this browser, so the page opens instantly and works offline. **Refresh** reads only files that changed.
+- Click a product to see its colours and sizes table and details. From there, **Open in editor** or **Email this sell sheet**.

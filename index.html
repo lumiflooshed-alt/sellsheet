@@ -40,6 +40,50 @@ svg{flex:none}
 .nav-it:hover,.nav-it:focus-visible{background:var(--raise);outline:none}.nav-it svg{width:20px;height:20px;flex:none;color:var(--accent)}
 .nav-it span{display:grid;gap:1px;min-width:0}.nav-it.nav-sub{padding:7px 12px 7px 44px}.nav-it.nav-sub b{font-size:14px;font-weight:600;color:var(--muted)}.nav-it.nav-sub svg{width:16px;height:16px}.nav-it b{font-size:15px}.nav-it small{color:var(--muted);font-size:12.5px}.nav-list .menu-h{padding-top:16px}
 #custDlg{width:min(1500px,calc(100vw - 24px));height:min(900px,calc(100vh - 24px))}
+#invDlg{width:min(1500px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+.iv-wrap{grid-template-rows:auto auto minmax(0,1fr)}
+.iv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise);font-size:13.5px}.iv-bar:empty{display:none}
+.iv-bar .spacer{flex:1 1 0}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
+.iv-sync{color:var(--muted)}.iv-prog{display:inline-flex;align-items:center;gap:8px;color:var(--muted)}.iv-prog i{display:block;width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.iv-prog i b{display:block;height:100%;background:var(--accent);transition:width .3s}
+.iv-main{position:relative;min-height:0;display:grid}.iv-scroll{overflow:auto;min-height:0;padding:18px 18px 28px}
+.iv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.iv-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.iv-stat small{display:block;color:var(--muted);font-size:12.5px;font-weight:600;letter-spacing:.02em}.iv-stat b{display:block;font:700 24px/1.2 var(--ui);margin-top:4px;font-variant-numeric:tabular-nums}
+.iv-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}.iv-tools #ivQ{flex:1 1 260px;min-width:0;height:38px}.iv-tools select{height:38px;width:auto}
+.iv-cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.iv-cats:empty{display:none}
+.iv-cat{border:1px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 13px var(--ui);cursor:pointer}.iv-cat small{color:var(--muted);font-weight:500;margin-left:4px}.iv-cat[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--panel)}.iv-cat[aria-pressed=true] small{color:inherit;opacity:.7}
+.iv-view{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}.iv-view button{border:0;background:var(--panel);padding:0 12px;height:36px;font:600 13px var(--ui);color:var(--muted);cursor:pointer}.iv-view button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent)}
+.iv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.iv-card{display:flex;flex-direction:column;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;padding:0;font:inherit;color:inherit;transition:transform .15s var(--ease),box-shadow .15s var(--ease),border-color .15s}
+.iv-card:hover,.iv-card:focus-visible{transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,14,22,.12);border-color:var(--line2);outline:none}.iv-card.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.iv-img{position:relative;aspect-ratio:4/5;background:var(--raise);display:grid;place-items:center;overflow:hidden;border-bottom:1px solid var(--line)}.iv-img img{width:100%;height:100%;object-fit:cover;object-position:top}.iv-img img.contain{object-fit:contain;background:#fff}
+.iv-ph{display:grid;place-items:center;width:100%;height:100%;font:700 34px var(--ui);color:#fff;background:var(--c,#1F2A44);letter-spacing:.04em}
+.iv-img .iv-tag{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);color:#111;border-radius:999px;padding:3px 9px;font:600 11.5px var(--ui);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.iv-img .iv-fmt{position:absolute;bottom:10px;right:10px;display:flex;gap:4px}.iv-img .iv-fmt span{background:rgba(10,10,10,.72);color:#fff;border-radius:6px;padding:2px 6px;font:700 10.5px var(--mono)}
+.iv-skel{width:100%;height:100%;background:linear-gradient(100deg,var(--raise) 30%,var(--line) 50%,var(--raise) 70%);background-size:300% 100%;animation:ivsk 1.3s linear infinite}@keyframes ivsk{to{background-position:-100% 0}}
+.iv-info{padding:12px 14px 14px;display:grid;gap:6px}.iv-info h4{margin:0;font:700 15px/1.3 var(--ui);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.iv-code{font:600 12px var(--mono);color:var(--muted);letter-spacing:.03em}.iv-meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted)}.iv-meta b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.iv-price{font:700 14px var(--ui);color:var(--accent)}
+.iv-sw{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.iv-sw i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.18);background:var(--c)}.iv-sw i.q{background:conic-gradient(#e5e5e5 0 25%,#bbb 0 50%,#e5e5e5 0 75%,#bbb 0)}.iv-sw small{color:var(--muted);font-size:12px;margin-left:2px}
+.iv-bad{color:var(--warn);font-size:12.5px}
+.iv-list{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}.iv-list th{position:sticky;top:-18px;background:var(--bg);text-align:left;font:600 12px var(--ui);color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);z-index:1}
+.iv-list td{padding:8px 10px;border-bottom:1px solid var(--line);background:var(--panel);vertical-align:middle}.iv-list tr{cursor:pointer}.iv-list tr:hover td{background:var(--raise)}.iv-list tr.on td{background:var(--accent-soft)}
+.iv-list .th{width:44px;height:55px;border-radius:6px;overflow:hidden;background:var(--raise);display:grid;place-items:center}.iv-list .th img{width:100%;height:100%;object-fit:cover;object-position:top}.iv-list .th .iv-ph{font-size:14px}
+.iv-list .num{text-align:right;font-variant-numeric:tabular-nums}
+.iv-empty{max-width:560px;margin:40px auto;text-align:center;display:grid;gap:12px;justify-items:center}.iv-empty svg{width:56px;height:56px;color:var(--accent)}.iv-empty h3{margin:0;font-size:20px}.iv-empty p{margin:0;color:var(--muted);line-height:1.5}
+.iv-empty .row{display:flex;gap:8px;width:100%;max-width:460px}.iv-empty .row .in{flex:1;min-width:0}
+.iv-detail{position:absolute;top:0;right:0;bottom:0;width:min(900px,100%);z-index:6;border-left:1px solid var(--line);box-shadow:-18px 0 40px rgba(10,14,22,.2);background:var(--panel);display:grid;grid-template-rows:minmax(0,1fr) auto;animation:cpin .2s var(--ease)}
+.ivd-b{overflow:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;padding:22px 24px}
+.ivd-pv{background:var(--raise);border:1px solid var(--line);border-radius:12px;overflow:hidden;align-self:start;position:sticky;top:0}.ivd-pv img{display:block;width:100%;height:auto;background:#fff}.ivd-pv .iv-ph{aspect-ratio:4/5}
+.ivd-photos{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.ivd-photos img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
+.ivd-h h3{margin:0 0 4px;font:700 22px/1.25 var(--ui)}.ivd-h .iv-code{font-size:13px}.ivd-h .iv-price{font-size:18px;margin-top:6px;display:block}
+.ivd-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}.ivd-kpis div{background:var(--raise);border-radius:10px;padding:10px 12px}.ivd-kpis small{display:block;color:var(--muted);font-size:12px;font-weight:600}.ivd-kpis b{font:700 18px var(--ui);font-variant-numeric:tabular-nums}
+.ivd-sec{margin-top:18px}.ivd-sec h4{margin:0 0 8px;font:700 12.5px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.ivd-t{width:100%;border-collapse:collapse;font-size:13.5px}.ivd-t th,.ivd-t td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}.ivd-t th{font-weight:600;color:var(--muted);font-size:12px}.ivd-t td:first-child,.ivd-t th:first-child{text-align:left}.ivd-t tr.tot td{font-weight:700;background:var(--raise)}
+.ivd-t td:first-child i{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);border:1px solid rgba(0,0,0,.18);margin-right:7px;vertical-align:-1px}
+.ivd-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px}.ivd-kv dt{color:var(--muted)}.ivd-kv dd{margin:0;overflow-wrap:anywhere}
+.ivd-files{display:flex;flex-wrap:wrap;gap:6px}.ivd-files a{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line2);border-radius:8px;padding:5px 10px;font:600 13px var(--ui);color:var(--ink);text-decoration:none}.ivd-files a:hover{border-color:var(--accent);color:var(--accent)}
+.ivd-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 24px;border-top:1px solid var(--line);background:var(--raise)}.ivd-f .spacer{flex:1}
+@media (max-width:760px){.iv-detail{position:fixed;inset:0;width:100%;z-index:20}.ivd-b{grid-template-columns:1fr;padding:16px}.ivd-pv{position:static}.iv-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}.iv-stats{grid-template-columns:repeat(3,1fr);gap:8px}.iv-stat{padding:10px}.iv-stat b{font-size:19px}.iv-info{padding:10px}.iv-scroll{padding:12px}.iv-list .hide-sm{display:none}}
 .cp-tools #cpQ{flex:1 1 280px;min-width:0;height:38px}.cp-tools .spacer{flex:1 1 0}
 .cp-main{display:grid;grid-template-columns:minmax(0,1fr);min-height:0}
 .cp-tw{overflow:auto;min-height:0}
@@ -691,6 +735,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
   <div class="nav-wrap">
     <div class="nav-h"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><b>Sell Sheet Studio</b><button class="btn icon sm ghost" id="navClose" type="button" aria-label="Close menu">✕</button></div>
     <nav class="nav-list" aria-label="Pages">
+      <button type="button" class="nav-it" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><span><b>Inventory</b><small id="navInv"></small></span></button>
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
       <button type="button" class="nav-it nav-sub" data-nav="cust-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span><b>New customer</b></span></button>
@@ -698,6 +743,13 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
       <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
       <button type="button" class="nav-it" data-nav="open-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l6 11-4 7H6l-4-7z"/><path d="M8 3l6 11M2 14h20M16 3L10 14"/></svg><span><b>From Google Drive</b><small>PDF, Word or Google Docs</small></span></button>
     </nav>
+  </div>
+</dialog>
+<dialog id="invDlg" aria-label="Inventory">
+  <div class="lg-wrap iv-wrap">
+    <div class="ml-top"><h2>Inventory</h2><span class="note" id="ivSum"></span><button class="btn icon sm ghost" id="ivClose" type="button" aria-label="Close">✕</button></div>
+    <div class="iv-bar" id="ivBar"></div>
+    <div class="iv-main"><div class="iv-scroll" id="ivScroll"><div id="ivBody"></div></div><aside class="iv-detail" id="ivDetail" hidden aria-label="Product details"></aside></div>
   </div>
 </dialog>
 <dialog id="custDlg" aria-label="Customers">
@@ -1977,7 +2029,7 @@ for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMod
    that closes by itself (no clicks) once permission has been given. */
 const PROV_NAME={google:'Gmail',microsoft:'Outlook'};
 // read-only Gmail access, used only to spot replies from customers you've sent sell sheets to
-const GMAIL_READ='https://www.googleapis.com/auth/gmail.readonly';
+const GMAIL_READ='https://www.googleapis.com/auth/gmail.readonly',DRIVE_READ='https://www.googleapis.com/auth/drive.readonly';
 const lsJ=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}},lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
 const authGet=()=>{const a=lsJ('ss-acct');return a&&a.prov?a:null;};
 const authSet=a=>a?lsSet('ss-acct',JSON.stringify({prov:a.prov,email:a.email||''})):lsDel('ss-acct');
@@ -1997,8 +2049,8 @@ async function msRefresh(){const o=toksAll().microsoft;if(!o?.rt||!EMAIL_SETUP.m
 async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh():null);}
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
-function googleLogin(choose,hint){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
-  const scope='openid email profile https://www.googleapis.com/auth/gmail.send '+GMAIL_READ+' https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
+function googleLogin(choose,hint,extra){return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
+  const scope='openid email profile https://www.googleapis.com/auth/gmail.send '+GMAIL_READ+' https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file'+(extra?' '+extra.join(' '):'');
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
       if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/gmail.send')){rej(new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.'));return;}
@@ -2021,8 +2073,8 @@ async function msLogin(choose,hint){const w=window.open('about:blank','ss-login'
     const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:email||hint||'',rt:j.refresh_token||''};tokSet('microsoft',t);return t;}
   catch(e){try{w.close();}catch(_){}throw e;}}
 // signs in as the site's account (customers and sent log sync to it). Reuses or renews the current sign-in first, unless fresh.
-async function login(p,choose,fresh){const before=cuKey(),hint=choose?'':meFor(p);
-  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint):msLogin(choose,hint));
+async function login(p,choose,fresh,extra){const before=cuKey(),hint=choose?'':meFor(p);
+  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint,extra):msLogin(choose,hint));
   authSet({prov:p,email:t.email});afterLogin(before);return t;}
 function afterLogin(prevKey){const a=authGet();if(!a)return;
   // the first time an account signs in on this browser, copy the customers saved here into it
@@ -2703,16 +2755,194 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
   catch(e){console.error(e);toast(e.message||'Could not open that file from Google Drive.',6000);return null;}
   finally{open.forEach(d=>{if(!d.open)d.showModal();});if(custDlg.open)renderCP();}}
 
+/* ---------- inventory: a Google Drive folder of sell sheets, shown as products ----------
+   Reads every sell sheet (PDF, Word, Google Docs, JPG/PNG) in the chosen folder and its subfolders (subfolders become categories).
+   Files with the same name in different formats (e.g. "ABC-1 Sell Sheet.pdf" and ".docx") are one product.
+   What's read is kept in this browser (IndexedDB "ss-inv"), so the page opens instantly and works offline; only changed files are read again.
+   Needs read-only Drive access (asked for the first time the page connects). */
+const invDlg=$('#invDlg');
+const IV={folder:(()=>{try{const f=JSON.parse(lsGet('ss-inv-folder')||'null');return f&&f.id?f:null;}catch(_){return null;}})(),items:[],busy:false,prog:null,err:'',last:+lsGet('ss-inv-sync')||0,
+  q:'',cat:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map()};
+const INV_MIMES={'application/pdf':'PDF','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'Word','application/vnd.google-apps.document':'Doc','image/jpeg':'JPG','image/png':'PNG'};
+const INV_RANK={PDF:0,Word:1,Doc:2,JPG:3,PNG:4};
+let invDbp=null;
+function invDb(){return invDbp||(invDbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('ss-inv',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('items',{keyPath:'key'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));}
+async function invAll(){try{const d=await invDb();return await new Promise(res=>{const q=d.transaction('items').objectStore('items').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);});}catch(_){return[];}}
+async function invPut(list,dropKeys=[]){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite'),os=t.objectStore('items');for(const x of list)os.put(x);for(const k of dropKeys)os.delete(k);t.oncomplete=res;t.onerror=res;t.onabort=res;});}catch(_){}}
+async function invClear(){try{const d=await invDb();await new Promise(res=>{const t=d.transaction('items','readwrite');t.objectStore('items').clear();t.oncomplete=res;t.onerror=res;});}catch(_){}}
+// a Google token that can read Drive (asks once)
+async function invToken(interactive){const t=tokGet('google');if(t&&hasScope(t,DRIVE_READ))return t;if(!interactive)return null;
+  const a=authGet(),n=a&&a.prov!=='google'?await googleLogin(false,meFor('google'),[DRIVE_READ]):await login('google',false,true,[DRIVE_READ]);
+  if(!hasScope(n,DRIVE_READ))throw new Error('Google didn\'t give permission to read your Drive. Try again and allow "See and download all your Google Drive files".');return n;}
+const folderIdFrom=v=>{v=String(v||'').trim();const m=v.match(/\/folders\/([\w-]{10,})/)||v.match(/[?&]id=([\w-]{10,})/)||v.match(/^([\w-]{20,})$/);return m?m[1]:'';};
+// the base product name of a file: "ABC-1 Sell Sheet.pdf" → "abc-1"
+const invBase=n=>String(n||'').replace(/\.(pdf|docx?|jpe?g|png)$/i,'').replace(/\s*[-–]?\s*sell\s*sheet\s*$/i,'').replace(/\s*\(\d+\)$/,'').trim();
+async function invList(t,folder){const out=[],seen=new Set();
+  const walk=async(id,path,depth)=>{if(seen.has(id)||out.length>=800)return;seen.add(id);let page='';
+    do{const q=encodeURIComponent(`'${qs(id)}' in parents and trashed=false`);
+      const j=await driveFetch(t,`https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=200&supportsAllDrives=true&includeItemsFromAllDrives=true&fields=nextPageToken,files(id,name,mimeType,modifiedTime,size,webViewLink)${page?'&pageToken='+encodeURIComponent(page):''}`);
+      for(const f of j.files||[]){if(f.mimeType===FOLDER_MIME){if(depth<3)await walk(f.id,[...path,f.name],depth+1);}else if(INV_MIMES[f.mimeType])out.push({...f,cat:path[0]||'',path:path.join(' / ')});}
+      page=j.nextPageToken||'';}while(page);};
+  await walk(folder.id,[],0);return out;}
+async function invDownload(t,f){const ex=f.mimeType==='application/vnd.google-apps.document';
+  const url=ex?`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}/export?mimeType=${encodeURIComponent('application/vnd.openxmlformats-officedocument.wordprocessingml.document')}`:`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&supportsAllDrives=true`;
+  let r;try{r=await fetch(url,{headers:{Authorization:'Bearer '+t.token}});}catch(_){throw new Error('Could not reach Google Drive.');}
+  if(!r.ok){const e=await httpErr('Drive',r);if(r.status===401)tokSet('google',null);throw e;}
+  const blob=await r.blob();return new File([blob],ex?f.name+'.docx':f.name,{type:ex?'application/vnd.openxmlformats-officedocument.wordprocessingml.document':f.mimeType});}
+// small JPEG pictures for the cards
+async function shrink(src,w){try{const bm=await createImageBitmap(src instanceof Blob?src:await (await fetch(src)).blob());const sc=Math.min(1,w/bm.width),c=document.createElement('canvas');c.width=Math.round(bm.width*sc);c.height=Math.round(bm.height*sc);
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.imageSmoothingQuality='high';x.drawImage(bm,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.82);}catch(_){return'';}}
+async function pdfPage1(buf,w){try{await loadScript('pdfjs');const L=window.pdfjsLib;L.GlobalWorkerOptions.workerSrc=LIBS.pdfjs.replace(/pdf(\.min)?\.js$/,'pdf.worker$1.js');
+  const pdf=await L.getDocument({data:new Uint8Array(buf.slice(0)),isEvalSupported:false}).promise,pg=await pdf.getPage(1),vp0=pg.getViewport({scale:1}),vp=pg.getViewport({scale:w/vp0.width});
+  const c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:x,viewport:vp}).promise;pdf.destroy?.();return c.toDataURL('image/jpeg',.82);}catch(_){return'';}}
+// the numbers on one sheet (calc() and priceText() work on the open sheet, so borrow S for a moment)
+function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
+    return{title:sh.title||'',code:sh.code||'',price:priceText(),pcs:c.T.tot||0,boxes:c.T.boxes||0,sizes:sh.sizes.filter(Boolean),showSizes:sh.showSizes!==false,
+      colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot})),totQ:c.T.q,
+      details:sh.rows.map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
+  catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
+async function invRead(t,group){const f=group.files[0],out={key:group.key,file:f.id,mod:f.modifiedTime,cat:group.cat,path:group.path,name:group.name,files:group.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name})),updated:Math.max(...group.files.map(x=>Date.parse(x.modifiedTime)||0))};
+  try{const file=await invDownload(t,f),kind=INV_MIMES[f.mimeType];
+    if(kind==='JPG'||kind==='PNG'){out.thumb=await shrink(file,480);out.kind='image';return out;}
+    const buf=kind==='PDF'?await file.arrayBuffer():null;
+    if(buf)out.thumb=await pdfPage1(buf,480);
+    try{const sh=await readSheetFile(file);out.sum=sheetSummary(sh);out.how=sh._how;if(sh.photos?.length){out.photo=await shrink(sh.photos[0].url,480);out.photos=(await Promise.all(sh.photos.slice(0,6).map(p=>shrink(p.url,160)))).filter(Boolean);}}
+    catch(e){out.bad=e.message==='notsheet'||e.message==='nodata'?'Not recognised as a sell sheet':e.message==='notext'?'A picture-only PDF: nothing to read':'Couldn\'t be read';}
+    return out;}
+  catch(e){out.bad=e.status===401?'Sign-in expired':'Couldn\'t download';out.retry=true;return out;}}
+async function invSync(interactive){if(IV.busy||!IV.folder)return;let t;
+  try{t=await invToken(interactive);}catch(e){IV.err=e.message;renderInv();return;}
+  if(!t){IV.err='signin';renderInv();return;}
+  IV.busy=true;IV.err='';IV.prog={done:0,total:0,phase:'list'};renderInv();
+  try{const files=await invList(t,IV.folder),groups=new Map();
+    for(const f of files){const base=invBase(f.name),k=(f.path+'|'+base).toLowerCase();if(!groups.has(k))groups.set(k,{key:k,name:base||f.name,cat:f.cat,path:f.path,files:[]});groups.get(k).files.push(f);}
+    for(const g of groups.values())g.files.sort((a,b)=>INV_RANK[INV_MIMES[a.mimeType]]-INV_RANK[INV_MIMES[b.mimeType]]);
+    const cached=new Map(IV.items.map(x=>[x.key,x])),keep=[],todo=[];
+    for(const g of groups.values()){const c=cached.get(g.key),f=g.files[0];
+      if(c&&!c.retry&&c.file===f.id&&c.mod===f.modifiedTime){keep.push({...c,cat:g.cat,path:g.path,files:g.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name})),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0))});}else todo.push(g);}
+    const gone=[...cached.keys()].filter(k=>!groups.has(k));
+    IV.items=[...keep,...todo.map(g=>({key:g.key,name:g.name,cat:g.cat,path:g.path,files:g.files.map(x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,name:x.name})),updated:Math.max(...g.files.map(x=>Date.parse(x.modifiedTime)||0)),pending:true}))];
+    IV.prog={done:0,total:todo.length,phase:'read'};renderInv();await invPut(keep,gone);
+    let i=0;const next=async()=>{while(i<todo.length){const g=todo[i++],it=await invRead(t,g);const at=IV.items.findIndex(x=>x.key===g.key);if(at>=0)IV.items[at]=it;await invPut([it]);IV.prog.done++;invSoon();}};
+    await Promise.all([next(),next(),next()]);
+    IV.last=Date.now();lsSet('ss-inv-sync',String(IV.last));}
+  catch(e){console.error(e);IV.err=e.status===404?'That folder can\'t be found. It may have been moved or deleted, or shared with a different Google account.':e.message||'Couldn\'t read the folder.';}
+  finally{IV.busy=false;IV.prog=null;renderInv();}}
+let invT=0;const invSoon=()=>{clearTimeout(invT);invT=setTimeout(renderInv,120);};
+async function invSetFolder(f){if(IV.folder?.id!==f.id){IV.items=[];IV.full.clear();await invClear();}IV.folder={id:f.id,name:f.name};lsSet('ss-inv-folder',JSON.stringify(IV.folder));IV.cat='';IV.open=null;await invSync(true);}
+async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn\'t set up yet. Click Sign in → Set up sign-in.',5000);return;}
+  let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
+  if(!EMAIL_SETUP.googleApiKey){$('#ivLink')?.focus();toast('Paste the folder\'s link from Google Drive (the picker needs a Google API key).',5000);return;}
+  invDlg.close();let f=null;
+  try{await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
+    const P=google.picker,view=(label,fn)=>{let v=new P.DocsView(P.ViewId.FOLDERS).setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(FOLDER_MIME);v=fn(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
+    f=await new Promise(res=>{new P.PickerBuilder().setTitle('Choose the folder with your sell sheets')
+      .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('Shared with me',v=>v.setOwnedByMe?v.setOwnedByMe(false):v)).enableFeature(P.Feature.SUPPORT_DRIVES)
+      .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
+      .setCallback(d=>{if(d.action===P.Action.PICKED){const x=d.docs?.[0];res(x?{id:x.id,name:x.name}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
+  catch(e){toast(e.message,5000);}
+  finally{if(!invDlg.open)invDlg.showModal();}
+  if(f)await invSetFolder(f);}
+async function invUseLink(v){const id=folderIdFrom(v);if(!id){toast('That doesn\'t look like a Google Drive folder link.',4000);return;}
+  let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
+  try{const f=await driveFetch(t,`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}?supportsAllDrives=true&fields=id,name,mimeType`);
+    if(f.mimeType!==FOLDER_MIME){toast(`“${f.name}” is a file, not a folder.`,4000);return;}await invSetFolder(f);}
+  catch(e){toast(e.status===404?'That folder can\'t be found with this Google account.':e.message,5000);}}
+// colours: a swatch when the name is a colour the browser knows ("Navy", "Olive"…), else a neutral one
+const swCache=new Map();
+function swatch(name){const n=String(name||'').toLowerCase().trim();if(swCache.has(n))return swCache.get(n);
+  const tries=[n.replace(/\s+/g,''),n.split(/[\s/&-]+/).pop(),n.split(/[\s/&-]+/)[0],{charcoal:'#36454f',heather:'#b9b9b9',cream:'#fffdd0',burgundy:'#800020',oatmeal:'#d8cbb3',camel:'#c19a6b',mustard:'#e1ad01',mint:'#98ff98',denim:'#1560bd',stone:'#b5ab9b',sand:'#c2b280',rust:'#b7410e',wine:'#722f37',forest:'#228b22',royal:'#4169e1',heathergrey:'#b9b9b9',grey:'gray'}[n.replace(/\s+/g,'')]];
+  let c='';for(const x of tries)if(x&&CSS.supports('color',x)){c=x;break;}swCache.set(n,c);return c;}
+const swDots=(cols,max=8)=>cols.length?`<span class="iv-sw" title="${esc(cols.map(c=>c.name).join(', '))}">${cols.slice(0,max).map(c=>{const s=swatch(c.name);return`<i${s?` style="--c:${esc(s)}"`:' class="q"'}></i>`;}).join('')}${cols.length>max?`<small>+${cols.length-max}</small>`:''}<small>${cols.length} colour${cols.length>1?'s':''}</small></span>`:'';
+const initials=t=>String(t||'?').replace(/[^\p{L}\p{N}\s]/gu,'').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
+const invTitle=x=>x.sum?.title||x.name,invPic=x=>x.photo||x.thumb||'';
+function invPicHTML(x,cls=''){const p=invPic(x);if(x.pending)return'<div class="iv-skel"></div>';
+  return p?`<img src="${p}" alt="" loading="lazy"${!x.photo&&x.kind!=='image'?` class="contain${cls}"`:''}>`:`<div class="iv-ph" style="--c:${esc(x.sum?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`;}
+const ivNF=new Intl.NumberFormat();
+function invShown(){const q=IV.q.trim().toLowerCase();let l=IV.items.filter(x=>(!IV.cat||x.cat===IV.cat)&&(!q||[invTitle(x),x.name,x.sum?.code,x.cat,x.path,...(x.sum?.colours||[]).map(c=>c.name),...(x.sum?.details||[]).map(d=>d.value)].some(v=>String(v||'').toLowerCase().includes(q))));
+  const by={name:(a,b)=>COLL.compare(invTitle(a),invTitle(b)),code:(a,b)=>COLL.compare(a.sum?.code||'~',b.sum?.code||'~'),pcs:(a,b)=>(b.sum?.pcs||0)-(a.sum?.pcs||0),updated:(a,b)=>b.updated-a.updated}[IV.sort]||((a,b)=>b.updated-a.updated);
+  return l.sort(by);}
+function renderInv(){if(!invDlg.open)return;const F=IV.folder,items=IV.items;
+  const sum=items.reduce((a,x)=>(a.pcs+=x.sum?.pcs||0,a.boxes+=x.sum?.boxes||0,(x.sum?.colours||[]).forEach(c=>a.cols.add(c.name.toLowerCase())),a),{pcs:0,boxes:0,cols:new Set()});
+  $('#ivSum').textContent=F?`${items.length} product${items.length===1?'':'s'}`:'';
+  // bar: folder, sync state
+  const fic='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+  const P=IV.prog;
+  $('#ivBar').innerHTML=F?`<span class="iv-folder">${fic}<span title="${esc(F.name)}">${esc(F.name)}</span></span><a class="lnk" href="https://drive.google.com/drive/folders/${encodeURIComponent(F.id)}" target="_blank" rel="noopener">Open in Drive ↗</a><button class="lnk" type="button" id="ivChange">Change folder</button><span class="spacer"></span>
+    ${P?`<span class="iv-prog">${P.phase==='list'?'Looking through the folder…':`Reading sell sheets ${P.done} of ${P.total}`}${P.total?`<i><b style="width:${Math.round(P.done/P.total*100)}%"></b></i>`:''}</span>`
+      :IV.err==='signin'?`<span class="iv-sync">Showing what was read ${IV.last?esc(agoMin(IV.last)):''}. Sign in with Google to refresh.</span><button class="btn sm primary" type="button" id="ivSync">Refresh</button>`
+      :IV.err?`<span class="iv-bad">${esc(IV.err)}</span><button class="btn sm" type="button" id="ivSync">Try again</button>`
+      :`<span class="iv-sync">Updated ${IV.last?esc(agoMin(IV.last)):'never'}</span><button class="btn sm" type="button" id="ivSync">Refresh</button>`}`:'';
+  if(!F){$('#ivBody').innerHTML=`<div class="iv-empty">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>'}
+    <h3>Your sell sheets, as an inventory</h3><p>Choose the Google Drive folder where you keep your sell sheets. Every sheet in it (PDF, Word, Google Docs or image) is shown here as a product with its picture, item code, price, colours and quantities. Subfolders become categories.</p>
+    <button class="btn primary" type="button" id="ivPick">Choose folder in Google Drive</button><small class="iv-sync">or paste the folder's link</small>
+    <div class="row"><input class="in" id="ivLink" placeholder="https://drive.google.com/drive/folders/…" aria-label="Folder link"><button class="btn" type="button" id="ivLinkGo">Use folder</button></div>
+    <small class="iv-sync">Needs read-only access to your Google Drive, asked once. Nothing in your Drive is changed.</small></div>`;renderInvDetail();return;}
+  const cats=[...items.reduce((m,x)=>m.set(x.cat,(m.get(x.cat)||0)+1),new Map())].filter(([c])=>c).sort((a,b)=>COLL.compare(a[0],b[0]));
+  const shown=invShown(),stat=(l,v)=>`<div class="iv-stat"><small>${l}</small><b>${v}</b></div>`;
+  const scroll=$('#ivScroll').scrollTop,focus=document.activeElement?.id;
+  $('#ivBody').innerHTML=`<div class="iv-stats">${stat('Products',ivNF.format(items.length))}${stat('Total pieces',ivNF.format(sum.pcs))}${stat('Total boxes',ivNF.format(sum.boxes))}${stat('Colours',ivNF.format(sum.cols.size))}${cats.length?stat('Categories',cats.length):''}</div>
+    <div class="iv-tools"><input class="in" id="ivQ" type="search" placeholder="Search name, item code, colour…" value="${esc(IV.q)}" aria-label="Search inventory">
+      <select class="in" id="ivSort" aria-label="Sort">${[['updated','Recently updated'],['name','Name A–Z'],['code','Item code'],['pcs','Most pieces']].map(([v,n])=>`<option value="${v}"${IV.sort===v?' selected':''}>${n}</option>`).join('')}</select>
+      <span class="iv-view" role="group" aria-label="View"><button type="button" data-ivview="grid" aria-pressed="${IV.view==='grid'}">Cards</button><button type="button" data-ivview="list" aria-pressed="${IV.view==='list'}">List</button></span></div>
+    <div class="iv-cats">${cats.length?`<button class="iv-cat" type="button" data-ivcat="" aria-pressed="${!IV.cat}">All<small>${items.length}</small></button>${cats.map(([c,n])=>`<button class="iv-cat" type="button" data-ivcat="${esc(c)}" aria-pressed="${IV.cat===c}">${esc(c)}<small>${n}</small></button>`).join('')}`:''}</div>
+    ${!items.length&&!IV.busy?'<div class="iv-empty"><h3>No sell sheets in this folder yet</h3><p>Add PDF or Word sell sheets to the folder in Google Drive (Save to Drive from this site works too), then click Refresh.</p></div>'
+      :!shown.length?'<div class="iv-empty"><p>Nothing matches this search.</p></div>'
+      :IV.view==='list'?`<table class="iv-list"><thead><tr><th></th><th>Product</th><th>Item code</th><th class="hide-sm">Category</th><th class="hide-sm">Colours</th><th class="num">Pieces</th><th class="num hide-sm">Boxes</th><th class="hide-sm">Price</th><th class="hide-sm">Updated</th></tr></thead><tbody>${shown.map(x=>`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"><td><div class="th">${invPicHTML(x)}</div></td><td><b>${esc(invTitle(x))}</b>${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td><td class="iv-code">${esc(x.sum?.code||'')}</td><td class="hide-sm">${esc(x.cat||'')}</td><td class="hide-sm">${swDots(x.sum?.colours||[],6)}</td><td class="num">${x.sum?ivNF.format(x.sum.pcs||0):''}</td><td class="num hide-sm">${x.sum?ivNF.format(x.sum.boxes||0):''}</td><td class="hide-sm">${esc(x.sum?.price||'')}</td><td class="hide-sm">${esc(ago(x.updated))}</td></tr>`).join('')}</tbody></table>`
+      :`<div class="iv-grid">${shown.map(x=>`<button class="iv-card${IV.open===x.key?' on':''}" type="button" data-iv="${esc(x.key)}"><div class="iv-img">${invPicHTML(x)}${x.cat?`<span class="iv-tag">${esc(x.cat)}</span>`:''}<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span></div>
+        <div class="iv-info">${x.sum?.code?`<span class="iv-code">${esc(x.sum.code)}</span>`:''}<h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}
+          ${x.sum?.price?`<span class="iv-price">${esc(x.sum.price)}</span>`:''}${x.sum&&(x.sum.pcs||x.sum.boxes)?`<span class="iv-meta"><span><b>${ivNF.format(x.sum.pcs)}</b> pcs</span><span><b>${ivNF.format(x.sum.boxes)}</b> box${x.sum.boxes===1?'':'es'}</span>${x.sum.sizes?.length&&x.sum.showSizes?`<span>${esc(x.sum.sizes.join(' · '))}</span>`:''}</span>`:''}${swDots(x.sum?.colours||[])}</div></button>`).join('')}</div>`}`;
+  $('#ivScroll').scrollTop=scroll;if(focus==='ivQ'){const q=$('#ivQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
+  renderInvDetail();}
+function renderInvDetail(){const d=$('#ivDetail'),x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';return;}d.hidden=false;
+  const s=x.sum,full=IV.full.get(x.key),sz=s?.showSizes&&s?.sizes?.length;
+  const pv=full||x.thumb||x.photo;
+  d.innerHTML=`<div class="ivd-b"><div><div class="ivd-pv">${pv?`<img src="${pv}" alt="Sell sheet ${esc(invTitle(x))}">`:`<div class="iv-ph" style="--c:${esc(s?.theme||'#1F2A44')}">${esc(initials(invTitle(x)))}</div>`}</div>
+      ${x.photos?.length>1||(x.photo&&x.thumb)?`<div class="ivd-photos">${x.thumb?`<img src="${x.thumb}" alt="Sell sheet" data-ivpv="sheet" title="The sell sheet">`:''}${(x.photos||[]).map((p,i)=>`<img src="${p}" alt="Photo ${i+1}" data-ivpv="${i}" title="Photo ${i+1}">`).join('')}</div>`:''}</div>
+    <div><div class="ivd-h">${x.cat?`<span class="iv-sync">${esc(x.path||x.cat)}</span>`:''}<h3>${esc(invTitle(x))}</h3>${s?.code?`<span class="iv-code">ITEM CODE · ${esc(s.code)}</span>`:''}${s?.price?`<span class="iv-price">${esc(s.price)}</span>`:''}</div>
+      ${x.bad?`<p class="iv-bad">${esc(x.bad)}. You can still open it in Drive.</p>`:''}
+      ${s?`<div class="ivd-kpis"><div><small>Total pieces</small><b>${ivNF.format(s.pcs||0)}</b></div><div><small>Boxes</small><b>${ivNF.format(s.boxes||0)}</b></div><div><small>Colours</small><b>${(s.colours||[]).length}</b></div></div>`:''}
+      ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
+        <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
+      ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
+      <div class="ivd-sec"><h4>Files in Drive</h4><div class="ivd-files">${x.files.map(f=>`<a href="${esc(f.link||'https://drive.google.com/file/d/'+encodeURIComponent(f.id)+'/view')}" target="_blank" rel="noopener" title="${esc(f.name)}">${esc(f.kind)} ↗</a>`).join('')}</div><p class="iv-sync" style="margin:8px 0 0">Updated ${esc(DTF_WHEN.format(x.updated))}</p></div></div></div>
+    <div class="ivd-f"><button class="btn sm primary" type="button" data-ivd="edit"${x.kind==='image'?' disabled title="Pictures can\'t be opened in the editor"':''}>Open in editor</button><button class="btn sm" type="button" data-ivd="email"${x.kind==='image'?' disabled':''}>Email this sell sheet</button><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivd="close">Close</button></div>`;
+  // a sharper picture of the sell sheet for the large preview
+  if(!full&&x.files[0]?.kind==='PDF'&&!x.pending&&!x._loading){x._loading=true;invToken(false).then(async t=>{if(!t)return;const f=await invDownload(t,{id:x.files[0].id,name:x.files[0].name,mimeType:'application/pdf'});const u=await pdfPage1(await f.arrayBuffer(),900);if(u){IV.full.set(x.key,u);if(IV.open===x.key){const im=$('#ivDetail .ivd-pv img');if(im)im.src=u;}}}).catch(()=>{}).finally(()=>{x._loading=false;});}}
+async function invOpenSheet(x,thenEmail){let t;try{t=await invToken(true);}catch(e){toast(e.message,5000);return;}
+  const f=x.files.find(f=>f.kind!=='JPG'&&f.kind!=='PNG');if(!f)return;toast('Opening '+invTitle(x)+'…',20000);
+  try{const mime=Object.keys(INV_MIMES).find(k=>INV_MIMES[k]===f.kind),file=await invDownload(t,{id:f.id,name:f.name,mimeType:mime});invDlg.close();await openSheetFile(file);if(thenEmail)openMail();}
+  catch(e){toast(e.message||'Couldn\'t open that sell sheet.',5000);}}
+async function openInv(){if(!invDlg.open)invDlg.showModal();if(!IV.items.length&&IV.folder){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
+  renderInv();if(IV.folder&&!IV.busy&&Date.now()-IV.last>3*60e3){const t=await invToken(false);if(t)invSync(false);else{IV.err='signin';renderInv();}}}
+invDlg.addEventListener('click',async e=>{const t=e.target;
+  const card=t.closest('[data-iv]');if(card){IV.open=IV.open===card.dataset.iv?null:card.dataset.iv;$$('#ivBody [data-iv]').forEach(c=>c.classList.toggle('on',c.dataset.iv===IV.open));renderInvDetail();return;}
+  const v=t.closest('[data-ivview]');if(v){IV.view=v.dataset.ivview;lsSet('ss-inv-view',IV.view);renderInv();return;}
+  const c=t.closest('[data-ivcat]');if(c){IV.cat=c.dataset.ivcat;renderInv();return;}
+  const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?(IV.full.get(IV.open)||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
+  const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
+  const id=t.closest('button')?.id;
+  if(id==='ivPick'||id==='ivChange')invPickFolder();else if(id==='ivSync')invSync(true);else if(id==='ivLinkGo')invUseLink($('#ivLink').value);});
+invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
+  else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv]')){e.preventDefault();e.target.click();}});
+let ivQt=0;invDlg.addEventListener('input',e=>{if(e.target.id==='ivQ'){IV.q=e.target.value;clearTimeout(ivQt);ivQt=setTimeout(renderInv,90);}});
+invDlg.addEventListener('change',e=>{if(e.target.id==='ivSort'){IV.sort=e.target.value;lsSet('ss-inv-sort',IV.sort);renderInv();}});
+invDlg.addEventListener('cancel',e=>{if(IV.open){e.preventDefault();IV.open=null;renderInv();}});
+$('#ivClose').onclick=()=>invDlg.close();
+// what was read last time, for the sidebar count
+if(IV.folder)invAll().then(a=>{if(!IV.items.length)IV.items=a.filter(x=>x&&x.key);});
+
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
 function openNav(){lgLoad();cuLoad();const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
   const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
   $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
+  {const n=IV.items.length;$('#navInv').textContent=IV.folder?`${n} product${n===1?'':'s'} · ${IV.folder.name}`:'Your sell sheets folder in Google Drive';}
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
