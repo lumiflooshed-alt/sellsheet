@@ -136,11 +136,74 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 | **Need admin approval** (Microsoft work account) | Ask your IT admin to click **Grant admin consent** under **API permissions**. |
 | **Nothing happens when clicking Sign in** | Allow pop-ups for the site in your browser and try again. |
 
+## 4. Optional, recommended: stay signed in to Google
+
+Without this, Google signs you out of the site about an hour after you sign in. Reply checking and inventory syncing then pause until you click something. This step keeps you signed in until you click **Sign out**, so replies and your inventory keep updating in the background.
+
+Google only gives a lasting sign-in to a small server that keeps your **Client secret**. The repository includes one: [`worker/google-token.js`](worker/google-token.js). It runs free on Cloudflare (Workers free plan). It never sees your emails or files. It only swaps Google's sign-in codes for short passes.
+
+Keep the Client secret out of chats, email and the site's code. It only goes into Cloudflare's encrypted secrets.
+
+1. **Google:**
+   - Open <https://console.cloud.google.com> → **Google Auth Platform → Clients** → your `Sell Sheet Studio` client.
+   - Under **Authorized redirect URIs**, click **Add URI** and enter the site's address exactly as **Sign in → Sign-in setup** shows it, e.g. `https://lumiflooshed-alt.github.io/sellsheet/`. Add your Cloudflare Pages address too if you use one. Click **Save**.
+   - On the same page, under **Client secrets**, copy the secret, or click **Add secret** to make one.
+2. **Cloudflare:**
+   - Go to <https://dash.cloudflare.com> → **Workers & Pages → Create → Create Worker**.
+   - Name it `sellsheet-token`, then click **Deploy**.
+   - Click **Edit code**, replace everything with the contents of `worker/google-token.js`, then click **Deploy**.
+3. **Worker settings:** open the Worker's **Settings → Variables and Secrets** and add these four:
+   - `GOOGLE_CLIENT_ID` (type **Text**): your Client ID.
+   - `GOOGLE_CLIENT_SECRET` (type **Secret**): the Client secret from step 1.
+   - `SEAL_KEY` (type **Secret**): any long random text, at least 40 letters and numbers. It locks the sign-in copy kept in your browser.
+   - `ALLOWED_ORIGINS` (type **Text**): `https://lumiflooshed-alt.github.io`. To add your Cloudflare Pages address, separate them with a comma.
+   - Click **Deploy** again.
+4. **Connect the site:**
+   - Copy the Worker's address from its overview, e.g. `https://sellsheet-token.YOUR-NAME.workers.dev`.
+   - On the site, open **Sign in → Sign-in setup** and paste it into **Stay-signed-in helper**.
+   - Click **Save**. The site checks the helper is reachable and set up.
+   - Sign in once more on each device.
+   - **Settings → Email → Stay signed in** then says **On**.
+5. **If your Google app's audience is External and its status is Testing,** Google ends lasting sign-ins after 7 days. To stop that:
+   - Open **Google Auth Platform → Audience** and click **Publish app**.
+   - You'll still see the "Google hasn't verified this app" screen when signing in. Click **Continue**. That's fine for your own use.
+   - **Internal** (Workspace) apps don't have this limit.
+
+To turn it off, clear the helper address in **Sign-in setup**. To cut off access completely, also remove the app at <https://myaccount.google.com/permissions>.
+
+## Choosing the address you send from
+
+- In the **Email** window, the **Send from** list next to Gmail shows:
+  - Your Gmail address.
+  - Every address set up in Gmail under **Settings → See all settings → Accounts → Send mail as**, such as a business address or a team alias. Only addresses Gmail has verified are listed.
+  - **＋ Add another Gmail account…** signs in to a second Gmail account, for sending only.
+    - Your customers and the Sent list stay with the account you signed in to the site with.
+    - Replies to that account are checked too.
+- Your choice is remembered. You can also change it in **Settings → Email → Send from**. To refresh the list after adding an address in Gmail, click **Refresh** there.
+
+## Sync between devices
+
+When you sign in with the same Google account on several devices, these sync between them:
+- customers and groups
+- the Sent list
+- email wording
+- inventory status, stars and notes
+- all Settings, including the Inventory folder
+- your saved sell sheets (with photos)
+
+How it works:
+- **Changes made here** are sent within a couple of seconds. Edits to a sheet go after about 12 seconds of quiet.
+- **Changes from other devices** are fetched every 90 seconds while the site is open, and whenever you come back to the tab.
+- **Conflicts:** when the same item was changed on two devices, the newest change wins.
+- **Deleting a sheet** on one device deletes it on the others.
+- **Saved sheets:** they sync with Google sign-in only. With Outlook, everything else syncs.
+
 ## Good to know
 
 - **Signing in is optional.** Without it, customers are saved in that browser, and **Share instead…** in the Email window still hands the files to your device's own email app.
 - **You stay signed in on this browser until you click Sign out**, in every tab.
-  - Google only hands out one-hour passes. After an hour, the next email or Drive save briefly opens a Google window that closes by itself; you don't need to click anything.
+  - Without the stay-signed-in helper (step 4), Google only hands out one-hour passes. After an hour, the next email or Drive save briefly opens a Google window that closes by itself; you don't need to click anything.
+  - With the helper, Google stays signed in until you sign out, and nothing pops up.
   - Microsoft passes renew silently in the background (for up to about a day of not using the site).
 - **Signed in with Outlook but saving to Google Drive?** The site asks for your Google account once, just for Drive. You stay signed in with Outlook, and your customers stay on that account.
 - **Sending limits:**
@@ -163,7 +226,7 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 - **The first time:** signing in after this update asks Google for the extra read-only permission. If you were already signed in, click **Sent → Turn on**.
 - **Limits:**
   - Checks only run while the site is open in a tab.
-  - Google's sign-in lasts an hour and can only be renewed with a click. After that, checking pauses until you send an email, sign in, or click **Sent → Check now**.
+  - Without the stay-signed-in helper (step 4), Google's sign-in lasts an hour and can only be renewed with a click. After that, checking pauses until you send an email, sign in, or click **Sent → Check now**. With the helper, checking never pauses.
   - Follow-up date reminders don't need Gmail, so they keep working.
 
 ## Inventory (Google Drive folder)
@@ -180,6 +243,11 @@ Client IDs are not passwords. They're meant to be public and only work from the 
 - **Sent to:** each product shows who it was emailed to, who replied, and when. **Email it to customers who haven't had it** ticks everyone else in the Email window, so you can review the list before sending.
 - **Export** downloads the inventory as a spreadsheet (CSV).
 - Active/inactive, stars and notes sync between your devices when you're signed in.
+- **Keep in sync automatically** (Settings → Inventory, on by default):
+  - The folder is checked in the background every 15 minutes while the site is open; you can choose 5, 15, 30 or 60 minutes.
+  - The site first asks Drive what changed since the last check, so it only reads folders when something actually changed.
+  - The chosen folder is saved with your settings, so every device signed in to the same account uses it without choosing it again.
+  - With the stay-signed-in helper this keeps going for good. Without it, it runs while the hour-long Google sign-in lasts.
 
 ### Your Drive folders decide status and type
 - A folder whose name starts with **Active** (or Current) makes everything inside it active.
