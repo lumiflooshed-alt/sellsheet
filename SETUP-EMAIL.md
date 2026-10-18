@@ -21,13 +21,13 @@ Your site addresses (add every one you use):
 ## 1. Google (Gmail and Google Workspace)
 
 1. Go to <https://console.cloud.google.com> and sign in.
-2. At the top, click the project picker, then **New project**. Name it `Sell Sheet Studio` and click **Create**. Make sure it's selected.
+2. At the top, click the project picker, then **New project**. Name it `Rakaposhica Dashboard` and click **Create**. Make sure it's selected.
 3. Open **APIs & Services → Library**. Search for and **Enable** each of:
    - **Gmail API**
    - **Google Drive API**
    - **Google Picker API** (only needed to choose any Drive folder when saving; see 1b)
 4. Open **Google Auth Platform** (or **APIs & Services → OAuth consent screen**) and click **Get started**:
-   - App name: `Sell Sheet Studio`. User support email: your email.
+   - App name: `Rakaposhica Dashboard`. User support email: your email.
    - **Audience**:
      - Choose **Internal** if everyone using it is in your own Google Workspace organisation. No review is needed.
      - Otherwise choose **External**.
@@ -41,7 +41,7 @@ Your site addresses (add every one you use):
    - To let Inventory make folders, add files and move sheets between your Active and Inactive folders, also add **`https://www.googleapis.com/auth/drive`**. It's only asked for the first time you do one of those.
    - Google calls these *restricted* scopes. That's fine while the app is **Internal**, or **External** in Testing with yourself as a test user. Opening it to the public would need Google's paid security review.
 6. Go to **Clients → Create client**:
-   - Application type: **Web application**. Name: `Sell Sheet Studio`.
+   - Application type: **Web application**. Name: `Rakaposhica Dashboard`.
    - **Authorized JavaScript origins**: click **Add URI** and enter `https://lumiflooshed-alt.github.io`. Add your Cloudflare address too if you have one, e.g. `https://YOUR-NAME.pages.dev`.
    - Enter origins only, with no `/sellsheet/` at the end. Leave **Authorized redirect URIs** empty.
    - Click **Create**.
@@ -79,7 +79,7 @@ In the picker (**Save → Google Drive → Browse Drive…**) you see your folde
 
 1. Go to <https://entra.microsoft.com> (or <https://portal.azure.com>) and sign in with your Microsoft account.
 2. Open **App registrations** (under **Applications**) and click **New registration**:
-   - Name: `Sell Sheet Studio`.
+   - Name: `Rakaposhica Dashboard`.
    - Supported account types: **Accounts in any organizational directory and personal Microsoft accounts**.
    - Redirect URI: choose **Single-page application (SPA)** and enter `https://lumiflooshed-alt.github.io/sellsheet/` (with the slash at the end).
    - Click **Register**.
@@ -145,7 +145,7 @@ Google only gives a lasting sign-in to a small server that keeps your **Client s
 Keep the Client secret out of chats, email and the site's code. It only goes into Cloudflare's encrypted secrets.
 
 1. **Google:**
-   - Open <https://console.cloud.google.com> → **Google Auth Platform → Clients** → your `Sell Sheet Studio` client.
+   - Open <https://console.cloud.google.com> → **Google Auth Platform → Clients** → your Web application client.
    - Under **Authorized redirect URIs**, click **Add URI** and enter the site's address exactly as **Sign in → Sign-in setup** shows it, e.g. `https://lumiflooshed-alt.github.io/sellsheet/`. Add your Cloudflare Pages address too if you use one. Click **Save**.
    - On the same page, under **Client secrets**, copy the secret, or click **Add secret** to make one.
 2. **Cloudflare:**

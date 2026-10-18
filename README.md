@@ -1,4 +1,4 @@
-# Sell Sheet Studio
+# Rakaposhica Dashboard
 
 Everything runs in the browser. Photos never leave the computer.
 

@@ -1,4 +1,4 @@
-// Sell Sheet Studio: "Stay signed in" helper for Google (a Cloudflare Worker, free plan is plenty).
+// Rakaposhica Dashboard: "Stay signed in" helper for Google (a Cloudflare Worker, free plan is plenty).
 //
 // Google only hands out long-lasting sign-ins (refresh tokens) to a server that holds the
 // Client secret. This Worker is that server. It never sees your email or files: it only swaps
