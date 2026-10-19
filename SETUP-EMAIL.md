@@ -249,6 +249,37 @@ How it works:
   - The chosen folder is saved with your settings, so every device signed in to the same account uses it without choosing it again.
   - With the stay-signed-in helper this keeps going for good. Without it, it runs while the hour-long Google sign-in lasts.
 
+### QuickBooks items
+
+**Inventory → QuickBooks items** shows your products and services from a QuickBooks report, with every column of the report.
+
+**Getting the report in:**
+- **Upload:**
+  1. In QuickBooks, open **Reports → Product/Service List**.
+  2. Optional: click **Customize** to add columns such as **SKU**.
+  3. Click **Export → Export to Excel** (CSV works too).
+  4. Drop the file on the page, or click **Import report**. Each import replaces the previous list.
+- **Automatically, from Gmail:**
+  1. In QuickBooks, save the customized report.
+  2. Under **Reports → Custom reports → Edit**, turn on **Set email schedule**.
+  3. Send it to your Gmail address and tick **Attach the report as an Excel file**.
+  4. On the page, open **Auto-import…** and tick **Import automatically**.
+  - The newest report email is picked up when the page opens and every 30 minutes while the site is open.
+  - It uses the read-only Gmail access already used for reply checking.
+
+**Using the page:**
+- **Columns:** choose which to show and in what order. **Compact rows** and **wrap long text** are in the same panel.
+- **Search, filter and sort:** search every column, filter by type, group or category, and click a heading to sort.
+- **Item details:** click a row to see all of that item's details, including hidden columns.
+- **Sell sheets:**
+  - Items are matched to the sell sheets in Inventory by **SKU** (item code) or name.
+  - The **Sell sheet** column and the **Has a sell sheet / No sell sheet yet** filter show which items still need one.
+  - A matched product's panel in Inventory shows its QuickBooks price, cost and quantity.
+- **Export** downloads what's shown as a spreadsheet.
+- **Sync:** the latest import and your column choices sync to your other devices when you're signed in.
+
+Changes go one way, from QuickBooks to the site. Editing an item here does not change QuickBooks.
+
 ### Your Drive folders decide status and type
 - A folder whose name starts with **Active** (or Current) makes everything inside it active.
 - A folder starting with **Inactive** (or Discontinued, Archive) makes everything inside it inactive.

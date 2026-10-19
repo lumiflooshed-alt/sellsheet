@@ -114,7 +114,35 @@ svg{flex:none}
 .ivd-sent{display:grid;gap:2px;max-height:320px;overflow:auto}.ivd-sent .r{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 8px;border-radius:8px;font-size:13.5px;cursor:pointer}.ivd-sent .r:hover{background:var(--raise)}
 .ivd-sent .r b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ivd-sent .r small{display:block;color:var(--muted);font-size:12px}.ivd-sent .st{font-size:12px;border-radius:6px;padding:2px 7px;background:var(--raise);color:var(--muted);white-space:nowrap}.ivd-sent .st.rp{background:var(--accent-soft);color:var(--accent-fg);font-weight:600}
 .ivd-sentsum{font-size:13.5px;color:var(--muted);margin:0 0 8px}.ivd-sentsum b{color:var(--ink)}
-.iv-wrap{grid-template-rows:auto auto minmax(0,1fr)}
+.iv-wrap{grid-template-rows:auto auto auto minmax(0,1fr)}
+.sub-tabs{display:flex;gap:4px;padding:8px 16px 0;border-bottom:1px solid var(--line);background:var(--panel)}
+.sub-tabs a{padding:8px 12px 9px;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:6px 6px 0 0}
+.sub-tabs a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}.sub-tabs a[aria-current]{color:var(--accent-fg);border-bottom-color:var(--accent)}
+#qbDlg .lg-wrap{grid-template-rows:auto auto auto minmax(0,1fr)}
+.qb-main{position:relative;min-height:0;display:grid;grid-template-columns:minmax(0,1fr)}.qb-scroll{overflow:auto;min-height:0}
+.qb-bar .in{height:36px}.qb-bar #qbQ{flex:1 1 220px;min-width:160px}.qb-bar select.in{flex:0 1 190px}
+.qb-t{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
+.qb-t th{position:sticky;top:0;z-index:2;background:var(--raise);text-align:left;font:700 12px var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding:0;border-bottom:1px solid var(--line);white-space:nowrap}
+.qb-t th button{all:unset;cursor:pointer;display:flex;align-items:center;gap:4px;padding:10px 12px;width:100%;box-sizing:border-box}.qb-t th button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.qb-t th.num button{justify-content:flex-end}.qb-t th .ar{opacity:.4;font-size:10px}.qb-t th[aria-sort] .ar{opacity:1;color:var(--accent-fg)}
+.qb-t td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qb-t td.num,.qb-t th.num{text-align:right;font-variant-numeric:tabular-nums}.qb-t td.neg{color:var(--bad)}
+.qb-t th:first-child,.qb-t td:first-child{position:sticky;left:0;z-index:1;background:var(--panel)}.qb-t th:first-child{z-index:3;background:var(--raise)}
+.qb-t td:first-child{font-weight:600}
+.qb-t tbody tr{cursor:pointer}.qb-t tbody tr:hover td{background:color-mix(in srgb,var(--accent) 6%,var(--panel))}.qb-t tbody tr.on td{background:var(--accent-soft)}
+.qb-t tr.grp td{background:var(--raise);font:700 12.5px var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;cursor:default;position:static}
+.qb-dense .qb-t td{padding:5px 10px}.qb-dense .qb-t th button{padding:7px 10px}
+.qb-wrapcells .qb-t td{white-space:normal;max-width:none}
+.qb-ss{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--accent-fg);background:var(--accent-soft);border-radius:999px;padding:2px 8px;border:0;cursor:pointer}
+.qb-side{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);z-index:6;border-left:1px solid var(--line);box-shadow:-18px 0 40px rgba(10,14,22,.18);background:var(--panel);display:grid;grid-template-rows:auto minmax(0,1fr);animation:cpin .2s var(--ease)}
+.qb-side .qs-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.qb-side .qs-h h3{margin:0;font-size:17px;flex:1;min-width:0}
+.qb-side .qs-b{overflow:auto;padding:12px 16px 20px}
+.qs-kv{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);gap:0;margin:0}.qs-kv dt,.qs-kv dd{margin:0;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}.qs-kv dt{color:var(--muted);padding-right:10px}.qs-kv dd{word-break:break-word}.qs-kv dd.hid{color:var(--faint)}
+.qb-cols{display:grid;gap:4px}.qb-cols .ivf-row{display:flex;align-items:center;gap:6px}
+.qb-empty{max-width:720px;margin:28px auto;padding:0 18px}.qb-empty h3{margin:0 0 6px;font-size:20px}.qb-empty ol{padding-left:20px;line-height:1.6}.qb-empty .card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0;background:var(--panel)}
+.qb-drop{outline:3px dashed var(--accent);outline-offset:-10px}
+.qb-more{display:block;margin:14px auto}
+@media (max-width:760px){.qb-t td{max-width:200px}.sub-tabs{padding:6px 10px 0}}
 .iv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise);font-size:13.5px}.iv-bar:empty{display:none}
 .iv-bar .spacer{flex:1 1 0}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent-fg);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
 .iv-sync{color:var(--muted)}.iv-prog{display:inline-flex;align-items:center;gap:8px;color:var(--muted)}.iv-prog i{display:block;width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.iv-prog i b{display:block;height:100%;background:var(--accent);transition:width .3s}
@@ -965,9 +993,19 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
 <dialog id="invDlg" aria-label="Inventory">
   <div class="lg-wrap iv-wrap">
     <div class="ml-top"><h2>Inventory</h2><span class="note" id="ivSum"></span><button class="btn icon sm ghost" id="ivClose" type="button" aria-label="Close">✕</button></div>
+    <nav class="sub-tabs" aria-label="Inventory views"><a href="#inventory">Sell sheets</a><a href="#qbo-items">QuickBooks items</a></nav>
     <div class="iv-bar" id="ivBar"></div>
     <div class="iv-main"><div class="iv-scroll" id="ivScroll"><div id="ivBody"></div></div><aside class="iv-detail" id="ivDetail" hidden aria-label="Product details"></aside></div>
   </div>
+</dialog>
+<dialog id="qbDlg" aria-label="QuickBooks items">
+  <div class="lg-wrap qb-wrap">
+    <div class="ml-top"><h2>QuickBooks items</h2><span class="note" id="qbSum"></span><button class="btn icon sm ghost" id="qbClose" type="button" aria-label="Close">✕</button></div>
+    <nav class="sub-tabs" aria-label="Inventory views"><a href="#inventory">Sell sheets</a><a href="#qbo-items">QuickBooks items</a></nav>
+    <div class="iv-bar qb-bar" id="qbBar"></div>
+    <div class="qb-main"><div class="qb-scroll" id="qbScroll"></div><aside class="qb-side" id="qbSide" hidden aria-label="Item details"></aside></div>
+  </div>
+  <input type="file" id="qbFile" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
 </dialog>
 <dialog id="custDlg" aria-label="Customers">
   <div class="lg-wrap">
@@ -1117,11 +1155,11 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
   tabs:['home','editor','inventory','pipeline','sent','customers'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','chart','activity','top','inv','cust'],secOff:[],side:['top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},upd:0};
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},qbo:{hide:[],order:[],auto:false,q:'',dense:false,wrap:false},pipe:{colsOff:[],days:90},sheet:{contact:''},upd:0};
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   const fix=(arr,def)=>[...arr.filter(k=>def.includes(k)),...def.filter(k=>!arr.includes(k))];d.tabs=fix(d.tabs,SET_DEF.tabs);d.home.kpis=fix(d.home.kpis,SET_DEF.home.kpis);d.home.secs=fix(d.home.secs,SET_DEF.home.secs);
-  d.currency=String(d.currency).trim().slice(0,6)||'$';if(!d.name&&d.home.name)d.name=d.home.name;if(typeof sv.upd==='number')d.upd=sv.upd;try{if(!sv.start&&localStorage.getItem('ss-home-start')==='0')d.start='editor';}catch(_){}return d;}
+  d.currency=String(d.currency).trim().slice(0,6)||'$';for(const k of['hide','order'])d.qbo[k]=d.qbo[k].filter(x=>typeof x==='string').map(x=>x.slice(0,80)).slice(0,200);d.qbo.q=String(d.qbo.q).slice(0,300);if(!d.name&&d.home.name)d.name=d.home.name;if(typeof sv.upd==='number')d.upd=sv.upd;try{if(!sv.start&&localStorage.getItem('ss-home-start')==='0')d.start='editor';}catch(_){}return d;}
 const SET=setNorm((()=>{try{return JSON.parse(localStorage.getItem('ss-settings')||'{}');}catch(_){return{};}})());
 function setSave(){SET.upd=Date.now();try{localStorage.setItem('ss-settings',JSON.stringify(SET));}catch(_){}if(typeof scheduleSync==='function')scheduleSync();}
 const FD=()=>Math.max(1,+SET.followDays||7);
@@ -2185,7 +2223,7 @@ function parseCSV(t){const rows=[];let row=[],f='',q=false;const d=(t.split('\n'
     else if(ch==='"')q=true;else if(ch===d){row.push(f);f='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=ch;}
   if(f||row.length){row.push(f);rows.push(row);}return rows.filter(r=>r.some(x=>x.trim()));}
 // .xlsx is a zip of XML files: read the first sheet that has an "email" column (formulas use their saved result)
-async function readXlsx(file){await loadScript('jszip');let zip;try{zip=await JSZip.loadAsync(file);}catch(_){throw new Error('That Excel file could not be opened.');}
+async function readXlsx(file,want=/e-?mail/i){await loadScript('jszip');let zip;try{zip=await JSZip.loadAsync(file);}catch(_){throw new Error('That Excel file could not be opened.');}
   const txt=async p=>{const f=zip.file(p);return f?f.async('string'):'';},xml=t=>new DOMParser().parseFromString(t||'<x/>','application/xml');
   const tx=el=>[...el.getElementsByTagName('t')].filter(t=>t.parentNode.nodeName!=='rPh').map(t=>t.textContent).join('');
   const ss=[...xml(await txt('xl/sharedStrings.xml')).getElementsByTagName('si')].map(tx);
@@ -2199,7 +2237,7 @@ async function readXlsx(file){await loadScript('jszip');let zip;try{zip=await JS
       for(const c of r.getElementsByTagName('c')){const ref=c.getAttribute('r'),k=ref?colN(ref):i;i=k+1;const t=c.getAttribute('t'),v=c.getElementsByTagName('v')[0]?.textContent??'';
         row[k]=t==='s'?(ss[+v]??''):t==='inlineStr'?tx(c):t==='b'?(v==='1'?'TRUE':'FALSE'):v;}
       rows.push(Array.from(row,x=>x??''));}
-    if(!first&&rows.length)first=rows;if(rows.slice(0,10).some(r=>r.some(x=>/e-?mail/i.test(x))))return rows;}
+    if(!first&&rows.length)first=rows;if(rows.slice(0,25).some(r=>r.some(x=>want.test(x))))return rows;}
   return first||[];}
 // rows → customers. Rows sharing an email, or with the same name and company, become one customer (their emails go in a dropdown).
 // Emails already saved are never duplicated: new details fill gaps in the saved customer instead.
@@ -2422,7 +2460,7 @@ const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsub
 /* what was last synced: the cloud file's version and a fingerprint of the local data. When neither changed, a sync only asks Drive for the version. */
 const SYNC={ver:'',fp:''};
 const hashS=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+':'+str.length;};
-const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
+const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),String(lsJ('ss-qbo')?.at||''),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
 const blankS=x=>!x.title&&!x.code&&!(x.photos||[]).length;
 /* sell sheets: each saved sheet is its own small file in the app's private Drive folder; the sync file keeps the list (and deletions).
    The newest version of each sheet wins. */
@@ -2471,9 +2509,11 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       const im=mergeInvMeta(ivMetaAll(),rd.invMeta);lsSet('ss-inv-meta',JSON.stringify(im));
       // settings: the newest change wins
       if(rd.settings&&typeof rd.settings==='object'&&(+rd.settings.upd||0)>(+SET.upd||0)){setReplace(rd.settings,true);invFolderFromSet();}
+      // QuickBooks items: the newest import wins
+      let QBX=lsJ('ss-qbo');{const qr=qbClean(rd.qbo);if(qr&&qr.at>(+QBX?.at||0)){QBX=qr;lsSet('ss-qbo',JSON.stringify(qr));QB.data=qr;if(qbDlg.open)renderQb(true);}}
       const SHX=acct.prov==='google'?await syncSheets(a,rd.sheets):null;SYNC.ver=remote.version||'';
-      if((SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
-        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
+      if((QBX&&(+QBX.at||0)!==(+rd.qbo?.at||0))||(SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
+        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),...(QBX?{qbo:QBX}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
       if(invDlg.open)renderInv(true);
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
@@ -3464,6 +3504,7 @@ function renderInvDetail(force){const d=$('#ivDetail');
       ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
         <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
       ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
+      ${qbInvHTML(x)}
       ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck))),never=CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m))));
         return`<div class="ivd-sec"><h4>Sent to${z.n?` (${z.n})`:''}</h4>${z.n?`<p class="ivd-sentsum"><b>${z.n}</b> customer${z.n>1?'s':''} · <b>${z.rep}</b> replied${z.ord?` · <b>${z.ord}</b> ordered`:''} · last sent ${esc(ago(z.last))}</p>
           <div class="ivd-sent">${l.map(t=>{const e=t.root,rp=e.reply||['replied','interested','ordered'].includes(e.status);return`<div class="r" data-ivwho="${esc(e.email||e.name)}" title="Show in Sent"><span><b>${esc(e.name||e.company||e.email)}</b><small>${esc([e.company&&e.name?e.company:'',e.email].filter(Boolean).join(' · '))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></span><span class="st${rp?' rp':''}">${esc(e.reply&&e.status==='none'?'Replied':ST_NAME[e.status||'none'])}</span><em class="iv-sync">${esc(ago(t.last))}</em></div>`;}).join('')}</div>`
@@ -3514,6 +3555,7 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
   const c=t.closest('[data-ivcat]');if(c){IV.cat=c.dataset.ivcat;renderInv();return;}
   const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?((x=>x&&IV.full.get(x.file+'|'+x.mod))(IV.items.find(i=>i.key===IV.open))||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
   const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}
+    else if(x&&a.dataset.ivd==='qbo'){QB.side='item';QB.open=+a.dataset.i;openQb();}
     else if(x&&a.dataset.ivd==='sendnew'){const l=ivSends(x),had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck)));invOpenSheet(x,true,CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m)))).map(c=>ck(c.email)));}
     else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
   const id=t.closest('button')?.id;
@@ -4164,8 +4206,156 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 /* ---------- pages and addresses ----------
    Each page has its own address (#home, #inventory, #pipeline, #sent, #customers), so Back works, a refresh stays on the page,
    and a page can be opened in its own browser tab. The sell sheet editor is the site with no #. */
+/* ---------- QuickBooks items: a Product/Service report exported from QuickBooks (Excel or CSV), uploaded or picked up from Gmail ----------
+   Every column of the report is shown; which ones and in what order is up to you (synced). Items are matched to your sell sheets by SKU or name. */
+const qbDlg=$('#qbDlg'),QB={data:null,q:'',fcol:-1,fval:'',has:'',sort:-1,dir:1,open:-1,side:'',n:300,busy:''};
+const QB_Q='has:attachment (filename:xlsx OR filename:csv) from:(quickbooks OR intuit)';
+const QB_HEAD=/^(product\/service( name)?|products?\/services?|product|service|item( name)?|name|sku|type|item type|description|sales description|purchase description|sales price\/rate|sales price|price|rate|cost|purchase cost|qty on hand|quantity on hand|quantity|qty|income account|expense account|inventory asset account|asset account|category|class|taxable|reorder point|unit|preferred vendor|vendor|full name|account|on hand|available)$/i;
+// which column holds the name, SKU, type…
+function qbIdx(d,what){const c=d.cols.map(x=>x.toLowerCase());
+  const tests={name:[/^(product\/service( name)?|products?\/services?|item( name)?|name|product|full name)$/,/name|product|item/],sku:[/^sku$/,/sku|item code|part/],type:[/^(type|item type)$/,/type/],cat:[/^category$/,/categor|class|group/],qty:[/^(qty on hand|quantity on hand|on hand)$/,/on hand|qty|quantity/],price:[/^(sales price\/rate|sales price|price|rate)$/,/price|rate/],cost:[/^(cost|purchase cost)$/,/cost/],desc:[/^(description|sales description)$/,/description/]}[what]||[];
+  for(const re of tests){const i=c.findIndex(x=>re.test(x));if(i>=0)return i;}return-1;}
+// report rows (from Excel or CSV) → {title, cols, rows}
+function qbParse(raw,src){const rows=raw.map(r=>Array.from(r||[],x=>String(x??'').replace(/\s+/g,' ').trim()));
+  let hi=-1;for(let i=0;i<Math.min(rows.length,30);i++)if(rows[i].filter(x=>QB_HEAD.test(x)).length>=2){hi=i;break;}
+  if(hi<0)throw new Error('That doesn\'t look like a QuickBooks products and services report: no column headings such as Product/Service, SKU, Type or Price were found.');
+  const head=rows[hi],data=rows.slice(hi+1),width=Math.max(head.length,...data.map(r=>r.length));
+  const footer=t=>/^(grand )?total\b/i.test(t)||/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday),/i.test(t)||/^(cash|accrual) basis/i.test(t);
+  let grp='',hasGrp=false;const items=[];
+  for(const r of data){const filled=[];for(let j=0;j<width;j++)if(r[j])filled.push(j);if(!filled.length||footer(r[filled[0]]))continue;
+    // a section heading (e.g. a category) sits alone in a column without a heading
+    if(filled.length===1&&!head[filled[0]]){grp=r[filled[0]];hasGrp=true;continue;}
+    items.push({g:grp,r});}
+  const used=[...Array(width).keys()].filter(j=>items.some(x=>x.r[j]));
+  const seen=new Map(),cols=used.map((j,n)=>{let h=head[j]||(n===0?'Item':'Column '+(n+1));const k=h.toLowerCase();seen.set(k,(seen.get(k)||0)+1);return seen.get(k)>1?h+' '+seen.get(k):h;});
+  const out={v:1,at:Date.now(),src:String(src||'').slice(0,200),title:rows.slice(0,hi).map(r=>r.filter(Boolean).join(' ')).filter(Boolean).slice(0,4).join(' · ').slice(0,300),cols:(hasGrp?['Group']:[]).concat(cols),
+    rows:items.slice(0,10000).map(x=>(hasGrp?[x.g]:[]).concat(used.map(j=>x.r[j]||'')))};
+  if(!out.rows.length)throw new Error('The report has headings but no items.');return out;}
+function qbClean(d){if(!d||typeof d!=='object'||!Array.isArray(d.cols)||!Array.isArray(d.rows))return null;const cols=d.cols.slice(0,80).map(x=>String(x??'').slice(0,80));
+  return{v:1,at:+d.at||0,src:String(d.src||'').slice(0,200),title:String(d.title||'').slice(0,300),cols,rows:d.rows.slice(0,10000).filter(Array.isArray).map(r=>cols.map((_,j)=>String(r[j]??'').slice(0,2000)))};}
+async function qbReadFile(f){const name=f.name||'report';let raw;
+  if(/\.xlsx$/i.test(name)||(f.type||'').includes('spreadsheetml'))raw=await readXlsx(f,QB_HEAD);
+  else if(/\.(csv|txt)$/i.test(name)||/csv|text/.test(f.type||''))raw=parseCSV((await f.text()).replace(/^﻿/,''));
+  else if(/\.xls$/i.test(name))throw new Error('That\'s an old Excel .xls file. Export from QuickBooks again and choose Excel (.xlsx), or CSV.');
+  else throw new Error('Choose the Excel (.xlsx) or CSV file exported from QuickBooks.');
+  return qbParse(raw,name);}
+function qbSave(d,msg){QB.data=d;lsSet('ss-qbo',JSON.stringify(d));QB.open=-1;if(QB.side==='item')QB.side='';scheduleSync();renderQb();if(msg)toast(msg);if(invDlg.open&&IV.open)renderInvDetail(true);}
+async function qbImport(f){try{const d=await qbReadFile(f);qbSave(d,`Imported ${d.rows.length} item${d.rows.length===1?'':'s'} from ${f.name}`);}catch(e){toast(e.message||'That file couldn\'t be read.',7000);}}
+// numbers: shown right-aligned, money with the currency
+const qbNum=v=>{let t=String(v??'').trim(),neg=false;if(!t)return NaN;if(/^\(.*\)$/.test(t)){neg=true;t=t.slice(1,-1).trim();}if(t[0]==='-'){neg=!neg;t=t.slice(1).trim();}
+  t=t.replace(/^(US\$|C\$|A\$|[$€£¥₹])\s?/,'');if(t[0]==='-'){neg=!neg;t=t.slice(1);}t=t.replace(/,(?=\d{3}(\D|$))/g,'');return /^\d*\.?\d+$/.test(t)?(neg?-1:1)*parseFloat(t):NaN;};
+function qbKinds(d){if(d._k)return d._k;return d._k=d.cols.map((c,j)=>{const vals=d.rows.map(r=>r[j]).filter(Boolean);if(!vals.length||/sku|code|\bid\b|number|#|upc|barcode|ean|phone|zip|postal/i.test(c))return'';const n=vals.filter(v=>isFinite(qbNum(v))).length;
+  if(n/vals.length<.8)return'';return/price|cost|rate|amount|value|total|balance|sales|purchase/i.test(c)?'money':'num';});}
+const qbFmt=(v,k)=>{if(!k||!v)return esc(v);const n=qbNum(v);if(!isFinite(n))return esc(v);return esc(k==='money'?(n<0?'-':'')+SET.currency+Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):n.toLocaleString(undefined,{maximumFractionDigits:2}));};
+// which sell sheet (Inventory) goes with an item: same SKU / item code, or the same name
+let qbMC={k:'',m:null};
+function qbMatches(d){const key=d.at+'#'+IV.items.length+'#'+IV.last;if(qbMC.k===key)return qbMC.m;const by=new Map();
+  for(const x of IV.items){for(const k of[x.sum?.code,invTitle(x),x.name])if(k){const n=nrm(k);if(n&&!by.has(n))by.set(n,x);}}
+  const ni=qbIdx(d,'name'),si=qbIdx(d,'sku');
+  const m=d.rows.map(r=>{for(const v of[si>=0?r[si]:'',ni>=0?r[ni]:'',ni>=0?String(r[ni]).split(':').pop():''])if(v&&by.has(nrm(v)))return by.get(nrm(v));return null;});
+  qbMC={k:key,m};return m;}
+function qbForItem(x){const d=QB.data||(QB.data=lsJ('ss-qbo'));if(!d)return-1;const m=qbMatches(d);return m.findIndex(y=>y===x);}
+function qbInvHTML(x){const i=qbForItem(x);if(i<0)return'';const d=QB.data,r=d.rows[i],k=qbKinds(d),pick=['sku','type','price','cost','qty','desc'].map(w=>qbIdx(d,w)).filter((j,n,a)=>j>=0&&a.indexOf(j)===n&&r[j]);
+  return`<div class="ivd-sec"><h4>QuickBooks</h4><dl class="ivd-kv">${pick.map(j=>`<dt>${esc(d.cols[j])}</dt><dd>${qbFmt(r[j],k[j])}</dd>`).join('')}</dl><p style="margin:8px 0 0"><button class="btn sm ghost" type="button" data-ivd="qbo" data-i="${i}">See every column</button> <small class="iv-sync">From ${esc(d.src||'the report')}, ${esc(ago(d.at))}</small></p></div>`;}
+function qbCols(d){const L=d.cols.map((c,j)=>({c,j})),o=SET.qbo.order,pos=c=>{const i=o.indexOf(c);return i<0?1e4+d.cols.indexOf(c):i;};return L.sort((a,b)=>pos(a.c)-pos(b.c));}
+function qbShown(d){const q=QB.q.trim().toLowerCase(),m=qbMatches(d);let L=d.rows.map((r,i)=>i).filter(i=>{const r=d.rows[i];
+    return(!q||r.some(v=>v.toLowerCase().includes(q)))&&(QB.fcol<0||r[QB.fcol]===QB.fval)&&(!QB.has||(QB.has==='yes')===!!m[i]);});
+  if(QB.sort>=0){const k=qbKinds(d)[QB.sort],j=QB.sort;L.sort((a,b)=>{const x=d.rows[a][j],y=d.rows[b][j];if(!x!==!y)return x?-1:1;return QB.dir*(k?(qbNum(x)-qbNum(y)):COLL.compare(x,y));});}
+  return L;}
+function renderQb(keepScroll){if(!qbDlg.open)return;const d=QB.data,bar=$('#qbBar'),sc=$('#qbScroll');qbDlg.classList.toggle('qb-dense',!!SET.qbo.dense);qbDlg.classList.toggle('qb-wrapcells',!!SET.qbo.wrap);
+  if(!d){$('#qbSum').textContent='';bar.innerHTML=`<span class="spacer"></span><button class="btn sm ghost" type="button" data-qb="auto">Auto-import from Gmail…</button><button class="btn sm primary" type="button" data-qb="import">Import report</button>`;
+    sc.innerHTML=`<div class="qb-empty"><h3>Bring in your products and services from QuickBooks</h3><p class="note">Every column of the report shows here: item names, SKUs, types, prices, quantities… Choose which columns to show and drag a file here to update it.</p>
+      <div class="card"><b>Upload a report</b><ol><li>In QuickBooks, open <b>Reports</b> and search for <b>Product/Service List</b> (or go to <b>Sales → Products and services</b>).</li><li>Optional: <b>Customize</b> it to add columns such as <b>SKU</b>, then <b>Save customization</b>.</li><li>Click the <b>Export</b> icon → <b>Export to Excel</b> (or CSV).</li><li>Drop the file anywhere on this page, or click <b>Import report</b>.</li></ol><button class="btn sm primary" type="button" data-qb="import">Import report</button></div>
+      <div class="card"><b>Or have it arrive by itself</b><p class="note" style="margin:6px 0 0">QuickBooks can email the report to you on a schedule, as an Excel attachment. The site then picks up the newest one from your Gmail. <button class="lnk" type="button" data-qb="auto">How to set it up</button></p></div></div>`;
+    renderQbSide();return;}
+  const k=qbKinds(d),cols=qbCols(d).filter(c=>!SET.qbo.hide.includes(c.c)),m=qbMatches(d),L=qbShown(d),nWith=m.filter(Boolean).length,ti=qbIdx(d,'type'),gi=d.cols.indexOf('Group'),ci=qbIdx(d,'cat'),fcols=[gi,ti,ci].filter((j,n,a)=>j>=0&&a.indexOf(j)===n);
+  $('#qbSum').textContent=`${d.rows.length} items`;
+  const focusQ=document.activeElement?.id==='qbQ';
+  bar.innerHTML=`<input class="in" id="qbQ" type="search" placeholder="Search every column" aria-label="Search items" value="${esc(QB.q)}">
+    ${fcols.map(j=>`<select class="in" data-qbf="${j}" aria-label="Filter by ${esc(d.cols[j])}"><option value="">All: ${esc(d.cols[j])}</option>${[...new Set(d.rows.map(r=>r[j]).filter(Boolean))].sort((a,b)=>COLL.compare(a,b)).slice(0,300).map(v=>`<option value="${esc(v)}"${QB.fcol===j&&QB.fval===v?' selected':''}>${esc(v)}</option>`).join('')}</select>`).join('')}
+    <select class="in" id="qbHas" aria-label="Sell sheet"><option value="">All items</option><option value="yes"${QB.has==='yes'?' selected':''}>Has a sell sheet (${nWith})</option><option value="no"${QB.has==='no'?' selected':''}>No sell sheet yet (${d.rows.length-nWith})</option></select>
+    <span class="spacer"></span><button class="btn sm ghost" type="button" data-qb="cols">Columns</button><button class="btn sm ghost" type="button" data-qb="auto">Auto-import…</button><button class="btn sm ghost" type="button" data-qb="export" title="Download what's shown as a spreadsheet (CSV)">Export</button><button class="btn sm" type="button" data-qb="import">Import report</button>
+    <span class="iv-sync" style="flex-basis:100%">${QB.busy?esc(QB.busy):`${L.length===d.rows.length?'':`Showing ${L.length} of ${d.rows.length} · `}<b>${nWith}</b> with a sell sheet, <b>${d.rows.length-nWith}</b> without · from ${esc(d.src||'a report')} ${esc(ago(d.at))}${d.title?' · '+esc(d.title):''}`}</span>`;
+  if(focusQ){const q=$('#qbQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
+  const st=keepScroll?sc.scrollTop:0,sl=keepScroll?sc.scrollLeft:0;
+  sc.innerHTML=!L.length?'<div class="qb-empty"><p class="note">No items match.</p></div>':`<table class="qb-t"><thead><tr>${cols.map(c=>`<th class="${k[c.j]?'num':''}"${QB.sort===c.j?` aria-sort="${QB.dir>0?'ascending':'descending'}"`:''}><button type="button" data-qbsort="${c.j}" title="Sort by ${esc(c.c)}">${esc(c.c)}<span class="ar">${QB.sort===c.j?(QB.dir>0?'▲':'▼'):'↕'}</span></button></th>`).join('')}<th><button type="button" data-qbsort="-2" title="Sort by sell sheet">Sell sheet</button></th></tr></thead>
+    <tbody>${L.slice(0,QB.n).map(i=>{const r=d.rows[i],x=m[i];return`<tr data-qbr="${i}"${QB.open===i&&QB.side==='item'?' class="on"':''}>${cols.map(c=>`<td class="${k[c.j]?'num':''}${k[c.j]&&qbNum(r[c.j])<0?' neg':''}" title="${esc(r[c.j])}">${qbFmt(r[c.j],k[c.j])}</td>`).join('')}<td>${x?`<button class="qb-ss" type="button" data-qbss="${esc(x.key)}" title="Open in Inventory">✓ ${esc(x.fst==='off'||!ivOn(x)?'Inactive':'Sell sheet')}</button>`:'<span class="iv-sync">None</span>'}</td></tr>`;}).join('')}</tbody></table>
+    ${L.length>QB.n?`<button class="btn sm qb-more" type="button" data-qb="more">Show ${Math.min(300,L.length-QB.n)} more (${L.length-QB.n} left)</button>`:''}`;
+  if(keepScroll){sc.scrollTop=st;sc.scrollLeft=sl;}
+  renderQbSide();}
+function renderQbSide(){const a=$('#qbSide'),d=QB.data;if(!QB.side||(QB.side!=='auto'&&!d)){a.hidden=true;a.innerHTML='';return;}a.hidden=false;
+  const head=(t,sub)=>`<div class="qs-h"><h3>${t}${sub?`<small style="display:block;font:400 13px var(--ui);color:var(--muted)">${sub}</small>`:''}</h3><button class="btn icon sm ghost" type="button" data-qb="sidex" aria-label="Close">✕</button></div>`;
+  if(QB.side==='item'){const r=d.rows[QB.open];if(!r){QB.side='';a.hidden=true;return;}const k=qbKinds(d),ni=qbIdx(d,'name'),x=qbMatches(d)[QB.open];
+    a.innerHTML=head(esc(r[ni]||r.find(Boolean)||'Item'),qbIdx(d,'sku')>=0&&r[qbIdx(d,'sku')]?'SKU '+esc(r[qbIdx(d,'sku')]):'')+`<div class="qs-b">
+      <p>${x?`<button class="btn sm primary" type="button" data-qbss="${esc(x.key)}">Open its sell sheet in Inventory</button>`:'<span class="iv-sync">No sell sheet in Inventory matches this item\'s SKU or name.</span>'}</p>
+      <dl class="qs-kv">${qbCols(d).map(c=>`<dt>${esc(c.c)}</dt><dd class="${SET.qbo.hide.includes(c.c)?'hid':''}">${r[c.j]?qbFmt(r[c.j],k[c.j]):'<span class="iv-sync">–</span>'}</dd>`).join('')}</dl>
+      <p class="iv-sync">Greyed values are in columns you've hidden from the table.</p></div>`;return;}
+  if(QB.side==='cols'){const L=qbCols(d);
+    a.innerHTML=head('Columns','Tick to show; arrows change the order')+`<div class="qs-b"><div class="qb-cols">${L.map((c,i)=>`<div class="ivf-row${SET.qbo.hide.includes(c.c)?'':' on'}"><label style="flex:1;display:flex;gap:8px;align-items:center"><input type="checkbox" data-qbcol="${esc(c.c)}" ${SET.qbo.hide.includes(c.c)?'':'checked'}><span>${esc(c.c)}</span></label><span class="ivf-acts"><button type="button" class="btn icon sm ghost" data-qbmv="${i}|-1" aria-label="Move ${esc(c.c)} up" ${i?'':'disabled'}>↑</button><button type="button" class="btn icon sm ghost" data-qbmv="${i}|1" aria-label="Move ${esc(c.c)} down" ${i<L.length-1?'':'disabled'}>↓</button></span></div>`).join('')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn sm ghost" type="button" data-qb="colsall">Show all</button><button class="btn sm ghost" type="button" data-qb="colsreset">Original order</button></div>
+      <div style="display:grid;gap:8px;margin-top:16px"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-qbopt="dense" ${SET.qbo.dense?'checked':''}> Compact rows</label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-qbopt="wrap" ${SET.qbo.wrap?'checked':''}> Show long text in full (wrap)</label></div>
+      <p class="iv-sync" style="margin-top:14px">Your choices are saved and sync to your other devices.</p></div>`;return;}
+  if(QB.side==='auto'){const last=+lsGet('ss-qbo-chk')||0,g=authGet()?.prov==='google';
+    a.innerHTML=head('Auto-import from Gmail','The newest QuickBooks report email is picked up by itself')+`<div class="qs-b">
+      <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" data-qbopt="auto" ${SET.qbo.auto?'checked':''} ${g?'':'disabled'}> Import automatically</label>
+      ${g?'':'<p class="iv-sync">Sign in with Google first (top right).</p>'}
+      <label class="field" style="margin-top:12px"><span>Gmail search for the report emails</span><input class="in" id="qbAq" value="${esc(SET.qbo.q||QB_Q)}" spellcheck="false"><small class="hint">The newest email it finds with an Excel or CSV attachment is used. Checked when this page opens and every 30 minutes while the site is open.</small></label>
+      <p><button class="btn sm" type="button" data-qb="check" ${g?'':'disabled'}>Check Gmail now</button> <span class="iv-sync">${last?'Last checked '+esc(ago(last)):'Not checked yet'}</span></p>
+      <h4 style="margin:18px 0 6px">Set up the schedule in QuickBooks (once)</h4>
+      <ol style="padding-left:18px;line-height:1.6;margin:0">
+        <li>Open <b>Reports</b> → <b>Product/Service List</b>. Click <b>Customize</b> to add any columns you want (e.g. SKU), then <b>Save customization</b>.</li>
+        <li>Open <b>Reports → Custom reports</b>, and on your saved report choose <b>Edit</b> (or the arrow next to it).</li>
+        <li>Turn on <b>Set email schedule</b>, pick how often (e.g. daily), put your Gmail address in <b>To</b>, and tick <b>Attach the report as an Excel file</b>. Save.</li>
+        <li>Tick <b>Import automatically</b> above. Each new email updates this page on every device.</li></ol>
+      <p class="iv-sync" style="margin-top:12px">Only QuickBooks report emails matching the search are opened, read-only, using the Gmail access the site already has for reply checking.</p></div>`;return;}}
+function qbExport(){const d=QB.data;if(!d)return;const cols=qbCols(d).filter(c=>!SET.qbo.hide.includes(c.c)),m=qbMatches(d),q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v)&&!/^-?\d[\d.,]*$/.test(v))v="'"+v;return`"${v.replace(/"/g,'""')}"`;};
+  const rows=qbShown(d).map(i=>[...cols.map(c=>d.rows[i][c.j]),m[i]?'Yes':'No'].map(q).join(','));
+  save(`QuickBooks items ${dayStr(Date.now())}.csv`,new Blob(['﻿'+[[...cols.map(c=>c.c),'Sell sheet'].map(q).join(','),...rows].join('\r\n')],{type:'text/csv'}));}
+// Gmail: the newest report email from QuickBooks with an Excel / CSV attachment
+async function qbAuto(manual){const a=authGet();if(!a||a.prov!=='google'){if(manual)toast('Sign in with Google first (top right).');return;}if(QB.busy)return;
+  let t=await silentTok('google').catch(()=>null);if(manual&&(!t||!canRead(t))){try{t=await login('google',false,true);}catch(e){toast(e.message);return;}}if(!t||!canRead(t)){if(manual)toast('Allow the site to read Gmail (Sent → Turn on reply checking), then try again.',6000);return;}
+  QB.busy='Checking Gmail for QuickBooks reports…';renderQb(true);let got=false;
+  try{lsSet('ss-qbo-chk',String(Date.now()));const list=await gmailGet(t,'messages?maxResults=5&q='+encodeURIComponent(SET.qbo.q||QB_Q));
+    for(const mm of list.messages||[]){const j=await gmailGet(t,`messages/${mm.id}?format=full`);if((+j.internalDate||0)<=(QB.data?.at||0))break;
+      const parts=[],walk=p=>{if(!p)return;if(p.filename&&/\.(xlsx|csv)$/i.test(p.filename)&&p.body?.attachmentId)parts.push(p);(p.parts||[]).forEach(walk);};walk(j.payload);
+      const subj=(j.payload?.headers||[]).find(h=>/^subject$/i.test(h.name))?.value||'QuickBooks report';
+      for(const p of parts){try{const at=await gmailGet(t,`messages/${mm.id}/attachments/${p.body.attachmentId}`),bin=atob(String(at.data||'').replace(/-/g,'+').replace(/_/g,'/')),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+          const d=await qbReadFile(new File([u],p.filename,{type:p.mimeType||''}));d.at=+j.internalDate||Date.now();d.src='Gmail: '+subj;qbSave(d,manual?`Imported ${d.rows.length} items from “${subj}”`:'');got=true;break;}catch(e){console.warn(e);}}
+      if(got)break;}
+    if(manual&&!got)toast(QB.data?'No newer QuickBooks report in Gmail.':'No QuickBooks report email with an Excel or CSV attachment was found. Check the search in Auto-import.',6000);}
+  catch(e){if(manual)toast(e.message||'Couldn\'t check Gmail.');}finally{QB.busy='';renderQb(true);}}
+setInterval(()=>{if(SET.qbo.auto&&!document.hidden&&Date.now()-(+lsGet('ss-qbo-chk')||0)>30*60e3)qbAuto(false);},60e3);
+async function openQb(){pageShown('qbo-items');if(!qbDlg.open)qbDlg.showModal();if(!QB.data)QB.data=lsJ('ss-qbo');
+  if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
+  renderQb();if(SET.qbo.auto&&Date.now()-(+lsGet('ss-qbo-chk')||0)>10*60e3)qbAuto(false);}
+$('#qbClose').onclick=()=>qbDlg.close();
+qbDlg.addEventListener('cancel',()=>{if(QB.side){QB.side='';renderQb(true);}});
+let qbQt=0;
+qbDlg.addEventListener('input',e=>{const t=e.target;if(t.id==='qbQ'){QB.q=t.value;QB.n=300;clearTimeout(qbQt);qbQt=setTimeout(()=>renderQb(),120);}
+  else if(t.id==='qbAq'){SET.qbo.q=t.value.trim()===QB_Q?'':t.value.trim();setSave();}});
+qbDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.qbf!==undefined){QB.fcol=t.value?+t.dataset.qbf:-1;QB.fval=t.value;QB.n=300;renderQb();}
+  else if(t.id==='qbHas'){QB.has=t.value;QB.n=300;renderQb();}
+  else if(t.dataset.qbcol!==undefined){const c=t.dataset.qbcol,h=SET.qbo.hide.filter(x=>x!==c);if(!t.checked)h.push(c);SET.qbo.hide=h;setSave();renderQb(true);}
+  else if(t.dataset.qbopt){SET.qbo[t.dataset.qbopt]=t.checked;setSave();if(t.dataset.qbopt==='auto'&&t.checked)qbAuto(true);renderQb(true);}
+  else if(t.id==='qbFile'){const f=t.files?.[0];t.value='';if(f)qbImport(f);}});
+qbDlg.addEventListener('click',e=>{const t=e.target;
+  const ss=t.closest('[data-qbss]');if(ss){IV.open=ss.dataset.qbss;IV.add=null;openInv().then(()=>renderInvDetail(true));return;}
+  const b=t.closest('[data-qb]');if(b){const v=b.dataset.qb;
+    if(v==='import')$('#qbFile').click();else if(v==='cols'||v==='auto'){QB.side=QB.side===v?'':v;renderQb(true);}else if(v==='sidex'){QB.side='';renderQb(true);}
+    else if(v==='more'){QB.n+=300;renderQb(true);}else if(v==='export')qbExport();else if(v==='check')qbAuto(true);
+    else if(v==='colsall'){SET.qbo.hide=[];setSave();renderQb(true);}else if(v==='colsreset'){SET.qbo.order=[];setSave();renderQb(true);}return;}
+  const so=t.closest('[data-qbsort]');if(so){const j=+so.dataset.qbsort;if(j===-2){QB.has=QB.has==='yes'?'no':QB.has==='no'?'':'yes';renderQb();return;}
+    if(QB.sort!==j){QB.sort=j;QB.dir=1;}else if(QB.dir>0)QB.dir=-1;else QB.sort=-1;renderQb(true);return;}
+  const mv=t.closest('[data-qbmv]');if(mv){const L=qbCols(QB.data).map(c=>c.c),[i,dd]=mv.dataset.qbmv.split('|').map(Number),j=i+dd;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];SET.qbo.order=L;setSave();renderQb(true);return;}
+  const tr=t.closest('tr[data-qbr]');if(tr){const i=+tr.dataset.qbr;if(QB.side==='item'&&QB.open===i){QB.side='';}else{QB.side='item';QB.open=i;}renderQb(true);}});
+// drop a report file anywhere on the page
+qbDlg.addEventListener('dragover',e=>{if([...(e.dataTransfer?.types||[])].includes('Files')){e.preventDefault();e.stopPropagation();qbDlg.classList.add('qb-drop');}});
+qbDlg.addEventListener('dragleave',e=>{if(!qbDlg.contains(e.relatedTarget))qbDlg.classList.remove('qb-drop');});
+qbDlg.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];qbDlg.classList.remove('qb-drop');if(!f)return;e.preventDefault();e.stopPropagation();qbImport(f);});
+
 const PAGES={home:['homeDlg','Home',()=>openHome()],inventory:['invDlg','Inventory',()=>openInv()],pipeline:['plDlg','Pipeline',()=>openPipe()],sent:['logDlg','Sent',()=>openLog()],customers:['custDlg','Customers',()=>openCP()],
-  settings:['setDlg','Settings',()=>openSettings()],
+  settings:['setDlg','Settings',()=>openSettings()],'qbo-items':['qbDlg','QuickBooks items',()=>openQb()],
   'line-sheet':['lineDlg','Line sheet',()=>LN.keys.length?(pageShown('line-sheet'),lineDlg.open||lineDlg.showModal()):openInv()]};
 const PG={hold:false,routing:false};
 const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAGES[h]?h:'';};
@@ -4173,8 +4363,8 @@ const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAG
 function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
   if(pageNow()!==name)history[location.hash&&!PG.inRoute?'pushState':'replaceState'](null,'','#'+name);
   navCur(name);}
-const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',settings:'Settings','line-sheet':'Line sheet'};
-function navCur(name){document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Rakaposhica Dashboard';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
+const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',settings:'Settings','line-sheet':'Line sheet','qbo-items':'QuickBooks items'};
+function navCur(name){$$('.sub-tabs a').forEach(a=>a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name)?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Rakaposhica Dashboard';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'||name==='qbo-items'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
 const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span></button>${['home','editor','inventory','pipeline','sent','customers'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
 // light/dark and the account button, on every page (copies that work the editor's own buttons)
 const GEAR='<button class="btn icon ghost pg-gear" type="button" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>';
@@ -4189,7 +4379,7 @@ for(const[name,[id]]of Object.entries(PAGES)){const d=$('#'+id);d.classList.add(
 function route(){const n=pageNow();PG.inRoute=true;try{if(n){PAGES[n][2]();return;}if(location.hash!=='#editor'&&SET.start!=='editor'&&PAGES[SET.start]){PAGES[SET.start][2]();return;}}finally{PG.inRoute=false;}if(!location.hash)history.replaceState(null,'','#editor');navCur('editor');if(Object.values(PAGES).some(([i])=>$('#'+i).open)){const ap=$('#app');ap.classList.remove('pg-enter');void ap.offsetWidth;ap.classList.add('pg-enter');setTimeout(()=>ap.classList.remove('pg-enter'),400);}PG.routing=true;for(const[,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(d.open)d.close();}PG.routing=false;}
 window.addEventListener('popstate',route);
 // the tabs: plain links, so Ctrl/⌘-click or middle-click opens a page in a new browser tab
-document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
+document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a,.sub-tabs a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
   if(n==='editor'){goEditor();return;}if(n!==pageNow())PAGES[n][2]();});
 // the editor gets the same bar: menu, tabs, light/dark, account, and the arrow that hides the toolbar
 (()=>{const bar=document.createElement('div');bar.className='pg-bar';bar.id='edBar';bar.innerHTML=NAV_HTML;const nav=bar.querySelector('.pg-nav');
@@ -4238,7 +4428,7 @@ document.body.appendChild(cmdDlg);
 const CMD={i:0,items:[],mode:''};
 const cmdGo=(fn)=>()=>{cmdDlg.close();fn();};
 function cmdBase(){const pg=(k,n,sub)=>({g:'Pages',t:n,sub,run:cmdGo(()=>k==='editor'?goEditor():PAGES[k][2]())});
-  const out=[pg('home','Home','Today at a glance'),pg('editor','Sell sheet editor','Make and edit sell sheets'),pg('inventory','Inventory','Your sell sheets in Google Drive'),pg('pipeline','Pipeline','From first send to order'),pg('sent','Sent','Emails, replies and follow-ups'),pg('customers','Customers','Your customer list'),pg('settings','Settings','Make the site yours'),
+  const out=[pg('home','Home','Today at a glance'),pg('editor','Sell sheet editor','Make and edit sell sheets'),pg('inventory','Inventory','Your sell sheets in Google Drive'),pg('qbo-items','QuickBooks items','Products and services from a QuickBooks report'),{g:'Actions',t:'Import a QuickBooks report',sub:'Excel or CSV export',run:cmdGo(async()=>{await openQb();$('#qbFile').click();})},pg('pipeline','Pipeline','From first send to order'),pg('sent','Sent','Emails, replies and follow-ups'),pg('customers','Customers','Your customer list'),pg('settings','Settings','Make the site yours'),
     {g:'Actions',t:'New sell sheet',run:cmdGo(()=>{goEditor();$('#newSheet').click();})},{g:'Actions',t:'Email this sell sheet',sub:sheetName(S||{}),run:cmdGo(()=>{goEditor();openMail();})},{g:'Actions',t:'New customer',run:cmdGo(()=>openCustomer('new'))},
     {g:'Actions',t:'Open a sell sheet from this computer',run:cmdGo(()=>$('#openFile').click())},{g:'Actions',t:'Open a sell sheet from Google Drive',run:cmdGo(()=>driveOpen('sheet').then(f=>{if(f)openSheetFile(f);}))},
     {g:'Actions',t:'Show follow-ups that are due',run:cmdGo(()=>{lgF.q='';lgF.status='follow';openLog();})},{g:'Actions',t:'Show replies',run:cmdGo(()=>{lgF.q='';lgF.status='reply';openLog();})},
@@ -4248,6 +4438,7 @@ function cmdBase(){const pg=(k,n,sub)=>({g:'Pages',t:n,sub,run:cmdGo(()=>k==='ed
   for(const[k,n]of ST_SECS)out.push({g:'Settings',t:n,sub:'Settings',hay:SKW[k]||'',run:cmdGo(()=>openSettings(k))});
   for(const sh of sheets)out.push({g:'Sell sheets',t:sheetName(sh),sub:'Saved on this device · '+ago(sh.updated||Date.now()),run:cmdGo(async()=>{goEditor();await switchTo(sh);})});
   cuLoad();for(const c of CU.list)out.push({g:'Customers',t:c.name||c.company||c.email,sub:[c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '),hay:[c.name,c.company,c.email,...altOf(c),...grpsOf(c)].join(' '),run:cmdGo(()=>openCustomer(ck(c.email)))});
+  {const d=QB.data||lsJ('ss-qbo');if(d){const ni=qbIdx(d,'name'),si=qbIdx(d,'sku');d.rows.slice(0,3000).forEach((r,i)=>out.push({g:'QuickBooks items',t:r[ni]||r.find(Boolean)||'(item)',sub:[si>=0?r[si]:'',...r.filter((v,j)=>j!==ni&&j!==si&&v).slice(0,2)].filter(Boolean).join(' · '),hay:r.join(' '),run:cmdGo(async()=>{QB.side='item';QB.open=i;await openQb();})}));}}
   for(const x of IV.items)out.push({g:'Products',t:invTitle(x),sub:[x.sum?.code,x.sum?.price,x.type,x.cat].filter(Boolean).join(' · '),hay:[invTitle(x),x.sum?.code,x.cat,x.type].join(' '),run:cmdGo(async()=>{IV.open=x.key;await openInv();renderInvDetail(true);})});
   return out;}
 const SHORTCUTS=[['Ctrl/⌘ K','Search everything'],['?','This list'],['G then H','Home'],['G then E','Sell sheet editor'],['G then I','Inventory'],['G then P','Pipeline'],['G then S','Sent'],['G then C','Customers'],['G then ,','Settings'],['/','Search on the page you\'re on'],['Ctrl/⌘ Shift F','Hide or show the editor toolbar'],['Esc','Close a pop-up or panel']];
