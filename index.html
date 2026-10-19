@@ -142,6 +142,17 @@ svg{flex:none}
 .qb-empty{max-width:720px;margin:28px auto;padding:0 18px}.qb-empty h3{margin:0 0 6px;font-size:20px}.qb-empty ol{padding-left:20px;line-height:1.6}.qb-empty .card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0;background:var(--panel)}
 .qb-drop{outline:3px dashed var(--accent);outline-offset:-10px}
 .qb-more{display:block;margin:14px auto}
+.np-qb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.qb-live{color:var(--accent-fg);font-weight:600}.qb-bulk{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 10px;border-radius:10px;background:var(--accent-soft)}
+.qb-t .qb-ck{width:34px;text-align:center}.qb-t td.qb-ck{cursor:default}.qb-t th.qb-ck{padding:0 8px}
+.qb-t td:first-child.qb-ck{font-weight:400}
+.qb-t td.low{color:var(--warn,#B45309);font-weight:600}.qb-lowtag{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:color-mix(in srgb,#F59E0B 22%,transparent);color:inherit;border-radius:999px;padding:1px 6px}
+.qf{display:grid;gap:10px}.qf .field{margin:0}.qf .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.qf textarea.in{min-height:64px}
+.qf .req::after{content:' *';color:var(--bad)}
+.qb-rev{display:grid;gap:6px;margin:6px 0 14px}.qb-rev div{display:grid;grid-template-columns:minmax(0,34%) minmax(0,1fr);gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:13.5px}.qb-rev s{color:var(--muted)}.qb-rev b{color:var(--accent-fg)}
+.qs-acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.qb-err{color:var(--bad);font-size:13.5px;margin:8px 0}
+.qc-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,140px) auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}.qc-row .in{height:32px}
 @media (max-width:760px){.qb-t td{max-width:200px}.sub-tabs{padding:6px 10px 0}}
 .iv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise);font-size:13.5px}.iv-bar:empty{display:none}
 .iv-bar .spacer{flex:1 1 0}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent-fg);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
@@ -1019,6 +1030,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
       <button class="btn sm primary" id="cpAdd" type="button">＋ New customer</button>
       <button class="btn sm ghost" id="cpImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file from this computer or Google Drive">Import</button>
       <button class="btn sm ghost" id="cpExport" type="button">Export</button>
+      <button class="btn sm ghost" id="cpQbo" type="button" aria-haspopup="menu" hidden>QuickBooks</button>
       <div class="cu-groups cp-chips" id="cpChips"></div>
     </div>
     <div class="cp-main">
@@ -1155,7 +1167,7 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
   tabs:['home','editor','inventory','pipeline','sent','customers'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','chart','activity','top','inv','cust'],secOff:[],side:['top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},qbo:{hide:[],order:[],auto:false,q:'',dense:false,wrap:false},pipe:{colsOff:[],days:90},sheet:{contact:''},upd:0};
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},qbo:{hide:[],order:[],auto:false,q:'',dense:false,wrap:false,write:false,cust:false},pipe:{colsOff:[],days:90},sheet:{contact:''},upd:0};
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   const fix=(arr,def)=>[...arr.filter(k=>def.includes(k)),...def.filter(k=>!arr.includes(k))];d.tabs=fix(d.tabs,SET_DEF.tabs);d.home.kpis=fix(d.home.kpis,SET_DEF.home.kpis);d.home.secs=fix(d.home.secs,SET_DEF.home.secs);
@@ -2363,10 +2375,11 @@ async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh()
 // which slot a Google sign-in is kept in: 'google' is the site's account; other Gmail accounts used only for sending are 'gx:<email>'
 const gSlot=(key,email)=>key!=='extra'?key:(authGet()?.prov==='google'&&ck(authGet().email)===ck(email))?'google':'gx:'+ck(email);
 // the sign-in window comes back to this page with ?code=…; it is read here (same origin) and closed
-function popupCode(w,state){return new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
+const popupCode=(w,state)=>popupParams(w,state).then(sp=>sp.get('code'));
+function popupParams(w,state){return new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
     let u;try{u=new URL(w.location.href);}catch(_){return;}if(u.origin!==location.origin)return;const sp=u.searchParams;if(!sp.get('code')&&!sp.get('error'))return;
     clearInterval(iv);w.close();if(sp.get('state')!==state){rej(new Error('Sign-in failed. Please try again.'));return;}
-    sp.get('error')?rej(new Error(sp.get('error')==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':sp.get('error_description')||sp.get('error'))):res(sp.get('code'));},250);});}
+    sp.get('error')?rej(new Error(sp.get('error')==='access_denied'?(sp.get('realmId')!==null||/intuit/i.test(sp.get('error_description')||'')?'QuickBooks access wasn\'t allowed.':'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).'):sp.get('error_description')||sp.get('error'))):res(sp);},250);});}
 async function pkce(){const rnd=n=>crypto.getRandomValues(new Uint8Array(n)),verifier=b64url(rnd(48));return{verifier,challenge:b64url(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),state:b64url(rnd(16))};}
 async function gUserEmail(token){try{return(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}})).json()).email||'';}catch(_){return'';}}
 async function gCodeLogin(choose,hint,scope,key){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
@@ -2438,7 +2451,7 @@ const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.colo
 function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])]){const k=ck(d?.email);if(k&&(!del.has(k)||del.get(k)<d.at))del.set(k,+d.at||0);}
   const m=new Map();for(const c of[...(a.customers||[]),...(b.customers||[])]){if(!c||!EMAIL_RE.test(String(c.email||'').trim()))continue;const k=ck(c.email),o=m.get(k);if(!o||(+c.upd||0)>(+o.upd||0))m.set(k,c);}
   const cutoff=Date.now()-180*864e5;
-  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),greet:cleanGreet(c.greet),upd:+c.upd||0};}),
+  return{customers:[...m.values()].filter(c=>!((del.get(ck(c.email))||0)>(+c.upd||0))).map(c=>{const ok=v=>Array.isArray(v)?v.filter(a=>typeof a==='string'&&EMAIL_RE.test(a.trim())).map(a=>a.trim()):[];return{name:String(c.name||''),company:String(c.company||''),email:String(c.email).trim(),alt:ok(c.alt),use:ok(c.use),groups:grpsOf(c),color:COLOR_HEX[c.color]?c.color:normHex(c.color),note:String(c.note||'').slice(0,4000),info:cleanInfo(c.info),greet:cleanGreet(c.greet),...(/^\d{1,12}$/.test(String(c.qb||''))?{qb:String(c.qb)}:{}),upd:+c.upd||0};}),
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at})),groups:mergeGroupMeta(a.groups,b.groups)};}
 // group colours/names: newest change wins; deleted groups are remembered
 function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
@@ -2460,7 +2473,7 @@ const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsub
 /* what was last synced: the cloud file's version and a fingerprint of the local data. When neither changed, a sync only asks Drive for the version. */
 const SYNC={ver:'',fp:''};
 const hashS=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+':'+str.length;};
-const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),String(lsJ('ss-qbo')?.at||''),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
+const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),String(lsJ('ss-qbo')?.at||''),String(lsJ('ss-qbc')?.at||''),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
 const blankS=x=>!x.title&&!x.code&&!(x.photos||[]).length;
 /* sell sheets: each saved sheet is its own small file in the app's private Drive folder; the sync file keeps the list (and deletions).
    The newest version of each sheet wins. */
@@ -2509,11 +2522,13 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       const im=mergeInvMeta(ivMetaAll(),rd.invMeta);lsSet('ss-inv-meta',JSON.stringify(im));
       // settings: the newest change wins
       if(rd.settings&&typeof rd.settings==='object'&&(+rd.settings.upd||0)>(+SET.upd||0)){setReplace(rd.settings,true);invFolderFromSet();}
+      // QuickBooks connection (so every device can use it)
+      let QBCX=lsJ('ss-qbc');{const qr=rd.qbc&&typeof rd.qbc==='object'?rd.qbc:null;if(qr&&(+qr.at||0)>(+QBCX?.at||0)){QBCX=qr;lsSet('ss-qbc',JSON.stringify(qr));qbConnChanged();}}
       // QuickBooks items: the newest import wins
       let QBX=lsJ('ss-qbo');{const qr=qbClean(rd.qbo);if(qr&&qr.at>(+QBX?.at||0)){QBX=qr;lsSet('ss-qbo',JSON.stringify(qr));QB.data=qr;if(qbDlg.open)renderQb(true);}}
       const SHX=acct.prov==='google'?await syncSheets(a,rd.sheets):null;SYNC.ver=remote.version||'';
-      if((QBX&&(+QBX.at||0)!==(+rd.qbo?.at||0))||(SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
-        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),...(QBX?{qbo:QBX}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
+      if((QBCX&&(+QBCX.at||0)!==(+rd.qbc?.at||0))||(QBX&&(+QBX.at||0)!==(+rd.qbo?.at||0))||(SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{}])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
+        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),...(QBX?{qbo:QBX}:{}),...(QBCX?{qbc:QBCX}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
       if(invDlg.open)renderInv(true);
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
@@ -3697,7 +3712,7 @@ function setReplace(obj,fromSync){const n=setNorm(obj);for(const k of Object.key
 const getP=(o,p)=>p.split('.').reduce((a,k)=>a?.[k],o),setP=(o,p,v)=>{const ks=p.split('.'),l=ks.pop();ks.reduce((a,k)=>a[k],o)[l]=v;};
 const ST_SECS=[['general','General','<circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8L7 17M17 7l2.8-2.8"/>'],['home','Home dashboard','<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'],
   ['nav','Navigation','<path d="M4 6h16M4 12h16M4 18h10"/>'],['email','Email & replies','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'],['inv','Inventory','<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>'],
-  ['pipe','Pipeline','<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/>'],['sheet','Sell sheets','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>'],['data','Backup & reset','<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/>']];
+  ['pipe','Pipeline','<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/>'],['sheet','Sell sheets','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>'],['qbo','QuickBooks','<rect x="3" y="3" width="18" height="18" rx="9"/><path d="M9 8v8M9 8h2a3 3 0 0 1 0 6H9M15 16V8M15 16h-2"/>'],['data','Backup & reset','<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/>']];
 const ACCENTS=[['#0E993F','Green'],['#2563EB','Blue'],['#4F46E5','Indigo'],['#9333EA','Purple'],['#DB2777','Pink'],['#DC2626','Red'],['#EA7317','Orange'],['#CA8A04','Gold'],['#0891B2','Teal'],['#475569','Slate']];
 const SIDE_ITEMS=[['home','Home'],['editor','Sell sheet editor'],['inv','Inventory'],['pipe','Pipeline'],['sent','Sent emails'],['cust','Customers'],['cust-new','New customer'],['open-pc','Open a sell sheet: from this computer'],['open-drive','Open a sell sheet: from Google Drive']];
 const TAB_NAMES={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers'};
@@ -3757,6 +3772,7 @@ function renderSettings(){if(!setDlg.open)return;
     ${card('',row('Period','Customers active in the last',seg('pipe.days',[[30,'30 days'],[90,'90'],[365,'12 months'],[0,'All time']]))+PL_COLS.map(([k,n])=>row(n,'Column',`<label class="st-sw2"><input type="checkbox" data-spipe="${k}" ${SET.pipe.colsOff.includes(k)?'':'checked'}><i></i></label>`)).join(''))}`;
   else if(ST.sec==='sheet')body=`<h3>Sell sheets</h3><p class="st-lead">Defaults for new sell sheets.</p>
     ${card('',row('Contact email on new sheets','Shown in the footer of every new sell sheet',txt('sheet.contact','sales@yourcompany.com','','email').replace('value=""',`value="${esc(SET.sheet.contact)}"`)))}`;
+  else if(ST.sec==='qbo')body=qbSettingsHTML();
   else body=`<h3>Backup & reset</h3><p class="st-lead">Keep a copy of everything, or start your settings over.</p>
     ${card('',row('Download a backup','Settings, customers, the Sent list, your email wording and inventory notes, in one file',`<button class="btn sm" type="button" data-sact="backup">Download</button>`)
       +row('Restore from a backup','Adds the backup\'s customers and Sent list to what\'s here, and uses its settings',`<button class="btn sm" type="button" data-sact="restore">Choose file…</button><input type="file" id="stRestore" accept=".json,application/json" hidden>`)
@@ -3784,6 +3800,10 @@ setDlg.addEventListener('click',e=>{const t=e.target;
   else if(v==='ivPick'){openInv().then(()=>invPickFolder());}
   else if(v==='ivSyncNow'){if(!IV.folder){openInv();return;}invSync(true).then(()=>{toast(IV.err?'Couldn\'t sync the inventory':'Inventory is up to date');if(setDlg.open)renderSettings();});}
   else if(v==='helper'){openSetup();}
+  else if(v==='qbConnect'){qbConnect().then(()=>{if(setDlg.open)renderSettings();});}
+  else if(v==='qbDisconnect'){if(!ST.qbSure){ST.qbSure=true;renderSettings();return;}ST.qbSure=false;qbDisconnect().then(()=>renderSettings());}
+  else if(v==='qbRefresh'){qbLoad(true).then(()=>{toast(QL.err||'QuickBooks data is up to date');renderSettings();});}
+  else if(v==='qbOpen'){openQb();}
   else if(v==='relogin'){login('google',false,true).then(()=>{toast('Signed in. You\'ll stay signed in on this device.');renderSettings();}).catch(e=>toast(e.message));}
   else if(v==='addFrom'){chooseFrom('+').then(()=>{if(setDlg.open)renderSettings();});}
   else if(v==='saRefresh'){Promise.all(gKeys().map(k=>loadSendAs(k,true))).then(()=>{renderSettings();toast('Addresses updated from Gmail');});}
@@ -4015,7 +4035,7 @@ function renderCPFoot(){const shown=CP.rows||[],ticked=CU.list.filter(c=>CU.sel.
 // highlight the open customer's row without redrawing the table
 function cpSelectRow(key){$('#cpTable tr.on')?.classList.remove('on');if(key&&CP.mode==='cust'){const tr=[...$$('#cpTable tr[data-cp]')].find(r=>r.dataset.cp===key);tr?.classList.add('on');}}
 // reset=true when a filter changed (go back to the top of the list)
-function renderCP(reset){const nn=nnCount();if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
+function renderCP(reset){$('#cpQbo').hidden=!qbOn();const nn=nnCount();if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
   const dupes=findDupes();
   $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
   $('#cpColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cuColors()].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;
@@ -4102,6 +4122,9 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
     ${(()=>{const have=new Set(W.keys),q=[...new Set(['Phone','Address','Website',...infoKeys()])].filter(k=>!have.has(k)&&k!==OTHER.name&&k!==OTHER.company).slice(0,8);
       return q.length?`<div class="np-quick"><span>Quick add:</span>${q.map(k=>`<button type="button" data-cpd="qadd" data-k="${esc(k)}">${npI('add')}${esc(k)}</button>`).join('')}</div>`:'';})()}
     <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().filter(x=>x!==OTHER.name&&x!==OTHER.company).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div></div>`;
+  P.qbo=isNew||!qbOn()?'':(()=>{const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return'';const w=SET.qbo.write;
+    return`<div class="np-sec" id="np-qbo"><h4>${npI('note')}QuickBooks</h4><p class="np-qb">${c.qb?`Linked to QuickBooks${w?'. Changes you save here update QuickBooks too.':' (read-only).'}`:'Not in QuickBooks yet.'}
+      ${w?(c.qb?'<button class="btn sm ghost" type="button" data-cpd="qbupd">Update QuickBooks now</button>':'<button class="btn sm" type="button" data-cpd="qbadd">Add to QuickBooks</button>'):'<button class="lnk" type="button" data-cpd="qbrw">Turn on changes</button>'}</p></div>`;})();
   P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
   P.sent=`<div class="np-sec" id="np-sent"><h4>${npI('sent')}Sent to this customer${sent.length?` <span class="np-count">${sent.length}</span>`:''}</h4>${sent.length?`<div class="np-list">${sent.slice(0,20).map(th=>`<div class="np-row"><span class="np-dot" style="background:${tagHex(th.root.color)||'var(--line2)'}"></span><b>${esc(th.root.sheet)}</b><span>${esc(ago(th.root.at))}${th.fups.length?` · ${th.fups.length} follow-up${th.fups.length>1?'s':''}`:''}</span><em>${esc(ST_NAME[th.root.status||'none'])}</em></div>`).join('')}</div>`:'<p class="np-empty">Nothing sent yet.</p>'}</div>`;
   P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
@@ -4109,7 +4132,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   return P;}
 function npGreetOut(W){const n=greetName({cust:1,name:W.vals.name[0],greet:W.greet});return n?`Emails greet them as “${esc(n)}”`:'No name to greet them by yet';}
 function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
-  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
+  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}${P.qbo||''}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
 // auto-height for the note
 const npSize=el=>{el.style.height='auto';el.style.height=el.scrollHeight+2+'px';};
 custDlg.addEventListener('input',e=>{if(e.target.classList.contains('np-auto'))npSize(e.target);const st=$('#cpdState');if(st&&CP.dirty)st.textContent='● Unsaved changes';});
@@ -4126,7 +4149,7 @@ function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.clos
   CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;cpSelectRow(null);renderCPDetail();renderCPFoot();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
   const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W),greet:W.greet});
-  if(err){toast(err);return false;}const isNew=CP.open==='new';CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
+  if(err){toast(err);return false;}const isNew=CP.open==='new';{const sv=CU.list.find(x=>ck(x.email)===ck(emails[0]));if(sv?.qb&&SET.qbo.write&&qbOn())qbCustPush(sv,true);}CP.open=ck(emails[0]);CP.W=null;CP.dirty=false;CP.closeSure=false;renderCP();if(mailDlg.open)renderCust();toast(isNew?'Customer added':'Customer saved');return true;}
 // removing can be undone for a few seconds (restored customers count as just edited, so a sync can't remove them again)
 function undoCustomers(snap,msg){toast(msg,7000,{label:'Undo',fn:()=>{const s=JSON.parse(snap),now=Date.now();const back=new Set(s.list.map(c=>ck(c.email)));
   CU.list=[...s.list.map(c=>CU.list.find(x=>ck(x.email)===ck(c.email))||{...c,upd:now}),...CU.list.filter(x=>!back.has(ck(x.email)))];CU.deleted=CU.deleted.filter(d=>!back.has(d.email)||s.deleted.some(o=>o.email===d.email&&o.at===d.at));
@@ -4146,6 +4169,7 @@ custDlg.addEventListener('change',e=>{const t=e.target;
   if(t.dataset.cptick!==undefined){t.checked?CU.sel.add(t.dataset.cptick):CU.sel.delete(t.dataset.cptick);CP.tickSure=false;renderCPFoot();return;}
   if(t.dataset.cpall!==undefined){cpShown().forEach(c=>t.checked?CU.sel.add(ck(c.email)):CU.sel.delete(ck(c.email)));CP.tickSure=false;$$('#cpTable [data-cptick]').forEach(cb=>{cb.checked=CU.sel.has(cb.dataset.cptick);});renderCPFoot();}});
 custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),W=CP.W;
+  if(a&&['qbadd','qbupd','qbrw'].includes(a.dataset.cpd)){if(a.dataset.cpd==='qbrw'){openSettings('qbo');return;}const c=CU.list.find(x=>ck(x.email)===CP.open);if(c){if(CP.dirty&&!saveCustomer())return;qbCustPush(CU.list.find(x=>ck(x.email)===CP.open)||c);}return;}
   if(t.closest('[data-cpmore]')){cpMore();return;}
   if(t.closest('[data-cpnn]')){CP.nn=!CP.nn;renderCP(true);return;}
   const gt=t.closest('#cpChips [data-gtog]');if(gt){const k=gt.dataset.gtog;CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);renderCP(true);return;}
@@ -4208,7 +4232,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
    and a page can be opened in its own browser tab. The sell sheet editor is the site with no #. */
 /* ---------- QuickBooks items: a Product/Service report exported from QuickBooks (Excel or CSV), uploaded or picked up from Gmail ----------
    Every column of the report is shown; which ones and in what order is up to you (synced). Items are matched to your sell sheets by SKU or name. */
-const qbDlg=$('#qbDlg'),QB={data:null,q:'',fcol:-1,fval:'',has:'',sort:-1,dir:1,open:-1,side:'',n:300,busy:''};
+const qbDlg=$('#qbDlg'),QB={data:null,q:'',fcol:-1,fval:'',has:'',sort:-1,dir:1,open:-1,side:'',n:300,busy:'',sel:new Set(),pend:null,err:''};
 const QB_Q='has:attachment (filename:xlsx OR filename:csv) from:(quickbooks OR intuit)';
 const QB_HEAD=/^(product\/service( name)?|products?\/services?|product|service|item( name)?|name|sku|type|item type|description|sales description|purchase description|sales price\/rate|sales price|price|rate|cost|purchase cost|qty on hand|quantity on hand|quantity|qty|income account|expense account|inventory asset account|asset account|category|class|taxable|reorder point|unit|preferred vendor|vendor|full name|account|on hand|available)$/i;
 // which column holds the name, SKU, type…
@@ -4254,7 +4278,7 @@ function qbMatches(d){const key=d.at+'#'+IV.items.length+'#'+IV.last;if(qbMC.k==
   const ni=qbIdx(d,'name'),si=qbIdx(d,'sku');
   const m=d.rows.map(r=>{for(const v of[si>=0?r[si]:'',ni>=0?r[ni]:'',ni>=0?String(r[ni]).split(':').pop():''])if(v&&by.has(nrm(v)))return by.get(nrm(v));return null;});
   qbMC={k:key,m};return m;}
-function qbForItem(x){const d=QB.data||(QB.data=lsJ('ss-qbo'));if(!d)return-1;const m=qbMatches(d);return m.findIndex(y=>y===x);}
+function qbForItem(x){const d=qbCur();if(!d)return-1;const m=qbMatches(d);return m.findIndex(y=>y===x);}
 function qbInvHTML(x){const i=qbForItem(x);if(i<0)return'';const d=QB.data,r=d.rows[i],k=qbKinds(d),pick=['sku','type','price','cost','qty','desc'].map(w=>qbIdx(d,w)).filter((j,n,a)=>j>=0&&a.indexOf(j)===n&&r[j]);
   return`<div class="ivd-sec"><h4>QuickBooks</h4><dl class="ivd-kv">${pick.map(j=>`<dt>${esc(d.cols[j])}</dt><dd>${qbFmt(r[j],k[j])}</dd>`).join('')}</dl><p style="margin:8px 0 0"><button class="btn sm ghost" type="button" data-ivd="qbo" data-i="${i}">See every column</button> <small class="iv-sync">From ${esc(d.src||'the report')}, ${esc(ago(d.at))}</small></p></div>`;}
 function qbCols(d){const L=d.cols.map((c,j)=>({c,j})),o=SET.qbo.order,pos=c=>{const i=o.indexOf(c);return i<0?1e4+d.cols.indexOf(c):i;};return L.sort((a,b)=>pos(a.c)-pos(b.c));}
@@ -4263,27 +4287,30 @@ function qbShown(d){const q=QB.q.trim().toLowerCase(),m=qbMatches(d);let L=d.row
   if(QB.sort>=0){const k=qbKinds(d)[QB.sort],j=QB.sort;L.sort((a,b)=>{const x=d.rows[a][j],y=d.rows[b][j];if(!x!==!y)return x?-1:1;return QB.dir*(k?(qbNum(x)-qbNum(y)):COLL.compare(x,y));});}
   return L;}
 function renderQb(keepScroll){if(!qbDlg.open)return;const d=QB.data,bar=$('#qbBar'),sc=$('#qbScroll');qbDlg.classList.toggle('qb-dense',!!SET.qbo.dense);qbDlg.classList.toggle('qb-wrapcells',!!SET.qbo.wrap);
+  if(!d&&qbOn()){$('#qbSum').textContent='';bar.innerHTML='';sc.innerHTML=`<div class="qb-empty"><h3>${QL.err?'Couldn\'t load from QuickBooks':'Loading your items from QuickBooks…'}</h3><p class="note">${QL.err?esc(QL.err)+' <button class="lnk" type="button" data-qbl="refresh">Try again</button>':'This takes a few seconds the first time.'}</p></div>`;renderQbSide();return;}
   if(!d){$('#qbSum').textContent='';bar.innerHTML=`<span class="spacer"></span><button class="btn sm ghost" type="button" data-qb="auto">Auto-import from Gmail…</button><button class="btn sm primary" type="button" data-qb="import">Import report</button>`;
-    sc.innerHTML=`<div class="qb-empty"><h3>Bring in your products and services from QuickBooks</h3><p class="note">Every column of the report shows here: item names, SKUs, types, prices, quantities… Choose which columns to show and drag a file here to update it.</p>
+    sc.innerHTML=`<div class="qb-empty"><h3>Bring in your products and services from QuickBooks</h3><p class="note">Every column shows here: item names, SKUs, types, prices, quantities… Choose which columns to show.</p>
+      <div class="card"><b>Connect QuickBooks directly (recommended)</b><p class="note" style="margin:6px 0 10px">Live items, edit them here, add new ones, adjust stock and manage categories. Changes go both ways.</p><button class="btn sm primary" type="button" data-qbl="connect">Connect QuickBooks…</button></div>
       <div class="card"><b>Upload a report</b><ol><li>In QuickBooks, open <b>Reports</b> and search for <b>Product/Service List</b> (or go to <b>Sales → Products and services</b>).</li><li>Optional: <b>Customize</b> it to add columns such as <b>SKU</b>, then <b>Save customization</b>.</li><li>Click the <b>Export</b> icon → <b>Export to Excel</b> (or CSV).</li><li>Drop the file anywhere on this page, or click <b>Import report</b>.</li></ol><button class="btn sm primary" type="button" data-qb="import">Import report</button></div>
       <div class="card"><b>Or have it arrive by itself</b><p class="note" style="margin:6px 0 0">QuickBooks can email the report to you on a schedule, as an Excel attachment. The site then picks up the newest one from your Gmail. <button class="lnk" type="button" data-qb="auto">How to set it up</button></p></div></div>`;
     renderQbSide();return;}
-  const k=qbKinds(d),cols=qbCols(d).filter(c=>!SET.qbo.hide.includes(c.c)),m=qbMatches(d),L=qbShown(d),nWith=m.filter(Boolean).length,ti=qbIdx(d,'type'),gi=d.cols.indexOf('Group'),ci=qbIdx(d,'cat'),fcols=[gi,ti,ci].filter((j,n,a)=>j>=0&&a.indexOf(j)===n);
+  const k=qbKinds(d),cols=qbCols(d).filter(c=>!SET.qbo.hide.includes(c.c)),m=qbMatches(d),L=qbShown(d),nWith=m.filter(Boolean).length,ti=qbIdx(d,'type'),gi=d.cols.indexOf('Group'),ci=qbIdx(d,'cat'),fcols=[gi,ti,ci,d.live?d.cols.indexOf('Status'):-1].filter((j,n,a)=>j>=0&&a.indexOf(j)===n);
   $('#qbSum').textContent=`${d.rows.length} items`;
   const focusQ=document.activeElement?.id==='qbQ';
   bar.innerHTML=`<input class="in" id="qbQ" type="search" placeholder="Search every column" aria-label="Search items" value="${esc(QB.q)}">
     ${fcols.map(j=>`<select class="in" data-qbf="${j}" aria-label="Filter by ${esc(d.cols[j])}"><option value="">All: ${esc(d.cols[j])}</option>${[...new Set(d.rows.map(r=>r[j]).filter(Boolean))].sort((a,b)=>COLL.compare(a,b)).slice(0,300).map(v=>`<option value="${esc(v)}"${QB.fcol===j&&QB.fval===v?' selected':''}>${esc(v)}</option>`).join('')}</select>`).join('')}
     <select class="in" id="qbHas" aria-label="Sell sheet"><option value="">All items</option><option value="yes"${QB.has==='yes'?' selected':''}>Has a sell sheet (${nWith})</option><option value="no"${QB.has==='no'?' selected':''}>No sell sheet yet (${d.rows.length-nWith})</option></select>
-    <span class="spacer"></span><button class="btn sm ghost" type="button" data-qb="cols">Columns</button><button class="btn sm ghost" type="button" data-qb="auto">Auto-import…</button><button class="btn sm ghost" type="button" data-qb="export" title="Download what's shown as a spreadsheet (CSV)">Export</button><button class="btn sm" type="button" data-qb="import">Import report</button>
-    <span class="iv-sync" style="flex-basis:100%">${QB.busy?esc(QB.busy):`${L.length===d.rows.length?'':`Showing ${L.length} of ${d.rows.length} · `}<b>${nWith}</b> with a sell sheet, <b>${d.rows.length-nWith}</b> without · from ${esc(d.src||'a report')} ${esc(ago(d.at))}${d.title?' · '+esc(d.title):''}`}</span>`;
+    <span class="spacer"></span><button class="btn sm ghost" type="button" data-qb="cols">Columns</button>${d.live?`<button class="btn sm ghost" type="button" data-qbl="cats">Categories</button><button class="btn sm ghost" type="button" data-qbl="refresh" title="Get the latest from QuickBooks">Refresh</button>`:'<button class="btn sm ghost" type="button" data-qb="auto">Auto-import…</button>'}<button class="btn sm ghost" type="button" data-qb="export" title="Download what's shown as a spreadsheet (CSV)">Export</button>${d.live?(SET.qbo.write?'<button class="btn sm primary" type="button" data-qbl="new">＋ New item</button>':''):'<button class="btn sm" type="button" data-qb="import">Import report</button>'}
+    ${d.live&&SET.qbo.write&&QB.sel.size?`<span class="qb-bulk" style="flex-basis:100%"><b>${QB.sel.size} selected</b><button class="btn sm ghost" type="button" data-qbl="bulkcat">Set category…</button><button class="btn sm ghost" type="button" data-qbl="bulkoff">Make inactive</button><button class="btn sm ghost" type="button" data-qbl="bulkon">Make active</button><button class="btn sm ghost" type="button" data-qbl="bulkprice">Change prices…</button><button class="lnk" type="button" data-qbl="selnone">Clear</button></span>`:''}
+    <span class="iv-sync" style="flex-basis:100%">${QB.busy?esc(QB.busy):`${L.length===d.rows.length?'':`Showing ${L.length} of ${d.rows.length} · `}<b>${nWith}</b> with a sell sheet, <b>${d.rows.length-nWith}</b> without · ${d.live?`<span class="qb-live">● Live from QuickBooks</span>${d.title?' · '+esc(d.title):''} · updated ${esc(ago(QL.at||d.at))}${QL.err?' · <span style="color:var(--bad)">'+esc(QL.err)+'</span>':''}${SET.qbo.write?'':' · <button class="lnk" type="button" data-qbl="rw">Read-only: turn on editing</button>'}`:`from ${esc(d.src||'a report')} ${esc(ago(d.at))}${d.title?' · '+esc(d.title):''}${qbOn()?'':' · <button class="lnk" type="button" data-qbl="connect">Connect QuickBooks directly</button>'}`}`}</span>`;
   if(focusQ){const q=$('#qbQ');q.focus();q.setSelectionRange(q.value.length,q.value.length);}
-  const st=keepScroll?sc.scrollTop:0,sl=keepScroll?sc.scrollLeft:0;
-  sc.innerHTML=!L.length?'<div class="qb-empty"><p class="note">No items match.</p></div>':`<table class="qb-t"><thead><tr>${cols.map(c=>`<th class="${k[c.j]?'num':''}"${QB.sort===c.j?` aria-sort="${QB.dir>0?'ascending':'descending'}"`:''}><button type="button" data-qbsort="${c.j}" title="Sort by ${esc(c.c)}">${esc(c.c)}<span class="ar">${QB.sort===c.j?(QB.dir>0?'▲':'▼'):'↕'}</span></button></th>`).join('')}<th><button type="button" data-qbsort="-2" title="Sort by sell sheet">Sell sheet</button></th></tr></thead>
-    <tbody>${L.slice(0,QB.n).map(i=>{const r=d.rows[i],x=m[i];return`<tr data-qbr="${i}"${QB.open===i&&QB.side==='item'?' class="on"':''}>${cols.map(c=>`<td class="${k[c.j]?'num':''}${k[c.j]&&qbNum(r[c.j])<0?' neg':''}" title="${esc(r[c.j])}">${qbFmt(r[c.j],k[c.j])}</td>`).join('')}<td>${x?`<button class="qb-ss" type="button" data-qbss="${esc(x.key)}" title="Open in Inventory">✓ ${esc(x.fst==='off'||!ivOn(x)?'Inactive':'Sell sheet')}</button>`:'<span class="iv-sync">None</span>'}</td></tr>`;}).join('')}</tbody></table>
+  const st=keepScroll?sc.scrollTop:0,sl=keepScroll?sc.scrollLeft:0,qi=qbIdx(d,'qty'),ri=d.cols.indexOf('Reorder point');
+  sc.innerHTML=!L.length?'<div class="qb-empty"><p class="note">No items match.</p></div>':`<table class="qb-t"><thead><tr>${d.live&&SET.qbo.write?`<th class="qb-ck"><input type="checkbox" data-qbselall aria-label="Select all shown" ${L.length&&L.every(i=>QB.sel.has(d.ids[i]))?'checked':''}></th>`:''}${cols.map(c=>`<th class="${k[c.j]?'num':''}"${QB.sort===c.j?` aria-sort="${QB.dir>0?'ascending':'descending'}"`:''}><button type="button" data-qbsort="${c.j}" title="Sort by ${esc(c.c)}">${esc(c.c)}<span class="ar">${QB.sort===c.j?(QB.dir>0?'▲':'▼'):'↕'}</span></button></th>`).join('')}<th><button type="button" data-qbsort="-2" title="Sort by sell sheet">Sell sheet</button></th></tr></thead>
+    <tbody>${L.slice(0,QB.n).map(i=>{const r=d.rows[i],x=m[i];const low=d.live&&qi>=0&&ri>=0&&r[ri]!==''&&qbNum(r[qi])<=qbNum(r[ri]);return`<tr data-qbr="${i}"${QB.open===i&&['item','edit','adjust'].includes(QB.side)?' class="on"':''}>${d.live&&SET.qbo.write?`<td class="qb-ck"><input type="checkbox" data-qbsel="${esc(d.ids[i])}" aria-label="Select" ${QB.sel.has(d.ids[i])?'checked':''}></td>`:''}${cols.map(c=>`<td class="${k[c.j]?'num':''}${k[c.j]&&qbNum(r[c.j])<0?' neg':''}${low&&c.j===qi?' low':''}" title="${esc(r[c.j])}">${low&&c.j===qi?'<span class="qb-lowtag">Low</span> ':''}${qbFmt(r[c.j],k[c.j])}</td>`).join('')}<td>${x?`<button class="qb-ss" type="button" data-qbss="${esc(x.key)}" title="Open in Inventory">✓ ${esc(x.fst==='off'||!ivOn(x)?'Inactive':'Sell sheet')}</button>`:'<span class="iv-sync">None</span>'}</td></tr>`;}).join('')}</tbody></table>
     ${L.length>QB.n?`<button class="btn sm qb-more" type="button" data-qb="more">Show ${Math.min(300,L.length-QB.n)} more (${L.length-QB.n} left)</button>`:''}`;
   if(keepScroll){sc.scrollTop=st;sc.scrollLeft=sl;}
   renderQbSide();}
-function renderQbSide(){const a=$('#qbSide'),d=QB.data;if(!QB.side||(QB.side!=='auto'&&!d)){a.hidden=true;a.innerHTML='';return;}a.hidden=false;
+function renderQbSide(){const a=$('#qbSide'),d=QB.data;if(qbLiveSide(a,d))return;if(!QB.side||(QB.side!=='auto'&&!d)){a.hidden=true;a.innerHTML='';return;}a.hidden=false;
   const head=(t,sub)=>`<div class="qs-h"><h3>${t}${sub?`<small style="display:block;font:400 13px var(--ui);color:var(--muted)">${sub}</small>`:''}</h3><button class="btn icon sm ghost" type="button" data-qb="sidex" aria-label="Close">✕</button></div>`;
   if(QB.side==='item'){const r=d.rows[QB.open];if(!r){QB.side='';a.hidden=true;return;}const k=qbKinds(d),ni=qbIdx(d,'name'),x=qbMatches(d)[QB.open];
     a.innerHTML=head(esc(r[ni]||r.find(Boolean)||'Item'),qbIdx(d,'sku')>=0&&r[qbIdx(d,'sku')]?'SKU '+esc(r[qbIdx(d,'sku')]):'')+`<div class="qs-b">
@@ -4325,9 +4352,211 @@ async function qbAuto(manual){const a=authGet();if(!a||a.prov!=='google'){if(man
     if(manual&&!got)toast(QB.data?'No newer QuickBooks report in Gmail.':'No QuickBooks report email with an Excel or CSV attachment was found. Check the search in Auto-import.',6000);}
   catch(e){if(manual)toast(e.message||'Couldn\'t check Gmail.');}finally{QB.busy='';renderQb(true);}}
 setInterval(()=>{if(SET.qbo.auto&&!document.hidden&&Date.now()-(+lsGet('ss-qbo-chk')||0)>30*60e3)qbAuto(false);},60e3);
-async function openQb(){pageShown('qbo-items');if(!qbDlg.open)qbDlg.showModal();if(!QB.data)QB.data=lsJ('ss-qbo');
+/* ---------- QuickBooks connection (through the helper Worker; QuickBooks doesn't accept calls from web pages) ----------
+   The connection key is kept in this browser and synced to your other devices. Items, accounts and tax codes are kept in
+   IndexedDB and refreshed from QuickBooks' change list. Changes to QuickBooks need "Allow changes" (Settings → QuickBooks)
+   and are always shown for review first. */
+const QBC={c:(()=>{const c=lsJ('ss-qbc');return c&&c.conn&&c.key?c:null;})()};
+const qbOn=()=>!!(QBC.c&&gHelper());
+const QL={items:[],accts:[],tax:[],pref:null,at:0,err:'',busy:null};
+function qbConnChanged(){const c=lsJ('ss-qbc');QBC.c=c&&c.conn&&c.key?c:null;if(!QBC.c){QL.items=[];QL.at=0;qbKv('put','ql',null);}QB.data=qbCur();if(qbDlg.open)renderQb(true);if(setDlg.open&&ST.sec==='qbo')renderSettings();if(QBC.c)qbLoad(false);}
+// a tiny IndexedDB store for the QuickBooks lists (they can be large)
+let qkDb=null;const qbKvDb=()=>qkDb||(qkDb=new Promise((res,rej)=>{let r;try{r=indexedDB.open('ss-qbo',1);}catch(e){return rej(e);}r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}).catch(e=>{qkDb=null;throw e;}));
+async function qbKv(op,k,v){try{const d=await qbKvDb();return await new Promise(res=>{const t=d.transaction('kv',op==='get'?'readonly':'readwrite'),os=t.objectStore('kv'),q=op==='get'?os.get(k):v==null?os.delete(k):os.put(v,k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);});}catch(_){return null;}}
+async function qbApi(method,path,params,body){if(!qbOn())throw new Error('Connect QuickBooks first (Settings → QuickBooks).');let j;
+  try{j=await helperCall('qbo/api',{conn:QBC.c.conn,key:QBC.c.key,method,path,params,body});}
+  catch(e){if(e.code==='reconnect'||e.code==='not_connected'){QL.err=e.message;if(qbDlg.open)renderQb(true);}throw e;}
+  if(j.status>=400){const f=j.data?.Fault?.Error?.[0]||j.data?.fault?.error?.[0];throw Object.assign(new Error(f?String(f.Detail||f.detail||f.Message||f.message):'QuickBooks replied '+j.status),{qcode:String(f?.code||''),status:j.status});}
+  return j.data;}
+async function qbQuery(q){const out=[];for(let st=1;st<200000;st+=1000){const d=await qbApi('GET','query',{query:`${q} STARTPOSITION ${st} MAXRESULTS 1000`}),qr=d.QueryResponse||{},k=Object.keys(qr).find(k=>Array.isArray(qr[k])),l=k?qr[k]:[];out.push(...l);if(l.length<1000)break;}return out;}
+const qbLog=t=>{const l=lsJ('ss-qbo-log')||[];l.unshift({at:Date.now(),t:String(t).slice(0,300)});lsSet('ss-qbo-log',JSON.stringify(l.slice(0,100)));};
+// everything: on connecting, once a day, or when asked. Otherwise only what changed (QuickBooks' change list).
+function qbLoad(full){if(!qbOn())return Promise.resolve();if(QL.busy)return QL.busy;
+  return QL.busy=(async()=>{try{
+    if(!QL.at){const c=await qbKv('get','ql');if(c&&c.realm===QBC.c.realm){Object.assign(QL,{items:c.items||[],accts:c.accts||[],tax:c.tax||[],pref:c.pref||null,at:c.at||0});qbRefreshView();}}
+    if(full||!QL.at||Date.now()-QL.at>20*3600e3||!QL.items.length){const t0=Date.now();
+      const[items,accts,tax,pref]=await Promise.all([qbQuery('select * from Item where Active in (true,false)'),qbQuery('select * from Account where Active = true'),qbQuery('select * from TaxCode where Active = true').catch(()=>[]),qbApi('GET','preferences').then(d=>d.Preferences).catch(()=>null)]);
+      Object.assign(QL,{items,accts,tax,pref,at:t0});}
+    else{const since=new Date(QL.at-90e3).toISOString(),t0=Date.now(),d=await qbApi('GET','cdc',{entities:'Item,Account,TaxCode'+(SET.qbo.cust?',Customer':''),changedSince:since});
+      for(const blk of d.CDCResponse||[])for(const qr of blk.QueryResponse||[])for(const[k,l]of Object.entries(qr)){if(!Array.isArray(l))continue;
+        if(k==='Customer'){qbCustIn(l);continue;}const key={Item:'items',Account:'accts',TaxCode:'tax'}[k];if(!key)continue;
+        for(const o of l){const i=QL[key].findIndex(x=>x.Id===o.Id);if(o.status==='Deleted'||(key!=='items'&&o.Active===false)){if(i>=0)QL[key].splice(i,1);}else if(i>=0)QL[key][i]=o;else QL[key].push(o);}}
+      QL.at=t0;}
+    QL.err='';qbKv('put','ql',{realm:QBC.c.realm,items:QL.items,accts:QL.accts,tax:QL.tax,pref:QL.pref,at:QL.at});}
+  catch(e){QL.err=e.message||'Couldn\'t reach QuickBooks.';}
+  finally{QL.busy=null;qbRefreshView();}})();}
+function qbRefreshView(){QB.data=qbCur();if(qbDlg.open)renderQb(true);if(invDlg.open&&IV.open&&!IV.add)renderInvDetail(true);}
+setInterval(()=>{if(qbOn()&&!document.hidden&&Date.now()-QL.at>(qbDlg.open?3:15)*60e3)qbLoad(false);},60e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&qbOn()&&Date.now()-QL.at>60e3&&qbDlg.open)qbLoad(false);});
+setTimeout(()=>{if(qbOn())qbLoad(false);},5000);
+const qbAcct=r=>r?(QL.accts.find(a=>a.Id===r.value)?.FullyQualifiedName||r.name||''):'',qbTax=r=>r?(QL.tax.find(t=>t.Id===r.value)?.Name||r.name||''):'';
+const qbCats=()=>QL.items.filter(x=>x.Type==='Category');
+const QB_TY={Inventory:'Inventory',NonInventory:'Non-inventory',Service:'Service',Group:'Bundle',Bundle:'Bundle'};
+const qbN=v=>v==null||v===''?'':String(v);
+function qbLiveData(){const its=QL.items.filter(x=>x.Type!=='Category').sort((a,b)=>COLL.compare(a.Name||'',b.Name||'')),cat=id=>QL.items.find(x=>x.Id===id)?.FullyQualifiedName||'';
+  const cols=['Name','SKU','Type','Category','Sales description','Sales price','Cost','Qty on hand','Reorder point','Status','Purchase description','Income account','Expense account','Inventory asset account','Sales tax','Purchase tax','Preferred vendor','Last changed'];
+  const rows=its.map(x=>[x.Name||'',x.Sku||'',QB_TY[x.Type]||x.Type||'',x.SubItem&&x.ParentRef?cat(x.ParentRef.value):'',x.Description||'',qbN(x.UnitPrice),qbN(x.PurchaseCost),x.Type==='Inventory'?qbN(x.QtyOnHand):'',x.Type==='Inventory'?qbN(x.ReorderPoint):'',x.Active===false?'Inactive':'Active',x.PurchaseDesc||'',
+    qbAcct(x.IncomeAccountRef),qbAcct(x.ExpenseAccountRef),qbAcct(x.AssetAccountRef),qbTax(x.SalesTaxCodeRef),qbTax(x.PurchaseTaxCodeRef),x.PrefVendorRef?.name||'',x.MetaData?.LastUpdatedTime?dayStr(Date.parse(x.MetaData.LastUpdatedTime)):''].map(v=>String(v??'')));
+  return{v:1,live:true,at:QL.at,src:'QuickBooks',title:QBC.c?.company||'',cols,rows,ids:its.map(x=>x.Id)};}
+// what the QuickBooks pages and panels use: live items when connected, otherwise the last report
+function qbCur(){if(qbOn()&&QL.items.length)return qbLiveData();return lsJ('ss-qbo');}
+const qbItem=id=>QL.items.find(x=>x.Id===id);
+// connect / disconnect (QuickBooks' own sign-in window)
+async function qbConnect(){if(!gHelper()){toast('QuickBooks connects through your helper Worker. Set it up first (Sign in → Sign-in setup), then add the QuickBooks settings to it (SETUP-EMAIL.md).',8000);openSetup();return;}
+  let cfg;try{cfg=await helperCall('qbo/config',{});}catch(e){toast(e.code==='qbo_not_configured'?'The helper isn\'t set up for QuickBooks yet: add INTUIT_CLIENT_ID, INTUIT_CLIENT_SECRET and the QBO_KV binding (SETUP-EMAIL.md).':e.message,9000);return;}
+  const w=window.open('about:blank','ss-login','width=560,height=720');if(!w){toast('Your browser blocked the QuickBooks window. Allow pop-ups for this site and try again.');return;}
+  try{const st=b64url(crypto.getRandomValues(new Uint8Array(16)));
+    w.location.href=cfg.auth+'?'+new URLSearchParams({client_id:cfg.clientId,response_type:'code',scope:'com.intuit.quickbooks.accounting',redirect_uri:redirectUri(),state:st});
+    let sp;try{sp=await popupParams(w,st);}catch(e){if(/cancelled/.test(e.message))e.message+=` If QuickBooks showed a redirect error, add ${redirectUri()} under Redirect URIs in your Intuit app (SETUP-EMAIL.md).`;throw e;}
+    const r=await helperCall('qbo/connect',{code:sp.get('code'),realmId:sp.get('realmId'),redirect_uri:redirectUri()});
+    QBC.c={conn:r.conn,key:r.key,realm:r.realm,env:r.env,company:r.company,country:r.country,at:Date.now()};lsSet('ss-qbc',JSON.stringify(QBC.c));QL.items=[];QL.at=0;QL.err='';scheduleSync();
+    qbLog(`Connected to ${r.company||'QuickBooks'} (${r.env})`);toast(`Connected to ${r.company||'QuickBooks'}${r.env==='sandbox'?' (sandbox)':''}`);await qbLoad(true);}
+  catch(e){try{w.close();}catch(_){}toast(e.message||'Couldn\'t connect to QuickBooks.',8000);}}
+async function qbDisconnect(){if(QBC.c)try{await helperCall('qbo/disconnect',{conn:QBC.c.conn,key:QBC.c.key});}catch(_){}
+  qbLog('Disconnected from QuickBooks');lsSet('ss-qbc',JSON.stringify({at:Date.now(),off:1}));QBC.c=null;QL.items=[];QL.at=0;qbKv('put','ql',null);QB.sel.clear();QB.side='';scheduleSync();qbRefreshView();toast('Disconnected from QuickBooks');}
+function qbSettingsHTML(){const c=QBC.c,row=(t,sub,ctl)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${ctl}</div>`,b=(v,t,cls='btn sm')=>`<button class="${cls}" type="button" data-sact="${v}">${t}</button>`,log=(lsJ('ss-qbo-log')||[]).slice(0,12);
+  return`<h3>QuickBooks</h3><p class="st-lead">Connect QuickBooks Online to see and manage your items, stock and categories here. Changes go both ways.</p>
+  <div class="st-card"><h4>Connection</h4>${c?row(esc(c.company||'Connected'),`${c.env==='sandbox'?'<b>Sandbox</b> (test company)':'Your live company'} · connected ${esc(ago(c.at))}${QL.err?' · <span style="color:var(--bad)">'+esc(QL.err)+'</span>':''}`,`<span style="display:flex;gap:8px;flex-wrap:wrap">${b('qbOpen','Open items')}${b('qbRefresh','Refresh now','btn sm ghost')}${b('qbDisconnect',ST.qbSure?'Click again to disconnect':'Disconnect','btn sm ghost')}</span>`)
+      +row('Last updated',QL.at?esc(ago(QL.at)):'Not yet','')
+    :row('Not connected',gHelper()?'Opens QuickBooks\' sign-in. Pick the company (use a sandbox company to test).':'Needs your helper Worker first (Sign in → Sign-in setup), with the QuickBooks settings added (SETUP-EMAIL.md).',b('qbConnect','Connect QuickBooks…','btn sm primary'))}</div>
+  <div class="st-card"><h4>Changes to QuickBooks</h4>${row('Allow changes to QuickBooks','Edit items, create items and categories, and adjust stock from the dashboard. Every change is shown for review before it\'s sent. Off = read-only.',`<label class="st-sw2"><input type="checkbox" data-sp="qbo.write" ${SET.qbo.write?'checked':''}><i></i></label>`)}
+    ${row('Keep customers in step','Customers changed in QuickBooks update the matching customers here (matched by email)',`<label class="st-sw2"><input type="checkbox" data-sp="qbo.cust" ${SET.qbo.cust?'checked':''}><i></i></label>`)}</div>
+  <div class="st-card"><h4>Recent changes made from the dashboard</h4>${log.length?log.map(l=>row(esc(l.t),esc(ago(l.at)),'')).join(''):'<p class="iv-sync" style="margin:6px 0">None yet.</p>'}</div>`;}
+/* ---- customers ↔ QuickBooks: matched by QuickBooks id, else by email ---- */
+const qbCEmail=q=>String(q.PrimaryEmailAddr?.Address||'').split(/[,;]/).map(x=>x.trim()).find(x=>EMAIL_RE.test(x))||'';
+const qbCAddr=a=>a?[a.Line1,a.Line2,a.City,a.CountrySubDivisionCode,a.PostalCode,a.Country].filter(Boolean).join(', '):'';
+function qbCustIn(list,addNew=SET.qbo.cust){let added=0,linked=0,upd=0,skipped=0;const now=Date.now();
+  for(const q of list){if(q.status==='Deleted'||q.Active===false)continue;const email=qbCEmail(q);
+    let c=CU.list.find(x=>x.qb===q.Id)||(email&&CU.list.find(x=>[x.email,...altOf(x)].some(a=>ck(a)===ck(email))));
+    const name=[q.GivenName,q.FamilyName].filter(Boolean).join(' ')||(q.DisplayName!==q.CompanyName?q.DisplayName:'')||'',phone=q.PrimaryPhone?.FreeFormNumber||'',addr=qbCAddr(q.BillAddr),qt=Date.parse(q.MetaData?.LastUpdatedTime||'')||0;
+    if(c){const was=+c.upd||0;if(c.qb!==q.Id){c.qb=q.Id;c.upd=now;linked++;}
+      if(qt>was){let ch=false;const info=cleanInfo(c.info);for(const[k,v]of[['name',name],['company',q.CompanyName||'']])if(v&&c[k]!==v){c[k]=v;ch=true;}
+        for(const[k,v]of[['Phone',phone],['Address',addr]])if(v&&info[k]!==v){info[k]=v;ch=true;}if(ch){c.info=info;c.upd=now;upd++;}}}
+    else if(addNew){if(!email){skipped++;continue;}CU.list.push({name,company:q.CompanyName||'',email,alt:[],use:[email],groups:[],color:'',note:'',info:cleanInfo({Phone:phone,Address:addr}),greet:{},qb:q.Id,upd:now});added++;}}
+  if(added||linked||upd){cuSave();if(custDlg.open)renderCP();if(mailDlg.open)renderCust();}return{added,linked,upd,skipped};}
+async function qbCustImport(){try{toast('Getting customers from QuickBooks…',20000);const l=await qbQuery('select * from Customer where Active = true'),r=qbCustIn(l,true);
+    if(!SET.qbo.cust){SET.qbo.cust=true;setSave();}
+    toast(`${r.added} new customer${r.added===1?'':'s'} added, ${r.linked} linked${r.upd?`, ${r.upd} updated`:''}${r.skipped?`. ${r.skipped} without an email were skipped`:''}. Changes in QuickBooks will keep coming in.`,8000);}
+  catch(e){toast(e.message||'Couldn\'t get customers from QuickBooks.',6000);}}
+// create in QuickBooks, or update the linked customer (only fields the dashboard has; anything else stays as it is)
+async function qbCustPush(c,quiet){if(!SET.qbo.write){toast('Turn on “Allow changes to QuickBooks” in Settings → QuickBooks first.');return false;}
+  const nm=String(c.name||'').trim(),sp=nm.split(/\s+/),info=cleanInfo(c.info),body={...(nm?{GivenName:sp[0].slice(0,100),FamilyName:sp.slice(1).join(' ').slice(0,100)}:{}),...(c.company?{CompanyName:c.company.slice(0,100)}:{}),PrimaryEmailAddr:{Address:c.email},...(info.Phone?{PrimaryPhone:{FreeFormNumber:info.Phone.split('\n')[0].slice(0,30)}}:{})};
+  try{if(c.qb){const cur=(await qbApi('GET','customer/'+c.qb)).Customer;await qbApi('POST','customer',{},{sparse:true,Id:cur.Id,SyncToken:cur.SyncToken,...body});qbLog(`Updated customer ${nm||c.email} in QuickBooks`);if(!quiet)toast('QuickBooks updated');return true;}
+    const dn=(nm||c.company||c.email).slice(0,100);let r;
+    try{r=await qbApi('POST','customer',{},{DisplayName:dn,...body});}catch(e){if(e.qcode!=='6240'&&!/duplicate/i.test(e.message))throw e;r=await qbApi('POST','customer',{},{DisplayName:`${dn} (${c.email})`.slice(0,100),...body});}
+    c.qb=r.Customer.Id;c.upd=Date.now();cuSave();qbLog(`Added customer ${dn} to QuickBooks`);if(!quiet)toast(`Added ${dn} to QuickBooks`);if(custDlg.open)renderCPDetail();return true;}
+  catch(e){toast((c.name||c.email)+': '+(e.message||'QuickBooks refused that.'),7000);return false;}}
+$('#cpQbo').onclick=e=>{const b=e.currentTarget,n=CU.list.filter(c=>CU.sel.has(ck(c.email))&&!c.qb).length;
+  popMenu(b,`<span class="menu-h">QuickBooks</span><button type="button" role="menuitem" data-qbc="import"><b>Bring in customers from QuickBooks</b><small>Adds new ones, links the ones already here (by email)</small></button>${SET.qbo.write?`<button type="button" role="menuitem" data-qbc="push" ${n?'':'disabled'}><b>Add ticked customers to QuickBooks${n?` (${n})`:''}</b><small>${n?'Those not in QuickBooks yet':'Tick customers that aren\'t in QuickBooks yet'}</small></button>`:'<button type="button" role="menuitem" data-qbc="rw"><b>Allow changes to QuickBooks…</b><small>Needed to add customers to QuickBooks</small></button>'}`,
+    async(ev,menu)=>{const m=ev.target.closest('[data-qbc]');if(!m||m.disabled)return;menu.classList.add('hide');const a=m.dataset.qbc;
+      if(a==='import')qbCustImport();else if(a==='rw')openSettings('qbo');
+      else if(a==='push'){const l=CU.list.filter(c=>CU.sel.has(ck(c.email))&&!c.qb);if(!confirm(`Add ${l.length} customer${l.length>1?'s':''} to QuickBooks?`))return;let ok=0;for(const c of l)if(await qbCustPush(c,true))ok++;toast(`${ok} of ${l.length} added to QuickBooks`);renderCP();}});};
+/* ---- editing (only with "Allow changes"): forms → review → QuickBooks ---- */
+const QF=[['Name','Name','text','',1],['Sku','SKU','text'],['ParentRef','Category','cat'],['Description','Sales description','area'],['UnitPrice','Sales price','money'],['PurchaseDesc','Purchase description','area'],['PurchaseCost','Cost','money'],
+  ['ReorderPoint','Reorder point','num','Inventory'],['IncomeAccountRef','Income account','acct:inc'],['ExpenseAccountRef','Expense / cost of sales account','acct:exp'],['AssetAccountRef','Inventory asset account','acct:asset','Inventory'],
+  ['SalesTaxCodeRef','Sales tax','tax'],['PurchaseTaxCodeRef','Purchase tax','tax'],['Active','Active (shown in QuickBooks lists)','bool']];
+const QA={inc:['Income','Other Income'],exp:['Cost of Goods Sold','Expense','Other Expense'],asset:['Other Current Asset']};
+const qbAccts=k=>QL.accts.filter(a=>QA[k].includes(a.AccountType)).sort((a,b)=>COLL.compare(a.FullyQualifiedName||a.Name,b.FullyQualifiedName||b.Name));
+const qbDefAcct=(k,re)=>{const l=qbAccts(k);return(l.find(a=>re.test(a.Name))||l[0])?.Id||'';};
+const qbVal=(x,k)=>{const v=x?.[k];if(k==='ParentRef')return x?.SubItem&&v?v.value:'';if(v&&typeof v==='object')return v.value||'';if(k==='Active')return v!==false;return v==null?'':String(v);};
+const qbShow=(k,kind,v)=>{if(kind==='bool')return v?'Yes':'No';if(kind==='cat')return v?(qbItem(v)?.FullyQualifiedName||v):'None';if(kind.startsWith('acct'))return v?qbAcct({value:v}):'None';if(kind==='tax')return v?qbTax({value:v}):'None';if(kind==='money'&&v!=='')return SET.currency+(+v).toFixed(2);return v===''?'–':String(v);};
+function qbFormHTML(x,type){const f=QF.filter(q=>!q[3]||q[3]===type),opt=(l,v,none)=>`${none?`<option value="">${none}</option>`:''}${l.map(o=>`<option value="${esc(o.Id)}"${o.Id===v?' selected':''}>${esc(o.FullyQualifiedName||o.Name)}</option>`).join('')}`;
+  return`<div class="qf">${f.map(([k,l,kind,,req])=>{const v=qbVal(x,k),id='qf-'+k;
+    if(kind==='bool')return`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-qf="${k}" ${x?v?'checked':'':'checked'}> ${l}</label>`;
+    const ctl=kind==='area'?`<textarea class="in" id="${id}" data-qf="${k}" rows="2">${esc(v)}</textarea>`
+      :kind==='cat'?`<select class="in" id="${id}" data-qf="${k}">${opt(qbCats().filter(c=>!x||c.Id!==x.Id),v,'None (top level)')}</select>`
+      :kind.startsWith('acct')?`<select class="in" id="${id}" data-qf="${k}">${opt(qbAccts(kind.slice(5)),v||(!x?qbDefAcct(kind.slice(5),{inc:/sales of product|^sales$/i,exp:/cost of goods|cost of sales/i,asset:/inventory asset/i}[kind.slice(5)]):''),kind==='acct:inc'&&!(x&&!v)?'':'None')}</select>`
+      :kind==='tax'?`<select class="in" id="${id}" data-qf="${k}">${opt(QL.tax,v,'None')}</select>`
+      :`<input class="in" id="${id}" data-qf="${k}" value="${esc(v)}" ${kind==='money'||kind==='num'?'inputmode="decimal"':''} ${k==='Name'?'maxlength="100"':''}>`;
+    return`<label class="field"><span class="${req?'req':''}">${l}</span>${ctl}</label>`;}).join('')}</div>`;}
+function qbFormRead(root,type){const out={};for(const el of root.querySelectorAll('[data-qf]')){const k=el.dataset.qf;out[k]=el.type==='checkbox'?el.checked:el.value.trim();}return out;}
+// what changed, as QuickBooks fields, plus lines for the review
+function qbDiff(x,v,type){const patch={},lines=[];
+  for(const[k,l,kind,only]of QF){if(only&&only!==type||!(k in v))continue;let nv=v[k],ov=qbVal(x,k);
+    if(kind==='money'||kind==='num'){if(nv!==''&&!isFinite(numText(nv)))throw new Error(`${l}: “${nv}” isn't a number.`);nv=nv===''?'':String(numText(nv));if(ov!=='')ov=String(+ov);}
+    if(String(nv)===String(ov))continue;lines.push([l,qbShow(k,kind,ov),qbShow(k,kind,nv)]);
+    if(k==='ParentRef'){patch.SubItem=!!nv;if(nv)patch.ParentRef={value:nv};}
+    else if(kind.startsWith('acct')||kind==='tax'){if(nv)patch[k]={value:nv};}
+    else if(kind==='money'||kind==='num'){patch[k]=nv===''?(k==='ReorderPoint'?null:0):+nv;}
+    else patch[k]=nv;}
+  return{patch,lines};}
+const qbFail=e=>e.qcode==='5010'?'This item was changed in QuickBooks a moment ago. The latest version is loaded: check it and save again.'
+  :e.qcode==='6240'||/duplicate/i.test(e.message)?'QuickBooks already has an item or category with that name. Names must be unique.':e.message;
+function qbPend(title,lines,run,back){QB.pend={title,lines,run,back,err:''};QB.side='review';renderQb(true);}
+async function qbRunPend(){const P=QB.pend;if(!P||P.busy)return;P.busy=true;P.err='';renderQbSide();
+  try{const msg=await P.run();qbLog(msg);toast(msg);QB.pend=null;QB.side=P.done||'';await qbLoad(false);}
+  catch(e){P.err=qbFail(e);if(e.qcode==='5010'||e.partial)await qbLoad(false);}finally{if(QB.pend)QB.pend.busy=false;renderQb(true);}}
+async function qbSaveItem(x,patch){const d=await qbApi('POST','item',{},{sparse:true,Id:x.Id,SyncToken:x.SyncToken,...patch});const it=d.Item;const i=QL.items.findIndex(y=>y.Id===it.Id);if(i>=0)QL.items[i]=it;else QL.items.push(it);return it;}
+function qbLiveSide(a,d){if(!d?.live||!['item','edit','new','adjust','cats','review'].includes(QB.side))return false;a.hidden=false;
+  const head=(t,sub)=>`<div class="qs-h"><h3>${t}${sub?`<small style="display:block;font:400 13px var(--ui);color:var(--muted)">${sub}</small>`:''}</h3><button class="btn icon sm ghost" type="button" data-qb="sidex" aria-label="Close">✕</button></div>`;
+  const id=d.ids[QB.open],x=qbItem(id),w=SET.qbo.write;
+  if(QB.side==='review'){const P=QB.pend;if(!P){QB.side='';return qbLiveSide(a,d);}
+    a.innerHTML=head('Check before sending to QuickBooks',esc(P.title))+`<div class="qs-b"><div class="qb-rev">${P.lines.map(([l,o,n])=>`<div><span>${esc(l)}</span><span>${o!==undefined&&o!==null?`<s>${esc(o)}</s> → `:''}<b>${esc(n)}</b></span></div>`).join('')}</div>
+      ${P.err?`<p class="qb-err">${esc(P.err)}</p>`:''}<div class="qs-acts"><button class="btn sm primary" type="button" data-qbl="confirm" ${P.busy?'disabled':''}>${P.busy?'Sending…':'Send to QuickBooks'}</button><button class="btn sm ghost" type="button" data-qbl="back">Back</button></div></div>`;return true;}
+  if(QB.side==='cats'){const cats=qbCats().sort((p,q)=>COLL.compare(p.FullyQualifiedName,q.FullyQualifiedName)),n=c=>QL.items.filter(y=>y.SubItem&&y.ParentRef?.value===c.Id&&y.Type!=='Category').length;
+    a.innerHTML=head('Categories','Product categories in QuickBooks')+`<div class="qs-b">${cats.length?cats.map(c=>`<div class="qc-row" style="padding-left:${(String(c.FullyQualifiedName).split(':').length-1)*14}px">${w?`<input class="in" data-qcname="${esc(c.Id)}" value="${esc(c.Name)}" aria-label="Category name"><select class="in" data-qcpar="${esc(c.Id)}" aria-label="Inside"><option value="">Top level</option>${cats.filter(o=>o.Id!==c.Id&&!String(o.FullyQualifiedName).startsWith(c.FullyQualifiedName+':')).map(o=>`<option value="${esc(o.Id)}"${c.SubItem&&c.ParentRef?.value===o.Id?' selected':''}>${esc(o.FullyQualifiedName)}</option>`).join('')}</select>`:`<span>${esc(c.Name)}</span><span></span>`}<small class="iv-sync">${n(c)}</small></div>`).join(''):'<p class="iv-sync">No categories yet.</p>'}
+      ${w?`<div class="qf" style="margin-top:14px"><b>New category</b><input class="in" id="qcNew" placeholder="Category name" maxlength="100"><select class="in" id="qcNewPar"><option value="">Top level</option>${cats.map(o=>`<option value="${esc(o.Id)}">Inside ${esc(o.FullyQualifiedName)}</option>`).join('')}</select><button class="btn sm primary" type="button" data-qbl="catadd">Add category</button></div>`:'<p class="iv-sync">Turn on “Allow changes” in Settings → QuickBooks to add or rename categories.</p>'}</div>`;return true;}
+  if(QB.side==='new'){if(!w){QB.side='';return false;}const ty=QB.newType||'Inventory';
+    a.innerHTML=head('New item','Created in QuickBooks')+`<div class="qs-b" id="qbForm"><label class="field"><span>Type</span><select class="in" id="qfType">${[['Inventory','Inventory (tracks stock)'],['NonInventory','Non-inventory'],['Service','Service']].map(([v,l])=>`<option value="${v}"${v===ty?' selected':''}>${l}</option>`).join('')}</select></label>
+      ${qbFormHTML(null,ty)}${ty==='Inventory'?`<div class="row2 qf" style="margin-top:10px"><label class="field"><span class="req">Quantity on hand</span><input class="in" id="qfQty" inputmode="decimal" value="0"></label><label class="field"><span class="req">As of</span><input class="in" id="qfAsOf" type="date" value="${new Date().toISOString().slice(0,10)}"></label></div>`:''}
+      ${QB.formErr?`<p class="qb-err">${esc(QB.formErr)}</p>`:''}<div class="qs-acts" style="margin-top:12px"><button class="btn sm primary" type="button" data-qbl="newgo">Review</button><button class="btn sm ghost" type="button" data-qb="sidex">Cancel</button></div></div>`;return true;}
+  if(!x){QB.side='';return false;}
+  if(QB.side==='edit'&&w){a.innerHTML=head('Edit '+esc(x.Name),QB_TY[x.Type]||x.Type)+`<div class="qs-b" id="qbForm">${qbFormHTML(x,x.Type)}${QB.formErr?`<p class="qb-err">${esc(QB.formErr)}</p>`:''}<div class="qs-acts" style="margin-top:12px"><button class="btn sm primary" type="button" data-qbl="editgo">Review changes</button><button class="btn sm ghost" type="button" data-qbl="item">Cancel</button></div></div>`;return true;}
+  if(QB.side==='adjust'&&w&&x.Type==='Inventory'){const ad=qbDefAcct('exp',/shrinkage|inventory adjust/i);
+    a.innerHTML=head('Adjust quantity · '+esc(x.Name),`On hand now: ${esc(qbN(x.QtyOnHand)||'0')}`)+`<div class="qs-b qf" id="qbForm"><div class="row2"><label class="field"><span>New quantity</span><input class="in" id="qaNew" inputmode="decimal" placeholder="${esc(qbN(x.QtyOnHand)||'0')}"></label><label class="field"><span>or change by (±)</span><input class="in" id="qaBy" inputmode="decimal" placeholder="e.g. -3"></label></div>
+      <label class="field"><span>Date</span><input class="in" id="qaDate" type="date" value="${new Date().toISOString().slice(0,10)}"></label>
+      <label class="field"><span>Adjustment account</span><select class="in" id="qaAcct">${qbAccts('exp').map(o=>`<option value="${esc(o.Id)}"${o.Id===ad?' selected':''}>${esc(o.FullyQualifiedName||o.Name)}</option>`).join('')}</select></label>
+      <label class="field"><span>Reason (memo)</span><input class="in" id="qaMemo" placeholder="e.g. Recount, damaged, samples" maxlength="200"></label>
+      ${QB.formErr?`<p class="qb-err">${esc(QB.formErr)}</p>`:''}<div class="qs-acts"><button class="btn sm primary" type="button" data-qbl="adjgo">Review</button><button class="btn sm ghost" type="button" data-qbl="item">Cancel</button></div>
+      <p class="iv-sync">Recorded in QuickBooks as an inventory quantity adjustment, so your books stay right.</p></div>`;return true;}
+  // the item: every field, plus actions
+  const r=d.rows[QB.open],k=qbKinds(d),mt=qbMatches(d)[QB.open];
+  a.innerHTML=head(esc(x.Name),[x.Sku?'SKU '+esc(x.Sku):'',esc(QB_TY[x.Type]||x.Type),x.Active===false?'Inactive':''].filter(Boolean).join(' · '))+`<div class="qs-b">
+    <div class="qs-acts">${w?`<button class="btn sm primary" type="button" data-qbl="edit">Edit</button>${x.Type==='Inventory'?'<button class="btn sm" type="button" data-qbl="adjust">Adjust quantity</button>':''}`:'<span class="iv-sync">Read-only. <button class="lnk" type="button" data-qbl="rw">Turn on editing</button></span>'}${mt?`<button class="btn sm ghost" type="button" data-qbss="${esc(mt.key)}">Its sell sheet</button>`:''}</div>
+    <dl class="qs-kv">${qbCols(d).map(c=>`<dt>${esc(c.c)}</dt><dd class="${SET.qbo.hide.includes(c.c)?'hid':''}">${r[c.j]?qbFmt(r[c.j],k[c.j]):'<span class="iv-sync">–</span>'}</dd>`).join('')}</dl></div>`;return true;}
+qbDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='qfType'){QB.newType=t.value;QB.formErr='';renderQbSide();return;}
+  if(t.dataset.qbsel!==undefined){t.checked?QB.sel.add(t.dataset.qbsel):QB.sel.delete(t.dataset.qbsel);renderQb(true);return;}
+  if(t.dataset.qbselall!==undefined){const d=QB.data;for(const i of qbShown(d).slice(0,QB.n))t.checked?QB.sel.add(d.ids[i]):QB.sel.delete(d.ids[i]);renderQb(true);return;}
+  const cn=t.dataset.qcname,cp=t.dataset.qcpar;
+  if(cn!==undefined){const c=qbItem(cn),v=t.value.trim();if(!c||!v||v===c.Name){t.value=c?.Name||'';return;}qbPend('Rename category',[['Name',c.Name,v]],async()=>{await qbSaveItem(c,{Name:v});return`Category renamed to ${v}`;});QB.pend.done='cats';}
+  if(cp!==undefined){const c=qbItem(cp);if(!c)return;const nv=t.value;qbPend('Move category',[[c.Name,c.SubItem&&c.ParentRef?qbItem(c.ParentRef.value)?.FullyQualifiedName:'Top level',nv?qbItem(nv)?.FullyQualifiedName:'Top level']],async()=>{await qbSaveItem(c,nv?{SubItem:true,ParentRef:{value:nv}}:{SubItem:false});return`Category ${c.Name} moved`;});QB.pend.done='cats';}},true);
+qbDlg.addEventListener('click',async e=>{const b=e.target.closest('[data-qbl]');if(!b)return;const v=b.dataset.qbl,d=QB.data,x=d?.ids?qbItem(d.ids[QB.open]):null;QB.formErr='';
+  if(v==='connect'){qbConnect();return;}if(v==='refresh'){QB.busy='Getting the latest from QuickBooks…';renderQb(true);await qbLoad(true);QB.busy='';renderQb(true);return;}
+  if(v==='rw'){openSettings('qbo');return;}
+  if(['edit','adjust','item','cats','new'].includes(v)){if(v==='new')QB.newType='Inventory';QB.side=v;renderQb(true);return;}
+  if(v==='back'){QB.side=QB.pend?.back||'item';QB.pend=null;renderQb(true);return;}
+  if(v==='confirm'){qbRunPend();return;}
+  if(v==='selnone'){QB.sel.clear();renderQb(true);return;}
+  try{
+    if(v==='editgo'){const vals=qbFormRead($('#qbForm'),x.Type);if(!vals.Name)throw new Error('The name can\'t be empty.');const{patch,lines}=qbDiff(x,vals,x.Type);if(!lines.length){QB.side='item';renderQb(true);toast('Nothing changed');return;}
+      const snap=x;qbPend(`Item: ${x.Name}`,lines,async()=>{await qbSaveItem(qbItem(snap.Id)||snap,patch);return`Saved ${vals.Name} in QuickBooks`;},'edit');QB.pend.done='item';return;}
+    if(v==='newgo'){const ty=QB.newType||'Inventory',vals=qbFormRead($('#qbForm'),ty);if(!vals.Name)throw new Error('Give the item a name.');if(!vals.IncomeAccountRef)throw new Error('Choose an income account.');
+      if(ty==='Inventory'&&(!vals.ExpenseAccountRef||!vals.AssetAccountRef))throw new Error('Inventory items need a cost of sales account and an inventory asset account.');
+      const{patch,lines}=qbDiff(null,vals,ty);const body={Type:ty,...patch};
+      if(ty==='Inventory'){const q=numText($('#qfQty').value||'0');if(!isFinite(q))throw new Error('Quantity on hand must be a number.');Object.assign(body,{TrackQtyOnHand:true,QtyOnHand:q,InvStartDate:$('#qfAsOf').value});lines.push(['Quantity on hand',null,String(q)],['As of',null,$('#qfAsOf').value]);}
+      lines.unshift(['Type',null,QB_TY[ty]]);qbPend(`New item: ${vals.Name}`,lines,async()=>{const r=await qbApi('POST','item',{},body);QL.items.push(r.Item);return`Created ${vals.Name} in QuickBooks`;},'new');return;}
+    if(v==='adjgo'){const cur=+x.QtyOnHand||0,nv=$('#qaNew').value.trim(),by=$('#qaBy').value.trim();let diff;
+      if(nv!==''){const n=numText(nv);if(!isFinite(n))throw new Error('New quantity must be a number.');diff=n-cur;}else if(by!==''){diff=(/^\s*-/.test(by)?-1:1)*numText(by.replace(/^\s*[+-]\s*/,''));if(!isFinite(diff))throw new Error('Change by must be a number, e.g. -3.');}else throw new Error('Enter the new quantity, or how much it changes by.');
+      if(!diff)throw new Error('That\'s the same as the quantity now.');const acct=$('#qaAcct').value,date=$('#qaDate').value,memo=$('#qaMemo').value.trim(),snap=x;
+      qbPend(`Adjust quantity: ${x.Name}`,[['Quantity on hand',String(cur),String(cur+diff)],['Change',null,(diff>0?'+':'')+diff],['Date',null,date],['Account',null,qbAcct({value:acct})],...(memo?[['Reason',null,memo]]:[])],
+        async()=>{try{await qbApi('POST','inventoryadjustment',{},{TxnDate:date,AdjustAccountRef:{value:acct},PrivateNote:memo,Line:[{DetailType:'ItemAdjustmentLineDetail',ItemAdjustmentLineDetail:{ItemRef:{value:snap.Id},QtyDiff:diff}}]});}
+          catch(e){if(e.status===400&&!e.qcode)e.message='QuickBooks didn\'t accept a quantity adjustment from the dashboard ('+e.message+'). Make it in QuickBooks under ＋ New → Inventory qty adjustment; it shows here within minutes.';throw e;}
+          const it=await qbApi('GET','item/'+snap.Id);const i=QL.items.findIndex(y=>y.Id===snap.Id);if(i>=0)QL.items[i]=it.Item;return`${snap.Name}: quantity ${cur} → ${cur+diff}`;},'adjust');QB.pend.done='item';return;}
+    if(v==='catadd'){const name=$('#qcNew').value.trim(),par=$('#qcNewPar').value;if(!name)throw new Error('Name the category.');
+      qbPend('New category',[['Name',null,name],['Inside',null,par?qbItem(par)?.FullyQualifiedName:'Top level']],async()=>{const r=await qbApi('POST','item',{},{Name:name,Type:'Category',...(par?{SubItem:true,ParentRef:{value:par}}:{})});QL.items.push(r.Item);return`Category ${name} added`;},'cats');QB.pend.done='cats';return;}
+    if(v.startsWith('bulk')){const its=[...QB.sel].map(qbItem).filter(Boolean);if(!its.length)return;
+      const ids=its.map(it=>it.Id),runAll=async(fn,what)=>{let ok=0;const bad=[];for(const id of ids){const it=qbItem(id);if(!it)continue;try{await qbSaveItem(it,fn(it));ok++;}catch(e){bad.push(it.Name+': '+qbFail(e));}}QB.sel.clear();if(bad.length)throw Object.assign(new Error(`${ok} of ${its.length} saved. Not saved: ${bad.join(' · ')}`),{partial:1});return`${what} for ${ok} item${ok===1?'':'s'}`;};
+      if(v==='bulkoff'||v==='bulkon'){const on=v==='bulkon';qbPend(`${its.length} items`,its.slice(0,30).map(it=>[it.Name,it.Active===false?'Inactive':'Active',on?'Active':'Inactive']),()=>runAll(()=>({Active:on}),on?'Made active':'Made inactive'),'');return;}
+      if(v==='bulkcat'){const m=popMenu(b,`<span class="menu-h">Move ${its.length} item${its.length>1?'s':''} into</span><button type="button" role="menuitem" data-qbcat=""><b>No category (top level)</b></button>${qbCats().map(c=>`<button type="button" role="menuitem" data-qbcat="${esc(c.Id)}"><b>${esc(c.FullyQualifiedName)}</b></button>`).join('')}`,
+          (ev,menu)=>{const c=ev.target.closest('[data-qbcat]');if(!c)return;menu.classList.add('hide');const to=c.dataset.qbcat,nm=to?qbItem(to)?.FullyQualifiedName:'No category';qbPend(`${its.length} items → ${nm}`,its.slice(0,30).map(it=>[it.Name,it.SubItem&&it.ParentRef?qbItem(it.ParentRef.value)?.FullyQualifiedName:'None',nm]),()=>runAll(()=>to?{SubItem:true,ParentRef:{value:to}}:{SubItem:false},`Moved to ${nm}`),'');});return;}
+      if(v==='bulkprice'){const how=prompt('Change sales prices of the selected items.\nType a percentage like +5% or -10%, or an amount like +2 or -1.50:');if(!how)return;const m=String(how).trim().match(/^([+-])\s*([\d.,]+)\s*(%?)$/);if(!m)throw new Error('Use a form like +5%, -10% or +2.');
+        const n=numText(m[2]),sg=m[1]==='-'?-1:1,np=it=>Math.max(0,Math.round(((m[3]?(+it.UnitPrice||0)*(1+sg*n/100):(+it.UnitPrice||0)+sg*n))*100)/100);
+        qbPend(`Sales prices ${how}`,its.slice(0,30).map(it=>[it.Name,SET.currency+(+it.UnitPrice||0).toFixed(2),SET.currency+np(it).toFixed(2)]),()=>runAll(it=>({UnitPrice:np(it)}),'Prices changed'),'');return;}}
+  }catch(err){QB.formErr=err.message;toast(err.message,5000);renderQbSide();}});
+async function openQb(){pageShown('qbo-items');if(!qbDlg.open)qbDlg.showModal();QB.data=qbCur();if(qbOn())qbLoad(false);
   if(IV.folder&&!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}
-  renderQb();if(SET.qbo.auto&&Date.now()-(+lsGet('ss-qbo-chk')||0)>10*60e3)qbAuto(false);}
+  renderQb();if(!qbOn()&&SET.qbo.auto&&Date.now()-(+lsGet('ss-qbo-chk')||0)>10*60e3)qbAuto(false);}
 $('#qbClose').onclick=()=>qbDlg.close();
 qbDlg.addEventListener('cancel',()=>{if(QB.side){QB.side='';renderQb(true);}});
 let qbQt=0;
@@ -4348,7 +4577,7 @@ qbDlg.addEventListener('click',e=>{const t=e.target;
   const so=t.closest('[data-qbsort]');if(so){const j=+so.dataset.qbsort;if(j===-2){QB.has=QB.has==='yes'?'no':QB.has==='no'?'':'yes';renderQb();return;}
     if(QB.sort!==j){QB.sort=j;QB.dir=1;}else if(QB.dir>0)QB.dir=-1;else QB.sort=-1;renderQb(true);return;}
   const mv=t.closest('[data-qbmv]');if(mv){const L=qbCols(QB.data).map(c=>c.c),[i,dd]=mv.dataset.qbmv.split('|').map(Number),j=i+dd;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];SET.qbo.order=L;setSave();renderQb(true);return;}
-  const tr=t.closest('tr[data-qbr]');if(tr){const i=+tr.dataset.qbr;if(QB.side==='item'&&QB.open===i){QB.side='';}else{QB.side='item';QB.open=i;}renderQb(true);}});
+  const tr=t.closest('tr[data-qbr]');if(tr){const i=+tr.dataset.qbr;if(t.closest('[data-qbsel]'))return;if(QB.side==='item'&&QB.open===i){QB.side='';}else{QB.side='item';QB.open=i;}renderQb(true);}});
 // drop a report file anywhere on the page
 qbDlg.addEventListener('dragover',e=>{if([...(e.dataTransfer?.types||[])].includes('Files')){e.preventDefault();e.stopPropagation();qbDlg.classList.add('qb-drop');}});
 qbDlg.addEventListener('dragleave',e=>{if(!qbDlg.contains(e.relatedTarget))qbDlg.classList.remove('qb-drop');});
@@ -4438,7 +4667,7 @@ function cmdBase(){const pg=(k,n,sub)=>({g:'Pages',t:n,sub,run:cmdGo(()=>k==='ed
   for(const[k,n]of ST_SECS)out.push({g:'Settings',t:n,sub:'Settings',hay:SKW[k]||'',run:cmdGo(()=>openSettings(k))});
   for(const sh of sheets)out.push({g:'Sell sheets',t:sheetName(sh),sub:'Saved on this device · '+ago(sh.updated||Date.now()),run:cmdGo(async()=>{goEditor();await switchTo(sh);})});
   cuLoad();for(const c of CU.list)out.push({g:'Customers',t:c.name||c.company||c.email,sub:[c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '),hay:[c.name,c.company,c.email,...altOf(c),...grpsOf(c)].join(' '),run:cmdGo(()=>openCustomer(ck(c.email)))});
-  {const d=QB.data||lsJ('ss-qbo');if(d){const ni=qbIdx(d,'name'),si=qbIdx(d,'sku');d.rows.slice(0,3000).forEach((r,i)=>out.push({g:'QuickBooks items',t:r[ni]||r.find(Boolean)||'(item)',sub:[si>=0?r[si]:'',...r.filter((v,j)=>j!==ni&&j!==si&&v).slice(0,2)].filter(Boolean).join(' · '),hay:r.join(' '),run:cmdGo(async()=>{QB.side='item';QB.open=i;await openQb();})}));}}
+  {const d=qbCur();if(d){const ni=qbIdx(d,'name'),si=qbIdx(d,'sku');d.rows.slice(0,3000).forEach((r,i)=>out.push({g:'QuickBooks items',t:r[ni]||r.find(Boolean)||'(item)',sub:[si>=0?r[si]:'',...r.filter((v,j)=>j!==ni&&j!==si&&v).slice(0,2)].filter(Boolean).join(' · '),hay:r.join(' '),run:cmdGo(async()=>{QB.side='item';QB.open=i;await openQb();})}));}}
   for(const x of IV.items)out.push({g:'Products',t:invTitle(x),sub:[x.sum?.code,x.sum?.price,x.type,x.cat].filter(Boolean).join(' · '),hay:[invTitle(x),x.sum?.code,x.cat,x.type].join(' '),run:cmdGo(async()=>{IV.open=x.key;await openInv();renderInvDetail(true);})});
   return out;}
 const SHORTCUTS=[['Ctrl/⌘ K','Search everything'],['?','This list'],['G then H','Home'],['G then E','Sell sheet editor'],['G then I','Inventory'],['G then P','Pipeline'],['G then S','Sent'],['G then C','Customers'],['G then ,','Settings'],['/','Search on the page you\'re on'],['Ctrl/⌘ Shift F','Hide or show the editor toolbar'],['Esc','Close a pop-up or panel']];
