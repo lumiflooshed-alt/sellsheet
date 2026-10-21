@@ -47,33 +47,14 @@ Your site addresses (add every one you use):
    - Click **Create**.
 7. Copy the **Client ID**. It looks like `1234567890-abc123.apps.googleusercontent.com`.
 
-## 1b. Optional: a Google API key, to browse your Drive
+## 1b. Browsing your Drive (no API key needed)
 
-**Save to Drive** works without this. Files go to a **Sell Sheets** folder created for you, or to the top of **My Drive**.
-Add a free API key to use Google's own Drive picker. With it you can:
+**Browse Drive…** (when saving), **open from Google Drive**, and **Inventory → choose folder** use a Drive browser built into the site. It lists My Drive, Shared drives and Shared with me, and you can search.
 
-- choose any folder (including shared drives) when saving
-- **open** a sell sheet from Drive (PDF, Word or Google Docs)
-- **import customers** from Drive (Excel, CSV or Google Sheets)
-
-To add the key:
-
-1. In the same Google Cloud project, make sure **Google Picker API** is enabled (step 3 above).
-2. Open **APIs & Services → Credentials → Create credentials → API key**. Copy the key (it starts with `AIza`).
-3. Click the new key to edit it:
-   - **Application restrictions:** choose **Websites**. Add `https://lumiflooshed-alt.github.io/*`, and your Cloudflare address too, e.g. `https://YOUR-NAME.pages.dev/*`.
-   - **API restrictions:** choose **Restrict key** and tick only **Google Picker API**.
-   - Click **Save**.
-4. Paste the key into the site under **Sign in → Sign-in setup → Google API key**, or send it to Claude.
-
-The key only lets your site addresses open Google's picker. Your files are still protected by your sign-in.
-Saving to Drive asks for one more Google permission, "files you use with this app". With it, the site can only see
-files it saves and folders you pick, never the rest of your Drive.
-
-In the picker (**Save → Google Drive → Browse Drive…**) you see your folders and files:
-
-- **Pick a folder** to save into it.
-- **Pick an existing PDF, Word or JPG file** to replace it with the current sheet. Drive keeps the old one in its version history.
+- The first time, Google asks for permission to see your Drive. When saving, it asks to see and save in your folders.
+- Google's own picker isn't used any more. It ran inside an embedded Google page, which Firefox and other privacy-focused browsers block from seeing your Google sign-in, so it failed with "401".
+- A Google API key isn't needed. You can leave the field in Sign-in setup empty.
+- On the **Data Access** page in Google Cloud, the scopes `.../auth/drive.readonly` and `.../auth/drive` must be listed (step 5b above). They're the same ones Inventory uses.
 
 ## 2. Microsoft (Outlook.com, Hotmail and Microsoft 365)
 
