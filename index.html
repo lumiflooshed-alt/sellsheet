@@ -276,6 +276,9 @@ textarea.np-in{display:block;overflow:hidden}
 #themeBtn svg{transition:transform .35s var(--spring)}#themeBtn:active svg{transform:rotate(-30deg)}
 .btn.sm{height:36px;padding:0 12px;font-size:14px;border-radius:9px}
 .btn.danger{color:var(--bad)}
+.ask{border:0;border-radius:16px;padding:0;width:min(440px,calc(100vw - 32px));background:var(--panel);color:var(--ink);box-shadow:0 24px 70px rgba(10,14,22,.35)}.ask::backdrop{background:rgba(10,14,22,.35)}
+.ask form{padding:20px 22px 18px;display:grid;gap:10px}.ask h3{margin:0;font-size:18px}.ask p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.ask-acts{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:8px}.ask .btn.danger.sm{background:var(--bad);color:#fff;border-color:var(--bad)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn svg{width:18px;height:18px}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
@@ -1049,6 +1052,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
     <div class="ml-bot"><span class="note" id="suStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="suCancel" type="button">Cancel</button><button class="btn primary" id="suSave" type="button">Save</button></div></div>
   </div>
 </dialog>
+<dialog id="askDlg" class="ask" aria-labelledby="askT"><form method="dialog"><h3 id="askT"></h3><p id="askB"></p><div class="ask-acts" id="askA"></div></form></dialog>
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <div class="offline" id="offline" role="status" popover="manual">You're offline. Everything you do is saved on this device and syncs when you're back online.</div>
 <div class="ctx hide" id="ctx" role="menu" aria-label="Text formatting"></div>
@@ -2174,8 +2178,7 @@ $('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
 const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.replace(/ · \d+ ticked$/,'')+(CU.sel.size?` · ${CU.sel.size} ticked`:'');};
 $('#cuList').addEventListener('click',e=>{const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
   if(ed)openCustomer(ed.dataset.cuedit);
-  if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;if(del.dataset.sure!=='1'){del.dataset.sure='1';del.title='Click again to delete';toast(`Click ✕ again to delete ${c.name||c.email}`);setTimeout(()=>{del.dataset.sure='';},3000);return;}
-    removeCustomers([c]);renderCust();}});
+  if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;ask({title:`Remove ${c.name||c.email}?`,body:'They\'re removed from your customer list. You can undo it for a few seconds afterwards.',ok:'Remove customer',danger:true}).then(r=>{if(r!=='ok')return;removeCustomers([c]);renderCust();});}});
 $('#cuAll').onclick=()=>{cuShown().forEach(c=>CU.sel.add(ck(c.email)));renderCust();};
 $('#cuNone').onclick=()=>{CU.sel.clear();renderCust();};
 // Import: Excel (.xlsx) or CSV, e.g. exports from Gmail / Outlook contacts or any sheet with Name, Company and Email columns.
@@ -2658,9 +2661,9 @@ $('#lgList').addEventListener('click',e=>{const en=lgEntry(e.target);if(!en)retu
   const dot=e.target.closest('[data-lcolor]');if(dot){openPalette(dot,en);return;}
   if(e.target.closest('[data-lwho]')){lgF.q=en.email||en.name;$('#lgQ').value=lgF.q;renderLog();return;}
   const del=e.target.closest('[data-ldel]');if(del){const th=threads().find(t=>t.root.id===en.id),gone=th?[th.root,...th.fups]:[en];
-    if(!(lgSure.id===en.id&&Date.now()<lgSure.until)){lgSure={id:en.id,until:Date.now()+3000};toast(gone.length>1?`Click ✕ again to delete this entry and its ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Click ✕ again to delete this entry');return;}lgSure={};
+    ask({title:gone.length>1?`Delete this entry and its ${gone.length-1} follow-up${gone.length>2?'s':''}?`:'Delete this entry?',body:`${en.name||en.email||'This send'} · ${en.sheet}. You can undo it for a few seconds afterwards.`,ok:'Delete',danger:true}).then(r=>{if(r!=='ok')return;
     const now=Date.now();LG.list=LG.list.filter(x=>!gone.includes(x));gone.forEach(x=>{LG.deleted.push({id:x.id,at:now});LG.sel.delete(x.id);});lgSave();renderLog();
-    toast(gone.length>1?`Deleted with ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Entry deleted',7000,{label:'Undo',fn:()=>{const t=Date.now(),ids=new Set(gone.map(x=>x.id));lgLoad();LG.deleted=LG.deleted.filter(d=>!ids.has(d.id));for(const x of gone)if(!LG.list.some(y=>y.id===x.id))LG.list.push({...x,upd:t});lgSave();if(logDlg.open)renderLog();toast('Restored');}});}});
+    toast(gone.length>1?`Deleted with ${gone.length-1} follow-up${gone.length>2?'s':''}`:'Entry deleted',7000,{label:'Undo',fn:()=>{const t=Date.now(),ids=new Set(gone.map(x=>x.id));lgLoad();LG.deleted=LG.deleted.filter(d=>!ids.has(d.id));for(const x of gone)if(!LG.list.some(y=>y.id===x.id))LG.list.push({...x,upd:t});lgSave();if(logDlg.open)renderLog();toast('Restored');}});});}});
 $('#lgExport').onclick=()=>{const th=lgShown();if(!th.length){toast('Nothing to export');return;}const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
   const line=(e,type,root)=>[fmtWhen(e.at),type,tagName(root.color),e.name,e.company,(e.emails.length?e.emails:[e.email]).join('; '),e.sheet,HOW_NAME[e.how],e.files.join(' '),e.from,ST_NAME[root.status||'none'],root.follow,type==='Original'?root.note:''].map(q).join(',');
   save('Sent sell sheets.csv',new Blob(['\uFEFF'+['Date,Type,Colour,Customer,Company,Email,Sell sheet,Sent as,Files,From,Status,Follow-up date,Note',...th.flatMap(t=>[line(t.root,'Original',t.root),...t.fups.map((f,n)=>line(f,'Follow-up '+(n+1),t.root))])].join('\r\n')],{type:'text/csv'}));};
@@ -2998,7 +3001,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   const nn=plan.filter(m=>m.person&&!greetName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
-  if(nn.length&&!nnOk){nnOk=true;mlStatus(`${nn.length} ${nn.length>1?'customers have':'customer has'} no name (see the list on the right). Add names, or click Send again to send anyway.`,true);return;}
+  if(nn.length&&!nnOk){ask({title:`${nn.length} ${nn.length>1?'customers have':'customer has'} no name`,body:'Their email will start without a name (e.g. “Hello,”). You can add names in the list on the right first.',ok:'Send anyway',cancel:'Add names first'}).then(r=>{if(r==='ok'){nnOk=true;$('#mlSend').click();}});return;}
   sending=true;$('#mlSend').disabled=true;
   const fr=p==='google'?curFrom():null,fk=fr&&fr.key!=='google'?fr.key:p;
   try{let tok=await silentTok(fk);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=fk===p?await login(p,false):await googleLogin(false,fr.acct,[],fk);renderAcct();}
@@ -3718,7 +3721,7 @@ function renderSettings(){if(!setDlg.open)return;
   else body=`<h3>Backup & reset</h3><p class="st-lead">Keep a copy of everything, or start your settings over.</p>
     ${card('',row('Download a backup','Settings, customers, the Sent list, your email wording and inventory notes, in one file',`<button class="btn sm" type="button" data-sact="backup">Download</button>`)
       +row('Restore from a backup','Adds the backup\'s customers and Sent list to what\'s here, and uses its settings',`<button class="btn sm" type="button" data-sact="restore">Choose file…</button><input type="file" id="stRestore" accept=".json,application/json" hidden>`)
-      +row('Reset all settings','Customers, sheets and the Sent list are kept',`<button class="btn sm ghost" type="button" data-sact="reset" style="color:var(--bad)">${ST.sure?'Click again to reset':'Reset'}</button>`))}`;
+      +row('Reset all settings','Customers, sheets and the Sent list are kept',`<button class="btn sm ghost" type="button" data-sact="reset" style="color:var(--bad)">Reset</button>`))}`;
   const sc=$('#stBody').scrollTop;$('#stBody').innerHTML=`<div class="st-in">${body}</div>`;$('#stBody').scrollTop=sc;}
 let stT=0;const stSaved=()=>{const el=$('#stSaved');el.textContent='✓ Saved';clearTimeout(stT);stT=setTimeout(()=>{el.textContent='';},1800);};
 function stChanged(rerender=true){setSave();applySettings();stSaved();if(rerender)renderSettings();}
@@ -3749,7 +3752,7 @@ setDlg.addEventListener('click',e=>{const t=e.target;
   else if(v==='ivFields'){openInv().then(()=>{IV.add={mode:'fields'};IV.open=null;renderInvDetail(true);});}
   else if(v==='backup')stBackup();
   else if(v==='restore')$('#stRestore').click();
-  else if(v==='reset'){if(!ST.sure){ST.sure=true;renderSettings();return;}ST.sure=false;setReplace({});SET.upd=Date.now();setSave();stSaved();toast('Settings are back to the defaults');}});
+  else if(v==='reset'){ask({title:'Reset all settings?',body:'Every setting goes back to how it started. Customers, sell sheets and the Sent list are kept.',ok:'Reset settings',danger:true}).then(r=>{if(r!=='ok')return;setReplace({});SET.upd=Date.now();setSave();stSaved();renderSettings();toast('Settings are back to the defaults');});}});
 setDlg.addEventListener('change',e=>{const t=e.target;if(t.id==='stFrom'){chooseFrom(t.value).then(()=>{if(setDlg.open)renderSettings();});return;}
   if(t.id==='stRestore'){const f=t.files?.[0];t.value='';if(f)stRestore(f);return;}
   if(t.dataset.slist){const[op,offp]=t.dataset.slist.split('|'),off=getP(SET,offp),k=t.value;setP(SET,offp,t.checked?off.filter(x=>x!==k):[...off,k]);stChanged();return;}
@@ -3942,7 +3945,7 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
 function openCP(){pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
-function openCustomer(key){if(custDlg.open&&CP.mode==='cust'&&CP.dirty&&CP.open!==key&&!closeCPDetail())return;const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
+function openCustomer(key){if(custDlg.open&&CP.mode==='cust'&&CP.dirty&&CP.open!==key&&!closeCPDetail(false,()=>openCustomer(key)))return;const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
   if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
 const cpShown=()=>{const q=CP.q.trim().toLowerCase();return cuSorted().filter(c=>(!CP.nn||noName(c))&&(!CP.color||(CP.color==='none'?!tagHex(c.color):c.color===CP.color||normHex(c.color)===CP.color))&&custMatch(c,q,CP.gsel));};
 // the table draws 80 rows at a time (more as you scroll): with hundreds of customers, drawing them all is what made it slow
@@ -3968,7 +3971,7 @@ function renderCPTable(keep){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==O
 function renderCPFoot(){const shown=CP.rows||[],ticked=CU.list.filter(c=>CU.sel.has(ck(c.email))).length;
   $('#cpNote').textContent=(shown.length!==CU.list.length?`Showing ${shown.length} of ${CU.list.length}. `:'')+(ticked?`${ticked} ticked.`:'Click a customer to open it. Tick customers to email, group or delete them.');
   for(const id of['cpEmail','cpTickGrp','cpTickDel'])$('#'+id).disabled=!ticked;
-  $('#cpEmail').textContent=ticked?`Email ${ticked} ticked`:'Email ticked customers';$('#cpTickDel').textContent=CP.tickSure?`Delete ${ticked}? Click again`:'Delete ticked';
+  $('#cpEmail').textContent=ticked?`Email ${ticked} ticked`:'Email ticked customers';$('#cpTickDel').textContent='Delete ticked';
   const all=$('#cpTable [data-cpall]');if(all)all.checked=!!shown.length&&shown.every(c=>CU.sel.has(ck(c.email)));}
 // highlight the open customer's row without redrawing the table
 function cpSelectRow(key){$('#cpTable tr.on')?.classList.remove('on');if(key&&CP.mode==='cust'){const tr=[...$$('#cpTable tr[data-cp]')].find(r=>r.dataset.cp===key);tr?.classList.add('on');}}
@@ -4063,7 +4066,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
   P.sent=`<div class="np-sec" id="np-sent"><h4>${npI('sent')}Sent to this customer${sent.length?` <span class="np-count">${sent.length}</span>`:''}</h4>${sent.length?`<div class="np-list">${sent.slice(0,20).map(th=>`<div class="np-row"><span class="np-dot" style="background:${tagHex(th.root.color)||'var(--line2)'}"></span><b>${esc(th.root.sheet)}</b><span>${esc(ago(th.root.at))}${th.fups.length?` · ${th.fups.length} follow-up${th.fups.length>1?'s':''}`:''}</span><em>${esc(ST_NAME[th.root.status||'none'])}</em></div>`).join('')}</div>`:'<p class="np-empty">Nothing sent yet.</p>'}</div>`;
   P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
-    ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del" style="${CP.delSure?'color:var(--bad)':''}">${CP.delSure?'Click again to remove':'Remove customer'}</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
+    ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del">Remove customer</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
 function npGreetOut(W){const n=greetName({cust:1,name:W.vals.name[0],greet:W.greet});return n?`Emails greet them as “${esc(n)}”`:'No name to greet them by yet';}
 function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
@@ -4077,10 +4080,17 @@ function dupesHTML(){const ds=findDupes();return`<div class="cpd-h"><h3>Possible
   <div class="cpd-f">${ds.length>1?`<button class="btn sm primary" type="button" data-cpd="mergeall">Merge all ${ds.length}</button>`:''}<span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
 const gFlat=()=>{const out=[],walk=(nds,d)=>{for(const nd of nds){out.push({name:nd.name,n:nd.n,k:nd.k,d});walk(nd.kids,d+1);}};walk(gTree().roots,0);return out;};
 function groupsHTML(){const gs=gFlat();return`<div class="cpd-h"><h3>Groups<small>Click a colour to change it. Rename by editing the name. Choose “Inside” to put a group in another one, like folders. A customer can be in several groups.</small></h3><button class="btn icon sm ghost" type="button" data-cpd="close" aria-label="Close">✕</button></div>
-  <div class="cpd-b" style="grid-template-columns:1fr"><div>${gs.length?gs.map(g=>`<div class="cp-grp" style="margin-left:${Math.min(g.d,6)*18}px"><button class="cpd-dot on" style="--tag:${gColor(g.name)};width:24px;height:24px" type="button" data-cpd="gcol" data-g="${esc(g.name)}" aria-label="Colour of ${esc(g.name)}"></button><input class="in" data-grename="${esc(g.name)}" value="${esc(g.name)}" aria-label="Group name"><select class="in cp-gpar" data-gparent="${esc(g.k)}" aria-label="Folder ${esc(g.name)} is inside" title="Inside"><option value="">Top level</option>${(bad=>gs.filter(o=>!bad.has(o.k)).map(o=>`<option value="${esc(o.k)}"${gParent(g.k)===o.k?' selected':''}>Inside ${esc(gPath(o.k))}</option>`).join(''))(gDesc(g.k))}</select><small>${g.n} customer${g.n===1?'':'s'}</small><button class="btn sm ghost" type="button" data-cpd="gshow" data-g="${esc(g.name)}">Show</button><button class="btn sm ghost" type="button" data-cpd="gdel" data-g="${esc(g.name)}">${CP.gdel===gKey(g.name)?'Click again to delete':'Delete'}</button></div>`).join(''):'<span class="cpd-hint">No groups yet. Open a customer and add them to a group, or tick customers and use “Add ticked to group…”.</span>'}</div>
+  <div class="cpd-b" style="grid-template-columns:1fr"><div>${gs.length?gs.map(g=>`<div class="cp-grp" style="margin-left:${Math.min(g.d,6)*18}px"><button class="cpd-dot on" style="--tag:${gColor(g.name)};width:24px;height:24px" type="button" data-cpd="gcol" data-g="${esc(g.name)}" aria-label="Colour of ${esc(g.name)}"></button><input class="in" data-grename="${esc(g.name)}" value="${esc(g.name)}" aria-label="Group name"><select class="in cp-gpar" data-gparent="${esc(g.k)}" aria-label="Folder ${esc(g.name)} is inside" title="Inside"><option value="">Top level</option>${(bad=>gs.filter(o=>!bad.has(o.k)).map(o=>`<option value="${esc(o.k)}"${gParent(g.k)===o.k?' selected':''}>Inside ${esc(gPath(o.k))}</option>`).join(''))(gDesc(g.k))}</select><small>${g.n} customer${g.n===1?'':'s'}</small><button class="btn sm ghost" type="button" data-cpd="gshow" data-g="${esc(g.name)}">Show</button><button class="btn sm ghost" type="button" data-cpd="gdel" data-g="${esc(g.name)}">${'Delete'}</button></div>`).join(''):'<span class="cpd-hint">No groups yet. Open a customer and add them to a group, or tick customers and use “Add ticked to group…”.</span>'}</div>
     <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button></div></div>
   <div class="cpd-f"><span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
-function closeCPDetail(force){if(CP.mode==='cust'&&CP.dirty&&!force){if(!CP.closeSure){CP.closeSure=true;renderCPDetail();toast('You have unsaved changes. Click Save, or close again to discard them.');return false;}}
+/* a proper confirm window (instead of "click again"). Resolves 'ok', 'alt' or false (cancelled / Esc). */
+function ask({title,body='',ok='OK',danger=false,alt='',cancel='Cancel'}){const d=$('#askDlg');if(d.open)d.close();
+  return new Promise(res=>{$('#askT').textContent=title;$('#askB').textContent=body;$('#askB').hidden=!body;
+    $('#askA').innerHTML=`<button class="btn sm ghost" value="cancel">${esc(cancel)}</button>${alt?`<button class="btn sm" value="alt">${esc(alt)}</button>`:''}<button class="btn sm ${danger?'danger':'primary'}" value="ok">${esc(ok)}</button>`;
+    d.onclose=()=>{d.onclose=null;res(d.returnValue==='ok'?'ok':d.returnValue==='alt'?'alt':false);};d.returnValue='';d.showModal();d.querySelector(danger?'[value="cancel"]':'[value="ok"]').focus();});}
+// closing a customer with unsaved changes asks: save, discard or keep editing. then() runs once it's closed.
+function closeCPDetail(force,then){if(CP.mode==='cust'&&CP.dirty&&!force){ask({title:'Save your changes?',body:'You changed this customer and haven\'t saved yet.',ok:'Save',alt:'Discard changes',cancel:'Keep editing'})
+      .then(r=>{if(r==='ok'){if(saveCustomer()){closeCPDetail(true);then?.();}}else if(r==='alt'){closeCPDetail(true);then?.();}});return false;}
   CP.mode='';CP.open=null;CP.W=null;CP.dirty=false;CP.closeSure=false;cpSelectRow(null);renderCPDetail();renderCPFoot();return true;}
 function saveCustomer(){const W=CP.W;if(!W)return false;const emails=W.emails.map(a=>a.trim()).filter(Boolean);if(!emails.length){toast('Add at least one email address');return false;}
   const err=cuUpsert(CP.open,{name:W.vals.name[0],company:W.vals.company[0],email:emails[0],alt:emails.slice(1).join(','),use:W.emails[W.useIdx]?.trim()||emails[0],groups:W.groups,color:W.color,note:W.note,info:wInfo(W),greet:W.greet});
@@ -4109,8 +4119,7 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   const gt=t.closest('#cpChips [data-gtog]');if(gt){const k=gt.dataset.gtog;CP.gsel.has(k)?CP.gsel.delete(k):CP.gsel.add(k);renderCP(true);return;}
   const op=t.closest('[data-cpopen]');if(op){openCustomer(op.dataset.cpopen);return;}
   const dl=t.closest('[data-cpdel]');if(dl){const c=CU.list.find(x=>ck(x.email)===dl.dataset.cpdel);if(!c)return;
-    if(dl.dataset.sure!=='1'){dl.dataset.sure='1';dl.style.color='var(--bad)';toast(`Click ✕ again to remove ${c.name||c.company||c.email}`);setTimeout(()=>{if(dl.isConnected){dl.dataset.sure='';dl.style.color='';}},3000);return;}
-    removeCustomers([c]);if(CP.open===ck(c.email)){CP.mode='';CP.open=null;CP.W=null;}renderCP();return;}
+    ask({title:`Remove ${c.name||c.company||c.email}?`,body:'You can undo it for a few seconds afterwards.',ok:'Remove customer',danger:true}).then(r=>{if(r!=='ok')return;removeCustomers([c]);if(CP.open===ck(c.email)){CP.mode='';CP.open=null;CP.W=null;}renderCP();});return;}
   const row=t.closest('tr[data-cp]');if(row&&!t.closest('input,button')){openCustomer(row.dataset.cp);return;}
   const gc=t.closest('[data-gcol]');if(gc&&!t.closest('button')){const g=gc.dataset.gcol;colorPop(gc,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
   if(!a)return;const act=a.dataset.cpd;
@@ -4130,11 +4139,11 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(act==='rminfo'){const k=a.dataset.k;W.keys=W.keys.filter(x=>x!==k);delete W.vals['i:'+k];CP.dirty=true;renderCPDetail();return;}
   if(act==='save'){saveCustomer();return;}
   if(act==='email'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;CU.sel.add(k);closeCPDetail(true);custDlg.close();if(mailDlg.open){renderCust();}else openMail();return;}
-  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;if(!CP.delSure){CP.delSure=true;renderCPDetail();return;}removeCustomers([c]);closeCPDetail(true);renderCP();return;}
+  if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;ask({title:`Remove ${c.name||c.company||c.email}?`,body:'You can undo it for a few seconds afterwards.',ok:'Remove customer',danger:true}).then(r=>{if(r!=='ok')return;removeCustomers([c]);closeCPDetail(true);renderCP();});return;}
   if(act==='merge'||act==='mergeall'){const ds=findDupes(),pick=act==='merge'?[ds[+a.dataset.i]]:ds;let n=0;for(const g of pick)if(g){mergeDupes(g);n++;}cuSave();if(mailDlg.open)renderCust();renderCP();toast(`Merged ${n} duplicate${n===1?'':'s'}`);return;}
   if(act==='gcol'){const g=a.dataset.g;colorPop(a,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
   if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);renderCP(true);return;}
-  if(act==='gdel'){const k=gKey(a.dataset.g);if(CP.gdel!==k){CP.gdel=k;renderCPDetail();return;}CP.gdel='';deleteGroup(a.dataset.g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');return;}
+  if(act==='gdel'){const g=a.dataset.g;ask({title:`Delete the group “${gName(g)}”?`,body:'The customers in it are kept; they just leave this group. Any folders inside it move up a level.',ok:'Delete group',danger:true}).then(r=>{if(r!=='ok')return;deleteGroup(g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');});return;}
   if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
 custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNewV'||e.target.id==='cpdNewK')){e.preventDefault();const W=CP.W,k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();
     if(!k){$('#cpdNewK').focus();return;}if(!v){$('#cpdNewV').focus();return;}
@@ -4152,7 +4161,7 @@ $('#cpGroups').onclick=()=>{CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';c
 $('#cpImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.currentTarget);};
 $('#cpExport').onclick=()=>$('#cuExport').click();
 $('#cpEmail').onclick=()=>{custDlg.close();if(mailDlg.open)renderCust();else openMail();};
-$('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;if(!CP.tickSure){CP.tickSure=true;renderCPFoot();return;}CP.tickSure=false;removeCustomers(list);renderCP();};
+$('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;ask({title:`Delete ${list.length} customer${list.length>1?'s':''}?`,body:'You can undo it for a few seconds afterwards.',ok:`Delete ${list.length}`,danger:true}).then(r=>{if(r!=='ok')return;removeCustomers(list);renderCP();});};
 $('#cpTickGrp').onclick=e=>{const btn=e.currentTarget,gs=allGroups();
   const m=popMenu(btn,`<span class="menu-h">Add ticked customers to</span>${gs.map(g=>`<button type="button" role="menuitem" data-tg="${esc(g.name)}"><b><span class="cdot" style="background:${gColor(g.name)}"></span>${esc(g.name)}</b><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')}<div style="display:flex;gap:6px;padding:6px 8px"><input class="in" id="tgNew" placeholder="New group" style="height:34px;flex:1" aria-label="New group name"><button class="btn sm" type="button" data-tgnew>Add</button></div>`,
     (ev,menu)=>{const b=ev.target.closest('[data-tg],[data-tgnew]');if(!b)return;const name=b.dataset.tg||$('#tgNew').value.trim().replace(/\s+/g,' ').slice(0,40);if(!name)return;
