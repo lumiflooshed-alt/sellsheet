@@ -152,6 +152,93 @@ Keep the Client secret out of chats, email and the site's code. It only goes int
 
 To turn it off, clear the helper address in **Sign-in setup**. To cut off access completely, also remove the app at <https://myaccount.google.com/permissions>.
 
+## 5. QuickBooks Online (connect, view and manage items, stock, categories and customers)
+
+The dashboard talks to QuickBooks through the same Cloudflare Worker as "Stay signed in" (step 4). QuickBooks doesn't accept calls from web pages, so the Worker is required. Your Intuit Client Secret goes only into Cloudflare's encrypted secrets, never into chat or the site's code.
+
+**Test first, for free, on a sandbox company.** This never touches your real books and costs nothing.
+
+### 5a. Create the Intuit app (free)
+1. Go to <https://developer.intuit.com> and sign in with your Intuit account (or create a free developer account). This is separate from your QuickBooks subscription.
+2. Open **My Hub → App dashboard → Create an app**:
+   - Choose **QuickBooks Online and Payments**.
+   - Name it `Rakaposhica Dashboard`.
+   - Tick the **Accounting** scope (`com.intuit.quickbooks.accounting`) only.
+3. In the app, open **Keys & credentials** and stay on **Development** (sandbox) for now.
+   - Copy the **Client ID**.
+   - Copy the **Client Secret**.
+4. On the same page, under **Redirect URIs**, add the site's addresses exactly, with the slash at the end:
+   - `https://sellsheet.pages.dev/`
+   - `https://lumiflooshed-alt.github.io/sellsheet/`
+   - Save.
+5. Intuit makes a **sandbox company** for you automatically, with sample items, customers and invoices. To see or add sandboxes, go to **My Hub → Sandboxes**. Choose **Canada** as the country to match your company.
+
+### 5b. Add QuickBooks to your Worker
+1. In Cloudflare, open **Storage & Databases → KV → Create**, name it `sellsheet-qbo`, and click **Add**.
+2. Open your Worker, then **Settings → Bindings → Add → KV namespace**:
+   - Variable name: `QBO_KV`
+   - Namespace: `sellsheet-qbo`
+   - Save.
+3. In **Settings → Variables and Secrets**, add:
+   - `INTUIT_CLIENT_ID` (Text): the Client ID.
+   - `INTUIT_CLIENT_SECRET` (Secret): the Client Secret.
+   - `INTUIT_ENV` (Text): `sandbox`.
+4. Click **Edit code**, replace everything with the latest `worker/google-token.js`, then click **Deploy**.
+5. To check it worked, open the Worker's address in a tab. It should show `"quickbooks":true`.
+
+### 5c. Connect
+1. On the site, open **Settings → QuickBooks → Connect QuickBooks…**.
+2. In the window that opens, sign in to Intuit and pick the sandbox company.
+3. Open **Inventory → QuickBooks items**. Your items load live.
+4. The connection syncs to your other devices when you're signed in with Google, so you only connect once.
+
+### 5d. Turning on changes
+The dashboard starts **read-only**. To edit from the dashboard, turn on **Settings → QuickBooks → Allow changes to QuickBooks**. Every change is shown for review (old → new) before it's sent, and listed under **Recent changes**.
+
+**Items**
+- Edit an item: name, SKU, category, descriptions, sales price, cost, reorder point, accounts, sales and purchase tax, active/inactive.
+- Create items: inventory (with starting quantity and date), non-inventory, or service.
+- **Adjust quantity:** recorded as an inventory quantity adjustment, with an account and a reason.
+- **Bulk:** tick items, then set a category, make them active or inactive, or change prices by a percentage or an amount.
+- **Categories:** add, rename, or move one inside another.
+
+**Customers** (Customers → QuickBooks)
+- **Bring in customers from QuickBooks:**
+  - Adds new ones and links the ones already here, matched by email.
+  - Customers without an email are skipped.
+  - From then on, changes in QuickBooks come in by themselves.
+- **Add to QuickBooks:** works on one customer or on all ticked customers. Once a customer is linked, saving them here updates QuickBooks too.
+
+**Two-way updates and conflicts**
+- **Changes made in QuickBooks** show here within a few minutes: every 3 minutes while the page is open, otherwise every 15.
+- **Changes you save here** go to QuickBooks straight away.
+- **If a record changed in QuickBooks** since you opened it, QuickBooks refuses the save. The latest version loads, and you check it and save again.
+- **Fields the dashboard doesn't show are never changed.**
+
+### 5e. What to check in the sandbox
+1. **Items:** they match QuickBooks.
+2. **Edit an item in the dashboard:**
+   - Change a price and a SKU.
+   - Check them in QuickBooks under **Sales → Products and services**.
+3. **Edit an item in QuickBooks:** change a price, then check that the dashboard shows it within a few minutes, or click **Refresh**.
+4. **New items:** create a new inventory item with a starting quantity, plus a service.
+5. **Adjust a quantity:**
+   - Check it in QuickBooks under the item's quantity history.
+   - If the dashboard says QuickBooks refused the adjustment, tell me. That part depends on what Intuit allows on your plan.
+6. **Categories:** add one, move items into it in bulk, and rename it.
+7. **Customers:** bring them in, add a new one to QuickBooks, then edit a linked one.
+8. **Disconnect and connect again.**
+
+### 5f. Going live with your real company
+1. In the Intuit app, open **Keys & credentials → Production**.
+   - Intuit asks a short set of questions about the app.
+   - It also asks for links to a privacy policy and terms of use. I can add simple pages to the site for this.
+2. Once approved, copy the **Production** Client ID and Secret, and add the same redirect URIs there.
+3. In Cloudflare, replace `INTUIT_CLIENT_ID` and `INTUIT_CLIENT_SECRET` with the production values. Set `INTUIT_ENV` to `production`, then click **Deploy**.
+4. On the site, go to **Settings → QuickBooks → Disconnect**, then **Connect**, and pick your real company.
+   - Leave **Allow changes** off for a few days to compare.
+   - Then turn it on.
+
 ## Choosing the address you send from
 
 - In the **Email** window, the **Send from** list next to Gmail shows:
@@ -229,6 +316,37 @@ How it works:
   - The site first asks Drive what changed since the last check, so it only reads folders when something actually changed.
   - The chosen folder is saved with your settings, so every device signed in to the same account uses it without choosing it again.
   - With the stay-signed-in helper this keeps going for good. Without it, it runs while the hour-long Google sign-in lasts.
+
+### QuickBooks items
+
+**Inventory → QuickBooks items** shows your products and services from a QuickBooks report, with every column of the report.
+
+**Getting the report in:**
+- **Upload:**
+  1. In QuickBooks, open **Reports → Product/Service List**.
+  2. Optional: click **Customize** to add columns such as **SKU**.
+  3. Click **Export → Export to Excel** (CSV works too).
+  4. Drop the file on the page, or click **Import report**. Each import replaces the previous list.
+- **Automatically, from Gmail:**
+  1. In QuickBooks, save the customized report.
+  2. Under **Reports → Custom reports → Edit**, turn on **Set email schedule**.
+  3. Send it to your Gmail address and tick **Attach the report as an Excel file**.
+  4. On the page, open **Auto-import…** and tick **Import automatically**.
+  - The newest report email is picked up when the page opens and every 30 minutes while the site is open.
+  - It uses the read-only Gmail access already used for reply checking.
+
+**Using the page:**
+- **Columns:** choose which to show and in what order. **Compact rows** and **wrap long text** are in the same panel.
+- **Search, filter and sort:** search every column, filter by type, group or category, and click a heading to sort.
+- **Item details:** click a row to see all of that item's details, including hidden columns.
+- **Sell sheets:**
+  - Items are matched to the sell sheets in Inventory by **SKU** (item code) or name.
+  - The **Sell sheet** column and the **Has a sell sheet / No sell sheet yet** filter show which items still need one.
+  - A matched product's panel in Inventory shows its QuickBooks price, cost and quantity.
+- **Export** downloads what's shown as a spreadsheet.
+- **Sync:** the latest import and your column choices sync to your other devices when you're signed in.
+
+With a report, changes go one way: from QuickBooks to the site. **Connect QuickBooks directly** (section 5) instead, and the page shows your items live, and lets you edit, create and adjust them from the dashboard.
 
 ### Your Drive folders decide status and type
 - A folder whose name starts with **Active** (or Current) makes everything inside it active.
