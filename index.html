@@ -276,6 +276,15 @@ textarea.np-in{display:block;overflow:hidden}
 #themeBtn svg{transition:transform .35s var(--spring)}#themeBtn:active svg{transform:rotate(-30deg)}
 .btn.sm{height:36px;padding:0 12px;font-size:14px;border-radius:9px}
 .btn.danger{color:var(--bad)}
+.db{border:0;border-radius:16px;padding:0;width:min(640px,calc(100vw - 24px));height:min(640px,calc(100vh - 40px));background:var(--panel);color:var(--ink);box-shadow:0 24px 70px rgba(10,14,22,.35)}.db::backdrop{background:rgba(10,14,22,.35)}
+.db-wrap{display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;height:100%}
+.db-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}.db-bar .in{flex:1 1 180px;height:36px}
+.db-places{display:flex;gap:4px;flex-wrap:wrap}.db-places button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 13px var(--ui);cursor:pointer}.db-places button[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-fg)}
+.db-crumbs{padding:8px 16px;font-size:13.5px;color:var(--muted);border-bottom:1px solid var(--line);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.db-crumbs b{color:var(--ink)}
+.db-list{overflow:auto;padding:6px 8px}
+.db-row{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);font:inherit;font-size:14px;padding:9px 10px;border-radius:8px;cursor:pointer;text-align:left}.db-row:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 8%,transparent)}.db-row:disabled{opacity:.45;cursor:default}
+.db-row .db-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.db-row small{color:var(--muted);font-size:12px}.db-row.fold .db-n::after{content:' ›';color:var(--muted)}
+.db-ic{width:22px;text-align:center;flex:none}.db-msg{color:var(--muted);padding:18px 10px;margin:0}.db-err{color:var(--bad);padding:18px 10px;margin:0}
 .ask{border:0;border-radius:16px;padding:0;width:min(440px,calc(100vw - 32px));background:var(--panel);color:var(--ink);box-shadow:0 24px 70px rgba(10,14,22,.35)}.ask::backdrop{background:rgba(10,14,22,.35)}
 .ask form{padding:20px 22px 18px;display:grid;gap:10px}.ask h3{margin:0;font-size:18px}.ask p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
 .ask-acts{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:8px}.ask .btn.danger.sm{background:var(--bad);color:#fff;border-color:var(--bad)}
@@ -1044,7 +1053,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
         <div class="kv"><span>Microsoft: <b>Single-page application redirect URI</b>, and Google: <b>Authorized redirect URI</b> (only with the stay-signed-in helper)</span><code id="suRedirect"></code><button class="btn sm" type="button" data-copy="suRedirect">Copy</button></div>
       </div>
       <label class="field"><span>Google Client ID</span><input class="in" id="suGoogle" type="text" spellcheck="false" autocomplete="off" placeholder="1234567890-abc123.apps.googleusercontent.com"><small class="hint" id="suGoogleHint"></small></label>
-      <label class="field"><span>Google API key <small style="font-weight:500">(optional, lets you pick any Drive folder when saving)</small></span><input class="in" id="suKey" type="text" spellcheck="false" autocomplete="off" placeholder="AIzaSy…"><small class="hint" id="suKeyHint"></small></label>
+      <label class="field"><span>Google API key <small style="font-weight:500">(optional, no longer needed: browsing Drive is built in)</small></span><input class="in" id="suKey" type="text" spellcheck="false" autocomplete="off" placeholder="AIzaSy…"><small class="hint" id="suKeyHint"></small></label>
       <label class="field"><span>Stay-signed-in helper <small style="font-weight:500">(optional, keeps Google signed in for good instead of about an hour)</small></span><input class="in" id="suHelper" type="url" spellcheck="false" autocomplete="off" placeholder="https://sellsheet-token.YOUR-NAME.workers.dev"><small class="hint" id="suHelperHint"></small></label>
       <label class="field"><span>Microsoft Application (client) ID</span><input class="in" id="suMs" type="text" spellcheck="false" autocomplete="off" placeholder="11111111-2222-3333-4444-555555555555"><small class="hint" id="suMsHint"></small></label>
       <p class="note">Saved in this browser so you can sign in straight away. To switch sign-in on for every device and everyone using the site, send the IDs to Claude (they're not passwords), or paste them into <code>index.html</code> as SETUP-EMAIL.md explains.</p>
@@ -1052,6 +1061,13 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
     <div class="ml-bot"><span class="note" id="suStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="suCancel" type="button">Cancel</button><button class="btn primary" id="suSave" type="button">Save</button></div></div>
   </div>
 </dialog>
+<dialog id="dbDlg" class="db" aria-labelledby="dbTitle"><div class="db-wrap">
+  <div class="ml-top"><h2 id="dbTitle">Google Drive</h2><button class="btn icon sm ghost" id="dbX" type="button" aria-label="Close">✕</button></div>
+  <div class="db-bar"><div class="db-places" id="dbPlaces" role="group" aria-label="Where"></div><input class="in" id="dbQ" type="text" placeholder="Search your Drive" aria-label="Search your Drive" autocomplete="off"></div>
+  <div class="db-crumbs" id="dbCrumbs"></div>
+  <div class="db-list" id="dbList"></div>
+  <div class="ml-bot"><span class="note" id="dbNote"></span><div class="bgrp"><button class="btn sm ghost" id="dbCancel" type="button">Cancel</button><button class="btn sm primary" id="dbOk" type="button">Choose this folder</button></div></div>
+</div></dialog>
 <dialog id="askDlg" class="ask" aria-labelledby="askT"><form method="dialog"><h3 id="askT"></h3><p id="askB"></p><div class="ask-acts" id="askA"></div></form></dialog>
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <div class="offline" id="offline" role="status" popover="manual">You're offline. Everything you do is saved on this device and syncs when you're back online.</div>
@@ -2778,7 +2794,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authGet()
 setTimeout(async()=>{if(authGet()?.prov==='google'&&gCan('google'))await checkReplies();dueNotify();},2500);
 
 /* ---------- save to Google Drive ----------
-   Uses the drive.file permission: the site can only see files it saves and folders the person picks in Google's own picker. */
+   Saving uses the drive.file permission (only files the site saves). Browse Drive… asks once for permission to see and save in your folders. */
 const driveDlg=$('#driveDlg'),DRIVE_FILE='https://www.googleapis.com/auth/drive.file',FOLDER_MIME='application/vnd.google-apps.folder';
 const DV=Object.assign({att:['pdf'],replace:true,recent:{},last:{}},(()=>{try{return JSON.parse(lsGet('ss-drive')||'{}')||{};}catch(_){return{};}})());
 const saveDV=()=>lsSet('ss-drive',JSON.stringify(DV));
@@ -2791,8 +2807,8 @@ function renderDrive(){const g=meFor('google'),a=authGet(),el=$('#dvAcct');
   const recent=(DV.recent[dvKey()]||[]),last=DV.last[dvKey()]||'app';
   $('#dvFolder').innerHTML=`<option value="app">Sell Sheets folder (created for you)</option><option value="root">My Drive (top level)</option>${recent.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}`;
   $('#dvFolder').value=[...$('#dvFolder').options].some(o=>o.value===last)?last:'app';
-  $('#dvPick').disabled=!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey;
-  $('#dvHint').textContent=EMAIL_SETUP.googleApiKey?'Browse Drive… shows your folders and files. Pick a folder to save into, or an existing PDF, Word or JPG to replace it.':'To browse your Drive, add a Google API key in Sign-in setup (see SETUP-EMAIL.md). Until then, use the Sell Sheets folder or My Drive.';}
+  $('#dvPick').disabled=!EMAIL_SETUP.google;
+  $('#dvHint').textContent='Browse Drive… shows your folders and files. Pick a folder to save into, or an existing PDF, Word or JPG to replace it.';}
 // a picked Drive file to overwrite (set from Browse Drive…, cleared when the window opens fresh)
 let dvTarget=null;const DRIVE_KIND={'application/pdf':'pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'docx','image/jpeg':'jpg'};
 function renderTarget(){const on=!!dvTarget;$('#dvTarget').hidden=!on;$('#dvWhereF').hidden=on;$('#dvReplaceL').hidden=on;$('#dvName').disabled=on;
@@ -2830,20 +2846,53 @@ async function driveUpload(t,folderId,name,type,blob,replace){const all='support
   const B='dv'+uid()+uid();
   const body=new Blob([`--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name,parents:[folderId],mimeType:type})}\r\n--${B}\r\nContent-Type: ${type}\r\n\r\n`,blob,`\r\n--${B}--`]);
   return driveFetch(t,`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&${all}&${fields}`,{method:'POST',headers:{'Content-Type':`multipart/related; boundary=${B}`},body});}
-// Google's own folder picker (needs an API key). Our dialog is hidden while it shows, since the picker can't sit above a modal.
-async function pickFolder(t){await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
-  const P=google.picker,view=(label,f)=>{let v=new P.DocsView(P.ViewId.DOCS).setIncludeFolders(true).setSelectFolderEnabled(true);if(P.DocsViewMode&&v.setMode)v=v.setMode(P.DocsViewMode.LIST);v=f(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
-  return new Promise(res=>{new P.PickerBuilder().setTitle('Pick a folder to save into, or a sell sheet file to replace')
-    .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('All files',v=>v)).enableFeature(P.Feature.SUPPORT_DRIVES)
-    .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
-    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name,mimeType:f.mimeType||'',url:f.url||''}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
-$('#dvPick').onclick=async()=>{dvStatus('');let t;try{t=await driveToken();}catch(e){dvStatus(e.message,true);return;}
-  driveDlg.close();let f=null;try{f=await pickFolder(t);}catch(e){openDrive();dvStatus(e.message,true);return;}
-  openDrive(true);if(!f)return;
+/* Google Drive browser, built into the site. Google's own picker runs inside an embedded Google page, which Firefox (and other browsers
+   that block third-party cookies) stops from seeing your Google sign-in, so it fails there. This lists your Drive with the Drive API instead. */
+const dbDlg=$('#dbDlg'),DB={res:null,o:null,t:null,stack:[],q:'',items:[],busy:false};
+// a Google token that can see your Drive (scope: drive.readonly, or drive to save into any folder); asks once if needed
+async function browseToken(scope){const ok=x=>x&&(hasScope(x,scope)||hasScope(x,'https://www.googleapis.com/auth/drive'));const t=await silentTok('google');if(ok(t))return t;
+  const a=authGet(),n=await (a&&a.prov!=='google'?googleLogin(false,meFor('google'),[scope]):login('google',false,true,[scope]));
+  if(!ok(n))throw new Error('Google didn\'t give permission to '+(/readonly/.test(scope)?'see your Drive files':'see and save in your Drive folders')+'. Try again and allow it.');renderDrive();return n;}
+// o: {title, mode:'folder'|'save'|'file', mimes:[…], scope, ok}. Resolves {id,name,mimeType} or null.
+function driveBrowse(o){if(DB.res)dbDone(null);return new Promise(res=>{DB.res=res;DB.o=o;DB.q='';DB.t=null;DB.items=[];DB.stack=[{id:'root',name:'My Drive'}];
+  $('#dbTitle').textContent=o.title;$('#dbOk').textContent=o.ok||'Choose this folder';$('#dbOk').hidden=o.mode==='file';$('#dbQ').value='';
+  if(!dbDlg.open)dbDlg.showModal();dbRender('Checking your Google sign-in…');
+  browseToken(o.scope).then(t=>{if(DB.res!==res)return;DB.t=t;dbLoad();},e=>{if(DB.res===res)dbRender('',e.message);});});}
+function dbDone(v){const r=DB.res;DB.res=null;if(dbDlg.open)dbDlg.close();r?.(v);}
+dbDlg.addEventListener('close',()=>{if(DB.res)dbDone(null);});
+const dbKind=m=>m===FOLDER_MIME?'folder':/pdf/.test(m)?'pdf':/word|google-apps\.document|msword/.test(m)?'doc':/sheet|csv|excel|text\/plain/.test(m)?'sheet':/image/.test(m)?'img':'file';
+const DB_ICON={folder:'📁',pdf:'📄',doc:'📝',sheet:'📊',img:'🖼️',file:'📄'};
+async function dbLoad(){const cur=DB.stack[DB.stack.length-1],o=DB.o,t=DB.t,base='https://www.googleapis.com/drive/v3/';DB.busy=true;DB.items=[];dbRender('Loading…');const want=DB.o;
+  try{if(cur.id==='drives'&&!DB.q){const j=await driveFetch(t,base+'drives?pageSize=100&fields=drives(id,name)');DB.items=(j.drives||[]).map(d=>({id:d.id,name:d.name,mimeType:FOLDER_MIME}));}
+    else{const q=DB.q.trim(),types=`(mimeType='${FOLDER_MIME}'${(o.mode==='folder'?[]:o.mimes||[]).map(m=>` or mimeType='${qs(m)}'`).join('')})`,
+        where=q?`name contains '${qs(q)}' and `:cur.id==='shared'?'sharedWithMe and ':`'${qs(cur.id)}' in parents and `,corp=q||DB.stack[0].id==='drives'?'allDrives':'user';
+      let pt='';do{const j=await driveFetch(t,`${base}files?q=${encodeURIComponent(where+'trashed=false and '+types)}&orderBy=${encodeURIComponent('folder,name')}&pageSize=300&fields=${encodeURIComponent('nextPageToken,files(id,name,mimeType,modifiedTime)')}&corpora=${corp}&supportsAllDrives=true&includeItemsFromAllDrives=true${pt?'&pageToken='+encodeURIComponent(pt):''}`);
+        DB.items.push(...(j.files||[]));pt=j.nextPageToken||'';}while(pt&&DB.items.length<1500);}
+    if(DB.o!==want)return;DB.busy=false;dbRender();}
+  catch(e){if(DB.o!==want)return;DB.busy=false;dbRender('',e.message||'Couldn\'t read your Drive.');}}
+function dbRender(msg,err){const o=DB.o,cur=DB.stack[DB.stack.length-1],places=[['root','My Drive'],['drives','Shared drives'],['shared','Shared with me']];
+  $('#dbPlaces').innerHTML=places.map(([id,n])=>`<button type="button" data-dbplace="${id}" aria-pressed="${!DB.q&&DB.stack[0].id===id}">${n}</button>`).join('');
+  $('#dbCrumbs').innerHTML=DB.q?`Search results for “${esc(DB.q)}”`:DB.stack.map((x,i)=>i<DB.stack.length-1?`<button class="lnk" type="button" data-dbup="${i}">${esc(x.name)}</button> › `:`<b>${esc(x.name)}</b>`).join('');
+  $('#dbOk').disabled=!!DB.busy||!!err||!!DB.q||['drives','shared'].includes(cur.id)||!DB.t;
+  $('#dbNote').textContent=o.mode==='file'?'Click a file to open it.':o.mode==='save'?'Open a folder, then click Save here. Or click a PDF, Word or JPG to replace it.':`Open the folder, then click ${o.ok||'Choose this folder'}.`;
+  $('#dbList').innerHTML=err?`<p class="db-err">${esc(err)} <button class="lnk" type="button" data-dbretry>Try again</button></p>`:msg?`<p class="db-msg">${esc(msg)}</p>`
+    :!DB.items.length?`<p class="db-msg">${DB.q?'Nothing matches.':'This folder is empty.'}</p>`
+    :DB.items.map((f,i)=>{const k=dbKind(f.mimeType);return`<button type="button" class="db-row${k==='folder'?' fold':''}" data-dbi="${i}"><span class="db-ic" aria-hidden="true">${DB_ICON[k]}</span><span class="db-n">${esc(f.name)}</span><small>${k!=='folder'&&f.modifiedTime?esc(dayStr(Date.parse(f.modifiedTime))):''}</small></button>`;}).join('');}
+dbDlg.addEventListener('click',e=>{const t=e.target;
+  const pl=t.closest('[data-dbplace]');if(pl){DB.q='';$('#dbQ').value='';DB.stack=[{id:pl.dataset.dbplace,name:pl.textContent}];dbLoad();return;}
+  const up=t.closest('[data-dbup]');if(up){DB.stack=DB.stack.slice(0,+up.dataset.dbup+1);dbLoad();return;}
+  if(t.closest('[data-dbretry]')){if(DB.t)dbLoad();else{const o=DB.o,r=DB.res;dbRender('Checking your Google sign-in…');browseToken(o.scope).then(x=>{if(DB.res===r){DB.t=x;dbLoad();}},err=>{if(DB.res===r)dbRender('',err.message);});}return;}
+  const row=t.closest('[data-dbi]');if(row){const f=DB.items[+row.dataset.dbi];if(!f)return;
+    if(f.mimeType===FOLDER_MIME){if(DB.q){DB.q='';$('#dbQ').value='';DB.stack=[{id:'root',name:'My Drive'}];}DB.stack.push({id:f.id,name:f.name});dbLoad();}else dbDone({id:f.id,name:f.name,mimeType:f.mimeType});return;}
+  if(t.closest('#dbOk')){const cur=DB.stack[DB.stack.length-1];dbDone({id:cur.id,name:cur.name,mimeType:FOLDER_MIME});return;}
+  if(t.closest('#dbCancel,#dbX'))dbDone(null);});
+let dbQt=0;$('#dbQ').addEventListener('input',e=>{clearTimeout(dbQt);dbQt=setTimeout(()=>{if(!DB.t)return;DB.q=e.target.value.trim();dbLoad();},300);});
+$('#dvPick').onclick=async()=>{dvStatus('');if(!EMAIL_SETUP.google){dvStatus('Google sign-in isn\'t set up yet. Click "Set up sign-in".',true);return;}
+  const f=await driveBrowse({title:'Choose where to save',mode:'save',mimes:Object.keys(DRIVE_KIND),scope:'https://www.googleapis.com/auth/drive',ok:'Save here'});if(!f)return;
   if(f.mimeType&&f.mimeType!==FOLDER_MIME){const kind=DRIVE_KIND[f.mimeType];
     if(!kind){dvStatus(`“${f.name}” can't be replaced with a sell sheet. Pick a folder, or a PDF, Word or JPG file.`,true);return;}
     dvTarget={id:f.id,name:f.name,kind,mime:f.mimeType};renderTarget();dvStatus('');return;}
-  dvTarget=null;const k=dvKey(),list=(DV.recent[k]||[]).filter(x=>x.id!==f.id);DV.recent[k]=[{id:f.id,name:f.name},...list].slice(0,6);DV.last[k]=f.id;saveDV();renderDrive();renderTarget();dvStatus(`Folder chosen: ${f.name}`);};
+  dvTarget=null;const k=dvKey();if(f.id!=='root'){const list=(DV.recent[k]||[]).filter(x=>x.id!==f.id);DV.recent[k]=[{id:f.id,name:f.name},...list].slice(0,6);}DV.last[k]=f.id;saveDV();renderDrive();renderTarget();dvStatus(`Folder chosen: ${f.name}`);};
 let drSaving=false;
 $('#dvSave').onclick=async()=>{if(drSaving)return;dvStatus('');
   if(!EMAIL_SETUP.google){dvStatus('Google sign-in isn\'t set up yet. Click "Set up sign-in".',true);return;}
@@ -3107,7 +3156,7 @@ $('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
 // small menu under a button; lives inside the button's window (if any) so it shows above it
 function srcMenu(btn,title,onPc,onDrive){const m=$('#srcMenu'),host=btn.closest('dialog')||document.body;
   if(!m.classList.contains('hide')&&m.dataset.for===btn.id){m.classList.add('hide');return;}
-  host.appendChild(m);m.dataset.for=btn.id;m.innerHTML=`<span class="menu-h">${esc(title)}</span><button type="button" role="menuitem" data-src="pc"><b>From this computer</b><small>Choose a file on this device</small></button><button type="button" role="menuitem" data-src="drive"><b>From Google Drive</b><small>${EMAIL_SETUP.google&&EMAIL_SETUP.googleApiKey?'Pick a file in your Drive':'Needs Google sign-in setup with an API key'}</small></button>`;
+  host.appendChild(m);m.dataset.for=btn.id;m.innerHTML=`<span class="menu-h">${esc(title)}</span><button type="button" role="menuitem" data-src="pc"><b>From this computer</b><small>Choose a file on this device</small></button><button type="button" role="menuitem" data-src="drive"><b>From Google Drive</b><small>${EMAIL_SETUP.google?'Pick a file in your Drive':'Needs Google sign-in setup'}</small></button>`;
   m.classList.remove('hide');const r=btn.getBoundingClientRect(),hr=host===document.body?{left:0,top:0,width:innerWidth,height:innerHeight}:host.getBoundingClientRect(),mh=m.offsetHeight,mw=m.offsetWidth;
   m.style.position=host===document.body?'fixed':'absolute';m.style.right='auto';m.style.left=Math.max(8,Math.min(r.left-hr.left,hr.width-mw-8))+'px';
   m.style.top=(r.bottom-hr.top+6+mh>hr.height-8?Math.max(8,r.top-hr.top-mh-6):r.bottom-hr.top+6)+'px';
@@ -3119,17 +3168,11 @@ const DRIVE_OPEN={
   cust:{title:'Import customers',mimes:['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv','text/plain','application/vnd.google-apps.spreadsheet'],what:'an Excel, CSV or Google Sheets file'}};
 // Google Docs / Sheets are downloaded as Word / Excel
 const DRIVE_EXPORT={'application/vnd.google-apps.document':['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],'application/vnd.google-apps.spreadsheet':['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xlsx']};
-async function pickFile(t,o){await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s file picker could not load.'))}));
-  const P=google.picker,view=(label,f)=>{let v=new P.DocsView(P.ViewId.DOCS).setIncludeFolders(true).setSelectFolderEnabled(false).setMimeTypes(o.mimes.join(','));if(P.DocsViewMode&&v.setMode)v=v.setMode(P.DocsViewMode.LIST);v=f(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
-  return new Promise(res=>{new P.PickerBuilder().setTitle(o.title+' from Google Drive')
-    .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('All files',v=>v)).enableFeature(P.Feature.SUPPORT_DRIVES)
-    .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
-    .setCallback(d=>{if(d.action===P.Action.PICKED){const f=d.docs?.[0];res(f?{id:f.id,name:f.name,mimeType:f.mimeType||''}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
+
 // pick a file in Drive and download it; returns a File (or null if cancelled)
 async function driveOpen(kind){const o=DRIVE_OPEN[kind];
-  if(!EMAIL_SETUP.google||!EMAIL_SETUP.googleApiKey){toast(EMAIL_SETUP.google?'Opening from Google Drive needs a Google API key. Add it under Sign in → Sign-in setup (see SETUP-EMAIL.md).':'Opening from Google Drive needs Google sign-in, which isn\'t set up yet. Click Sign in → Set up sign-in.',6000);return null;}
-  const open=[...document.querySelectorAll('dialog[open]')].filter(d=>d.id!=='navDlg');PG.hold=true;open.forEach(d=>d.close()); // Google's picker can't show above an open window
-  try{const t=await driveToken();const f=await pickFile(t,o);if(!f)return null;
+  if(!EMAIL_SETUP.google){toast('Opening from Google Drive needs Google sign-in, which isn\'t set up yet. Click Sign in → Set up sign-in.',6000);return null;}
+  try{const f=await driveBrowse({title:o.title+' from Google Drive',mode:'file',mimes:o.mimes,scope:DRIVE_READ});if(!f)return null;const t=DB.t;
     const ex=DRIVE_EXPORT[f.mimeType];if(f.mimeType&&!ex&&!o.mimes.includes(f.mimeType))throw new Error(`“${f.name}” isn't ${o.what}.`);
     toast(`Downloading ${f.name}…`,20000);
     const url=ex?`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}/export?mimeType=${encodeURIComponent(ex[0])}`:`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&supportsAllDrives=true`;
@@ -3138,7 +3181,7 @@ async function driveOpen(kind){const o=DRIVE_OPEN[kind];
     const blob=await r.blob(),name=ex&&!f.name.toLowerCase().endsWith(ex[1])?f.name+ex[1]:f.name;
     return new File([blob],name,{type:ex?ex[0]:(f.mimeType||blob.type)});}
   catch(e){console.error(e);toast(e.message||'Could not open that file from Google Drive.',6000);return null;}
-  finally{open.forEach(d=>{if(!d.open)d.showModal();});PG.hold=false;if(custDlg.open)renderCP();}}
+  finally{if(custDlg.open)renderCP();}}
 
 /* ---------- inventory: a Google Drive folder of sell sheets, shown as products ----------
    Reads every sell sheet (PDF, Word, Google Docs, JPG/PNG) in the chosen folder and its subfolders (subfolders become categories).
@@ -3329,18 +3372,8 @@ async function invAuto(){if(!SET.inv.auto||!IV.folder||IV.busy||document.hidden|
   const t=await invToken(false).catch(()=>null);if(!t)return;if(!IV.items.length){const all=await invAll();if(!IV.items.length)IV.items=all.filter(x=>x&&x.key);}invSync(false);}
 setInterval(invAuto,60e3);setTimeout(invAuto,4000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(invAuto,1500);});
 async function invPickFolder(){if(!EMAIL_SETUP.google){toast('Google sign-in isn\'t set up yet. Click Sign in → Set up sign-in.',5000);return;}
-  let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
-  if(!EMAIL_SETUP.googleApiKey){$('#ivLink')?.focus();toast('Paste the folder\'s link from Google Drive (the picker needs a Google API key).',5000);return;}
-  PG.hold=true;invDlg.close();let f=null;
-  try{await loadScript('gapi');await new Promise((res,rej)=>gapi.load('picker',{callback:res,onerror:()=>rej(new Error('Google\'s folder picker could not load.'))}));
-    const P=google.picker,view=(label,fn)=>{let v=new P.DocsView(P.ViewId.FOLDERS).setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(FOLDER_MIME);v=fn(v)||v;if(v.setLabel)v=v.setLabel(label);return v;};
-    f=await new Promise(res=>{new P.PickerBuilder().setTitle('Choose the folder with your sell sheets')
-      .addView(view('My Drive',v=>v.setParent('root'))).addView(view('Shared drives',v=>v.setEnableDrives(true))).addView(view('Shared with me',v=>v.setOwnedByMe?v.setOwnedByMe(false):v)).enableFeature(P.Feature.SUPPORT_DRIVES)
-      .setOAuthToken(t.token).setDeveloperKey(EMAIL_SETUP.googleApiKey).setAppId(EMAIL_SETUP.google.split('-')[0]).setOrigin(location.origin)
-      .setCallback(d=>{if(d.action===P.Action.PICKED){const x=d.docs?.[0];res(x?{id:x.id,name:x.name}:null);}else if(d.action===P.Action.CANCEL)res(null);}).build().setVisible(true);});}
-  catch(e){toast(e.message,5000);}
-  finally{if(!invDlg.open)invDlg.showModal();PG.hold=false;}
-  if(f)await invSetFolder(f);}
+  const f=await driveBrowse({title:'Choose the folder with your sell sheets',mode:'folder',scope:DRIVE_READ,ok:'Use this folder'});
+  if(f)await invSetFolder({id:f.id,name:f.name});}
 async function invUseLink(v){const id=folderIdFrom(v);if(!id){toast('That doesn\'t look like a Google Drive folder link.',4000);return;}
   let t;try{t=await invToken(true);}catch(e){toast(e.message,6000);return;}
   try{const f=await driveFetch(t,`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}?supportsAllDrives=true&fields=id,name,mimeType`);
