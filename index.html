@@ -79,6 +79,17 @@ svg{flex:none}
 .pl-addc{border:1px dashed var(--line2);border-radius:8px;background:none;height:34px;font:600 12.5px var(--ui);color:var(--muted);cursor:pointer}.pl-addc:hover{color:var(--accent-fg);border-color:var(--accent)}
 .td-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}.td-add .in{height:38px;font-size:14px}.td-add .btn{height:38px}
 .td-more{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:6px}.td-more .in{height:34px;font-size:13px;padding:0 8px}.td-more:has(>:only-child){grid-template-columns:minmax(0,11em)}
+.pl-main.td-min{grid-template-columns:minmax(0,1fr) 44px}.pl-main.td-min .pl-todo{padding:8px 4px;align-items:center}
+.td-tab{display:flex;flex-direction:column;align-items:center;gap:10px;border:0;background:none;cursor:pointer;color:var(--ink);padding:6px 4px;border-radius:8px;font:inherit}.td-tab:hover{background:var(--raise)}
+.td-tab b{writing-mode:vertical-rl;font-size:14px}.td-tab .ar{font-size:18px;line-height:1}.td-tab .n{font:700 12px var(--ui);background:var(--raise);border:1px solid var(--line);border-radius:999px;padding:1px 7px}.td-tab .n.due{background:var(--bad);border-color:var(--bad);color:#fff}
+@media (max-width:900px){.pl-main.td-min .pl-todo{padding:6px 12px}.td-tab{flex-direction:row;width:100%}.td-tab b{writing-mode:horizontal-tb}.td-tab .ar{transform:rotate(-90deg)}}
+.pl-todo h3 .btn{width:30px;height:30px;font-size:18px}
+.td-more{grid-template-columns:minmax(0,9.5em) minmax(0,7em) minmax(0,1fr)}.td-more .td-w{grid-column:1/-1}
+.td-sort{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}.td-sort .in{height:30px;width:auto;font-size:12.5px;padding:0 6px}
+.td-u{border:1px solid transparent;border-radius:999px;font:700 11px var(--ui);padding:1px 4px;background:none;color:var(--muted);cursor:pointer}
+.td-u.high{background:color-mix(in srgb,var(--bad) 15%,var(--panel));border-color:color-mix(in srgb,var(--bad) 45%,var(--panel));color:var(--ink)}
+.td-u.med{background:color-mix(in srgb,#E0A030 20%,var(--panel));border-color:color-mix(in srgb,#E0A030 50%,var(--panel));color:var(--ink)}
+.td-u.low{background:var(--raise);border-color:var(--line);color:var(--ink)}
 .td-list{display:grid}.td-empty{color:var(--muted);font-size:13px;margin:6px 0}
 .td{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
 .td>input[type=checkbox]{width:18px;height:18px;margin:4px 0 0;accent-color:var(--accent);cursor:pointer}
@@ -112,6 +123,16 @@ svg{flex:none}
 .pp-e .ea{display:flex;gap:14px;margin-top:4px}.pp-e .ea button{border:0;background:none;padding:2px 0;font:600 12.5px var(--ui);color:var(--accent-fg);cursor:pointer}.pp-e .ea button.x{color:var(--muted)}
 .pp-ne{display:grid;gap:6px;margin-top:6px}
 .pp-pick{display:grid;gap:2px}
+.pp-pref{display:block;color:var(--ink);font-weight:600}.ld-pref{color:var(--ink);font-weight:600}
+.pp-grpl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:6px}.pp-grpl .btn{height:40px}
+.pp-from{display:grid;gap:4px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px}.pp-from .hint{margin:0}
+.gm-q{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}.gm-q .btn{height:40px}
+.gm-list{display:grid;gap:6px;max-height:min(50vh,520px);overflow:auto}
+.gm-r{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;border:1px solid var(--line);border-radius:10px;padding:9px 10px;cursor:pointer;background:var(--panel)}
+.gm-r:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}.gm-r.off{opacity:.65;cursor:default}
+.gm-r input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent)}
+.gm-r b{display:block;font-size:14px;overflow-wrap:anywhere}.gm-r small{display:block;color:var(--muted);font-size:12.5px}.gm-r .sn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gm-r em{font-style:normal;font-size:12px;font-weight:700;color:var(--accent-fg)}
+
 .ml-sh{display:flex;align-items:center;gap:8px;margin:0;font-size:15px}.ml-step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--panel);font:700 12px var(--ui);flex:none}
 .ml-sh .ml-tplname{margin-left:auto;font:600 12px var(--ui);color:var(--muted)}
 .ml-aud{display:flex}.ml-aud button{flex:1}.ml-aud[hidden]{display:none}
@@ -2411,7 +2432,7 @@ function renderLeadPick(){const q=CU.q.trim().toLowerCase(),all=CRM.leads.filter
   $('#cuCount').textContent=all.length?(shown.length===all.length?`${all.length} lead${all.length>1?'s':''}`:`Showing ${shown.length} of ${all.length}`)+(nSel?` · ${nSel} ticked`:''):'';
   $('#cuList').innerHTML=shown.length?shown.slice(0,300).map((l,n)=>{const on=LSEL.has(l.id)&&!!l.email,g=leadGot(l,sid);
     return`<div class="cu${on?' on':''}"><input type="checkbox" id="ld-${n}" data-ld="${esc(l.id)}" ${on?'checked':''} ${l.email?'':'disabled'}><label class="who" for="ld-${n}"><b>${esc(l.name||l.company||l.email||'(no name)')}</b> <span class="ld-st">${esc(colName(l.stage))}</span>${l.temp==='hot'?' <span class="pl-tmp hot">Hot</span>':''}
-      <small>${l.email?esc([l.name?l.company:'',l.email].filter(Boolean).join(' · ')):'<span class="nn">No email address</span>'}</small>${g?`<span class="last" style="display:block">Already got this sheet ${esc(ago(g.at))}</span>`:''}</label>
+      <small>${l.email?esc([l.name?l.company:'',l.email].filter(Boolean).join(' · ')):'<span class="nn">No email address</span>'}${l.pref&&l.pref!=='email'?` · <span class="ld-pref">Prefers ${esc(prefText(l.pref,l.prefAt).toLowerCase())}</span>`:''}</small>${g?`<span class="last" style="display:block">Already got this sheet ${esc(ago(g.at))}</span>`:''}</label>
       <span class="acts"><button class="tiny" type="button" data-ldopen="${esc(l.id)}" aria-label="Open ${esc(l.name||l.company||l.email)} in the Pipeline" title="Open in the Pipeline">✎</button></span></div>`;}).join('')
     :`<div class="cu-empty">${all.length?'No leads match.':'No leads yet. Add one here or on the Pipeline page.'}</div>`;
   renderChips();renderSync();}
@@ -2728,7 +2749,7 @@ const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
-  return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),
+  return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),...(e.ext?{ext:1}:{}),
       how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),value:Math.max(0,Math.min(1e9,+e.value||0))||undefined,line:Array.isArray(e.line)?e.line.map(x=>String(x).slice(0,200)).slice(0,120):undefined,upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 /* ---------- leads, calls & notes, and to-dos ----------
@@ -2740,13 +2761,17 @@ const LEAD_ST=['new','none','replied','interested','quoted','ordered','declined'
 const TEMP_NAME={hot:'Hot',warm:'Warm',cold:'Cold'};
 const ACT_NAME={call:'Phone call',emailOut:'Email I sent',emailIn:'Email they sent',meeting:'Meeting',note:'Note'};
 const RES_NAME={talked:'Talked',voicemail:'Left a voicemail',noanswer:'No answer'};
+const PREF_NAME={email:'Email',call:'Phone call',text:'Text message',whatsapp:'WhatsApp',visit:'In person',social:'Instagram or social media'},PREF_KEY='Preferred contact';
+// a customer's preferred contact is one of their details ("Phone call · cell 604…"); a lead keeps it as two fields
+const prefText=(k,at)=>[PREF_NAME[k]||'',String(at||'').trim()].filter(Boolean).join(' · ');
 const LEAD_SOURCES=['Trade show','Referral','Website','Instagram','Cold call','Walk-in','Email list'];
 const cs=(v,n)=>String(v??'').slice(0,n),isWho=v=>/^(lead|cust):./.test(String(v||''));
 const cleanLead=l=>!l||typeof l!=='object'||!l.id?null:{id:cs(l.id,40),name:cs(l.name,120),company:cs(l.company,160),email:EMAIL_RE.test(String(l.email||'').trim())?String(l.email).trim():'',phone:cs(l.phone,60),city:cs(l.city,120),
-  source:cs(l.source,120),temp:TEMP_NAME[l.temp]?l.temp:'',stage:LEAD_ST.includes(l.stage)?l.stage:'new',value:+l.value>0?+l.value:0,sheet:cs(l.sheet,200),note:cs(l.note,4000),conv:EMAIL_RE.test(String(l.conv||'').trim())?ck(l.conv):'',created:+l.created||+l.upd||0,upd:+l.upd||0};
+  source:cs(l.source,120),temp:TEMP_NAME[l.temp]?l.temp:'',stage:LEAD_ST.includes(l.stage)?l.stage:'new',value:+l.value>0?+l.value:0,sheet:cs(l.sheet,200),note:cs(l.note,4000),pref:PREF_NAME[l.pref]?l.pref:'',prefAt:cs(l.prefAt,200),conv:EMAIL_RE.test(String(l.conv||'').trim())?ck(l.conv):'',created:+l.created||+l.upd||0,upd:+l.upd||0};
 const cleanAct=a=>!a||typeof a!=='object'||!a.id||!+a.at||!isWho(a.who)?null:{id:cs(a.id,40),who:cs(a.who,200),type:ACT_NAME[a.type]?a.type:'note',at:+a.at,dur:Math.max(0,Math.min(1440,parseInt(a.dur)||0)),dir:a.dir==='in'?'in':'out',
   result:RES_NAME[a.result]?a.result:'',sheet:cs(a.sheet,200),note:cs(a.note,4000),upd:+a.upd||0};
-const cleanTodo=t=>!t||typeof t!=='object'||!t.id?null:{id:cs(t.id,40),text:cs(t.text,500),due:/^\d{4}-\d\d-\d\d$/.test(t.due||'')?t.due:'',done:+t.done||0,who:isWho(t.who)?cs(t.who,200):'',created:+t.created||+t.upd||0,upd:+t.upd||0};
+const URG_NAME={high:'High',med:'Medium',low:'Low'},URG_RANK={high:0,med:1,low:2,'':3},isTdWho=v=>isWho(v)||/^grp:./.test(String(v||''));
+const cleanTodo=t=>!t||typeof t!=='object'||!t.id?null:{id:cs(t.id,40),text:cs(t.text,500),due:/^\d{4}-\d\d-\d\d$/.test(t.due||'')?t.due:'',done:+t.done||0,who:isTdWho(t.who)?cs(t.who,200):'',urg:URG_NAME[t.urg]?t.urg:'',created:+t.created||+t.upd||0,upd:+t.upd||0};
 function mergeCRM(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const arr=v=>Array.isArray(v)?v:[],del=new Map();
   for(const d of[...arr(a.deleted),...arr(b.deleted)])if(d&&d.id){const k=String(d.id);if(!del.has(k)||del.get(k)<+d.at)del.set(k,+d.at||0);}
   const one=(k,clean)=>{const m=new Map();for(const x of[...arr(a[k]),...arr(b[k])]){const c=clean(x);if(!c)continue;const o=m.get(c.id);if(!o||c.upd>o.upd)m.set(c.id,c);}return[...m.values()].filter(x=>!((del.get(x.id)||0)>=x.upd));};
@@ -2766,17 +2791,19 @@ const leadById=id=>CRM.leads.find(l=>l.id===id),leadByEmail=e=>{const k=ck(e);re
 const whoId=w=>String(w).slice(String(w).indexOf(':')+1);
 const phoneOf=c=>{const i=infoOf(c);const k=Object.keys(i).find(k=>/phone|mobile|cell|tel/i.test(k));return k?String(i[k]).split('\n')[0]:'';};
 function whoInfo(who){if(!isWho(who))return null;const id=whoId(who);
-  if(who.startsWith('lead:')){const l=leadById(id);return l?{who,kind:'lead',lead:l,name:l.name||l.company||l.email||'(no name)',company:l.name?l.company:'',email:l.email,phone:l.phone}:null;}
-  const c=CU.list.find(c=>ck(c.email)===id);if(c)return{who,kind:'cust',cust:c,key:id,name:c.name||c.company||c.email,company:c.name?c.company:'',email:c.email,phone:phoneOf(c)};
+  if(who.startsWith('lead:')){const l=leadById(id);return l?{who,kind:'lead',lead:l,name:l.name||l.company||l.email||'(no name)',company:l.name?l.company:'',email:l.email,phone:l.phone,pref:prefText(l.pref,l.prefAt)}:null;}
+  const c=CU.list.find(c=>ck(c.email)===id);if(c)return{who,kind:'cust',cust:c,key:id,name:c.name||c.company||c.email,company:c.name?c.company:'',email:c.email,phone:phoneOf(c),pref:String(infoOf(c)[PREF_KEY]||'').split('\n')[0]};
   const e=LG.list.find(e=>(e.cust||ck(e.email))===id)||CRM.leads.find(l=>l.conv===id);
   return e?{who,kind:'cust',key:id,name:e.name||e.company||e.email,company:e.name?e.company:'',email:e.email,phone:e.phone||''}:null;}
-const whoName=w=>whoInfo(w)?.name||'';
+const whoName=w=>String(w).startsWith('grp:')?(k=>{const g=allGroups().find(g=>gKey(g.name)===k);return g?'Group: '+gPath(k):'';})(whoId(w)):whoInfo(w)?.name||'';
 // the history of a customer includes what happened while they were a lead
 const whoKeys=w=>w.startsWith('cust:')?[w,...CRM.leads.filter(l=>l.conv===whoId(w)).map(l=>'lead:'+l.id)]:[w];
 function sendsOf(w){const ks=new Set(whoKeys(w).map(k=>k.startsWith('lead:')?k:whoId(k)));return LG.list.filter(e=>ks.has(e.cust||ck(e.email)));}
 const actsOf=w=>{const ks=new Set(whoKeys(w));return CRM.acts.filter(a=>ks.has(a.who));};
 const todosOf=w=>{const ks=new Set(whoKeys(w));return CRM.todos.filter(t=>ks.has(t.who));};
-const todoSort=(a,b)=>(a.due||'9999')<(b.due||'9999')?-1:(a.due||'9999')>(b.due||'9999')?1:a.created-b.created;
+const byDue=(a,b)=>(a.due||'9999')<(b.due||'9999')?-1:(a.due||'9999')>(b.due||'9999')?1:0,byUrg=(a,b)=>URG_RANK[a.urg||'']-URG_RANK[b.urg||''];
+// soonest first (most urgent first on the same day), or most urgent first when sorting by urgency
+const todoSort=(a,b)=>(lsGet('ss-td-sort')==='urg'?byUrg(a,b)||byDue(a,b):byDue(a,b)||byUrg(a,b))||a.created-b.created;
 const nextTodo=w=>todosOf(w).filter(t=>!t.done).sort(todoSort)[0]||null;
 const ACT_VERB={call:'Called',emailOut:'Emailed',emailIn:'They emailed',meeting:'Met',note:'Note added'};
 function lastTouch(w){let best=null;for(const a of actsOf(w))if(a.type!=='note'&&(!best||a.at>best.at))best={at:a.at,txt:`${ACT_VERB[a.type]} ${ago(a.at)}`};
@@ -2792,27 +2819,29 @@ const todosDue=()=>CRM.todos.filter(t=>!t.done&&t.due&&t.due<=dayStr(Date.now())
 /* to-do lists (Pipeline, Home and each person) */
 function whoOptions(sel){const L=CRM.leads.filter(l=>!l.conv).map(l=>['lead:'+l.id,l.name||l.company||l.email||'(no name)']).sort((a,b)=>COLL.compare(a[1],b[1]));
   const C=CU.list.map(c=>['cust:'+ck(c.email),c.name||c.company||c.email]).sort((a,b)=>COLL.compare(a[1],b[1]));const o=([v,n])=>`<option value="${esc(v)}"${v===sel?' selected':''}>${esc(n)}</option>`;
-  return`<option value="">For anyone (not linked)</option>${L.length?`<optgroup label="Leads">${L.map(o).join('')}</optgroup>`:''}${C.length?`<optgroup label="Customers">${C.map(o).join('')}</optgroup>`:''}`;}
+  const G=gFlat().map(g=>['grp:'+g.k,gPath(g.k)]);
+  return`<option value="">For anyone (not linked)</option>${L.length?`<optgroup label="Leads">${L.map(o).join('')}</optgroup>`:''}${C.length?`<optgroup label="Customers">${C.map(o).join('')}</optgroup>`:''}${G.length?`<optgroup label="Customer groups">${G.map(o).join('')}</optgroup>`:''}`;}
 const todoForm=(who,id)=>`<form class="td-add" data-tdform="${esc(who||'')}"><input class="in" name="t" id="${id}" placeholder="Add a to-do…" aria-label="New to-do" maxlength="500" autocomplete="off"><button class="btn sm primary" type="submit">Add</button>
-  <div class="td-more"><input class="in" type="date" name="d" aria-label="Due date (optional)" title="Due date (optional)">${who?'':`<select class="in" name="w" aria-label="Who it's for (optional)">${whoOptions('')}</select>`}</div></form>`;
+  <div class="td-more"><input class="in" type="date" name="d" aria-label="Due date (optional)" title="Due date (optional)"><select class="in" name="u" aria-label="Urgency"><option value="">Urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>${who?'':`<select class="in td-w" name="w" aria-label="Who it's for (optional)">${whoOptions('')}</select>`}</div></form>`;
 function todoItems(list,showWho){return list.map(t=>{const d=dueInfo(t.due),wn=showWho&&t.who?whoName(t.who):'';
   return`<div class="td${t.done?' done':''}"><input type="checkbox" data-tddone="${esc(t.id)}" ${t.done?'checked':''} aria-label="Done: ${esc(t.text)}"><div style="min-width:0"><input class="td-t" data-tdtext="${esc(t.id)}" value="${esc(t.text)}" aria-label="To-do" maxlength="500">
-    <div class="td-m">${t.done?`<span>Done ${esc(ago(t.done))}</span>`:`<span class="${d.cls}">${d.txt}</span><input type="date" data-tddue="${esc(t.id)}" value="${t.due}" aria-label="Due date for ${esc(t.text)}">`}${wn?`<button class="td-who" type="button" data-tdwho="${esc(t.who)}">${esc(wn)}</button>`:''}</div></div>
+    <div class="td-m">${t.done?`<span>Done ${esc(ago(t.done))}</span>`:`<span class="${d.cls}">${d.txt}</span><input type="date" data-tddue="${esc(t.id)}" value="${t.due}" aria-label="Due date for ${esc(t.text)}"><select class="td-u ${t.urg||'none'}" data-tdurg="${esc(t.id)}" aria-label="Urgency for ${esc(t.text)}"><option value="">No urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}"${t.urg===k?' selected':''}>${n}</option>`).join('')}</select>`}${wn?`<button class="td-who" type="button" data-tdwho="${esc(t.who)}">${esc(wn)}</button>`:''}</div></div>
     <button class="tiny x" type="button" data-tddel="${esc(t.id)}" aria-label="Delete to-do: ${esc(t.text)}">${I.x}</button></div>`;}).join('');}
 // open ones first (soonest due first), then the done ones behind a button
 function todoBlock(list,showWho,key){const open=list.filter(t=>!t.done).sort(todoSort),done=list.filter(t=>t.done).sort((a,b)=>b.done-a.done),sd=TD_SHOW.has(key);
   return`<div class="td-list">${open.length?todoItems(open,showWho):'<p class="td-empty">Nothing to do. Add one above.</p>'}</div>${done.length?`<button class="lnk td-sd" type="button" data-tdshow="${key}">${sd?'Hide':'Show'} ${done.length} done</button>${sd?`<div class="td-list">${todoItems(done,showWho)}</div>`:''}`:''}`;}
 const TD_SHOW=new Set();
-function addTodo(text,due,who){const now=Date.now();const t={id:newId(),text:String(text).trim().slice(0,500),due:/^\d{4}-\d\d-\d\d$/.test(due||'')?due:'',done:0,who:isWho(who)?who:'',created:now,upd:now};if(!t.text)return null;CRM.todos.push(t);return t;}
+function addTodo(text,due,who,urg){const now=Date.now();const t={id:newId(),text:String(text).trim().slice(0,500),due:/^\d{4}-\d\d-\d\d$/.test(due||'')?due:'',done:0,who:isTdWho(who)?who:'',urg:URG_NAME[urg]?urg:'',created:now,upd:now};if(!t.text)return null;CRM.todos.push(t);return t;}
 document.addEventListener('submit',e=>{const f=e.target.closest('[data-tdform]');if(!f)return;e.preventDefault();const t=f.elements.t.value.trim();if(!t){f.elements.t.focus();return;}
-  addTodo(t,f.elements.d.value,f.dataset.tdform||f.elements.w?.value||'');const id=f.elements.t.id;crmSave();const n=id&&document.getElementById(id);if(n)n.focus();});
-document.addEventListener('change',e=>{const el=e.target,d=el.dataset||{},id=d.tddone||d.tddue||d.tdtext;if(!id)return;const t=CRM.todos.find(x=>x.id===id);if(!t)return;
+  addTodo(t,f.elements.d.value,f.dataset.tdform||f.elements.w?.value||'',f.elements.u?.value||'');const id=f.elements.t.id;f.reset();crmSave();const n=id&&document.getElementById(id);if(n)n.focus();});
+document.addEventListener('change',e=>{const el=e.target,d=el.dataset||{};if(el.id==='tdSort'){lsSet('ss-td-sort',el.value);crmRefresh();return;}const id=d.tddone||d.tddue||d.tdtext||d.tdurg;if(!id)return;const t=CRM.todos.find(x=>x.id===id);if(!t)return;
   if(d.tddone){t.done=el.checked?Date.now():0;if(el.checked)toast('To-do done',5000,{label:'Undo',fn:()=>{t.done=0;touchX(t);crmSave();}});}
-  else if(d.tddue)t.due=el.value;else{const v=el.value.trim();if(!v){el.value=t.text;return;}t.text=v.slice(0,500);}touchX(t);crmSave();});
+  else if(d.tddue)t.due=el.value;else if(d.tdurg)t.urg=URG_NAME[el.value]?el.value:'';else{const v=el.value.trim();if(!v){el.value=t.text;return;}t.text=v.slice(0,500);}touchX(t);crmSave();});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset?.tdtext)e.target.blur();});
-document.addEventListener('click',e=>{const x=e.target.closest('[data-tddel],[data-tdwho],[data-tdshow]');if(!x)return;const d=x.dataset;
+document.addEventListener('click',e=>{const x=e.target.closest('[data-tddel],[data-tdwho],[data-tdshow],[data-tdmin]');if(!x)return;const d=x.dataset;
+  if(d.tdmin!==undefined){lsSet('ss-pl-todo',d.tdmin==='1'?'min':'');renderPlTodo();$('#plTodo button')?.focus();return;}
   if(d.tdshow){TD_SHOW.has(d.tdshow)?TD_SHOW.delete(d.tdshow):TD_SHOW.add(d.tdshow);crmRefresh();return;}
-  if(d.tdwho){openPerson(d.tdwho);return;}
+  if(d.tdwho){if(d.tdwho.startsWith('grp:')){const k=whoId(d.tdwho);if(plDlg.open)plDlg.close();if(homeDlg.open)homeDlg.close();openCP();CP.gsel=new Set([k]);renderCP(true);return;}openPerson(d.tdwho);return;}
   const t=CRM.todos.find(y=>y.id===d.tddel);if(!t)return;crmDel('todos',t.id);crmSave();
   toast('To-do deleted',6000,{label:'Undo',fn:()=>{CRM.deleted=CRM.deleted.filter(z=>z.id!==t.id);touchX(t);CRM.todos.push(t);crmSave();}});});
 const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
@@ -2829,7 +2858,7 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
   const shown=lgShown(),shownIds=new Set(shown.map(t=>t.root.id));LG.sel=new Set([...LG.sel].filter(id=>shownIds.has(id)));
-  const sentAs=e=>`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
+  const sentAs=e=>e.ext?'Sent from Gmail (outside this site)':`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
   // one listing per customer, under a heading per day (when first sent) or per sell sheet
   const by=lgGroupBy(),groups=new Map();
   const dk=new Map(by==='date'?shown.map(t=>[t,dayStr(t.root.at)]):[]);
@@ -2976,7 +3005,9 @@ async function checkReplies(manual){if(RP.busy)return RP.busy;const a=authGet();
       if(found.length){lgLoad();const byId=new Map(LG.list.map(e=>[e.id,e])),now=Date.now(),fresh=[];
         for(const[t,m]of found){const e=byId.get(t.root.id);if(!e||(e.reply&&e.reply.at>=m.at&&e.reply.at>t.last))continue;
           const seen=logDlg.open&&!document.hidden;e.reply={at:m.at,subj:m.subj,snip:m.snip,thread:m.thread,seen};if((e.status||'none')==='none')e.status='replied';e.upd=now;if(seen)LG.fresh.add(e.id);fresh.push(e);}
-        if(fresh.length){lgSave();if(logDlg.open)renderLog();announceReplies(fresh);}}}
+        if(fresh.length){lgSave();if(logDlg.open)renderLog();announceReplies(fresh);
+          // a lead who answers moves to Replied (unless you've already moved them further along)
+          crmLoad();let mv=false;for(const e of fresh)if(String(e.cust).startsWith('lead:')){const l=leadById(e.cust.slice(5));if(l&&(l.stage==='new'||l.stage==='none')){l.stage='replied';touchX(l);mv=true;}}if(mv)crmSave();else if(plDlg.open)renderPipe();}}}
     catch(e){console.error(e);RP.err=e.kind||'failed';if(e.kind==='expired')tokSet('google',null);}
     finally{RP.busy=null;renderRP();}})();return RP.busy;}
 // desktop notifications (optional; the browser asks for permission once)
@@ -3915,7 +3946,9 @@ function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'||PL.hot?[
   $('#plBoard').scrollLeft=sc;renderPlTodo();}
 function plSet(id,patch){lgLoad();const e=LG.list.find(x=>x.id===id);if(!e)return;Object.assign(e,patch,{upd:Date.now()});lgSave();}
 async function openPipe(){cuLoad();lgLoad();crmLoad();pageShown('pipeline');const fresh=!plDlg.open;if(!plDlg.open)plDlg.showModal();renderPipe();if(fresh){const b=$('#plBoard');b.classList.add('anim');setTimeout(()=>b.classList.remove('anim'),900);}}
-plDlg.addEventListener('input',e=>{if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}else if(e.target.id==='ppQ')renderPick();});
+plDlg.addEventListener('input',e=>{if(e.target.id==='ppCust'){const m=e.target.value.match(/<([^<>]+)>\s*$/),c=m&&CU.list.find(c=>ck(c.email)===ck(m[1]));if(!c)return;const f=e.target.form,inf=infoOf(c),pv=String(inf[PREF_KEY]||'').split('\n')[0],pk=Object.keys(PREF_NAME).find(k=>pv.startsWith(PREF_NAME[k]))||'';
+    const set=(n,v)=>{if(f.elements[n]&&v)f.elements[n].value=v;};set('name',c.name);set('company',c.company);set('email',c.email);set('phone',phoneOf(c));set('city',String(inf.City||'').split('\n')[0]);set('pref',pk);set('prefAt',pk?pv.slice(PREF_NAME[pk].length).replace(/^\s*·\s*/,''):'');f.elements.cust.value=ck(c.email);return;}
+  if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}else if(e.target.id==='ppQ')renderPick();});
 const moneyIn=raw=>{raw=String(raw).trim();const k=/k$/i.test(raw);return(numText(raw.replace(/k$/i,''))||0)*(k?1000:1);};
 plDlg.addEventListener('change',e=>{const t=e.target,d=t.dataset;
   if(t.id==='plDays'){PL.days=+t.value;renderPipe();}else if(t.id==='plSheet'){PL.sheet=t.value;renderPipe();}
@@ -3925,7 +3958,8 @@ plDlg.addEventListener('change',e=>{const t=e.target,d=t.dataset;
   else if(d.plldval){const l=leadById(d.plldval);if(l){l.value=moneyIn(t.value)||0;touchX(l);crmSave();}}
   else if(d.ppf){const l=leadById(whoId(PL.person||''));if(!l)return;if(d.ppf==='stage'){setLeadStage(l,t.value);return;}if(d.ppf==='temp')l.temp=TEMP_NAME[t.value]?t.value:'';else l.value=moneyIn(t.value)||0;touchX(l);crmSave();}});
 plDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.dataset.plval||e.target.dataset.plldval||e.target.dataset.ppf==='value'))e.target.blur();});
-plDlg.addEventListener('submit',e=>{const f=e.target.closest('[data-ppform]');if(!f)return;e.preventDefault();if(f.dataset.ppform==='lead')saveLeadForm(f);else saveLogForm(f);});
+plDlg.addEventListener('submit',e=>{const f=e.target.closest('[data-ppform]');if(!f)return;e.preventDefault();const k=f.dataset.ppform;if(k==='gmq'){GM.q=f.elements.q.value;gmLoad();}else if(k==='lead')saveLeadForm(f);else saveLogForm(f);});
+plDlg.addEventListener('change',e=>{const id=e.target.dataset?.gmsel;if(!id)return;e.target.checked?GM.sel.add(id):GM.sel.delete(id);const b=plDlg.querySelector('[data-pp=gmtrack]');if(b){b.disabled=!GM.sel.size;b.textContent=`Track ${GM.sel.size||''} email${GM.sel.size===1?'':'s'}`.replace('  ',' ');}});
 plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[data-pppick]');if(!b)return;const d=b.dataset;
   if(d.plview){PL.view=d.plview;lsSet('ss-pl-view',PL.view);renderPipe();return;}
   if(b.id==='plHot'){PL.hot=!PL.hot;renderPipe();return;}
@@ -3945,12 +3979,16 @@ plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[d
   if(p==='close'){closePerson();return;}
   if(p==='noedit'){PL.edit=false;renderPerson();return;}
   if(p==='newlead'){openPerson('new');return;}
+  if(p==='grplead'){grpToLeads($('#ppGrp')?.value||'');return;}
+  if(p==='gmail'||p==='gmailany'){openGmail(p==='gmail'?PL.person:'');return;}
+  if(p==='gmback'){openPerson(PL.gmFor||'pick');return;}
+  if(p==='gmtrack'){gmTrack();return;}
   if(p==='edit'){PL.edit=true;renderPerson();plDlg.querySelector('#plPerson input')?.focus();return;}
   if(p==='convert'&&l){askConvert(l);return;}
   if(p==='cust'&&info?.cust){openCustomer(info.key);return;}
   if(p==='email'&&info?.email){plDlg.close();openMail({aud:l&&!l.conv?'lead':'cust',pick:l&&!l.conv?l.id:info.key});return;}
   if(p==='del'&&l){if(await ask({title:`Delete ${info.name}?`,body:'The lead, their logged calls and notes are removed. To-dos for them stay, unlinked.',ok:'Delete lead',danger:true})!=='ok')return;
-    for(const a of CRM.acts.filter(a=>a.who===PL.person))crmDel('acts',a.id);for(const x of CRM.todos.filter(x=>x.who===PL.person)){x.who='';touchX(x);}crmDel('leads',l.id);closePerson();crmSave();toast('Lead deleted');}});
+    for(const a of CRM.acts.filter(a=>a.who===PL.person))crmDel('acts',a.id);for(const x of CRM.todos.filter(x=>x.who===PL.person)){x.who='';touchX(x);}crmDel('leads',l.id);if(l.email)leadGroup(l.email,false);closePerson();crmSave();toast('Lead deleted');}});
 // drag and drop between columns (customers' sell sheets and leads)
 let plDrag=null;
 plDlg.addEventListener('dragstart',e=>{const c=e.target.closest?.('[data-pl],[data-pllead]');if(!c)return;plDrag=c.dataset.pl?c.dataset.pl:'L:'+c.dataset.pllead;c.classList.add('drag');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',plDrag);}catch(_){}});
@@ -3972,15 +4010,27 @@ const nextLine=w=>{const t=nextTodo(w);if(!t)return'';const d=dueInfo(t.due);ret
 function leadCard(l){const w='lead:'+l.id,lt=lastTouch(w),rep=sendsOf(w).some(e=>e.reply),nn=noteCount(w),st=l.stage;
   return`<div class="pl-card" draggable="true" data-pllead="${esc(l.id)}"><div class="pl-top"><button class="who" type="button" data-plopen="${esc(w)}">${esc(l.name||l.company||l.email||'(no name)')}</button>${l.temp?`<span class="pl-tmp ${l.temp}">${TEMP_NAME[l.temp]}</span>`:''}</div>
     ${l.name&&l.company||l.city?`<span class="pl-sub">${esc([l.name?l.company:'',l.city].filter(Boolean).join(' · '))}</span>`:''}${l.sheet?`<span class="pl-sheet" title="${esc(l.sheet)}">${esc(l.sheet)}</span>`:''}
-    <span class="pl-sub"><span class="pl-kind">${l.conv?'Customer':'Lead'}</span> ${rep?'<span class="pl-rp">Replied</span> ':''}${esc(lt?lt.txt:'Added '+ago(l.created||l.upd))}${nn?` · ${nn} note${nn>1?'s':''}`:''}</span>${nextLine(w)}
+    <span class="pl-sub"><span class="pl-kind">${l.conv?'Customer':'Lead'}</span> ${rep?'<span class="pl-rp">Replied</span> ':''}${esc(lt?lt.txt:'Added '+ago(l.created||l.upd))}${l.pref&&l.pref!=='email'?` · prefers ${esc(PREF_NAME[l.pref].toLowerCase())}`:''}${nn?` · ${nn} note${nn>1?'s':''}`:''}</span>${nextLine(w)}
     <div class="pl-row"><input class="pl-val" data-plldval="${esc(l.id)}" inputmode="decimal" placeholder="$ value" value="${l.value||''}" aria-label="Order value"><span class="spacer"></span><select class="pl-mv" data-plldmv="${esc(l.id)}" aria-label="Move to">${PL_COLS.filter(([k])=>!SET.pipe.colsOff.includes(k)||st===k).map(([k,n])=>`<option value="${k}"${st===k?' selected':''}>${n}</option>`).join('')}</select></div></div>`;}
 function setLeadStage(l,st){if(!l||!LEAD_ST.includes(st)||l.stage===st)return;l.stage=st;touchX(l);crmSave();toast(`Moved to ${colName(st)}`);if(st==='ordered'&&!l.conv)setTimeout(()=>askConvert(l),300);}
 async function askConvert(l){const n=l.name||l.company||l.email||'this lead';
   if(!l.email){const r=await ask({title:`Make ${n} a customer?`,body:'Customers need an email address. Add one to this lead first.',ok:'Add email',cancel:'Not now'});if(r==='ok'){PL.edit=true;openPerson('lead:'+l.id);}return;}
   const r=await ask({title:`Make ${n} a customer?`,body:'They\'re added to your Customers list. Their calls, emails, notes and to-dos stay with them.',ok:'Make customer',cancel:'Not now'});if(r==='ok')convertLead(l);}
+// a customer picked as a lead sits in the customer list's Leads group until they become a customer again
+const LEADS_GROUP='Leads';
+function leadGroup(email,on){cuLoad();const k=ck(email),c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===k));if(!c)return;const gs=grpsOf(c),has=gs.some(g=>gKey(g)===gKey(LEADS_GROUP));
+  if(on===has)return;c.groups=on?[...gs,LEADS_GROUP]:gs.filter(g=>gKey(g)!==gKey(LEADS_GROUP));c.upd=Date.now();cuSave();}
+// every customer in a group (and its subfolders) becomes a lead, unless they already are one
+async function grpToLeads(k){if(!k){toast('Choose a group first');$('#ppGrp')?.focus();return;}cuLoad();crmLoad();const d=gDesc(k),mem=CU.list.filter(c=>grpsOf(c).some(g=>d.has(gKey(g))));
+  const fresh=mem.filter(c=>![c.email,...altOf(c)].some(a=>leadByEmail(a)));if(!fresh.length){toast(mem.length?'Everyone in that group is already a lead':'That group has no customers');return;}
+  if(await ask({title:`Add ${fresh.length} customer${fresh.length>1?'s':''} as leads?`,body:`Everyone in ${gPath(k)}${mem.length>fresh.length?` who isn't a lead yet`:''} goes into New lead in the Pipeline, and into the Leads group in Customers.`,ok:`Add ${fresh.length} lead${fresh.length>1?'s':''}`})!=='ok')return;
+  const now=Date.now();for(const c of fresh){const inf=infoOf(c),pv=String(inf[PREF_KEY]||'').split('\n')[0],pk=Object.keys(PREF_NAME).find(x=>pv.startsWith(PREF_NAME[x]))||'';
+    CRM.leads.push(cleanLead({id:newId(),name:c.name,company:c.company,email:c.email,phone:phoneOf(c),city:String(inf.City||'').split('\n')[0],source:'Customer group: '+gPath(k),pref:pk,prefAt:pk?pv.slice(PREF_NAME[pk].length).replace(/^\s*·\s*/,''):'',stage:'new',created:now,upd:now}));
+    const gs=grpsOf(c);if(!gs.some(g=>gKey(g)===gKey(LEADS_GROUP))){c.groups=[...gs,LEADS_GROUP];c.upd=now;}}
+  cuSave();closePerson();crmSave();toast(`Added ${fresh.length} lead${fresh.length>1?'s':''} from ${gPath(k)}`);}
 function convertLead(l){cuLoad();const k=ck(l.email);if(!CU.list.some(c=>[c.email,...altOf(c)].some(a=>ck(a)===k))){const info={};if(l.phone)info.Phone=l.phone;if(l.city)info.City=l.city;if(l.source)info['Lead source']=l.source;
-    const err=cuUpsert('new',{name:l.name,company:l.company,email:l.email,note:l.note,info});if(err){toast(err,6000);return;}}
-  const c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===k));l.conv=ck(c?c.email:l.email);touchX(l);crmSave();toast(`${l.name||l.company||l.email} is now a customer`);if(PL.person==='lead:'+l.id)openPerson('cust:'+l.conv);}
+    if(l.pref)info[PREF_KEY]=prefText(l.pref,l.prefAt);const err=cuUpsert('new',{name:l.name,company:l.company,email:l.email,note:l.note,info});if(err){toast(err,6000);return;}}
+  leadGroup(l.email,false);const c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===k));l.conv=ck(c?c.email:l.email);touchX(l);crmSave();toast(`${l.name||l.company||l.email} is now a customer`);if(PL.person==='lead:'+l.id)openPerson('cust:'+l.conv);}
 
 /* the panel for one person: details, log a call or email, to-dos and the whole history */
 function openPerson(who,o={}){if(!plDlg.open)openPipe();PL.person=who;PL.editNote='';if(who!=='new'&&!o.keepEdit)PL.edit=!!o.edit;PL.logFocus=!!o.log;renderPerson();
@@ -3989,7 +4039,11 @@ function closePerson(){PL.person=null;PL.edit=false;const p=$('#plPerson');p.hid
 const ppHead=(t,sub,av)=>`<div class="pp-h">${av?`<span class="av" aria-hidden="true">${esc(initials(av))}</span>`:''}<div style="flex:1;min-width:0"><h3>${esc(t)}</h3>${sub?`<small>${sub}</small>`:''}</div><button class="btn icon sm ghost pp-x" type="button" data-pp="close" aria-label="Close panel">✕</button></div>`;
 const sheetNames=()=>[...new Set([...sheets.map(sheetName),...LG.list.map(e=>e.sheet)].filter(Boolean))].sort((a,b)=>COLL.compare(a,b)).slice(0,300);
 function leadForm(l){const v=k=>esc(l?.[k]??''),isNew=!l;
-  return`<form class="pp-b pp-form" data-ppform="lead" novalidate><div class="pp-grid">
+  const cl=isNew&&CU.list.length?`<div class="pp-from"><label class="field"><span>Already a customer? Pick them (optional)</span><input class="in" id="ppCust" list="ppCustL" placeholder="Search your customers" autocomplete="off"></label>
+      <datalist id="ppCustL">${CU.list.filter(c=>!leadByEmail(c.email)).slice(0,500).map(c=>`<option value="${esc([c.name,c.company].filter(Boolean).join(' · ')||c.email)} <${esc(c.email)}>"></option>`).join('')}</datalist>
+      <small class="hint" id="ppCustNote">They stay in your customer list and are added to its <b>Leads</b> group.</small><input type="hidden" name="cust" value="">
+      ${gFlat().filter(g=>gKey(g.name)!==gKey(LEADS_GROUP)).length?`<div class="pp-grpl"><label class="field"><span>Or add a whole customer group</span><select class="in" id="ppGrp"><option value="">Choose a group…</option>${gFlat().filter(g=>gKey(g.name)!==gKey(LEADS_GROUP)).map(g=>`<option value="${esc(g.k)}">${esc(gPath(g.k))} (${gCount(g.k)})</option>`).join('')}</select></label><button class="btn sm" type="button" data-pp="grplead">Add them as leads</button></div>`:''}</div>`:'';
+  return`<form class="pp-b pp-form" data-ppform="lead" novalidate>${cl}<div class="pp-grid">
     <label class="field"><span>Name</span><input class="in" name="name" value="${v('name')}" autocomplete="off"></label>
     <label class="field"><span>Company or store</span><input class="in" name="company" value="${v('company')}" autocomplete="off"></label>
     <label class="field"><span>Email</span><input class="in" name="email" type="email" value="${v('email')}" autocomplete="off"></label>
@@ -3998,6 +4052,8 @@ function leadForm(l){const v=k=>esc(l?.[k]??''),isNew=!l;
     <label class="field"><span>Where they came from</span><input class="in" name="source" list="ppSrc" value="${v('source')}" placeholder="e.g. Trade show" autocomplete="off"></label>
     <label class="field"><span>Hot or cold</span><select class="in" name="temp"><option value="">Not set</option>${Object.entries(TEMP_NAME).map(([k,n])=>`<option value="${k}"${l?.temp===k?' selected':''}>${n}</option>`).join('')}</select></label>
     <label class="field"><span>Possible order (${esc(SET.currency)})</span><input class="in" name="value" inputmode="decimal" value="${l?.value||''}" autocomplete="off"></label>
+    <label class="field"><span>Preferred contact</span><select class="in" name="pref"><option value="">Not set</option>${Object.entries(PREF_NAME).map(([k,n])=>`<option value="${k}"${l?.pref===k?' selected':''}>${n}</option>`).join('')}</select></label>
+    <label class="field"><span>Where or which (optional)</span><input class="in" name="prefAt" value="${v('prefAt')}" placeholder="e.g. cell 604…, or the Kitsilano store" autocomplete="off"></label>
     <label class="field" style="grid-column:1/-1"><span>Interested in</span><input class="in" name="sheet" list="ppSheets" value="${v('sheet')}" placeholder="A product or sell sheet" autocomplete="off"></label></div>
     <label class="field"><span>Notes</span><textarea class="in" name="note" rows="3">${v('note')}</textarea></label>
     ${isNew?`<div class="pp-grid"><label class="field"><span>Already been in touch?</span><select class="in" name="first"><option value="">Not yet</option><option value="call">Yes, a phone call</option><option value="emailOut">Yes, I emailed them (outside this app)</option><option value="emailIn">Yes, they emailed me</option><option value="meeting">Yes, we met</option></select></label>
@@ -4027,17 +4083,54 @@ function tlItem(x){const ed=id=>PL.editNote===id,noteBox=(id,v)=>ed(id)?`<div cl
     const t=a.type==='call'?`Phone call · ${a.dir==='in'?'they called':'I called'}${a.dur?` · ${a.dur} min`:''}`:a.type==='emailOut'?'Email I sent (outside this app)':a.type==='emailIn'?'Email they sent':ACT_NAME[a.type];
     return`<div class="pp-e"><span class="k ${c}" aria-hidden="true">${ic}</span><div><div class="r"><b>${esc(t)}</b><span class="when">${esc(fmtWhen(a.at))}</span></div>${a.result||a.sheet?`<div class="meta">${esc([RES_NAME[a.result],a.sheet].filter(Boolean).join(' · '))}</div>`:''}${noteBox(id,a.note)}
       ${ed(id)?'':`<div class="ea"><button type="button" data-ppnedit="${id}">${a.note?'Edit note':'Add a note'}</button><button type="button" class="x" data-ppactdel="${esc(a.id)}">Delete</button></div>`}</div></div>`;}
-  if(x.k==='send'){const e=x.e,id='s:'+e.id;return`<div class="pp-e"><span class="k app" aria-hidden="true">APP</span><div><div class="r"><b>Sell sheet sent: ${esc(e.sheet)}</b><span class="when">${esc(fmtWhen(e.at))}</span></div><div class="meta">From this app · ${esc(HOW_NAME[e.how]||'')}${e.status&&e.status!=='none'?' · '+esc(ST_NAME[e.status]):''}</div>${noteBox(id,e.note)}
+  if(x.k==='send'){const e=x.e,id='s:'+e.id;return`<div class="pp-e"><span class="k ${e.ext?'out':'app'}" aria-hidden="true">${e.ext?'OUT':'APP'}</span><div><div class="r"><b>${e.ext?'Email sent from Gmail':'Sell sheet sent'}: ${esc(e.sheet)}</b><span class="when">${esc(fmtWhen(e.at))}</span></div><div class="meta">${e.ext?'Outside this site · replies are checked':'From this app · '+esc(HOW_NAME[e.how]||'')}${e.status&&e.status!=='none'?' · '+esc(ST_NAME[e.status]):''}</div>${noteBox(id,e.note)}
       ${ed(id)?'':`<div class="ea"><button type="button" data-ppnedit="${id}">${e.note?'Edit note':'Add a note'}</button><button type="button" data-ppsent="${esc(e.email)}">Open in Sent</button></div>`}</div></div>`;}
   if(x.k==='reply'){const e=x.e;return`<div class="pp-e"><span class="k in" aria-hidden="true">RE</span><div><div class="r"><b>Replied${e.reply.subj?': '+esc(e.reply.subj):''}</b><span class="when">${esc(fmtWhen(e.reply.at))}</span></div>${e.reply.snip?`<div class="note">“${esc(e.reply.snip)}”</div>`:''}</div></div>`;}
   return`<div class="pp-e"><span class="k" aria-hidden="true">NEW</span><div><div class="r"><b>Lead added</b><span class="when">${esc(fmtWhen(x.at))}</span></div>${x.l.source?`<div class="meta">From ${esc(x.l.source)}</div>`:''}</div></div>`;}
+/* emails sent from Gmail outside this site: pick them from Sent mail and they're tracked like sell sheets sent from here
+   (they show in the Pipeline, on the person's timeline and in Sent, and replies are found by the same check) */
+const GM={q:'',list:[],sel:new Set(),busy:false,err:'',tok:null};
+const addrsIn=v=>[...new Set((String(v||'').match(/[^\s<>,;"']+@[^\s<>,;"']+\.[^\s<>,;"']+/g)||[]).map(x=>x.trim()))];
+const nameIn=v=>{const m=String(v||'').match(/^\s*"?([^"<,]+?)"?\s*</);return m?m[1].trim():'';};
+const unSnip=v=>String(v||'').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+function openGmail(forWho){if(!plDlg.open)openPipe();PL.gmFor=forWho||'';PL.person='gmail';const wi=forWho?whoInfo(forWho):null;
+  GM.q=wi?.email?'to:'+wi.email:'newer_than:60d';GM.list=[];GM.sel.clear();renderPerson();gmLoad();}
+async function gmLoad(){const a=authGet();GM.busy=true;GM.err='';GM.sel.clear();if(PL.person==='gmail')renderPerson();
+  try{if(!a||a.prov!=='google')throw Object.assign(new Error(a?'Picking sent emails works with a Gmail account. Sign in with Google to use it.':'Sign in with Google first, so the site can look at your sent mail.'),{kind:'signin'});
+    let tok=await silentTok('google');if(!tok||!canRead(tok))tok=await login('google',false,true);GM.tok=tok;
+    const q=GM.q.trim(),list=await gmailGet(tok,'messages?maxResults=25&q='+encodeURIComponent('in:sent '+q.replace(/\bin:sent\b/g,'').trim())),ids=(list.messages||[]).map(m=>m.id),out=[];
+    for(let i=0;i<ids.length;i+=5)out.push(...await Promise.all(ids.slice(i,i+5).map(id=>gmailGet(tok,`messages/${id}?format=metadata&metadataHeaders=To&metadataHeaders=Subject`))));
+    GM.list=out.map(j=>({id:j.id,thread:j.threadId,at:+j.internalDate||0,subj:mHdr(j,'Subject'),to:mHdr(j,'To'),snip:unSnip(j.snippet)})).sort((x,y)=>y.at-x.at);}
+  catch(e){GM.err=e.kind==='signin'?e.message:e.kind==='scope'?'Allow the site to read your Gmail (it asks when you sign in) to pick sent emails.':e.kind==='api'?'Turn on the Gmail API in your Google Cloud project first.':'Couldn\'t load your sent mail: '+e.message;}
+  finally{GM.busy=false;if(PL.person==='gmail')renderPerson();}}
+function gmRender(){const tracked=new Set(LG.list.map(e=>e.gthread).filter(Boolean)),w=PL.gmFor,wi=w?whoInfo(w):null;
+  return ppHead('Track emails sent from Gmail',wi?'Emails you sent to '+esc(wi.name):'Pick emails you sent outside this site. Their replies are checked with the others.')+`<div class="pp-b">
+    <form class="gm-q" data-ppform="gmq"><input class="in" name="q" value="${esc(GM.q)}" aria-label="Search your sent mail" placeholder="Search, e.g. to:buyer@store.com or a word" autocomplete="off"><button class="btn sm" type="submit">Search</button></form>
+    ${GM.err?`<p class="pp-err" role="alert">${esc(GM.err)}</p>`:''}
+    ${GM.busy?'<p class="td-empty">Loading your sent mail…</p>':GM.list.length?`<div class="gm-list">${GM.list.map(m=>{const t=tracked.has(m.thread),to=addrsIn(m.to);
+      return`<label class="gm-r${t?' off':''}"><input type="checkbox" data-gmsel="${esc(m.id)}" ${t?'disabled':''} aria-label="Track: ${esc(m.subj||'(no subject)')}"><span><b>${esc(m.subj||'(no subject)')}</b><small>To ${esc(nameIn(m.to)||to[0]||'?')}${to.length>1?` and ${to.length-1} more`:''} · ${esc(fmtWhen(m.at))}</small>${m.snip?`<small class="sn">${esc(m.snip)}</small>`:''}</span>${t?'<em>Tracked</em>':''}</label>`;}).join('')}</div>`:GM.err?'':'<p class="td-empty">No sent emails found. Try another search.</p>'}
+    <label class="field"><span>About which sell sheet (optional)</span><input class="in" id="gmSheet" list="ppSheets3" placeholder="Leave empty to use the email's subject" autocomplete="off"></label><datalist id="ppSheets3">${sheetNames().map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist>
+    <div class="pp-acts"><button class="btn sm primary" type="button" data-pp="gmtrack" disabled>Track emails</button><button class="btn sm ghost" type="button" data-pp="gmback">Back</button></div>
+    ${w?'':'<p class="pp-facts">Each email goes to the lead or customer with that address. Anyone new is added as a lead.</p>'}</div>`;}
+function gmTrack(){lgLoad();crmLoad();cuLoad();const sheetIn=($('#gmSheet')?.value||'').trim(),now=Date.now(),me=GM.tok?.email||authGet()?.email||'',sid=(sheets.find(x=>sheetName(x)===sheetIn)||{}).id;let n=0,added=0;
+  for(const m of GM.list.filter(m=>GM.sel.has(m.id))){const to=addrsIn(m.to);if(!to.length||LG.list.some(e=>e.gthread===m.thread))continue;let w=PL.gmFor;
+    if(!w){const l=leadByEmail(to[0]),c=!l&&CU.list.find(c=>[c.email,...altOf(c)].some(x=>ck(x)===ck(to[0])));
+      if(l)w='lead:'+l.id;else if(c)w='cust:'+ck(c.email);else{const nl=cleanLead({id:newId(),name:nameIn(m.to),email:to[0],stage:'none',source:'Gmail',created:now,upd:now});CRM.leads.push(nl);w='lead:'+nl.id;added++;}}
+    const i=whoInfo(w),pe=i?.lead||i?.cust||{};
+    LG.list.push({id:newId(),at:m.at||now,sheetId:sid||'gm:'+m.thread,sheet:sheetIn||m.subj||'Email',name:pe.name||nameIn(m.to),company:pe.company||'',email:to[0],emails:to,cust:w.startsWith('lead:')?w:whoId(w),
+      how:'attach',files:[],parts:[],from:me,prov:'google',status:'none',note:'',follow:'',gthread:m.thread,ext:1,upd:now});
+    if(w.startsWith('lead:')){const l=leadById(whoId(w));if(l&&l.stage==='new'){l.stage='none';touchX(l);}}n++;}
+  if(!n){toast('Those emails are already tracked');return;}
+  lgSave();crmSave();toast(`Tracking ${n} email${n>1?'s':''}${added?`, ${added} new lead${added>1?'s':''} added`:''}. Replies show here when they come in.`,6000);
+  if(PL.gmFor)openPerson(PL.gmFor);else closePerson();renderPipe();checkReplies(false);}
 function renderPersonTodos(){const box=$('#ppTodos');if(!box||!PL.person)return;box.innerHTML=todoBlock(todosOf(PL.person),false,'p');}
 function renderPerson(){const p=$('#plPerson'),w=PL.person;if(!w){closePerson();return;}p.hidden=false;
   if(w==='new'){p.innerHTML=ppHead('Add a lead','Someone who might buy. Fill in what you know; you can add the rest later.')+leadForm(null);return;}
-  if(w==='pick'){p.innerHTML=ppHead('Log a call or email','Who was it?')+`<div class="pp-b"><input class="in" id="ppQ" type="search" placeholder="Search leads and customers" aria-label="Search leads and customers" autocomplete="off"><div class="pp-pick" id="ppPick"></div><button class="btn sm" type="button" data-pp="newlead">＋ Someone new: add a lead</button></div>`;renderPick();return;}
+  if(w==='pick'){p.innerHTML=ppHead('Log a call or email','Who was it?')+`<div class="pp-b"><input class="in" id="ppQ" type="search" placeholder="Search leads and customers" aria-label="Search leads and customers" autocomplete="off"><div class="pp-pick" id="ppPick"></div><div class="pp-acts"><button class="btn sm" type="button" data-pp="newlead">＋ Someone new: add a lead</button><button class="btn sm" type="button" data-pp="gmailany">Pick emails from my Gmail Sent</button></div></div>`;renderPick();return;}
+  if(w==='gmail'){p.innerHTML=gmRender();return;}
   const info=whoInfo(w);if(!info){closePerson();return;}const l=info.lead;
   if(l&&PL.edit){p.innerHTML=ppHead('Edit lead',esc(info.name),info.name)+leadForm(l);return;}
-  const sub=[info.company,info.email&&`<a href="mailto:${esc(info.email)}">${esc(info.email)}</a>`,info.phone&&`<a href="tel:${esc(info.phone.replace(/[^\d+]/g,''))}">${esc(info.phone)}</a>`].filter(Boolean).map(s=>s.startsWith('<a')?s:esc(s)).join(' · ');
+  const sub=[info.company,info.email&&`<a href="mailto:${esc(info.email)}">${esc(info.email)}</a>`,info.phone&&`<a href="tel:${esc(info.phone.replace(/[^\d+]/g,''))}">${esc(info.phone)}</a>`].filter(Boolean).map(s=>s.startsWith('<a')?s:esc(s)).join(' · ')+(info.pref?`<span class="pp-pref">Prefers ${esc(info.pref)}</span>`:'');
   const th=info.kind==='cust'?threads().filter(t=>(t.root.cust||ck(t.root.email))===info.key):[];
   p.innerHTML=ppHead(info.name,sub,info.name)+`<div class="pp-b">
     <div class="pp-acts"><button class="btn sm primary" type="button" data-pp="email" ${info.email?'':'disabled title="Add an email address first"'}>Email a sell sheet</button>
@@ -4048,7 +4141,7 @@ function renderPerson(){const p=$('#plPerson'),w=PL.person;if(!w){closePerson();
       <label class="field"><span>Possible order (${esc(SET.currency)})</span><input class="in" data-ppf="value" inputmode="decimal" value="${l.value||''}"></label></div>
       ${l.source||l.city||l.sheet||l.conv?`<p class="pp-facts">${[l.conv&&'Now a customer',l.source&&'From '+esc(l.source),l.city&&esc(l.city),l.sheet&&'Interested in '+esc(l.sheet)].filter(Boolean).join(' · ')}</p>`:''}${l.note?`<div class="pp-note">${esc(l.note)}</div>`:''}`
     :th.length?`<section class="pp-sec"><h4>Sell sheets sent</h4>${th.map(t=>`<div class="pp-th"><span>${esc(t.root.sheet)}<small>Sent ${esc(ago(t.root.at))}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></span><input class="pl-val" data-plval="${esc(t.root.id)}" inputmode="decimal" placeholder="$ value" value="${t.root.value?esc(String(t.root.value)):''}" aria-label="Order value for ${esc(t.root.sheet)}"><select class="pl-mv" data-plmv="${esc(t.root.id)}" aria-label="Stage for ${esc(t.root.sheet)}">${STATUSES.map(([k])=>`<option value="${k}"${(t.root.status||'none')===k?' selected':''}>${esc(colName(k))}</option>`).join('')}</select></div>`).join('')}</section>`:''}
-    <section class="pp-sec"><h4>Log a call, email or note</h4>${logForm(info)}</section>
+    <section class="pp-sec"><h4>Log a call, email or note</h4><p class="pp-facts">Emailed them from Gmail? <button class="lnk" type="button" data-pp="gmail">Pick it from your Sent mail</button> and their reply is tracked automatically.</p>${logForm(info)}</section>
     <section class="pp-sec"><h4>To-dos</h4>${todoForm(w,'ppTd')}<div id="ppTodos"></div></section>
     <section class="pp-sec"><h4>Timeline</h4><div class="pp-tl">${timelineOf(w).map(tlItem).join('')||'<p class="td-empty">Nothing yet.</p>'}</div></section></div>`;
   renderPersonTodos();}
@@ -4062,8 +4155,8 @@ function saveLeadForm(f){const g=k=>String(f.elements[k]?.value||'').trim(),err=
   if(!g('name')&&!g('company')&&!email)return bad('Add at least a name, a company or an email address.');if(email&&!EMAIL_RE.test(email))return bad('That email address doesn\'t look right.');
   const dup=email&&CRM.leads.find(x=>!x.conv&&ck(x.email)===ck(email)&&PL.person!=='lead:'+x.id);if(dup)return bad(`${email} is already a lead (${dup.name||dup.company||dup.email}).`);
   const now=Date.now(),isNew=PL.person==='new',l=isNew?{id:newId(),stage:'new',created:now}:leadById(whoId(PL.person));if(!l)return;
-  Object.assign(l,{name:g('name'),company:g('company'),email,phone:g('phone'),city:g('city'),source:g('source'),temp:TEMP_NAME[g('temp')]?g('temp'):'',value:numText(g('value'))>0?numText(g('value')):0,sheet:g('sheet'),note:g('note')});
-  if(isNew){Object.assign(l,cleanLead({...l,upd:now}));CRM.leads.push(l);const first=g('first');if(first){CRM.acts.push({id:newId(),who:'lead:'+l.id,type:first,at:atFrom(g('firstAt'),''),dur:0,dir:first==='emailIn'?'in':'out',result:'',sheet:l.sheet,note:'',upd:now});l.stage='none';}}
+  Object.assign(l,{name:g('name'),company:g('company'),email,phone:g('phone'),city:g('city'),source:g('source'),temp:TEMP_NAME[g('temp')]?g('temp'):'',value:numText(g('value'))>0?numText(g('value')):0,sheet:g('sheet'),note:g('note'),pref:PREF_NAME[g('pref')]?g('pref'):'',prefAt:g('prefAt')});
+  if(isNew){Object.assign(l,cleanLead({...l,upd:now}));CRM.leads.push(l);const ck0=g('cust');if(ck0)leadGroup(ck0,true);const first=g('first');if(first){CRM.acts.push({id:newId(),who:'lead:'+l.id,type:first,at:atFrom(g('firstAt'),''),dur:0,dir:first==='emailIn'?'in':'out',result:'',sheet:l.sheet,note:'',upd:now});l.stage='none';}}
   touchX(l);PL.edit=false;crmSave();toast(isNew?'Lead added':'Saved');openPerson('lead:'+l.id);}
 function saveLogForm(f){const w=PL.person,g=k=>String(f.elements[k]?.value||'').trim(),type=f.dataset.t,now=Date.now();
   const a={id:newId(),who:w,type,at:atFrom(g('d'),g('tm')),dur:type==='call'?parseInt(g('dur'))||0:0,dir:type==='call'?(g('dir')==='in'?'in':'out'):type==='emailIn'?'in':'out',result:type==='call'?g('res'):'',sheet:g('sheet'),note:g('note').slice(0,4000),upd:now};
@@ -4071,8 +4164,9 @@ function saveLogForm(f){const w=PL.person,g=k=>String(f.elements[k]?.value||'').
   CRM.acts.push(cleanAct(a));const l=w.startsWith('lead:')?leadById(whoId(w)):null;if(l&&g('st')&&LEAD_ST.includes(g('st'))){l.stage=g('st');touchX(l);}
   if(g('next'))addTodo(g('next'),g('nextD'),w);PL.lt=type;crmSave();renderPerson();toast('Saved to the timeline');
   if(l&&l.stage==='ordered'&&!l.conv&&g('st')==='ordered')setTimeout(()=>askConvert(l),300);}
-function renderPlTodo(){const b=$('#plTodo');if(!b)return;const open=CRM.todos.filter(t=>!t.done).length,f=b.querySelector('form'),keep=f?[f.elements.t.value,f.elements.d.value,f.elements.w?.value]:null,foc=document.activeElement?.closest?.('#plTodo form')?document.activeElement.name:'';
-  b.innerHTML=`<h3>To-do<small>${open?open+' open':''}</small></h3>${todoForm('','plTd')}${todoBlock(CRM.todos,true,'pl')}`;
+function renderPlTodo(){const b=$('#plTodo');if(!b)return;const mini=lsGet('ss-pl-todo')==='min';$('#plDlg .pl-main').classList.toggle('td-min',mini);
+  if(mini){const open=CRM.todos.filter(t=>!t.done).length,due=todosDue();b.innerHTML=`<button class="td-tab" type="button" data-tdmin="0" aria-expanded="false" title="Show the to-do list"><span class="ar" aria-hidden="true">‹</span><b>To-do</b>${open?`<span class="n${due?' due':''}">${open}</span>`:''}</button>`;return;}const open=CRM.todos.filter(t=>!t.done).length,f=b.querySelector('form'),keep=f?[f.elements.t.value,f.elements.d.value,f.elements.w?.value]:null,foc=document.activeElement?.closest?.('#plTodo form')?document.activeElement.name:'';
+  b.innerHTML=`<h3>To-do<small>${open?open+' open':''}</small><button class="btn icon sm ghost" type="button" data-tdmin="1" aria-expanded="true" aria-label="Minimize the to-do list" title="Minimize">›</button></h3>${todoForm('','plTd')}<label class="td-sort">Sort by <select class="in" id="tdSort"><option value="due">Due date</option><option value="urg"${lsGet('ss-td-sort')==='urg'?' selected':''}>Urgency</option></select></label>${todoBlock(CRM.todos,true,'pl')}`;
   const g=b.querySelector('form');if(keep&&g){g.elements.t.value=keep[0];g.elements.d.value=keep[1];if(g.elements.w&&keep[2]!=null)g.elements.w.value=keep[2];if(foc)g.elements[foc]?.focus();}}
 
 /* ---------- settings page ---------- */
@@ -4466,7 +4560,8 @@ const npI=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 function npDD(f,n,label){const open=CP.W.exp.has(f);return`<button class="np-dd${open?' open':''}${n?' has':''}" type="button" data-cpd="dd" data-f="${esc(f)}" aria-expanded="${open}" title="${n?`Show the other ${esc(label)}`:`Add another ${esc(label)}`}">${n?`${n} more`:'Add other'}${npI('chev')}</button>`;}
 // one detail: its main value, and (when opened) a dropdown list of alternates
 function npMulti(f,label){const W=CP.W,v=W.vals[f],open=W.exp.has(f),lab=label.toLowerCase();
-  return`<div class="np-multi"><div class="np-main"><input class="np-in" data-alt="${esc(f)}|0" value="${esc(v[0])}" placeholder="Empty" aria-label="${esc(label)}">${npDD(f,v.length-1,lab)}</div>${open?npAltList(f,v,lab):''}</div>`;}
+  const pl=f==='i:'+PREF_KEY?' list="prefL" placeholder="e.g. Phone call · cell 604…"':' placeholder="Empty"';
+  return`<div class="np-multi"><div class="np-main"><input class="np-in" data-alt="${esc(f)}|0" value="${esc(v[0])}"${pl} aria-label="${esc(label)}">${f==='i:'+PREF_KEY?`<datalist id="prefL">${Object.values(PREF_NAME).map(n=>`<option value="${n}"></option>`).join('')}</datalist>`:''}${npDD(f,v.length-1,lab)}</div>${open?npAltList(f,v,lab):''}</div>`;}
 function npAltList(f,v,lab){return`<div class="np-altlist" role="group" aria-label="Other ${esc(lab)}"><span class="np-alth">Other ${esc(lab)}</span>${v.slice(1).map((x,i)=>`<div class="np-altrow"><input class="np-in" data-alt="${esc(f)}|${i+1}" value="${esc(x)}" placeholder="Another ${esc(lab)}" aria-label="Other ${esc(lab)} ${i+1}"><button class="np-mk" type="button" data-cpd="mkmain" data-f="${esc(f)}" data-i="${i+1}" title="Use this as the main one">Make main</button><button class="np-x" type="button" data-cpd="rmalt" data-f="${esc(f)}" data-i="${i+1}" aria-label="Remove">✕</button></div>`).join('')}
   <button class="np-add" type="button" data-cpd="addalt" data-f="${esc(f)}">${npI('add')}Add another</button></div>`;}
 function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
@@ -4485,7 +4580,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
     ${prop('grp','Groups',`<div class="np-grps">${W.groups.map(g=>gChip(g,`<button type="button" data-cpd="rmgrp" data-g="${esc(g)}" aria-label="Remove from ${esc(g)}">✕</button>`).replace('<span class="gchip"',`<span class="gchip" data-gcol="${esc(g)}" title="Click to change the colour of ${esc(gName(g))}"`)).join('')}<input class="np-in np-gin" id="cpdGrpIn" placeholder="${W.groups.length?'Add…':'Add to a group…'}" autocomplete="off" aria-label="Add to a group"></div>`)}
     ${prop('col','Colour',`<button class="np-colbtn" type="button" data-cpd="color">${t?`<i style="background:${t}"></i>${esc(tagName(W.color))}`:'<span class="np-empty">None</span>'}</button>`)}
     ${W.keys.map(k=>prop('info',esc(k),npMulti('i:'+k,k)+`<button class="np-x np-rmprop" type="button" data-cpd="rminfo" data-k="${esc(k)}" title="Remove this detail" aria-label="Remove ${esc(k)}">✕</button>`,'np-info')).join('')}
-    ${(()=>{const have=new Set(W.keys),q=[...new Set(['Phone','Address','Website',...infoKeys()])].filter(k=>!have.has(k)&&k!==OTHER.name&&k!==OTHER.company).slice(0,8);
+    ${(()=>{const have=new Set(W.keys),q=[...new Set(['Phone',PREF_KEY,'Address','Website',...infoKeys()])].filter(k=>!have.has(k)&&k!==OTHER.name&&k!==OTHER.company).slice(0,8);
       return q.length?`<div class="np-quick"><span>Quick add:</span>${q.map(k=>`<button type="button" data-cpd="qadd" data-k="${esc(k)}">${npI('add')}${esc(k)}</button>`).join('')}</div>`:'';})()}
     <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().filter(x=>x!==OTHER.name&&x!==OTHER.company).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div></div>`;
   P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
