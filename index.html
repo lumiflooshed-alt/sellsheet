@@ -137,7 +137,7 @@ svg{flex:none}
 .ml-sh{display:flex;align-items:center;gap:8px;margin:0;font-size:15px}.ml-step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--panel);font:700 12px var(--ui);flex:none}
 .ml-sh .ml-tplname{margin-left:auto;font:600 12px var(--ui);color:var(--muted)}
 .ml-track{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.ml-track[hidden]{display:none}.ml-track .seg button{height:34px;font-size:13.5px}.ml-tnote{flex:1 1 100%;color:var(--muted);font-size:12.5px}
-.ml-ci{display:grid;gap:6px}.ci-where{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-weight:600;font-size:14px}.ci-where .seg button{height:34px;font-size:13.5px}.ci-r{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:8px;align-items:center}.ci-r .in{height:38px;font-size:14px}.ci-on{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px;cursor:pointer}.ci-on input{width:18px;height:18px;accent-color:var(--accent);margin:0}.ml-ci .hint{margin:0}
+.ml-ci{display:grid;gap:6px}.ml-look{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.ml-look .seg button{height:34px;font-size:13.5px}.ml-how.is-plain .styled-only{display:none}.inc-opt:disabled{opacity:.45;cursor:not-allowed}.ci-where{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-weight:600;font-size:14px}.ci-where .seg button{height:34px;font-size:13.5px}.ci-r{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:8px;align-items:center}.ci-r .in{height:38px;font-size:14px}.ci-on{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px;cursor:pointer}.ci-on input{width:18px;height:18px;accent-color:var(--accent);margin:0}.ml-ci .hint{margin:0}
 .ml-aud{display:flex}.ml-aud button{flex:1}.ml-aud[hidden]{display:none}
 .inc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .inc-opt{text-align:left;border:1.5px solid var(--line2);border-radius:12px;background:var(--panel);padding:10px 12px;cursor:pointer;display:grid;gap:2px;font:inherit;color:var(--ink)}
@@ -986,13 +986,14 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
         <div class="group ml-inc"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">2</span>What's included</h3>
         <div class="ml-line" id="mlLine" hidden></div>
         <div class="ml-how">
+          <div class="ml-look"><span class="lbl">Email style</span><div class="seg" id="mlLook" role="group" aria-label="Email style"><button type="button" data-look="plain">Plain, like a normal email</button><button type="button" data-look="styled">Styled</button></div><small class="ml-tnote" id="mlLookNote"></small></div>
           <div class="inc-opts" role="group" aria-label="How to include the sell sheet">
             <button type="button" class="inc-opt" data-inc="attach" aria-pressed="false"><b>Attach a file</b><small>A PDF. Best for most buyers</small></button>
             <button type="button" class="inc-opt" data-inc="embed" aria-pressed="false"><b>Show it in the email</b><small>The sell sheet picture, no file</small></button>
             <button type="button" class="inc-opt" data-inc="both" aria-pressed="false"><b>Both</b><small>Picture in the email and the file</small></button>
             <button type="button" class="inc-opt" data-inc="none" aria-pressed="false"><b>Email only</b><small>No sell sheet, just your message</small></button>
           </div>
-          <details class="ml-more" id="mlMore"><summary>More options: Word or image files, pictures, tables, contact footer</summary>
+          <details class="ml-more" id="mlMore"><summary>More options: Word or image files, pictures, tables</summary>
           <div class="how-row">
             <div class="field"><span>Attach as</span>
               <div class="dd" id="mlAttDD"><button type="button" class="in dd-btn" id="mlAttBtn" aria-haspopup="true" aria-expanded="false"><span id="mlAttLbl">PDF</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -1002,21 +1003,22 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
                   <label class="mi"><input type="checkbox" value="jpg"><span><b>Image (.jpg)</b><small>Opens anywhere</small></span></label>
                   <small class="mi-note">Untick all for no attachment.</small>
                 </div></div></div>
-            <label class="switch"><input type="checkbox" id="mlSheetPic"><span class="sw-ui" aria-hidden="true"></span><span><b>Embed</b><small>Show the sell sheet picture in the email</small></span></label>
+            <label class="switch styled-only"><input type="checkbox" id="mlSheetPic"><span class="sw-ui" aria-hidden="true"></span><span><b>Embed</b><small>Show the sell sheet picture in the email</small></span></label>
           </div>
-          <div class="field"><span>Also add to the email</span><div class="togs" id="mlShow">
+          <div class="field styled-only"><span>Also add to the email</span><div class="togs" id="mlShow">
             <label class="tog"><input type="checkbox" value="photos"><span>Pictures</span></label>
             <label class="tog"><input type="checkbox" value="table"><span>Colours &amp; sizes table</span></label>
             <label class="tog"><input type="checkbox" value="details"><span>Product details</span></label>
-            <label class="tog"><input type="checkbox" value="contact"><span>Contact footer</span></label></div></div>
+</div></div>
           </details>
         </div>
-          <div class="ml-ci" id="mlCI"><span class="lbl">Your contact info at the end of the email</span>
+          <div class="ml-ci" id="mlCI"><span class="lbl">Your signature (plain text under your message)</span>
+            <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="name"><span>Name</span></label><input class="in" data-ci="name" placeholder="Your name" aria-label="Your name" autocomplete="name"></div>
+            <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="company"><span>Company</span></label><input class="in" data-ci="company" placeholder="e.g. Deals4Ever" aria-label="Company" autocomplete="organization"></div>
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="email"><span>Email</span></label><input class="in" data-ci="email" type="email" placeholder="you@yourcompany.com" aria-label="Your email" autocomplete="email"></div>
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="phone"><span>Phone</span></label><input class="in" data-ci="phone" type="tel" placeholder="e.g. 604 555 0100" aria-label="Your phone number" autocomplete="tel"></div>
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="web"><span>Website</span></label><input class="in" data-ci="web" type="url" placeholder="e.g. yourcompany.com" aria-label="Your website" autocomplete="url"></div>
-            <div class="ci-where"><span>Show it</span><div class="seg" role="group" aria-label="Where your contact info goes"><button type="button" data-ciwhere="below">Under the sell sheet</button><button type="button" data-ciwhere="footer">In the footer</button></div></div>
-            <small class="hint">Tick the ones to show. "In the footer" puts them in the coloured contact footer. Saved for every email, and synced when you're signed in.</small></div>
+            <small class="hint">Tick the lines to include. Saved for every email, and synced when you're signed in.</small></div>
           <label class="switch"><input type="checkbox" id="mlAvail"><span class="sw-ui" aria-hidden="true"></span><span><b>“Subject to availability”</b><small>Adds this small note at the end of the email</small></span></label>
         </div>
         <div class="group ml-msgg"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">3</span>Message<span class="ml-tplname" id="mlTplName"></span></h3>
@@ -1263,7 +1265,7 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
   tabs:['home','editor','inventory','pipeline','sent','customers'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','todo','chart','activity','top','inv','cust'],secOff:[],side:['todo','top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{email:'',phone:'',web:'',where:'below',on:{email:true,phone:true,web:true}},upd:0};
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:false}},upd:0};
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   // known items keep your order; a new one goes in after the item it follows by default
@@ -2201,14 +2203,27 @@ if(!MAIL.deliver){const had=lsGet('ss-mail')!=null;MAIL.deliver=had&&MAIL.summar
 if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 // current model: att = attachment types (may be none), sheetPic = embed the sell sheet picture, show = extra parts in the email
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
-if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
+if(!Array.isArray(MAIL.show))MAIL.show=[];MAIL.show=MAIL.show.filter(x=>x!=='contact');if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,greetBy:MAIL.greetBy,from:MAIL.from||''}));
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,looks:MAIL.looks,greetBy:MAIL.greetBy,from:MAIL.from||''}));
 const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
 // your contact details under the message: each one shows when it has a value and is ticked
 const ciEmail=()=>String(SET.mc.email||authGet()?.email||'').trim(),webHref=v=>/^https?:\/\//i.test(v)?v:'https://'+v;
-const ciLines=()=>[['email','Email',ciEmail()],['phone','Phone',String(SET.mc.phone||'').trim()],['web','Website',String(SET.mc.web||'').trim()]].filter(([k,,v])=>v&&SET.mc.on[k]!==false);
-const embedParts=()=>MAIL.line||MAIL.plain?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line||MAIL.plain?[]:MAIL.att;
+// your signature: plain lines under the message (name, company, email, phone, website), from your settings
+const sigName=()=>String(SET.mc.name||SET.name||'').trim();
+const sigLines=()=>[['name',sigName()],['company',String(SET.mc.company||'').trim()],['email',ciEmail()],['phone',String(SET.mc.phone||'').trim()],['web',String(SET.mc.web||'').trim()]].filter(([k,v])=>v&&SET.mc.on[k]!==false).map(x=>x[1]);
+/* Email style. Plain: just your words, like an email typed in Gmail (text plus a bare <p>/<br> copy, no card, banner, images or links).
+   Styled: the card layout with the sell sheet picture and tables. First emails to new leads always go plain. */
+if(!MAIL.looks||typeof MAIL.looks!=='object')MAIL.looks={};
+const lookNow=()=>MAIL.looks[MAIL.aud==='lead'?'lead':'cust']||(MAIL.aud==='lead'?'plain':'styled');
+const toLead=()=>(MAIL.kind==='follow'?MAIL.aud:(MAIL.track||MAIL.aud))==='lead';
+const firstContact=p=>!!p&&!LG.list.some(e=>(p.lead&&e.cust==='lead:'+p.lead)||[e.email,...(e.emails||[])].some(a=>a&&ck(a)===ck(p.email)));
+const msgPlain=m=>lookNow()==='plain'||(toLead()&&firstContact(m?.person));
+const paras=t=>String(t).replace(/\r\n?/g,'\n').split(/\n[ \t]*\n+/).map(x=>x.trim()).filter(Boolean).map(x=>`<p>${esc(x).replace(/\n/g,'<br>')}</p>`).join('');
+function plainHTML(msg,edit){const sig=sigLines();
+  return`<!doctype html><html><head><meta charset="utf-8"></head><body>${edit?`<div id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)">${tokHTML(edit.tpl,edit.person)}</div>`:paras(msg)}${sig.length?`<p>${sig.map(esc).join('<br>')}</p>`:''}${availOn()?`<p>${AVAIL_NOTE}</p>`:''}</body></html>`;}
+const plainText=msg=>String(msg).replace(/\s+$/,'')+(sigLines().length?'\n\n'+sigLines().join('\n'):'')+(availOn()?'\n\n'+AVAIL_NOTE:'');
+const embedParts=()=>MAIL.line||MAIL.plain||lookNow()==='plain'?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details'].includes(x))], attachParts=()=>MAIL.line||MAIL.plain?[]:MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
@@ -2431,7 +2446,7 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();if(MAIL.aud==='lead
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;const k=b.dataset.unsel;if(k.startsWith('lead:'))LSEL.delete(k.slice(5));else CU.sel.delete(k);renderCust();});
 /* the email page: send to customers or to leads (each with its own saved wording) */
 const LSEL=new Set();let LPF='';MAIL.aud='cust';
-function renderTrack(){if(MAIL.plain)MAIL.track=MAIL.aud;const t=MAIL.track||'cust',a=MAIL.aud;$$('#mlTrack button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.track===t)));$('#mlTrackRow').hidden=MAIL.kind==='follow'||!!MAIL.plain;
+function renderTrack(){if(MAIL.plain)MAIL.track=MAIL.aud;const t=MAIL.track||'cust',a=MAIL.aud;$$('#mlTrack button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.track===t)));$('#mlTrackRow').hidden=MAIL.kind==='follow'||!!MAIL.plain;const cc=!!($('#mlCc').value||$('#mlBcc').value);$('#mlCcRow').hidden=toLead()||!cc;$('#mlCcBtn').hidden=toLead()||cc;
   $('#mlTrackNote').textContent=t==='lead'?(a==='lead'?'Shows on their lead card. Typed addresses are added as leads.':'These customers are added as leads (and to the Leads group in Customers). Typed addresses become leads too.')
     :a==='lead'?'These leads become customers when it\'s sent, and it shows in the customer pipeline.':'Shows in the customer pipeline.';}
 $('#mlTrack').addEventListener('click',e=>{const b=e.target.closest('[data-track]');if(!b)return;MAIL.track=b.dataset.track;renderTrack();updMode();});
@@ -3281,31 +3296,29 @@ function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetic
     if(has('details')&&rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
       ${rows.map(([l,v])=>`<tr><td width="34%" style="padding:8px 12px;background:${tv.tint};border-bottom:1px solid ${tv.line};font:bold 11px ${F};color:${tv.p};text-transform:uppercase">${esc(l)}</td><td style="padding:8px 12px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222">${esc(v)}</td></tr>`).join('')}</table></td></tr>`;
   }
-  // contact info: plain lines under the sell sheet, or inside the coloured footer (with the sheet's own email when that's included)
-  const ci=ciLines(),inFoot=SET.mc.where==='footer'&&ci.length,ciA=([k,,v],st)=>k==='email'?`<a href="mailto:${esc(v)}" style="${st}">${esc(v)}</a>`:k==='phone'?`<a href="tel:${esc(v.replace(/[^\d+]/g,''))}" style="${st}">${esc(v)}</a>`:`<a href="${esc(webHref(v))}" style="${st}">${esc(v)}</a>`;
-  const fl=[...(has('contact')&&S.email&&!(inFoot&&ci.some(([k,,v])=>k==='email'&&ck(v)===ck(S.email)))?[['email','Email',S.email]]:[]),...(inFoot?ci:[])],fst=`color:${tv.pale};font:bold 13px ${F};text-decoration:none`;
-  if(fl.length)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff;line-height:1.6">${esc(S.headings.contact.toUpperCase())}<br>${fl.map(x=>ciA(x,fst)).join('<br>')}</td></tr></table></td></tr>`;
-  if(ci.length&&!inFoot)sum+=`<tr><td style="padding:18px 28px 0;font:14px/1.6 ${F};color:#444">${ci.map(x=>`${x[1]}: ${ciA(x,'color:'+tv.p)}`).join('<br>')}</td></tr>`;
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
-<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}${availOn()?`<tr><td style="padding:18px 28px 0;font:italic 12px ${F};color:#777">${AVAIL_NOTE}</td></tr>`:''}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
-function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of shownRows()){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
-  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';if(ciLines().length)t+='\n\n'+ciLines().map(([,n,v])=>n+': '+v).join('\n');if(availOn())t+='\n\n'+AVAIL_NOTE;return t;}
+<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sigLines().length?`<tr><td style="padding:0 28px 20px;font:15px/1.55 ${F};color:#222">${sigLines().map(esc).join('<br>')}</td></tr>`:''}${sum}${availOn()?`<tr><td style="padding:18px 28px 0;font:italic 12px ${F};color:#777">${AVAIL_NOTE}</td></tr>`:''}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
+function emailText(msg,parts){let t=String(msg).replace(/\s+$/,'')+(sigLines().length?'\n\n'+sigLines().join('\n'):'');if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of shownRows()){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
+  if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';if(availOn())t+='\n\n'+AVAIL_NOTE;return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
 const wrap76=s=>s.replace(/.{1,76}/g,'$&\r\n');
 const hdr=v=>String(v).replace(/[\r\n]+/g,' ');
 const encWord=v=>/^[\x20-\x7e]*$/.test(v)?hdr(v):'=?UTF-8?B?'+b64(hdr(v))+'?=';
 function mime(m){const B='ss'+uid()+uid(),R='rel'+uid(),A='alt'+uid(),L=[];
   const h=(k,v)=>{if(v&&v.length)L.push(`${k}: ${Array.isArray(v)?v.map(hdr).join(', '):v}`);};
-  if(m.from)h('From',fromHdr(m.from));h('To',m.to);h('Cc',m.cc);h('Bcc',m.bcc);h('Subject',encWord(m.subject));L.push('MIME-Version: 1.0',`Content-Type: multipart/mixed; boundary="${B}"`,'',`--${B}`,`Content-Type: multipart/related; boundary="${R}"`,'',`--${R}`,`Content-Type: multipart/alternative; boundary="${A}"`,'',
-    `--${A}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.text)),`--${A}`,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.html)),`--${A}--`);
+  if(m.from)h('From',fromHdr(m.from));h('To',m.to);h('Cc',m.cc);h('Bcc',m.bcc);if(m.replyTo)h('Reply-To',hdr(m.replyTo));h('Subject',encWord(m.subject));L.push('MIME-Version: 1.0');
+  const alt=[`Content-Type: multipart/alternative; boundary="${A}"`,'',`--${A}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.text)),`--${A}`,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.html)),`--${A}--`];
+  // nothing attached or embedded: just the text and its HTML copy, like an email typed in Gmail
+  if(!m.files.length&&!m.inline.length){L.push(...alt,'');return L.join('\r\n');}
+  L.push(`Content-Type: multipart/mixed; boundary="${B}"`,'',`--${B}`,`Content-Type: multipart/related; boundary="${R}"`,'',`--${R}`,...alt);
   for(const p of m.inline)L.push(`--${R}`,'Content-Type: image/jpeg',`Content-ID: <${p.cid}>`,`Content-Disposition: inline; filename="${p.name}"`,'Content-Transfer-Encoding: base64','',wrap76(p.b64));
   L.push(`--${R}--`);
   for(const f of m.files){const ascii=f.name.replace(/[^\x20-\x7e]/g,'_').replace(/"/g,"'");L.push(`--${B}`,`Content-Type: ${f.type}; name="${ascii}"`,`Content-Disposition: attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(f.name)}`,'Content-Transfer-Encoding: base64','',wrap76(f.b64));}
   L.push(`--${B}--`,'');return L.join('\r\n');}
 function graphMail(m){const r=a=>a.map(x=>({emailAddress:{address:x}}));
-  return{message:{subject:m.subject,body:{contentType:'HTML',content:m.html},toRecipients:r(m.to),ccRecipients:r(m.cc),bccRecipients:r(m.bcc),
+  return{message:{subject:m.subject,body:{contentType:'HTML',content:m.html},...(m.replyTo?{replyTo:r([m.replyTo])}:{}),toRecipients:r(m.to),ccRecipients:r(m.cc),bccRecipients:r(m.bcc),
     attachments:[...m.files.map(f=>({'@odata.type':'#microsoft.graph.fileAttachment',name:f.name,contentType:f.type,contentBytes:f.b64})),
       ...m.inline.map(p=>({'@odata.type':'#microsoft.graph.fileAttachment',name:p.name,contentType:'image/jpeg',contentBytes:p.b64,isInline:true,contentId:p.cid}))]},saveToSentItems:true};}
 async function sendOne(p,tok,m){
@@ -3322,10 +3335,11 @@ async function sendOne(p,tok,m){
   const body=JSON.stringify(graphMail(m));if(body.length>3.9e6){throw new Error('Too large for Outlook (4 MB limit). Untick an attachment or the product summary and try again.');}
   const r=await fetch('https://graph.microsoft.com/v1.0/me/sendMail',{method:'POST',headers:{Authorization:'Bearer '+tok.token,'Content-Type':'application/json'},body});
   if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error(j.error?.message||('Outlook error '+r.status));e.status=r.status;throw e;}}
-function planMessages(meEmail){const P=people(),cc=splitAddr($('#mlCc').value),bcc=splitAddr($('#mlBcc').value);
+// lead outreach: one person per email, never Cc or Bcc
+function planMessages(meEmail){const P=people(),solo=toLead(),cc=solo?[]:splitAddr($('#mlCc').value),bcc=solo?[]:splitAddr($('#mlBcc').value);
   const all=[...P.flatMap(x=>x.emails),...cc,...bcc],bad=all.filter(a=>!EMAIL_RE.test(a)),acc=all.filter(a=>EMAIL_RE.test(a)&&/[^\x21-\x7e]/.test(a));if(bad.length)throw new Error('Check these addresses: '+bad.join(', '));
   if(acc.length)throw new Error('These addresses have accented or special letters, which can\'t be sent from here: '+acc.join(', '));
-  if(!P.length&&!cc.length&&!bcc.length)throw new Error('Add at least one recipient: tick a customer or type an email address.');
+  if(!P.length&&!cc.length&&!bcc.length)throw new Error(solo?'Add at least one recipient: tick a lead or type an email address.':'Add at least one recipient: tick a customer or type an email address.');
   if(P.length)return P.map(p=>({to:p.emails,cc,bcc,person:p,people:[p]}));
   return[{to:[],cc,bcc,person:null,people:[]}];}
 async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
@@ -3334,14 +3348,14 @@ async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
     const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
-function checkHow(){return MAIL.line||MAIL.plain||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
+function checkHow(){if(!MAIL.line&&!MAIL.plain&&lookNow()==='plain'&&!attachParts().length)return'Pick "Attach a file" or "Email only" (a plain email can\'t show the sell sheet inside it).';return MAIL.line||MAIL.plain||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
 let sending=false;
 const dropSent=sent=>{const typed=new Set();for(const m of sent){if(m.person?.cust)CU.sel.delete(m.person.key);else if(m.person)m.to.forEach(a=>typed.add(ck(a)));}
   if(typed.size)$('#mlTo').value=splitAddr($('#mlTo').value).filter(a=>!typed.has(ck(a))).join(', ');renderCust();updMode();};
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');const sent=[];
   if(!EMAIL_SETUP[p]){mlStatus(`${p==='google'?'Google':'Microsoft'} sign-in isn't set up yet. Click "Set up sign-in", or use "Share instead…".`,true);return;}
   let plan;try{plan=planMessages(meFor(p));}catch(e){mlStatus(e.message,true);return;}
-  const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
+  pullSubject();const howErr=checkHow();if(howErr){mlStatus(howErr,true);return;}const kinds=attachParts(),parts=embedParts();
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   const nn=plan.filter(m=>m.person&&!greetName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
   if(nn.length&&!nnOk){ask({title:`${nn.length} ${nn.length>1?'customers have':'customer has'} no name`,body:'Their email will start without a name (e.g. “Hello,”). You can add names in the list on the right first.',ok:'Send anyway',cancel:'Add names first'}).then(r=>{if(r==='ok'){nnOk=true;$('#mlSend').click();}});return;}
@@ -3349,10 +3363,12 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   const fr=p==='google'?curFrom():null,fk=fr&&fr.key!=='google'?fr.key:p;
   try{let tok=await silentTok(fk);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=fk===p?await login(p,false):await googleLogin(false,fr.acct,[],fk);renderAcct();}
     const files=MAIL.line?[{name:MAIL.line.name,type:'application/pdf',blob:MAIL.line.blob,b64:await blobB64(MAIL.line.blob)}]:kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
-    let done=0;const fails=[];
+    let done=0,fpFiles=null;const fails=[];
     for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
-      const full={...m,from:fr,subject:fillTokens(subj,m.person),text:emailText(msg,parts),html:emailHTML(msg,inline,parts),files,inline};
-      try{const res=await sendOne(p,tok,full);done++;sent.push(m);logSent(m,p,fr?.email||tok.email,kinds,parts,res);lgSave();}catch(e){if(e.status===401){tokSet(fk,null);renderAcct();throw new Error(`Your sign-in expired${done?` after ${done} of ${plan.length} were sent (they're taken off the list)`:''}. Click Send again to sign in and send the rest.`);}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
+      const pl=msgPlain(m),mp=pl?[]:parts;let fl=files,kk=kinds;
+      if(pl&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line){fpFiles=fpFiles||await buildAttachments(['pdf']);fl=fpFiles;kk=['pdf'];}// a first email to a lead stays plain: the sell sheet goes as a PDF instead of a picture
+      const full={...m,from:fr,replyTo:fr?.email||tok.email||'',subject:fillTokens(subj,m.person),text:pl?plainText(msg):emailText(msg,mp),html:pl?plainHTML(msg):emailHTML(msg,inline,mp),files:fl,inline:pl?[]:inline};
+      try{const res=await sendOne(p,tok,full);done++;sent.push(m);logSent(m,p,fr?.email||tok.email,kk,mp,res);lgSave();}catch(e){if(e.status===401){tokSet(fk,null);renderAcct();throw new Error(`Your sign-in expired${done?` after ${done} of ${plan.length} were sent (they're taken off the list)`:''}. Click Send again to sign in and send the rest.`);}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     const left=plan.length-done-fails.length;
     if(fails.length){mlStatus(`Sent ${done} of ${plan.length}${done?' (taken off the list)':''}. Not sent: ${fails.join(' · ')}${left>0?` · ${left} more not tried`:''}`,true);}
@@ -3382,12 +3398,16 @@ $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.ac
 const LINE_DEF_SUBJ='Line sheet: {product}',LINE_DEF_MSG="Hi {name},\n\nPlease find attached our line sheet, {product}. Let me know which styles you'd like, or if you have any questions.\n\nThank you,";
 const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ},lead:{msg:'ss-leadmsg',subj:'ss-leadsubj',defMsg:()=>LEAD_DEF_MSG,defSubj:()=>LEAD_DEF_SUBJ},plain:{msg:'ss-plainmsg',subj:'ss-plainsubj',defMsg:()=>PLAIN_DEF_MSG,defSubj:()=>PLAIN_DEF_SUBJ},cplain:{msg:'ss-cplainmsg',subj:'ss-cplainsubj',defMsg:()=>CPLAIN_DEF_MSG,defSubj:()=>CPLAIN_DEF_SUBJ},pfollow:{msg:'ss-pfupmsg',subj:'ss-pfupsubj',defMsg:()=>PFUP_DEF_MSG,defSubj:()=>PFUP_DEF_SUBJ}};
 const wordKind=()=>MAIL.plain?(MAIL.kind==='follow'?'pfollow':MAIL.aud==='lead'?'plain':'cplain'):MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:MAIL.aud==='lead'?'lead':'new',wordKeys=()=>WORD_KEYS[wordKind()];
-function loadWording(){$('#mlSubj').value=tplOf('subj');$('#mlMsg').value=tplOf('msg');if(typeof updTpl==='function')updTpl();}
+function loadWording(){$('#mlSubj').value=tplOf('subj');$('#mlMsg').value=tplOf('msg');pullSubject(true);if(typeof updTpl==='function')updTpl();}
 const tplOf=which=>{const k=wordKeys();return lsGet(k[which])||(which==='msg'?k.defMsg():k.defSubj());};
 // the wording is saved only when you ask; the product's own name is stored as {product}, so the next sell sheet gets its name
 const tplNorm=v=>{const pl=productLabel();if(pl!=='this product'&&(/[\s\d]/.test(pl.trim())||pl.length>=10))v=v.replace(new RegExp('(^|[^\\p{L}\\p{N}])'+pl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),'$1{product}');return v;};
 const TPL_NAME={new:'customer email',lead:'lead email',plain:'lead email (no sell sheet)',cplain:'customer email (no sell sheet)',pfollow:'follow-up (no sell sheet)',follow:'follow-up email',line:'line sheet email'};
 const tplDirty=()=>tplNorm($('#mlSubj').value)!==tplOf('subj')||tplNorm($('#mlMsg').value)!==tplOf('msg');
+// drafts pasted from elsewhere often start with "Subject: …": that line belongs in the subject, not the message
+function pullSubject(quiet){const t=$('#mlMsg'),m=t.value.match(/^\s*subject\s*:[ \t]*([^\n]*)(\n|$)/i);if(!m)return false;const sj=m[1].trim();t.value=t.value.slice(m[0].length).replace(/^[ \t]*\n/,'');
+  if(sj)$('#mlSubj').value=sj;if(!quiet)toast('Moved the “Subject:” line out of the message and into the subject',4000);return true;}
+$('#mlMsg').addEventListener('input',()=>{if(pullSubject()){updTpl();updMsgPrev();updMode();schedPreview();}});
 function updTpl(){const d=tplDirty(),n=TPL_NAME[wordKind()];$('#mlTpl').hidden=!d;$('#mlTplSave').textContent='Save as my '+n;$('#mlTplName').textContent=d?'Changed for this email':'Your saved '+n;}
 function saveTpl(){const k=wordKeys(),now=String(Date.now());lsSet(k.subj,tplNorm($('#mlSubj').value));lsSet(k.msg,tplNorm($('#mlMsg').value));lsSet(k.subj+'-upd',now);lsSet(k.msg+'-upd',now);scheduleSync();updTpl();toast(`Saved. Every new ${TPL_NAME[wordKind()]} starts with this wording.`,5000);}
 $('#mlTplSave').onclick=saveTpl;$('#mlTplUndo').onclick=()=>{loadWording();updMsgPrev();updMode();schedPreview();};
@@ -3398,8 +3418,13 @@ $('.ml-toks').addEventListener('mousedown',e=>{if(e.target.closest('[data-tok]')
 $('.ml-toks').addEventListener('click',e=>{const b=e.target.closest('[data-tok]');if(!b)return;const f=$('#'+tokField),st=f.selectionStart??f.value.length,en=f.selectionEnd??st;f.focus();f.setRangeText(b.dataset.tok,st,en,'end');f.dispatchEvent(new Event('input',{bubbles:true}));});
 $('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMail();updMsgPrev();updMode();schedPreview();});
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
-const incMode=()=>MAIL.plain?'none':MAIL.att.length&&MAIL.sheetPic?'both':MAIL.sheetPic?'embed':MAIL.att.length?'attach':'';
-function renderHow(){$('#mailDlg .ml-top h2').textContent=MAIL.plain?(MAIL.aud==='lead'?'Email leads':'Email customers'):'Email sell sheet';$('[data-inc=none]').hidden=!!MAIL.line;$('#mlMore').hidden=!!MAIL.plain;$('[data-tok="{product}"]').hidden=!!MAIL.plain;$('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
+const incMode=()=>MAIL.plain?'none':lookNow()==='plain'&&!MAIL.line?(MAIL.att.length?'attach':''):MAIL.att.length&&MAIL.sheetPic?'both':MAIL.sheetPic?'embed':MAIL.att.length?'attach':'';
+function renderLook(){const l=lookNow(),pl=l==='plain';$$('#mlLook button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.look===l)));$('.ml-how').classList.toggle('is-plain',pl);
+  for(const b of $$('[data-inc=embed],[data-inc=both]')){b.disabled=pl;b.title=pl?'Pick Styled to show the sell sheet inside the email':'';}
+  $('#mlLookNote').textContent=(pl?'Just your words and signature, like an email you typed. No card, banner, pictures or links, so it reads as a personal email.':'The card layout with the sell sheet picture and tables.')+(toLead()?' First emails to new leads always go plain, whichever you pick.':'');}
+$('#mlLook').addEventListener('click',e=>{const b=e.target.closest('[data-look]');if(!b)return;MAIL.looks[MAIL.aud==='lead'?'lead':'cust']=b.dataset.look;
+  if(b.dataset.look==='plain'&&!MAIL.plain){MAIL.sheetPic=false;if(!MAIL.att.length)MAIL.att=['pdf'];}saveMail();renderHow();updMode();schedPreview();});
+function renderHow(){renderLook();$('#mailDlg .ml-top h2').textContent=MAIL.plain?(MAIL.aud==='lead'?'Email leads':'Email customers'):'Email sell sheet';$('[data-inc=none]').hidden=!!MAIL.line;$('#mlMore').hidden=!!MAIL.plain;$('[data-tok="{product}"]').hidden=!!MAIL.plain;$('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
   $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();renderCI();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
 $('.inc-opts').addEventListener('click',async e=>{const b=e.target.closest('[data-inc]');if(!b)return;const m=b.dataset.inc;if(m==='none'){setPlain(true);return;}if(MAIL.plain&&!await setPlain(false))return;if(m==='embed')MAIL.att=[];else if(!MAIL.att.length)MAIL.att=['pdf'];MAIL.sheetPic=m!=='attach';saveMail();renderHow();updMode();schedPreview();});
 $('#mlCcBtn').onclick=()=>{$('#mlCcRow').hidden=false;$('#mlCcBtn').hidden=true;$('#mlCc').focus();};
@@ -3408,8 +3433,7 @@ $('#mlAttBtn').onclick=e=>{e.stopPropagation();const m=$('#mlAtt'),open=m.classL
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('#mlAttDD')){$('#mlAtt').classList.add('hide');$('#mlAttBtn').setAttribute('aria-expanded','false');}},true);
 $('#mlAtt').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();$('#mlAtt').classList.add('hide');$('#mlAttBtn').focus();}});
 $('#mlSheetPic').addEventListener('change',e=>{MAIL.sheetPic=e.target.checked;saveMail();renderHow();updMode();schedPreview();});
-function renderCI(){for(const i of $$('#mlCI [data-ci]'))if(document.activeElement!==i)i.value=i.dataset.ci==='email'?ciEmail():SET.mc[i.dataset.ci]||'';for(const c of $$('#mlCI [data-cion]'))c.checked=SET.mc.on[c.dataset.cion]!==false;$$('#mlCI [data-ciwhere]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ciwhere===(SET.mc.where==='footer'?'footer':'below'))));}
-$('#mlCI').addEventListener('click',e=>{const b=e.target.closest('[data-ciwhere]');if(!b)return;SET.mc.where=b.dataset.ciwhere;setSave();renderCI();schedPreview();});
+function renderCI(){for(const i of $$('#mlCI [data-ci]'))if(document.activeElement!==i)i.value=i.dataset.ci==='email'?ciEmail():i.dataset.ci==='name'?sigName():SET.mc[i.dataset.ci]||'';for(const c of $$('#mlCI [data-cion]'))c.checked=SET.mc.on[c.dataset.cion]!==false;}
 let ciT=0;$('#mlCI').addEventListener('input',e=>{const k=e.target.dataset.ci;if(!k)return;SET.mc[k]=e.target.value.trim().slice(0,200);clearTimeout(ciT);ciT=setTimeout(setSave,600);schedPreview();});
 $('#mlCI').addEventListener('change',e=>{const k=e.target.dataset.cion;if(!k)return;SET.mc.on[k]=e.target.checked;setSave();schedPreview();});
 $('#mlAvail').addEventListener('change',e=>{MAIL.avail=e.target.checked;saveMail();schedPreview();});
@@ -3433,9 +3457,10 @@ async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let p
   const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
   if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
     +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
-    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Attached',files.length?files.map(esc).join(', '):'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
+    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Style',msgPlain(m)?(lookNow()==='plain'?'Plain, like a normal email':'Plain: first email to this lead'):'Styled')+row('Attached',(msgPlain(m)&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line?[fileBase()+'.pdf']:files).map(esc).join(', ')||'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
     +(m.person&&!greetName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
   const fr=$('#mlPrevFrame'),ed=()=>({tpl:$('#mlMsg').value,person:m.person}),prep=h=>h.replace('<head>','<head><base target="_blank"><style>'+PREV_CSS+'</style>');
+  if(msgPlain(m)){fr.srcdoc=prep(plainHTML(msg,ed()));fr._stale=false;return;}
   fr.srcdoc=prep(emailHTML(msg,[],parts.filter(p=>p!=='sheet'&&p!=='photos'),ed())).replace('</body>','<p style="font:13px Arial;color:#888;text-align:center">Loading pictures…</p></body>');fr._stale=false;
   const inline=parts.length?await emailInline(parts):[];if(seq!==prevSeq)return;
   // don't pull the message out from under the cursor: finish once they click away
@@ -3448,7 +3473,7 @@ const prevPerson=()=>prevPlan[+$('#mlPrevWho').value||0]?.person||null;
 // how the greeting reads for this recipient
 function greetLine(p){const first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';return first?`Their email starts “${esc(first.trim())}”`:'';}
 // text typed in the preview goes back into the editor (with {tokens}), and is remembered like typing in the editor
-function fromPreview(which,tpl){const inp=$(which==='msg'?'#mlMsg':'#mlSubj');if(inp.value===tpl)return;inp.value=tpl;updTpl();updMsgPrev();updMode();const o=$('#mlGrOut'),p=prevPerson();if(o&&p)o.innerHTML=greetLine(p);}
+function fromPreview(which,tpl){const inp=$(which==='msg'?'#mlMsg':'#mlSubj');if(inp.value===tpl)return;inp.value=tpl;if(which==='msg')pullSubject();updTpl();updMsgPrev();updMode();const o=$('#mlGrOut'),p=prevPerson();if(o&&p)o.innerHTML=greetLine(p);}
 // plain text only, and Enter makes a line break (a new line in the editor)
 function plainEditing(el,doc,oneLine){el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!oneLine)doc.execCommand('insertLineBreak');}});
   el.addEventListener('paste',e=>{e.preventDefault();let t=(e.clipboardData||window.clipboardData).getData('text/plain')||'';if(oneLine)t=t.replace(/\s*\r?\n\s*/g,' ');doc.execCommand('insertText',false,t);});
