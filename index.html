@@ -317,6 +317,8 @@ textarea.np-in{display:block;overflow:hidden}
 .seg button{height:38px;border:0;border-radius:8px;background:transparent;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;padding:0 12px;transition:background .15s,color .15s,box-shadow .15s}
 .seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(19,24,38,.12)}
 .list{display:grid;gap:8px}
+.item.off .grow>input,.item.off .grow>.row2,.item.off .grow>.sizes,.item.off .grow>.field{opacity:.6}
+.sheet .ed[data-goto]{cursor:pointer}
 .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;animation:fade .2s var(--ease)}
 .item .grow{display:grid;gap:8px;min-width:0}
 .item .acts{display:flex;flex-direction:column;gap:4px}
@@ -914,6 +916,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
             <label class="tog"><input type="checkbox" value="details"><span>Product details</span></label>
             <label class="tog"><input type="checkbox" value="contact"><span>Contact footer</span></label></div></div>
         </div>
+        <label class="switch"><input type="checkbox" id="mlAvail"><span class="sw-ui" aria-hidden="true"></span><span><b>“Subject to availability”</b><small>Adds this small note at the end of the email</small></span></label>
         </div>
         <div class="ml-pane" id="mlPrev">
           <div class="ml-count" id="mlCount" role="status"></div>
@@ -1106,7 +1109,7 @@ const toast=(t,ms=2600,act)=>{const el=$('#toast');const host=topDialog()||docum
   clearTimeout(toast.t);clearTimeout(toast.h);
   if(el.showPopover){try{el.hidePopover();}catch(_){}try{el.showPopover();}catch(_){}}
   requestAnimationFrame(()=>el.classList.add('on'));toast.t=setTimeout(()=>{el.classList.remove('on');toast.h=setTimeout(()=>{if(!el.classList.contains('on')&&el.hidePopover)try{el.hidePopover();}catch(_){}},400);},ms);};
-const I={paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>',
+const I={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',eyeoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10 10 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 4.1-5.1M9.9 5.2A9 9 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"/></svg>',paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>',
   product:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>',
   photos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>',
   colours:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>',
@@ -1127,7 +1130,19 @@ const FONTS=[['Arial'],['Verdana'],['Georgia'],['Trebuchet MS'],['Tahoma'],['Tim
 const fontLoaded={};
 function loadFont(n){const f=FONTS.find(x=>x[0]===n);if(!f||!f[1]||fontLoaded[n])return;fontLoaded[n]=1;const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(n)+':wght@400;700&display=swap';document.head.appendChild(l);}
 function ensureStyle(s){const d=JSON.parse(JSON.stringify(DEF_STYLE)),o=s.style||{};s.style=Object.assign(d,o);s.style.sz=Object.assign(JSON.parse(JSON.stringify(DEF_STYLE.sz)),o.sz||{});
-  const b=JSON.parse(JSON.stringify(DEF_STYLE.blocks));for(const k in b)Object.assign(b[k],(o.blocks||{})[k]||{});s.style.blocks=b;s.fmt=s.fmt||{};s.gfmt=s.gfmt||{};return s;}
+  const b=JSON.parse(JSON.stringify(DEF_STYLE.blocks));for(const k in b)Object.assign(b[k],(o.blocks||{})[k]||{});s.style.blocks=b;s.fmt=s.fmt||{};s.gfmt=s.gfmt||{};return fixRows(s);}
+// Price, Sizes and Packing rows always come from the Details tab fields. Older sheets could turn
+// them into typed text (by editing them on the sheet); bring that text back into the fields, and
+// make sure each of the three rows exists (added hidden if it had been removed).
+function fixRows(s){if(!Array.isArray(s.rows))s.rows=[];if(!s.price)s.price={amount:'',unit:'piece'};
+  const byLabel=r=>{const l=String(r.label||'').trim();return /^price$/i.test(l)?'price':/^sizes?$/i.test(l)?'sizes':/^packing$/i.test(l)?'packing':null;};
+  for(const r of s.rows){const w=r.auto?null:r.wasAuto||byLabel(r);delete r.wasAuto;if(!w)continue;if(s.rows.some(x=>x.auto===w))continue;const v=String(r.value||'').trim();
+    if(w==='price'){const m=v.replace(/,/g,'').match(/^[^\d.]{0,4}(\d+(?:\.\d+)?)\s*(?:\/|per|an?)?\s*(piece|pc|unit|box|dozen|pack|set|pair)?(?:e?s)?\.?$/i);
+      s.price=m?{amount:m[1],unit:!m[2]?s.price.unit:/^(pc|unit)/i.test(m[2])?'piece':m[2].toLowerCase()}:{amount:v,unit:s.price.unit};r.auto='price';r.value='';continue;}
+    const m=w==='packing'&&v.match(/^(\d+)\s*(?:pcs?|pieces?)?\s*(?:per|\/|an?)\s*box(?:es)?\.?$/i);if(m)s.perBox=Math.max(1,+m[1]);
+    if(!v||m||(w==='sizes'&&v.replace(/\s/g,'')===s.sizes.filter(Boolean).join(','))){r.auto=w;r.value='';}}
+  for(const a of AUTOS)if(!s.rows.some(r=>r.auto===a)){const r={id:uid(),label:AUTO_LABEL[a],auto:a,value:'',hidden:true};if(a==='price')s.rows.unshift(r);else s.rows.push(r);}
+  return s;}
 const pt=px=>Math.round(px*.75*2)/2;
 const PRESETS=[['Navy','#1F2A44','#4F8FD6'],['Forest','#1E3A2F','#4FA37A'],['Charcoal','#26282D','#E0A030'],['Burgundy','#4A1C2B','#D0566F'],['Teal','#12343B','#2BA6A6'],['Royal','#1C2B6B','#E2B714'],['Graphite','#2F3640','#8A97A8'],['Plum','#3A2147','#B57BD6']];
 
@@ -1152,13 +1167,14 @@ function blankSheet(){return{id:uid(),updated:Date.now(),title:'',code:'',photos
   headings:{colours:'Available colours & sizes',details:'Product details',contact:'Contact us'},email:SET.sheet.contact||'',theme:{primary:'#1F2A44',accent:'#4F8FD6'},style:JSON.parse(JSON.stringify(DEF_STYLE)),fmt:{},gfmt:{}};}
 // Template guidance: grey example text on the sheet (never printed) and a short explanation in the panel.
 const COLOUR_EX=['e.g. Black','e.g. Grey','e.g. Navy','e.g. White','e.g. Red'];
-const ROW_HELP={price:['Set the price on the Details tab','Filled in from the price above.'],
-  sizes:['Add sizes on the Colours tab','Listed from the sizes on the Colours tab.'],
-  packing:['Set pieces per box on the Product tab','Worked out from pieces per box.'],
+const ROW_HELP={price:['Set the price on the Details tab','Type a number (e.g. 12.50) or words (e.g. Call for price).'],
+  sizes:['Set sizes on the Details tab','The size names, also used for the colours table.'],
+  packing:['Set pieces per box on the Details tab','Also used for the box totals in the colours table.'],
   brand:['e.g. Your brand','The brand or label on the product.'],
   'style features':['e.g. Soft fleece, front pocket, ribbed cuffs','A few key selling points, separated by commas.'],
   'style code':['e.g. ABC-1234','Your own or the supplier’s style number.'],
   location:['e.g. FOB: Your city','Where the goods ship from, or the shipping terms.']};
+const UNITS=['piece','box','dozen','pack','set','pair'],AUTOS=['price','sizes','packing'],AUTO_LABEL={price:'Price',sizes:'Sizes',packing:'Packing'};
 const rowHelp=r=>ROW_HELP[r.auto||'']||ROW_HELP[(r.label||'').trim().toLowerCase()]||['Add a value',''];
 let S=null, sheets=[], tab='product';
 const editStates=new Map(); // photo id -> in-memory editing data (not saved)
@@ -1185,7 +1201,8 @@ function refreshPicker(){const sel=$('#sheetSel');const i=sheets.findIndex(x=>x.
 /* ---------- derived values ---------- */
 const numText=a=>{const t=String(a??'').trim().replace(/^[^\d.,-]{0,4}/,'').replace(/\s+/g,'');let n=NaN;
   if(t&&/^(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?$/.test(t))n=parseFloat(t.replace(/,/g,''));else if(/^(\d{1,3}(\.\d{3})+|\d+),\d{1,2}$/.test(t))n=parseFloat(t.replace(/\./g,'').replace(',','.'));return isFinite(n)?n:NaN;};
-const priceText=()=>{const a=String(S.price.amount).trim();if(!a)return'';const n=numText(a);return (isFinite(n)?SET.currency+n.toFixed(2):a)+' per '+S.price.unit;};
+const priceText=()=>{const a=String(S.price.amount).trim();if(!a)return'';const n=numText(a);return isFinite(n)?SET.currency+n.toFixed(2)+' per '+S.price.unit:a;};
+const shownRows=()=>S.rows.filter(r=>!(r.auto&&r.hidden));
 const rowVal=r=>r.auto==='price'?priceText():r.auto==='sizes'?S.sizes.filter(Boolean).join(', '):r.auto==='packing'?`${S.perBox} pcs per box`:r.value;
 function calc(){
   const n=S.sizes.length, rs=S.ratio.slice(0,n).reduce((a,b)=>a+(+b||0),0);
@@ -1225,7 +1242,7 @@ function sheetHTML(forExport){
   const head=sz?th('Colour')+S.sizes.map(s=>th(esc(s))).join('')+th('Boxes')+th('Total pcs'):th('Colour')+th('Pcs per box')+th('Boxes')+th('Total pcs');
   const body=c.rows.map((r,i)=>`<tr><td>${ed('colour:'+i+':name',r.name,COLOUR_EX[i%COLOUR_EX.length])}</td>${sz?r.q.map(v=>td(v||'–')).join(''):td(S.perBox)}${td(r.boxes)}${td(r.tot)}</tr>`).join('');
   const tot=`<tr class="tot">${td('TOTAL')}${sz?c.T.q.map(v=>td(v)).join(''):td('')}${td(c.T.boxes)}${td(c.T.tot)}</tr>`;
-  const rows=S.rows.map(r=>`<tr class="${r.auto==='price'?'price':''}"><td>${ed('row:'+r.id+':label',r.label,'Label')}</td><td>${ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
+  const rows=shownRows().map(r=>`<tr class="${r.auto==='price'?'price':''}"><td>${ed('row:'+r.id+':label',r.label,'Label')}</td><td>${r.auto?ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0]).replace('contenteditable="true"',`contenteditable="false" data-goto="${r.auto}" title="Change this on the Details tab"`):ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
   const rh=n=>B[n].h?`--rh:${B[n].h}px;`:'';
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
     ${blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}"><div class="t">${ed('title',S.title,'PRODUCT NAME',1)}</div><div class="c"><small>ITEM CODE</small><b>${ed('code',S.code,'CODE',1)}</b></div></div>`)}
@@ -1281,7 +1298,7 @@ function setKey(k,v){
     case 'heading':S.headings[p[1]]=v;break;
     case 'price':S.price[p[1]]=v;break;
     case 'perBox':S.perBox=Math.max(1,parseInt(v)||1);break;
-    case 'row':{const r=S.rows.find(r=>r.id===p[1]);if(!r)return;if(p[2]==='value'&&r.auto)r.auto=null;r[p[2]]=v;break;}
+    case 'row':{const r=S.rows.find(r=>r.id===p[1]);if(!r||(p[2]==='value'&&r.auto))return;r[p[2]]=v;break;}
     case 'colour':{const c=S.colours[+p[1]];if(!c)return;if(p[2]==='name')c.name=v;else if(p[2]==='boxes')c.boxes=Math.max(0,parseInt(v)||0);else c.qty[+p[3]]=Math.max(0,parseInt(v)||0);break;}
     case 'size':S.sizes[+p[1]]=v;break;
     case 'ratio':S.ratio[+p[1]]=Math.max(0,parseFloat(v)||0);break;
@@ -1305,7 +1322,7 @@ function renderPanel(){
     h=`<h2>Product</h2><p class="lead">The basics at the top of the sheet.</p>
     ${fld('Product name',inp('title',S.title,{ph:'e.g. Mens Fleece Hoodie',id:'f-title'}),'The big title in the header bar.')}
     ${fld('Item code',inp('code',S.code,{ph:'e.g. ABC-1234',id:'f-code'}),'Shown top-right so buyers can quote it when ordering.')}
-    ${fld('Pieces per box',inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'}),'How many pieces come in one box. Used for the table totals and the Packing row.')}
+    <p class="note">Price, sizes and pieces per box are set once, on the <button type="button" class="lnk" data-goto="price">Details tab</button>.</p>
     <p class="note">Grey text on the sheet is only an example. It disappears when you type, and never shows in downloads.</p>
     <p class="note">Tip: you can also click any text on the sheet and type to change it.</p>`;
   }
@@ -1333,24 +1350,27 @@ function renderPanel(){
     <div class="group"><h3>Sizes</h3>
       <p class="hint" style="margin:0">How the pieces in each box split across sizes. For example, a ratio of 1-2-2-1 puts twice as many M and L as S and XL in every box.</p>
       <div class="seg" role="group" aria-label="How sizes are packed"><button type="button" data-mode="ratio" aria-pressed="${S.mode==='ratio'}">Same ratio every box</button><button type="button" data-mode="manual" aria-pressed="${S.mode==='manual'}">I'll type amounts</button></div>
-      <div class="sizes" style="--n:${n}"><div class="hdr">${S.sizes.map(()=>'<span>Size</span>').join('')}<span></span></div>
-        <div class="r">${S.sizes.map((s,j)=>inp(`size:${j}`,s,{num:1,label:'Size name'})).join('')}<button class="tiny x" data-sdel="1" aria-label="Remove last size" ${n<=1?'disabled':''}>${I.x}</button></div>
-        ${S.mode==='ratio'?`<div class="hdr">${S.sizes.map(()=>'<span>Ratio</span>').join('')}<span></span></div><div class="r">${S.sizes.map((s,j)=>inp(`ratio:${j}`,S.ratio[j]??0,{num:1,type:'number',mode:'decimal',label:'Ratio for '+s})).join('')}<span></span></div>
+      <div class="sizes" style="--n:${n}">
+        ${S.mode==='ratio'?`<div class="hdr">${S.sizes.map(s=>`<span>${esc(s)||'?'}</span>`).join('')}<span></span></div><div class="r">${S.sizes.map((s,j)=>inp(`ratio:${j}`,S.ratio[j]??0,{num:1,type:'number',mode:'decimal',label:'Ratio for '+s})).join('')}<span></span></div>
         <p class="note">Each box: ${S.sizes.map((s,j)=>`${+c.per[j].toFixed(1)} ${esc(s)}`).join(', ')}.</p>${c.uneven?`<p class="warn">${S.perBox} pieces don't split evenly at this ratio. Numbers are rounded.</p>`:''}`:''}
       </div>
-      <button class="add" data-sadd="1">${I.plus}Add size</button>
+      <p class="note">Size names and pieces per box (${S.perBox}) are set on the <button type="button" class="lnk" data-goto="sizes">Details tab</button>.</p>
     </div>`;
   }
   else if(tab==='details'){
-    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them. Leave a row empty or remove it if you don't need it.</p>
-    <div class="group"><h3>Price</h3><p class="hint" style="margin:0">Shown in the Price row below.</p><div class="row2">${fld('Amount ('+esc(SET.currency)+')',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',mode:'decimal',id:'f-price'}))}
-      <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit"><option value="piece"${S.price.unit==='piece'?' selected':''}>piece</option><option value="box"${S.price.unit==='box'?' selected':''}>box</option></select></label></div></div>
-    <div class="list">${S.rows.map((r,i)=>`<div class="item"><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:'Label',label:'Row label'})}
-      ${r.auto?`<div class="in" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--raise)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rowVal(r))||'<span style=color:var(--faint)>Filled in automatically</span>'}</span><button class="btn sm ghost" data-unauto="${r.id}">Edit</button></div>`
-        :inp(`row:${r.id}:value`,r.value,{ph:rowHelp(r)[0],label:'Row value'})}
-      ${rowHelp(r)[1]?`<small class="hint">${rowHelp(r)[1]}</small>`:''}
-      ${r.wasAuto&&!r.auto?`<button class="btn sm ghost" style="justify-self:start" data-reauto="${r.id}">Fill automatically again</button>`:''}</div>
-      <div class="acts"><button class="tiny" data-rmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny" data-rmove="${i}:1" aria-label="Move down" ${i===S.rows.length-1?'disabled':''}>${I.down}</button><button class="tiny x" data-rdel="${r.id}" aria-label="Remove row">${I.x}</button></div></div>`).join('')}</div>
+    const n=S.sizes.length;
+    const autoIn=r=>r.auto==='price'?`<div class="row2">${fld('Amount ('+esc(SET.currency)+')',inp('price:amount',S.price.amount,{ph:'e.g. 12.50',id:'f-price'}))}
+        <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit">${UNITS.map(u=>`<option value="${u}"${S.price.unit===u?' selected':''}>${u}</option>`).join('')}</select></label></div>`
+      :r.auto==='sizes'?`<div class="sizes" style="--n:${n}"><div class="r">${S.sizes.map((s,j)=>inp(`size:${j}`,s,{num:1,label:'Size name',id:j?'':'f-size'})).join('')}<button class="tiny x" data-sdel="1" aria-label="Remove last size" ${n<=1?'disabled':''}>${I.x}</button></div></div>
+        <button class="add" data-sadd="1" style="justify-self:start">${I.plus}Add size</button>`
+      :`<label class="field"><span>Pieces per box</span>${inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'})}</label>`;
+    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or reorder them. Price, sizes and pieces per box are entered here once and used everywhere on the sheet.</p>
+    <div class="list">${S.rows.map((r,i)=>`<div class="item${r.auto&&r.hidden?' off':''}"${r.auto?` data-auto="${r.auto}"`:''}><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:r.auto?AUTO_LABEL[r.auto]:'Label',label:'Row label'})}
+      ${r.auto?autoIn(r):inp(`row:${r.id}:value`,r.value,{ph:rowHelp(r)[0],label:'Row value'})}
+      ${r.auto&&r.hidden?'<small class="hint">Hidden on the sheet. It is still used for the colours table.</small>':rowHelp(r)[1]?`<small class="hint">${rowHelp(r)[1]}</small>`:''}</div>
+      <div class="acts"><button class="tiny" data-rmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny" data-rmove="${i}:1" aria-label="Move down" ${i===S.rows.length-1?'disabled':''}>${I.down}</button>${r.auto
+        ?`<button class="tiny" data-rhide="${r.id}" aria-label="${r.hidden?'Show this row on the sheet':'Hide this row on the sheet'}" title="${r.hidden?'Show on the sheet':'Hide on the sheet'}" aria-pressed="${!r.hidden}">${r.hidden?I.eyeoff:I.eye}</button>`
+        :`<button class="tiny x" data-rdel="${r.id}" aria-label="Remove row">${I.x}</button>`}</div></div>`).join('')}</div>
     <button class="add" data-radd="1">${I.plus}Add row</button>`;
   }
   else if(tab==='contact'){
@@ -1392,6 +1412,7 @@ function softRefreshColours(){const c=calc();const pane=$('#panel .pane');const 
 $('#panel').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return; const d=b.dataset; let struct=true;
   if(d.addphoto){pickPhoto();return;}
+  if(d.goto){gotoAuto(d.goto);return;}
   if(d.pastephoto){pasteFromClipboard();return;}
   if(d.pedit){openEditorFor(d.pedit);return;}
   if(d.pdel){S.photos=S.photos.filter(p=>p.id!==d.pdel);editStates.delete(d.pdel);}
@@ -1407,8 +1428,7 @@ $('#panel').addEventListener('click',e=>{
   else if(d.radd){S.rows.push({id:uid(),label:'',value:''});}
   else if(d.rdel){S.rows=S.rows.filter(r=>r.id!==d.rdel);}
   else if(d.rmove){const[i,dir]=d.rmove.split(':').map(Number);const j=i+dir;[S.rows[i],S.rows[j]]=[S.rows[j],S.rows[i]];}
-  else if(d.unauto){const r=S.rows.find(r=>r.id===d.unauto);r.value=rowVal(r);r.wasAuto=r.auto;r.auto=null;}
-  else if(d.reauto){const r=S.rows.find(r=>r.id===d.reauto);r.auto=r.wasAuto;r.wasAuto=null;}
+  else if(d.rhide){const r=S.rows.find(r=>r.id===d.rhide);if(r)r.hidden=!r.hidden;}
   else if(d.preset){const[p,a]=d.preset.split(',');S.theme={primary:p,accent:a};}
   else if(d.appear){lsSet('ss-appear',d.appear);applyAppear();}
   else if(d.font){S.style.font=d.font;loadFont(d.font);}
@@ -1421,6 +1441,9 @@ $('#panel').addEventListener('click',e=>{
     if(d.radd){const ins=$$('#panel .item input');ins[ins.length-2]?.focus();}
     if(d.cadd){const ins=$$('#panel .list .item');ins[ins.length-1]?.querySelector('input')?.focus();}}
 });
+// price, sizes and pieces per box live on the Details tab only: open it at that field
+function gotoAuto(a){const r=S.rows.find(r=>r.auto===a);if(r&&r.hidden){r.hidden=false;renderSheet();touch();}tab='details';renderRail();renderPanel();
+  const f=$({price:'#f-price',sizes:'#f-size',packing:'#f-perbox'}[a]||'#f-price');if(f){f.closest('.item')?.scrollIntoView({block:'nearest'});f.focus();f.select?.();}}
 function bumpSize(k,dir){const v=S.style.sz[k];S.style.sz[k]=Math.min(60,Math.max(6,+(v+dir*4/3).toFixed(2)));}
 const darkMQ=matchMedia('(prefers-color-scheme: dark)');
 const isDark=()=>{const m=lsGet('ss-appear')||'system';return m==='dark'||(m==='system'&&darkMQ.matches);};
@@ -1433,7 +1456,6 @@ $('#themeBtn').onclick=()=>{lsSet('ss-appear',isDark()?'light':'dark');applyAppe
 const paper=$('#paper');
 paper.addEventListener('focusin',e=>{if(e.target.dataset?.edit){editingSheet=true;showFbar(e.target);}});
 paper.addEventListener('input',e=>{const k=e.target.dataset?.edit;if(!k)return;const v=e.target.textContent;
-  const r=k.startsWith('row:')&&k.endsWith(':value')?S.rows.find(r=>r.id===k.split(':')[1]):null; if(r&&r.auto){r.wasAuto=r.auto;}
   setKey(k,v);touch();const f=$(`#panel [data-k="${CSS.escape(k)}"]`);if(f&&f!==document.activeElement)f.value=v;});
 paper.addEventListener('focusout',e=>{if(!e.target.dataset?.edit)return;editingSheet=false;$('#fbar').classList.add('hide');fbEl=null;renderSheet();if(['details','colours','product','contact'].includes(tab))renderPanel();});
 paper.addEventListener('keydown',e=>{if(e.target.dataset?.edit&&e.key==='Enter'){e.preventDefault();e.target.blur();}});
@@ -1441,6 +1463,7 @@ paper.addEventListener('paste',e=>{if(!e.target.closest?.('[data-edit]'))return;
 paper.addEventListener('mousedown',e=>{if(e.button!==0||e.target.closest('.ed'))return;e.preventDefault();const ae=document.activeElement;if(ae&&ae.dataset&&ae.dataset.edit)ae.blur();});
 paper.addEventListener('click',e=>{e.stopPropagation();if(e.target.closest('.bh,.rz'))return;const a=e.target.closest('[data-addphoto]');if(a){pickPhoto();return;}
   const p=e.target.closest('[data-photo]');if(p){if(selBlock==='photos')openEditorFor(p.dataset.photo);else selectBlock('photos');return;}
+  const g=e.target.closest('[data-goto]');if(g){gotoAuto(g.dataset.goto);return;}
   if(e.target.closest('.ed'))return;const b=e.target.closest('.blk');selectBlock(b?b.dataset.block:null);});
 $('#canvas').addEventListener('click',e=>{if(!e.target.closest('.sheet,.fbar,.pill'))selectBlock(null);});
 function selectBlock(n){if(selBlock===n)return;selBlock=n;renderSheet();}
@@ -1869,7 +1892,7 @@ async function readSheetFile(f){const buf=await f.arrayBuffer(),u8=new Uint8Arra
     if(!z.file('word/document.xml'))throw fail('type');return parseSheet(await docxRows(z),'Word');}
   if(u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)throw fail('olddoc');
   throw fail('type');}
-function fromData(json){const d=JSON.parse(json);if(!d||d.app!=='sellsheet'||!d.sheet)throw fail('nodata');const s=cleanSheet(d.sheet);s._how='exact';return s;}
+function fromData(json){const d=JSON.parse(json);if(!d||d.app!=='sellsheet'||!d.sheet)throw fail('nodata');const s=fixRows(cleanSheet(d.sheet));s._how='exact';return s;}
 // Word: walk paragraphs and tables in reading order -> rows of cell texts, plus pictures and the header colours
 async function docxRows(z){const xml=await z.file('word/document.xml').async('string'),doc=new DOMParser().parseFromString(xml,'application/xml');
   if(doc.getElementsByTagName('parsererror').length)throw fail('damaged');
@@ -1942,7 +1965,7 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
       if(same&&ratio.every(r=>Number.isInteger(r))){t.mode='ratio';t.ratio=ratio;t.perBox=ratio.reduce((a,b)=>a+b,0)||t.perBox;}else{t.mode='manual';t.ratio=sizes.map(()=>1);}}}
   else t.showColours=false;
   if(details.length){t.rows=details.map(([l,v])=>{const r={id:uid(),label:nice(l),value:v};
-      if(/^price$/i.test(l)){const m=v.replace(/,/g,'').match(/([\d.]+)\s*(?:\/|per|a)\s*(piece|pc|pcs|unit|box)/i);if(m){t.price={amount:m[1],unit:/box/i.test(m[2])?'box':'piece'};r.auto='price';r.value='';}}
+      if(/^price$/i.test(l)){const m=v.replace(/,/g,'').match(/([\d.]+)\s*(?:\/|per|an?)\s*(piece|pc|unit|box|dozen|pack|set|pair)/i);if(m){t.price={amount:m[1],unit:/^(pc|unit)/i.test(m[2])?'piece':m[2].toLowerCase()};r.auto='price';r.value='';}}
       else if(/^packing$/i.test(l)){const m=v.match(/(\d+)\s*(?:pcs?|pieces?)\s*(?:per|\/|a)\s*box/i);if(m){t.perBox=+m[1];r.auto='packing';r.value='';}}
       else if(/^sizes?$/i.test(l)&&t.showSizes&&v.replace(/\s/g,'')===t.sizes.join(',')){r.auto='sizes';r.value='';}
       return r;});}
@@ -1950,18 +1973,18 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
   if(email)t.email=email;if(contactH&&contactH.length<40)t.headings.contact=nice(contactH);
   if(theme){t.theme.primary=theme.primary;if(theme.accent)t.theme.accent=theme.accent;}
   const lim=ci>=0?ci:di>=0?di:Infinity;t.photos=photos.filter(p=>p.at<=lim).slice(0,MAX_PHOTOS).map(p=>({id:uid(),url:p.url}));
-  const s=cleanSheet(t);s._how=from;s._read=[t.title&&'name',code&&'item code',colours.length&&`${colours.length} colour${colours.length>1?'s':''}`,details.length&&`${details.length} detail${details.length>1?'s':''}`,s.photos.length&&`${s.photos.length} photo${s.photos.length>1?'s':''}`,email&&'contact email'].filter(Boolean);
+  const s=fixRows(cleanSheet(t));s._how=from;s._read=[t.title&&'name',code&&'item code',colours.length&&`${colours.length} colour${colours.length>1?'s':''}`,details.length&&`${details.length} detail${details.length>1?'s':''}`,s.photos.length&&`${s.photos.length} photo${s.photos.length>1?'s':''}`,email&&'contact email'].filter(Boolean);
   return s;}
 // Rebuild an opened sheet field by field so only expected, well-formed values come in.
 function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v.slice(0,n):'',num=(v,d,mn,mx)=>{v=+v;return isFinite(v)?Math.min(mx,Math.max(mn,v)):d;},
     hex=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v)?v:null,arr=v=>Array.isArray(v)?v:[],obj=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{},
     fontOk=v=>FONTS.some(([n])=>n===v)?v:null,id=v=>typeof v==='string'&&/^[a-z0-9]{1,12}$/i.test(v)?v:uid(),autoOk=v=>['price','sizes','packing'].includes(v)?v:null;
   t.title=str(r.title,200);t.code=str(r.code,100);t.email=str(r.email,200);
-  t.price={amount:str(r.price?.amount,40),unit:r.price?.unit==='box'?'box':'piece'};
+  t.price={amount:str(r.price?.amount,40),unit:UNITS.includes(r.price?.unit)?r.price.unit:'piece'};
   const sz=arr(r.sizes).slice(0,20).map(x=>str(x,20));if(sz.length){t.sizes=sz;t.ratio=sz.map((_,j)=>num(arr(r.ratio)[j],1,0,9999));}
   t.perBox=num(r.perBox,24,1,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;
   const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999))}));if(co.length)t.colours=co;
-  const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto)}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
+  const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto),...(x?.hidden===true?{hidden:true}:{})}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
   const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
   t.theme={primary:hex(r.theme?.primary)||t.theme.primary,accent:hex(r.theme?.accent)||t.theme.accent};
   t.photos=arr(r.photos).slice(0,MAX_PHOTOS).filter(p=>typeof p?.url==='string'&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(p.url)).map(p=>({id:uid(),url:p.url}));
@@ -2039,7 +2062,7 @@ async function buildDocx(){
   // details table
   out.push(heading('heading:details',S.headings.details,B.details.w));
   const dw=scale([Math.round(S.style.lw*15),FULL-Math.round(S.style.lw*15)],B.details.w);
-  out.push(table(dw,S.rows.map(r=>{const kl='row:'+r.id+':label',kv='row:'+r.id+':value',pr=r.auto==='price';return new TableRow({height:{value:Math.max(340,(B.details.h||0)*15),rule:HeightRule.ATLEAST},children:[
+  out.push(table(dw,shownRows().map(r=>{const kl='row:'+r.id+':label',kv='row:'+r.id+':value',pr=r.auto==='price';return new TableRow({height:{value:Math.max(340,(B.details.h||0)*15),rule:HeightRule.ATLEAST},children:[
     cell(dw[0],[para(tx(kl,'label',r.label.toUpperCase(),P,1),al(kl,'label'))],{fill:T,b:{bottom:ln(L,4)},m:[90,160,90,160]}),
     cell(dw[1],[para(tx(kv,'value',rowVal(r),pr?P:INK,pr),al(kv,'value'))],{b:{bottom:ln(L,4)},m:[90,220,90,160]})]});})));
   out.push(gap(G*8));
@@ -2065,7 +2088,8 @@ if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
 if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,greetBy:MAIL.greetBy,from:MAIL.from||''}));
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,greetBy:MAIL.greetBy,from:MAIL.from||''}));
+const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
 const embedParts=()=>MAIL.line?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line?[]:MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
@@ -2988,16 +3012,16 @@ function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetic
       sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.colours.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${head.map(h=>th(esc(h))).join('')}</tr>
         ${c.rows.map(r=>`<tr>${cell(esc(r.name||'–'))}${(sz?r.q.map(v=>v||'–'):[S.perBox]).map(v=>cell(v,'text-align:center')).join('')}${cell(r.boxes,'text-align:center')}${cell(r.tot,'text-align:center')}</tr>`).join('')}
         <tr>${cell('<b>TOTAL</b>',`background:${tv.tint};color:${tv.p}`)}${(sz?c.T.q:['']).map(v=>cell(`<b>${v}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)).join('')}${cell(`<b>${c.T.boxes}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}${cell(`<b>${c.T.tot}</b>`,`text-align:center;background:${tv.tint};color:${tv.p}`)}</tr></table></td></tr>`;}
-    const rows=S.rows.map(r=>[r.label,rowVal(r)]).filter(([l,v])=>String(v||'').trim());
+    const rows=shownRows().map(r=>[r.label,rowVal(r)]).filter(([l,v])=>String(v||'').trim());
     if(has('details')&&rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
       ${rows.map(([l,v])=>`<tr><td width="34%" style="padding:8px 12px;background:${tv.tint};border-bottom:1px solid ${tv.line};font:bold 11px ${F};color:${tv.p};text-transform:uppercase">${esc(l)}</td><td style="padding:8px 12px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222">${esc(v)}</td></tr>`).join('')}</table></td></tr>`;
     if(has('contact')&&S.email)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff">${esc(S.headings.contact.toUpperCase())}<br><a href="mailto:${esc(S.email)}" style="color:${tv.pale};font:bold 13px ${F};text-decoration:none">${esc(S.email)}</a></td></tr></table></td></tr>`;}
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
-<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
-function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of S.rows){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
-  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';return t;}
+<tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}${availOn()?`<tr><td style="padding:18px 28px 0;font:italic 12px ${F};color:#777">${AVAIL_NOTE}</td></tr>`:''}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
+function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of shownRows()){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
+  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';if(availOn())t+='\n\n'+AVAIL_NOTE;return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
 const wrap76=s=>s.replace(/.{1,76}/g,'$&\r\n');
 const hdr=v=>String(v).replace(/[\r\n]+/g,' ');
@@ -3094,12 +3118,13 @@ $('#mlSubj').addEventListener('input',e=>keepWording('subj',e.target.value));
 $('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMail();updMsgPrev();updMode();schedPreview();});
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
 function renderHow(){$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
-  $('#mlSheetPic').checked=!!MAIL.sheetPic;$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
+  $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
 $('#mlAtt').addEventListener('change',()=>{MAIL.att=['pdf','docx','jpg'].filter(k=>attKinds().includes(k));saveMail();renderHow();schedPreview();});
 $('#mlAttBtn').onclick=e=>{e.stopPropagation();const m=$('#mlAtt'),open=m.classList.contains('hide');m.classList.toggle('hide',!open);$('#mlAttBtn').setAttribute('aria-expanded',open);};
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('#mlAttDD')){$('#mlAtt').classList.add('hide');$('#mlAttBtn').setAttribute('aria-expanded','false');}},true);
 $('#mlAtt').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();$('#mlAtt').classList.add('hide');$('#mlAttBtn').focus();}});
 $('#mlSheetPic').addEventListener('change',e=>{MAIL.sheetPic=e.target.checked;saveMail();schedPreview();});
+$('#mlAvail').addEventListener('change',e=>{MAIL.avail=e.target.checked;saveMail();schedPreview();});
 $('#mlShow').addEventListener('change',()=>{MAIL.show=$$('#mlShow input:checked').map(i=>i.value);saveMail();schedPreview();});
 // quick line under the message: what the first recipient will actually read
 function updMsgPrev(){const P=people(),p=P[0]||null,first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';
@@ -3315,7 +3340,7 @@ async function pdfPage1(buf,w){try{await loadScript('pdfjs');const L=window.pdfj
 function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
     return{title:sh.title||'',code:sh.code||'',price:priceText(),pcs:c.T.tot||0,boxes:c.T.boxes||0,sizes:sh.sizes.filter(Boolean),showSizes:sh.showSizes!==false,
       colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot})),totQ:c.T.q,
-      details:sh.rows.map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
+      details:shownRows().map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
   catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
 const ivFile=x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name,parent:x.parent});
 const ivPlace=g=>({cat:g.cat,cats:g.cats,path:g.path,fst:g.fst,type:g.type,ids:g.ids,fsi:g.fsi});
