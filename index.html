@@ -123,6 +123,7 @@ svg{flex:none}
 .pp-e .ea{display:flex;gap:14px;margin-top:4px}.pp-e .ea button{border:0;background:none;padding:2px 0;font:600 12.5px var(--ui);color:var(--accent-fg);cursor:pointer}.pp-e .ea button.x{color:var(--muted)}
 .pp-ne{display:grid;gap:6px;margin-top:6px}
 .pp-pick{display:grid;gap:2px}
+.np-hist{display:grid;gap:10px}.np-hist>h4{margin:0}.np-hist .pp-log .in{height:40px;font-size:14px}.np-hist .pp-log textarea.in{height:auto;padding:9px 11px}
 .pp-pref{display:block;color:var(--ink);font-weight:600}.ld-pref{color:var(--ink);font-weight:600}
 .pp-grpl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:6px}.pp-grpl .btn{height:40px}
 .pp-from{display:grid;gap:4px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px}.pp-from .hint{margin:0}
@@ -135,6 +136,8 @@ svg{flex:none}
 
 .ml-sh{display:flex;align-items:center;gap:8px;margin:0;font-size:15px}.ml-step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--panel);font:700 12px var(--ui);flex:none}
 .ml-sh .ml-tplname{margin-left:auto;font:600 12px var(--ui);color:var(--muted)}
+.ml-track{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.ml-track[hidden]{display:none}.ml-track .seg button{height:34px;font-size:13.5px}.ml-tnote{flex:1 1 100%;color:var(--muted);font-size:12.5px}
+.ml-ci{display:grid;gap:6px}.ci-where{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-weight:600;font-size:14px}.ci-where .seg button{height:34px;font-size:13.5px}.ci-r{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:8px;align-items:center}.ci-r .in{height:38px;font-size:14px}.ci-on{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px;cursor:pointer}.ci-on input{width:18px;height:18px;accent-color:var(--accent);margin:0}.ml-ci .hint{margin:0}
 .ml-aud{display:flex}.ml-aud button{flex:1}.ml-aud[hidden]{display:none}
 .inc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .inc-opt{text-align:left;border:1.5px solid var(--line2);border-radius:12px;background:var(--panel);padding:10px 12px;cursor:pointer;display:grid;gap:2px;font:inherit;color:var(--ink)}
@@ -977,6 +980,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
       <section class="ml-form" aria-label="Email">
         <div class="ml-pane" id="mlWrite">
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
+        <div class="ml-track" id="mlTrackRow"><span class="lbl">Track in</span><div class="seg" role="group" aria-label="Track this email in" id="mlTrack"><button type="button" data-track="cust" aria-pressed="true">Customer pipeline</button><button type="button" data-track="lead" aria-pressed="false">Leads</button></div><small class="ml-tnote" id="mlTrackNote"></small></div>
         <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span><button class="lnk" id="mlCcBtn" type="button">Add Cc / Bcc</button></div>
         <div class="row2" id="mlCcRow"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
         <div class="group ml-inc"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">2</span>What's included</h3>
@@ -1006,6 +1010,12 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
             <label class="tog"><input type="checkbox" value="contact"><span>Contact footer</span></label></div></div>
           </details>
         </div>
+          <div class="ml-ci" id="mlCI"><span class="lbl">Your contact info at the end of the email</span>
+            <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="email"><span>Email</span></label><input class="in" data-ci="email" type="email" placeholder="you@yourcompany.com" aria-label="Your email" autocomplete="email"></div>
+            <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="phone"><span>Phone</span></label><input class="in" data-ci="phone" type="tel" placeholder="e.g. 604 555 0100" aria-label="Your phone number" autocomplete="tel"></div>
+            <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="web"><span>Website</span></label><input class="in" data-ci="web" type="url" placeholder="e.g. yourcompany.com" aria-label="Your website" autocomplete="url"></div>
+            <div class="ci-where"><span>Show it</span><div class="seg" role="group" aria-label="Where your contact info goes"><button type="button" data-ciwhere="below">Under the sell sheet</button><button type="button" data-ciwhere="footer">In the footer</button></div></div>
+            <small class="hint">Tick the ones to show. "In the footer" puts them in the coloured contact footer. Saved for every email, and synced when you're signed in.</small></div>
           <label class="switch"><input type="checkbox" id="mlAvail"><span class="sw-ui" aria-hidden="true"></span><span><b>“Subject to availability”</b><small>Adds this small note at the end of the email</small></span></label>
         </div>
         <div class="group ml-msgg"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">3</span>Message<span class="ml-tplname" id="mlTplName"></span></h3>
@@ -1252,7 +1262,7 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
   tabs:['home','editor','inventory','pipeline','sent','customers'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','todo','chart','activity','top','inv','cust'],secOff:[],side:['todo','top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},upd:0};
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{email:'',phone:'',web:'',where:'below',on:{email:true,phone:true,web:true}},upd:0};
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   // known items keep your order; a new one goes in after the item it follows by default
@@ -2192,6 +2202,9 @@ if(!Array.isArray(MAIL.show))MAIL.show=[];if(!Array.isArray(MAIL.att))MAIL.att=[
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
 const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,greetBy:MAIL.greetBy,from:MAIL.from||''}));
 const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
+// your contact details under the message: each one shows when it has a value and is ticked
+const ciEmail=()=>String(SET.mc.email||authGet()?.email||'').trim(),webHref=v=>/^https?:\/\//i.test(v)?v:'https://'+v;
+const ciLines=()=>[['email','Email',ciEmail()],['phone','Phone',String(SET.mc.phone||'').trim()],['web','Website',String(SET.mc.web||'').trim()]].filter(([k,,v])=>v&&SET.mc.on[k]!==false);
 const embedParts=()=>MAIL.line?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line?[]:MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
@@ -2415,12 +2428,16 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();if(MAIL.aud==='lead
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;const k=b.dataset.unsel;if(k.startsWith('lead:'))LSEL.delete(k.slice(5));else CU.sel.delete(k);renderCust();});
 /* the email page: send to customers or to leads (each with its own saved wording) */
 const LSEL=new Set();let LPF='';MAIL.aud='cust';
+function renderTrack(){const t=MAIL.track||'cust',a=MAIL.aud;$$('#mlTrack button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.track===t)));$('#mlTrackRow').hidden=MAIL.kind==='follow';
+  $('#mlTrackNote').textContent=t==='lead'?(a==='lead'?'Shows on their lead card. Typed addresses are added as leads.':'These customers are added as leads (and to the Leads group in Customers). Typed addresses become leads too.')
+    :a==='lead'?'These leads become customers when it\'s sent, and it shows in the customer pipeline.':'Shows in the customer pipeline.';}
+$('#mlTrack').addEventListener('click',e=>{const b=e.target.closest('[data-track]');if(!b)return;MAIL.track=b.dataset.track;renderTrack();updMode();});
 function renderAud(){const lead=MAIL.aud==='lead';$$('#mlAud button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.aud===MAIL.aud)));$('#mlAud').hidden=MAIL.kind==='follow';
   $('#cuBtns').hidden=lead;$('#ldBtns').hidden=!lead;$('#cuSearch').placeholder=lead?'Search leads':'Search customers, or pick a group';$('#cuSearch').setAttribute('aria-label',$('#cuSearch').placeholder);
-  $('#mlTo').placeholder=lead?'Tick leads, or type email addresses separated by commas':'Tick customers, or type email addresses separated by commas';}
+  renderTrack();$('#mlTo').placeholder=lead?'Tick leads, or type email addresses separated by commas':'Tick customers, or type email addresses separated by commas';}
 async function setAud(a){if(MAIL.aud===a)return;
   if(MAIL.kind==='new'&&tplDirty()){const r=await ask({title:'Keep your changes?',body:`You changed the wording of this email. The ${a==='lead'?'lead':'customer'} email has its own wording.`,ok:'Save them first',alt:'Switch without saving',cancel:'Stay here'});if(!r)return;if(r==='ok')saveTpl();}
-  MAIL.aud=a;CU.q='';$('#cuSearch').value='';if(MAIL.kind==='new')loadWording();renderAud();renderCust(true);updTpl();schedPreview();}
+  MAIL.aud=a;MAIL.track=a;CU.q='';$('#cuSearch').value='';if(MAIL.kind==='new')loadWording();renderAud();renderCust(true);updTpl();schedPreview();}
 $('#mlAud').addEventListener('click',e=>{const b=e.target.closest('[data-aud]');if(b)setAud(b.dataset.aud);});
 const leadGot=(l,sid)=>LG.list.filter(e=>e.cust==='lead:'+l.id&&e.sheetId===sid).sort((a,b)=>b.at-a.at)[0];
 function renderLeadPick(){const q=CU.q.trim().toLowerCase(),all=CRM.leads.filter(l=>!l.conv),sid=MAIL.line?'line:'+MAIL.line.id:S.id;
@@ -2447,7 +2464,7 @@ let nnOk=false;
 function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnOk=false;
   const lead=MAIL.aud==='lead',att=MAIL.att.map(k=>ATT_NAME[k]).join(' + '),inEm=embedParts().length,fromA=MAIL.from||authGet()?.email||'';
   const inc=MAIL.line?'line sheet PDF attached':att&&inEm?`in the email + ${att} attached`:att?`${att} attached`:inEm?'shown in the email':'nothing of the sell sheet included';
-  $('#mlSumm').innerHTML=n?`<b>${n} email${n>1?'s':''}</b>${n>1?`, one per ${lead?'lead':'person'}`:''} · ${esc(inc)}${fromA?' · from '+esc(fromA):''}`:`Tick ${lead?'leads':'customers'} on the left to send to · ${esc(inc)}`;
+  $('#mlSumm').innerHTML=n?`<b>${n} email${n>1?'s':''}</b>${n>1?`, one per ${lead?'lead':'person'}`:''} · ${esc(inc)}${fromA?' · from '+esc(fromA):''}${MAIL.kind==='follow'?'':` · tracked in ${MAIL.track==='lead'?'Leads':'the customer pipeline'}`}`:`Tick ${lead?'leads':'customers'} on the left to send to · ${esc(inc)}`;
   $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
@@ -2740,7 +2757,16 @@ function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.f
   $$('.pg-nav a[href="#sent"] i').forEach(i=>{i.hidden=!(r+n);i.textContent=r+n>99?'99+':r+n;i.className=r?'rp':'';});
   const base=document.title.replace(/^\(\d+\+?\) /,'');document.title=r+n?`(${r+n>99?'99+':r+n}) ${base}`:base;}
 // called after each successful email
-function logSent(m,prov,from,kinds,parts,res){lgLoad();crmLoad();const now=Date.now(),ppl=(m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}]).map(p=>{if(p.lead||p.cust)return p;const l=leadByEmail((p.emails||[])[0]);return l?{...p,lead:l.id,name:p.name||l.name,company:p.company||l.company}:p;});
+function logSent(m,prov,from,kinds,parts,res){lgLoad();crmLoad();cuLoad();const now=Date.now(),track=MAIL.kind==='follow'?'':MAIL.track||MAIL.aud||'cust';let crmCh=false;
+  const ppl=(m.people&&m.people.length?m.people:[{emails:[...m.to,...m.cc,...m.bcc]}]).map(p=>{const em=(p.emails||[])[0];
+    // tracked as a lead: a customer or a typed address gets a lead (customers also go in the Leads group)
+    if(track==='lead'&&!p.lead&&em){let l=leadByEmail(em);if(!l){const c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===ck(em))),inf=c?infoOf(c):{},pv=String(inf[PREF_KEY]||'').split('\n')[0],pk=Object.keys(PREF_NAME).find(x=>pv.startsWith(PREF_NAME[x]))||'';
+        l=cleanLead({id:newId(),name:p.name||c?.name||'',company:p.company||c?.company||'',email:em,phone:c?phoneOf(c):'',city:String(inf.City||'').split('\n')[0],pref:pk,prefAt:pk?pv.slice(PREF_NAME[pk].length).replace(/^\s*·\s*/,''):'',source:c?'Customer':'Email',stage:'new',created:now,upd:now});CRM.leads.push(l);crmCh=true;if(c)leadGroup(c.email,true);}
+      return{...p,lead:l.id,cust:0,name:p.name||l.name,company:p.company||l.company};}
+    // tracked in the customer pipeline: a lead becomes a customer
+    if(track==='cust'&&p.lead){const l=leadById(p.lead);if(l&&!l.conv&&l.email)convertLead(l,true);return{...p,lead:'',cust:1,key:l?.conv||ck(em)};}
+    if(track==='cust'||p.lead||p.cust)return p;const l=leadByEmail(em);return l?{...p,lead:l.id,name:p.name||l.name,company:p.company||l.company}:p;});
+  if(crmCh)crmSave();
   let moved=false;for(const p of ppl){const l=p.lead&&leadById(p.lead);if(l&&l.stage==='new'){l.stage='none';touchX(l);moved=true;}}if(moved)crmSave();
   const L=MAIL.line;
   for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:L?'line:'+L.id:S.id,sheet:L?L.title+' (line sheet)':sheetName(S),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.lead?'lead:'+p.lead:p.cust?(p.key||ck(p.email)):'',
@@ -2784,7 +2810,7 @@ const touchX=x=>{x.upd=Math.max(Date.now(),(+x.upd||0)+1);return x;};
 function crmDel(kind,id){const x=CRM[kind].find(y=>y.id===id);CRM[kind]=CRM[kind].filter(y=>y.id!==id);CRM.deleted.push({id,at:Math.max(Date.now(),(+x?.upd||0)+1)});}
 const newId=()=>uid()+uid();
 // everything that shows leads, calls or to-dos follows a change
-function crmRefresh(){if(plDlg.open){renderPipe();renderPersonTodos();}if(homeDlg.open)renderHome();if(mailDlg.open&&MAIL.aud==='lead')renderCust();}
+function crmRefresh(){if(plDlg.open){renderPipe();renderPersonTodos();}if(custDlg.open&&typeof renderCustHist==='function'&&!$('#np-hist')?.contains(document.activeElement))renderCustHist();if(homeDlg.open)renderHome();if(mailDlg.open&&MAIL.aud==='lead')renderCust();}
 
 /* people */
 const leadById=id=>CRM.leads.find(l=>l.id===id),leadByEmail=e=>{const k=ck(e);return k?CRM.leads.find(l=>!l.conv&&ck(l.email)===k):null;};
@@ -3247,13 +3273,18 @@ function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetic
     const rows=shownRows().map(r=>[r.label,rowVal(r)]).filter(([l,v])=>String(v||'').trim());
     if(has('details')&&rows.length)sum+=`<tr><td style="padding:18px 28px 0"><div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.details.toUpperCase())}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
       ${rows.map(([l,v])=>`<tr><td width="34%" style="padding:8px 12px;background:${tv.tint};border-bottom:1px solid ${tv.line};font:bold 11px ${F};color:${tv.p};text-transform:uppercase">${esc(l)}</td><td style="padding:8px 12px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222">${esc(v)}</td></tr>`).join('')}</table></td></tr>`;
-    if(has('contact')&&S.email)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff">${esc(S.headings.contact.toUpperCase())}<br><a href="mailto:${esc(S.email)}" style="color:${tv.pale};font:bold 13px ${F};text-decoration:none">${esc(S.email)}</a></td></tr></table></td></tr>`;}
+  }
+  // contact info: plain lines under the sell sheet, or inside the coloured footer (with the sheet's own email when that's included)
+  const ci=ciLines(),inFoot=SET.mc.where==='footer'&&ci.length,ciA=([k,,v],st)=>k==='email'?`<a href="mailto:${esc(v)}" style="${st}">${esc(v)}</a>`:k==='phone'?`<a href="tel:${esc(v.replace(/[^\d+]/g,''))}" style="${st}">${esc(v)}</a>`:`<a href="${esc(webHref(v))}" style="${st}">${esc(v)}</a>`;
+  const fl=[...(has('contact')&&S.email&&!(inFoot&&ci.some(([k,,v])=>k==='email'&&ck(v)===ck(S.email)))?[['email','Email',S.email]]:[]),...(inFoot?ci:[])],fst=`color:${tv.pale};font:bold 13px ${F};text-decoration:none`;
+  if(fl.length)sum+=`<tr><td style="padding:18px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-top:4px solid ${tv.a}"><tr><td align="center" style="padding:14px;font:bold 15px ${F};color:#fff;line-height:1.6">${esc(S.headings.contact.toUpperCase())}<br>${fl.map(x=>ciA(x,fst)).join('<br>')}</td></tr></table></td></tr>`;
+  if(ci.length&&!inFoot)sum+=`<tr><td style="padding:18px 28px 0;font:14px/1.6 ${F};color:#444">${ci.map(x=>`${x[1]}: ${ciA(x,'color:'+tv.p)}`).join('<br>')}</td></tr>`;
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body style="margin:0;padding:0;background:#f4f5f4">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f4"><tr><td align="center" style="padding:24px 10px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:8px">
 <tr><td${edit?' id="ssEdit" contenteditable="true" spellcheck="true" aria-label="Message (edit it here)"':''} style="padding:26px 28px 20px;font:15px/1.55 ${F};color:#222">${para}</td></tr>${sum}${availOn()?`<tr><td style="padding:18px 28px 0;font:italic 12px ${F};color:#777">${AVAIL_NOTE}</td></tr>`:''}<tr><td style="height:26px"></td></tr></table></td></tr></table></body></html>`;}
 function emailText(msg,parts){let t=msg;if(parts.includes('details')){t+='\n\n'+[S.title,S.code&&'Item code: '+S.code].filter(Boolean).join('\n');for(const r of shownRows()){const v=rowVal(r);if(String(v||'').trim())t+=`\n${r.label}: ${v}`;}}
-  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';if(availOn())t+='\n\n'+AVAIL_NOTE;return t;}
+  if(parts.includes('contact')&&S.email)t+=`\n\n${S.headings.contact}: ${S.email}`;if(parts.includes('sheet'))t+='\n\n(The sell sheet is shown in the HTML version of this email.)';if(ciLines().length)t+='\n\n'+ciLines().map(([,n,v])=>n+': '+v).join('\n');if(availOn())t+='\n\n'+AVAIL_NOTE;return t;}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(b);});
 const wrap76=s=>s.replace(/.{1,76}/g,'$&\r\n');
 const hdr=v=>String(v).replace(/[\r\n]+/g,' ');
@@ -3329,7 +3360,7 @@ $('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
-function openMail(opts){MAIL.line=opts?.line||null;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'?'lead':'cust';LPF='';CU.q='';$('#cuSearch').value='';
+function openMail(opts){MAIL.line=opts?.line||null;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
   if(opts?.pick){if(MAIL.aud==='lead'){LSEL.clear();LSEL.add(opts.pick);}else CU.sel.add(opts.pick);}
   const cc=!!($('#mlCc').value||$('#mlBcc').value);$('#mlCcRow').hidden=!cc;$('#mlCcBtn').hidden=cc;$('#mlMore').open=MAIL.att.some(k=>k!=='pdf')||MAIL.show.length>0;CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;MAIL.kind=MAIL.line?'line':'new';loadWording();
@@ -3362,7 +3393,7 @@ $('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMa
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
 const incMode=()=>MAIL.att.length&&MAIL.sheetPic?'both':MAIL.sheetPic?'embed':MAIL.att.length?'attach':'';
 function renderHow(){$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
-  $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
+  $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();renderCI();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
 $('.inc-opts').addEventListener('click',e=>{const b=e.target.closest('[data-inc]');if(!b)return;const m=b.dataset.inc;if(m==='embed')MAIL.att=[];else if(!MAIL.att.length)MAIL.att=['pdf'];MAIL.sheetPic=m!=='attach';saveMail();renderHow();updMode();schedPreview();});
 $('#mlCcBtn').onclick=()=>{$('#mlCcRow').hidden=false;$('#mlCcBtn').hidden=true;$('#mlCc').focus();};
 $('#mlAtt').addEventListener('change',()=>{MAIL.att=['pdf','docx','jpg'].filter(k=>attKinds().includes(k));saveMail();renderHow();updMode();schedPreview();});
@@ -3370,6 +3401,10 @@ $('#mlAttBtn').onclick=e=>{e.stopPropagation();const m=$('#mlAtt'),open=m.classL
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('#mlAttDD')){$('#mlAtt').classList.add('hide');$('#mlAttBtn').setAttribute('aria-expanded','false');}},true);
 $('#mlAtt').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();$('#mlAtt').classList.add('hide');$('#mlAttBtn').focus();}});
 $('#mlSheetPic').addEventListener('change',e=>{MAIL.sheetPic=e.target.checked;saveMail();renderHow();updMode();schedPreview();});
+function renderCI(){for(const i of $$('#mlCI [data-ci]'))if(document.activeElement!==i)i.value=i.dataset.ci==='email'?ciEmail():SET.mc[i.dataset.ci]||'';for(const c of $$('#mlCI [data-cion]'))c.checked=SET.mc.on[c.dataset.cion]!==false;$$('#mlCI [data-ciwhere]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ciwhere===(SET.mc.where==='footer'?'footer':'below'))));}
+$('#mlCI').addEventListener('click',e=>{const b=e.target.closest('[data-ciwhere]');if(!b)return;SET.mc.where=b.dataset.ciwhere;setSave();renderCI();schedPreview();});
+let ciT=0;$('#mlCI').addEventListener('input',e=>{const k=e.target.dataset.ci;if(!k)return;SET.mc[k]=e.target.value.trim().slice(0,200);clearTimeout(ciT);ciT=setTimeout(setSave,600);schedPreview();});
+$('#mlCI').addEventListener('change',e=>{const k=e.target.dataset.cion;if(!k)return;SET.mc.on[k]=e.target.checked;setSave();schedPreview();});
 $('#mlAvail').addEventListener('change',e=>{MAIL.avail=e.target.checked;saveMail();schedPreview();});
 $('#mlShow').addEventListener('change',()=>{MAIL.show=$$('#mlShow input:checked').map(i=>i.value);saveMail();schedPreview();});
 // quick line under the message: what the first recipient will actually read
@@ -3919,11 +3954,11 @@ $('#lnDrive').onclick=async()=>{const st=$('#lnStatus');st.textContent='Saving t
 $('#lnClose').onclick=()=>lineDlg.close();
 
 /* ---------- pipeline: each customer × sell sheet, from first send to order ---------- */
-const plDlg=$('#plDlg'),PL={q:'',days:SET.pipe.days,sheet:'',view:['leads','cust','both'].includes(lsGet('ss-pl-view'))?lsGet('ss-pl-view'):'both',hot:false,person:null,edit:false,editNote:'',lt:'call'},PL_COLS=[['new','New lead','#3B6FD8'],['none','Contacted, no reply','#9AA19C'],['replied','Replied','#2563EB'],['interested','Interested','#9333EA'],['quoted','Quoted','#EA7317'],['ordered','Ordered','#0E993F'],['declined','Not interested','#C2413B']];
+const plDlg=$('#plDlg'),PL={q:'',days:SET.pipe.days,sheet:'',view:lsGet('ss-pl-view')==='leads'?'leads':'cust',hot:false,person:null,edit:false,editNote:'',lt:'call'},PL_COLS=[['new','New lead','#3B6FD8'],['none','Contacted, no reply','#9AA19C'],['replied','Replied','#2563EB'],['interested','Interested','#9333EA'],['quoted','Quoted','#EA7317'],['ordered','Ordered','#0E993F'],['declined','Not interested','#C2413B']];
 const money=v=>v?esc(SET.currency)+Math.round(v).toLocaleString():'';
 function plThreads(){lgLoad();const q=PL.q.trim().toLowerCase(),cut=PL.days?Date.now()-PL.days*DAY:0;
   return threads().filter(t=>{const e=t.root,last=Math.max(t.last,e.reply?.at||0,e.upd||0);return last>=cut&&(!PL.sheet||e.sheet===PL.sheet)&&(!q||[e.name,e.company,e.email,e.sheet,e.note].some(v=>String(v||'').toLowerCase().includes(q)));});}
-function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'||PL.hot?[]:plThreads().filter(t=>!String(t.root.cust||'').startsWith('lead:')),ld=plLeadsShown(),by=new Map(PL_COLS.map(c=>[c[0],[]]));
+function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'?[]:plThreads().filter(t=>!String(t.root.cust||'').startsWith('lead:')),ld=plLeadsShown(),by=new Map(PL_COLS.map(c=>[c[0],[]]));
   for(const t of th)(by.get(t.root.status||'none')||by.get('none')).push({t,last:t.last});for(const l of ld)by.get(l.stage).push({l,last:Math.max(l.created,lastTouch('lead:'+l.id)?.at||0)});
   const val=x=>+(x.t?x.t.root.value:x.l.value)||0,sum=k=>by.get(k).reduce((a,x)=>a+val(x),0),open=['replied','interested','quoted'].reduce((a,k)=>a+sum(k),0),won=sum('ordered'),nW=by.get('ordered').length,nL=by.get('declined').length;
   const cols=PL_COLS.filter(c=>!SET.pipe.colsOff.includes(c[0])&&!(c[0]==='new'&&PL.view==='cust')),off=PL_COLS.filter(c=>SET.pipe.colsOff.includes(c[0])),nOff=off.reduce((a,c)=>a+by.get(c[0]).length,0);
@@ -3933,7 +3968,7 @@ function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'||PL.hot?[
     <input class="in" id="plQ" type="search" placeholder="Search name, company, sell sheet, note" aria-label="Search pipeline"><select class="in" id="plDays" aria-label="Period">${[[30,'Last 30 days'],[90,'Last 90 days'],[365,'Last 12 months'],[0,'All time']].map(([v,n])=>`<option value="${v}"${PL.days===v?' selected':''}>${n}</option>`).join('')}</select><select class="in" id="plSheet" aria-label="Sell sheet"></select>
     <button class="btn sm" type="button" id="plHot" aria-pressed="false">Hot leads only</button><span class="pl-kpis" id="plKpis"></span><span class="spacer"></span>
     <button class="btn sm" type="button" id="plLog">Log a call or email</button><button class="btn sm primary" type="button" id="plAdd">＋ Add lead</button>`;
-  $$('#plView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plview===PL.view)));$('#plHot').setAttribute('aria-pressed',String(PL.hot));
+  $$('#plView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plview===PL.view)));$('#plHot').setAttribute('aria-pressed',String(PL.hot));$('#plHot').hidden=PL.view!=='leads';
   $('#plSheet').innerHTML=`<option value="">All sell sheets</option>${sheets.map(n=>`<option value="${esc(n)}"${PL.sheet===n?' selected':''}>${esc(n)}</option>`).join('')}`;
   const due=todosDue();
   $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||esc(SET.currency)+'0'}</b></span><span>Won: <b>${money(won)||esc(SET.currency)+'0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>${due?`<span class="due">To-dos due: <b>${due}</b></span>`:''}`;
@@ -3960,6 +3995,17 @@ plDlg.addEventListener('change',e=>{const t=e.target,d=t.dataset;
 plDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.dataset.plval||e.target.dataset.plldval||e.target.dataset.ppf==='value'))e.target.blur();});
 plDlg.addEventListener('submit',e=>{const f=e.target.closest('[data-ppform]');if(!f)return;e.preventDefault();const k=f.dataset.ppform;if(k==='gmq'){GM.q=f.elements.q.value;gmLoad();}else if(k==='lead')saveLeadForm(f);else saveLogForm(f);});
 plDlg.addEventListener('change',e=>{const id=e.target.dataset?.gmsel;if(!id)return;e.target.checked?GM.sel.add(id):GM.sel.delete(id);const b=plDlg.querySelector('[data-pp=gmtrack]');if(b){b.disabled=!GM.sel.size;b.textContent=`Track ${GM.sel.size||''} email${GM.sel.size===1?'':'s'}`.replace('  ',' ');}});
+// what happened / notes / delete on a timeline: the same in the Pipeline panel and on a customer's page
+async function tlAct(b,d,root,redraw){
+  if(d.lt){const f=b.closest('form');f.dataset.t=d.lt;f.querySelectorAll('[data-lt]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return true;}
+  if(d.ppsent!==undefined){lgF.q=d.ppsent;lgF.status='';root.close();openLog();return true;}
+  if(d.ppnedit){PL.editNote=d.ppnedit;redraw();root.querySelector(`[data-ppnote="${CSS.escape(d.ppnedit)}"]`)?.focus();return true;}
+  if(d.ppncancel!==undefined){PL.editNote='';redraw();return true;}
+  if(d.ppnsave){const v=String(root.querySelector(`[data-ppnote="${CSS.escape(d.ppnsave)}"]`)?.value||'').trim(),[k,id]=[d.ppnsave.slice(0,1),d.ppnsave.slice(2)];PL.editNote='';
+    if(k==='a'){const a=CRM.acts.find(x=>x.id===id);if(a){a.note=v.slice(0,4000);touchX(a);crmSave();}}else{lgLoad();const x=LG.list.find(x=>x.id===id);if(x){x.note=v.slice(0,2000);x.upd=Date.now();lgSave();}}
+    redraw();toast('Note saved');return true;}
+  if(d.ppactdel){const a=CRM.acts.find(x=>x.id===d.ppactdel);if(!a)return true;if(await ask({title:'Delete this entry?',body:`${ACT_NAME[a.type]} on ${fmtWhen(a.at)}${a.note?' and its note':''} will be removed from the timeline.`,ok:'Delete',danger:true})!=='ok')return true;crmDel('acts',a.id);crmSave();redraw();return true;}
+  return false;}
 plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[data-pppick]');if(!b)return;const d=b.dataset;
   if(d.plview){PL.view=d.plview;lsSet('ss-pl-view',PL.view);renderPipe();return;}
   if(b.id==='plHot'){PL.hot=!PL.hot;renderPipe();return;}
@@ -3967,14 +4013,7 @@ plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[d
   if(b.id==='plLog'){openPerson('pick');return;}
   if(d.plopen){openPerson(d.plopen);return;}
   if(d.pppick){openPerson(d.pppick,{log:true});return;}
-  if(d.lt){const f=b.closest('form');f.dataset.t=d.lt;f.querySelectorAll('[data-lt]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return;}
-  if(d.ppsent!==undefined){lgF.q=d.ppsent;lgF.status='';plDlg.close();openLog();return;}
-  if(d.ppnedit){PL.editNote=d.ppnedit;renderPerson();plDlg.querySelector(`[data-ppnote="${CSS.escape(d.ppnedit)}"]`)?.focus();return;}
-  if(d.ppncancel!==undefined){PL.editNote='';renderPerson();return;}
-  if(d.ppnsave){const v=String(plDlg.querySelector(`[data-ppnote="${CSS.escape(d.ppnsave)}"]`)?.value||'').trim(),[k,id]=[d.ppnsave.slice(0,1),d.ppnsave.slice(2)];PL.editNote='';
-    if(k==='a'){const a=CRM.acts.find(x=>x.id===id);if(a){a.note=v.slice(0,4000);touchX(a);crmSave();}}else{lgLoad();const x=LG.list.find(x=>x.id===id);if(x){x.note=v.slice(0,2000);x.upd=Date.now();lgSave();}}
-    renderPerson();toast('Note saved');return;}
-  if(d.ppactdel){const a=CRM.acts.find(x=>x.id===d.ppactdel);if(!a)return;if(await ask({title:'Delete this entry?',body:`${ACT_NAME[a.type]} on ${fmtWhen(a.at)}${a.note?' and its note':''} will be removed from the timeline.`,ok:'Delete',danger:true})!=='ok')return;crmDel('acts',a.id);crmSave();renderPerson();return;}
+  if(await tlAct(b,d,plDlg,renderPerson))return;
   const p=d.pp;if(!p)return;const info=whoInfo(PL.person||''),l=info?.lead;
   if(p==='close'){closePerson();return;}
   if(p==='noedit'){PL.edit=false;renderPerson();return;}
@@ -4000,10 +4039,10 @@ plDlg.addEventListener('drop',e=>{const col=e.target.closest('[data-plcol]');if(
 plDlg.addEventListener('cancel',e=>{if(PL.person){e.preventDefault();closePerson();}});
 $('#plClose').onclick=()=>plDlg.close();
 /* ---------- Pipeline: leads and customers, the person panel, and the to-do list ---------- */
-const PL_VIEW={leads:'Leads',cust:'Customers',both:'Both'};
+const PL_VIEW={cust:'Customers',leads:'Leads'};
 const colName=k=>(PL_COLS.find(c=>c[0]===k)||[])[1]||k;
 function plLeadsShown(){if(PL.view==='cust'&&!CRM.leads.some(l=>l.conv))return[];const q=PL.q.trim().toLowerCase(),cut=PL.days?Date.now()-PL.days*DAY:0;
-  return CRM.leads.filter(l=>{if(PL.view==='leads'&&l.conv||PL.view==='cust'&&!l.conv||PL.hot&&l.temp!=='hot')return false;const w='lead:'+l.id;
+  return CRM.leads.filter(l=>{if(PL.view==='leads'&&l.conv||PL.view==='cust'&&!l.conv||PL.view==='leads'&&PL.hot&&l.temp!=='hot')return false;const w='lead:'+l.id;
     if(cut&&Math.max(l.created,l.upd,lastTouch(w)?.at||0)<cut)return false;if(PL.sheet&&l.sheet!==PL.sheet&&!sendsOf(w).some(e=>e.sheet===PL.sheet))return false;
     return!q||[l.name,l.company,l.email,l.phone,l.city,l.source,l.sheet,l.note].some(v=>String(v||'').toLowerCase().includes(q));});}
 const nextLine=w=>{const t=nextTodo(w);if(!t)return'';const d=dueInfo(t.due);return`<span class="pl-next ${d.cls}" title="Next to-do">${t.due?esc(d.txt)+': ':''}${esc(t.text)}</span>`;};
@@ -4028,12 +4067,12 @@ async function grpToLeads(k){if(!k){toast('Choose a group first');$('#ppGrp')?.f
     CRM.leads.push(cleanLead({id:newId(),name:c.name,company:c.company,email:c.email,phone:phoneOf(c),city:String(inf.City||'').split('\n')[0],source:'Customer group: '+gPath(k),pref:pk,prefAt:pk?pv.slice(PREF_NAME[pk].length).replace(/^\s*·\s*/,''):'',stage:'new',created:now,upd:now}));
     const gs=grpsOf(c);if(!gs.some(g=>gKey(g)===gKey(LEADS_GROUP))){c.groups=[...gs,LEADS_GROUP];c.upd=now;}}
   cuSave();closePerson();crmSave();toast(`Added ${fresh.length} lead${fresh.length>1?'s':''} from ${gPath(k)}`);}
-function convertLead(l){cuLoad();const k=ck(l.email);if(!CU.list.some(c=>[c.email,...altOf(c)].some(a=>ck(a)===k))){const info={};if(l.phone)info.Phone=l.phone;if(l.city)info.City=l.city;if(l.source)info['Lead source']=l.source;
+function convertLead(l,quiet){cuLoad();const k=ck(l.email);if(!CU.list.some(c=>[c.email,...altOf(c)].some(a=>ck(a)===k))){const info={};if(l.phone)info.Phone=l.phone;if(l.city)info.City=l.city;if(l.source)info['Lead source']=l.source;
     if(l.pref)info[PREF_KEY]=prefText(l.pref,l.prefAt);const err=cuUpsert('new',{name:l.name,company:l.company,email:l.email,note:l.note,info});if(err){toast(err,6000);return;}}
-  leadGroup(l.email,false);const c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===k));l.conv=ck(c?c.email:l.email);touchX(l);crmSave();toast(`${l.name||l.company||l.email} is now a customer`);if(PL.person==='lead:'+l.id)openPerson('cust:'+l.conv);}
+  leadGroup(l.email,false);const c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===k));l.conv=ck(c?c.email:l.email);touchX(l);crmSave();if(quiet)return;toast(`${l.name||l.company||l.email} is now a customer`);if(PL.person==='lead:'+l.id)openPerson('cust:'+l.conv);}
 
 /* the panel for one person: details, log a call or email, to-dos and the whole history */
-function openPerson(who,o={}){if(!plDlg.open)openPipe();PL.person=who;PL.editNote='';if(who!=='new'&&!o.keepEdit)PL.edit=!!o.edit;PL.logFocus=!!o.log;renderPerson();
+function openPerson(who,o={}){if(!plDlg.open)openPipe();const v=who.startsWith('lead:')?(leadById(whoId(who))?.conv?'cust':'leads'):who.startsWith('cust:')?'cust':who==='new'?'leads':'';if(v&&v!==PL.view){PL.view=v;lsSet('ss-pl-view',v);renderPipe();}PL.person=who;PL.editNote='';if(who!=='new'&&!o.keepEdit)PL.edit=!!o.edit;PL.logFocus=!!o.log;renderPerson();
   const p=$('#plPerson');requestAnimationFrame(()=>{const f=o.log?p.querySelector('.pp-log [data-lt]'):p.querySelector('input:not([type=hidden]),button.pp-x');f?.focus();if(o.log)p.querySelector('.pp-log')?.scrollIntoView({block:'nearest'});});}
 function closePerson(){PL.person=null;PL.edit=false;const p=$('#plPerson');p.hidden=true;p.innerHTML='';}
 const ppHead=(t,sub,av)=>`<div class="pp-h">${av?`<span class="av" aria-hidden="true">${esc(initials(av))}</span>`:''}<div style="flex:1;min-width:0"><h3>${esc(t)}</h3>${sub?`<small>${sub}</small>`:''}</div><button class="btn icon sm ghost pp-x" type="button" data-pp="close" aria-label="Close panel">✕</button></div>`;
@@ -4158,11 +4197,11 @@ function saveLeadForm(f){const g=k=>String(f.elements[k]?.value||'').trim(),err=
   Object.assign(l,{name:g('name'),company:g('company'),email,phone:g('phone'),city:g('city'),source:g('source'),temp:TEMP_NAME[g('temp')]?g('temp'):'',value:numText(g('value'))>0?numText(g('value')):0,sheet:g('sheet'),note:g('note'),pref:PREF_NAME[g('pref')]?g('pref'):'',prefAt:g('prefAt')});
   if(isNew){Object.assign(l,cleanLead({...l,upd:now}));CRM.leads.push(l);const ck0=g('cust');if(ck0)leadGroup(ck0,true);const first=g('first');if(first){CRM.acts.push({id:newId(),who:'lead:'+l.id,type:first,at:atFrom(g('firstAt'),''),dur:0,dir:first==='emailIn'?'in':'out',result:'',sheet:l.sheet,note:'',upd:now});l.stage='none';}}
   touchX(l);PL.edit=false;crmSave();toast(isNew?'Lead added':'Saved');openPerson('lead:'+l.id);}
-function saveLogForm(f){const w=PL.person,g=k=>String(f.elements[k]?.value||'').trim(),type=f.dataset.t,now=Date.now();
+function saveLogForm(f,w=PL.person,redraw=renderPerson){const g=k=>String(f.elements[k]?.value||'').trim(),type=f.dataset.t,now=Date.now();
   const a={id:newId(),who:w,type,at:atFrom(g('d'),g('tm')),dur:type==='call'?parseInt(g('dur'))||0:0,dir:type==='call'?(g('dir')==='in'?'in':'out'):type==='emailIn'?'in':'out',result:type==='call'?g('res'):'',sheet:g('sheet'),note:g('note').slice(0,4000),upd:now};
   if(type==='note'&&!a.note){f.elements.note.focus();toast('Write the note first');return;}
   CRM.acts.push(cleanAct(a));const l=w.startsWith('lead:')?leadById(whoId(w)):null;if(l&&g('st')&&LEAD_ST.includes(g('st'))){l.stage=g('st');touchX(l);}
-  if(g('next'))addTodo(g('next'),g('nextD'),w);PL.lt=type;crmSave();renderPerson();toast('Saved to the timeline');
+  if(g('next'))addTodo(g('next'),g('nextD'),w);PL.lt=type;crmSave();redraw();toast('Saved to the timeline');
   if(l&&l.stage==='ordered'&&!l.conv&&g('st')==='ordered')setTimeout(()=>askConvert(l),300);}
 function renderPlTodo(){const b=$('#plTodo');if(!b)return;const mini=lsGet('ss-pl-todo')==='min';$('#plDlg .pl-main').classList.toggle('td-min',mini);
   if(mini){const open=CRM.todos.filter(t=>!t.done).length,due=todosDue();b.innerHTML=`<button class="td-tab" type="button" data-tdmin="0" aria-expanded="false" title="Show the to-do list"><span class="ar" aria-hidden="true">‹</span><b>To-do</b>${open?`<span class="n${due?' due':''}">${open}</span>`:''}</button>`;return;}const open=CRM.todos.filter(t=>!t.done).length,f=b.querySelector('form'),keep=f?[f.elements.t.value,f.elements.d.value,f.elements.w?.value]:null,foc=document.activeElement?.closest?.('#plTodo form')?document.activeElement.name:'';
@@ -4462,7 +4501,7 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 
 /* ---------- Customers page: every customer with every detail; opens each one in a large tab ---------- */
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
-function openCP(){pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
+function openCP(){crmLoad();lgLoad();pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
 function openCustomer(key){if(custDlg.open&&CP.mode==='cust'&&CP.dirty&&CP.open!==key&&!closeCPDetail(false,()=>openCustomer(key)))return;const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
   if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
@@ -4588,9 +4627,14 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
   P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
     ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del">Remove customer</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
+// a customer's contact history: log calls, emails sent elsewhere, meetings and notes; everything sent from here too
+function custHist(){const w='cust:'+CP.open;if(!whoInfo(w))return'';return`<h4>${npI('sent')}Contact history</h4>
+  <p class="pp-facts">Emailed them from Gmail? <button class="lnk" type="button" data-cphgm>Pick it from your Sent mail</button> and their reply is tracked automatically.</p>${logForm(whoInfo(w))}
+  <div class="pp-tl">${timelineOf(w).map(tlItem).join('')||'<p class="np-empty">No calls, emails or notes yet.</p>'}</div>`;}
+function renderCustHist(){const h=$('#np-hist');if(h&&CP.mode==='cust'&&CP.open&&CP.open!=='new')h.innerHTML=custHist();}
 function npGreetOut(W){const n=greetName({cust:1,name:W.vals.name[0],greet:W.greet});return n?`Emails greet them as “${esc(n)}”`:'No name to greet them by yet';}
 function custHTML(){const W=workCopy();if(!W)return'';const P=npParts(W,CP.open==='new');
-  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}</div></div>${P.foot}</div>`;}
+  return`<div class="np"><button class="btn icon sm ghost np-close" type="button" data-cpd="close" aria-label="Close customer">✕</button><div class="cpd-b np-page"><div class="np-inner">${P.head}${P.props}<hr class="np-hr">${P.note}${P.sent}${CP.open==='new'?'':`<div class="np-sec np-hist" id="np-hist">${custHist()}</div>`}</div></div>${P.foot}</div>`;}
 // auto-height for the note
 const npSize=el=>{el.style.height='auto';el.style.height=el.scrollHeight+2+'px';};
 custDlg.addEventListener('input',e=>{if(e.target.classList.contains('np-auto'))npSize(e.target);const st=$('#cpdState');if(st&&CP.dirty)st.textContent='● Unsaved changes';});
@@ -4665,6 +4709,10 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);renderCP(true);return;}
   if(act==='gdel'){const g=a.dataset.g;ask({title:`Delete the group “${gName(g)}”?`,body:'The customers in it are kept; they just leave this group. Any folders inside it move up a level.',ok:'Delete group',danger:true}).then(r=>{if(r!=='ok')return;deleteGroup(g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');});return;}
   if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
+custDlg.addEventListener('submit',e=>{const f=e.target.closest('[data-ppform=log]');if(!f)return;e.preventDefault();crmLoad();saveLogForm(f,'cust:'+CP.open,renderCustHist);});
+custDlg.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||!b.closest('#np-hist'))return;
+  if(b.dataset.cphgm!==undefined){if(CP.dirty){toast('Save your changes to this customer first');return;}const w='cust:'+CP.open;closeCPDetail(true);custDlg.close();openGmail(w);return;}
+  await tlAct(b,b.dataset,custDlg,renderCustHist);});
 custDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='cpdNewV'||e.target.id==='cpdNewK')){e.preventDefault();const W=CP.W,k=$('#cpdNewK').value.trim().slice(0,60),v=$('#cpdNewV').value.trim();
     if(!k){$('#cpdNewK').focus();return;}if(!v){$('#cpdNewV').focus();return;}
     const f=k===OTHER.name?'name':k===OTHER.company?'company':'i:'+k;if(f.startsWith('i:')&&!W.keys.includes(k)){W.keys.push(k);W.vals[f]=[v];}else{const l=W.vals[f];if(!l[0].trim())l[0]=v;else{l.push(v);W.exp.add(f);}}
