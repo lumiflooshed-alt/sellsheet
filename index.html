@@ -990,6 +990,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
             <button type="button" class="inc-opt" data-inc="attach" aria-pressed="false"><b>Attach a file</b><small>A PDF. Best for most buyers</small></button>
             <button type="button" class="inc-opt" data-inc="embed" aria-pressed="false"><b>Show it in the email</b><small>The sell sheet picture, no file</small></button>
             <button type="button" class="inc-opt" data-inc="both" aria-pressed="false"><b>Both</b><small>Picture in the email and the file</small></button>
+            <button type="button" class="inc-opt" data-inc="none" aria-pressed="false"><b>Email only</b><small>No sell sheet, just your message</small></button>
           </div>
           <details class="ml-more" id="mlMore"><summary>More options: Word or image files, pictures, tables, contact footer</summary>
           <div class="how-row">
@@ -2190,6 +2191,8 @@ async function buildDocx(){
 // Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
 const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
 const MAIL_DEF_SUBJ='Sell sheet: {product}',FUP_DEF_SUBJ='Following up: {product}',FUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
+const PLAIN_DEF_SUBJ='Quick introduction',PLAIN_DEF_MSG="Hi {name},\n\nI'd love to tell you about what we carry and how we could help {company}. Would you have a few minutes for a quick call this week?\n\nThank you,",PFUP_DEF_SUBJ='Following up',PFUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on my last email. Let me know if you'd like to talk, or if I can send you anything.\n\nThank you,";
+const CPLAIN_DEF_SUBJ='What are you looking for this season?',CPLAIN_DEF_MSG="Hi {name},\n\nI wanted to check in and see what {company} is looking for this season. Are there any styles, colours or quantities you need? Let me know and I'll put some options together for you.\n\nThank you,";
 const LEAD_DEF_SUBJ='Introducing {product}',LEAD_DEF_MSG="Hi {name},\n\nI'd like to introduce {product}. I've attached the sell sheet with the colours, sizes and pricing. If it's a fit for your store, I'd be happy to send samples or answer any questions.\n\nThank you,";
 const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
 const MAIL=Object.assign({prov:'google',att:['pdf'],mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
@@ -2205,7 +2208,7 @@ const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
 // your contact details under the message: each one shows when it has a value and is ticked
 const ciEmail=()=>String(SET.mc.email||authGet()?.email||'').trim(),webHref=v=>/^https?:\/\//i.test(v)?v:'https://'+v;
 const ciLines=()=>[['email','Email',ciEmail()],['phone','Phone',String(SET.mc.phone||'').trim()],['web','Website',String(SET.mc.web||'').trim()]].filter(([k,,v])=>v&&SET.mc.on[k]!==false);
-const embedParts=()=>MAIL.line?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line?[]:MAIL.att;
+const embedParts=()=>MAIL.line||MAIL.plain?[]:[...(MAIL.sheetPic?['sheet']:[]),...MAIL.show.filter(x=>['photos','table','details','contact'].includes(x))], attachParts=()=>MAIL.line||MAIL.plain?[]:MAIL.att;
 const howOf=()=>MAIL.att.length&&embedParts().length?'both':MAIL.att.length?'attach':'embed';
 const mailDlg=$('#mailDlg'), EMAIL_RE=/^[^\s@<>()",;:\\]+@[^\s@<>()",;:\\]+\.[^\s@<>()",;:\\]+$/;
 const splitAddr=v=>String(v||'').split(/[,;\s]+/).map(x=>x.trim().replace(/^<|>$/g,'')).filter(Boolean);
@@ -2428,18 +2431,22 @@ function renderChips(){setTimeout(updMsgPrev);schedPreview();if(MAIL.aud==='lead
 $('#mlChips').addEventListener('click',e=>{const b=e.target.closest('[data-unsel]');if(!b)return;const k=b.dataset.unsel;if(k.startsWith('lead:'))LSEL.delete(k.slice(5));else CU.sel.delete(k);renderCust();});
 /* the email page: send to customers or to leads (each with its own saved wording) */
 const LSEL=new Set();let LPF='';MAIL.aud='cust';
-function renderTrack(){const t=MAIL.track||'cust',a=MAIL.aud;$$('#mlTrack button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.track===t)));$('#mlTrackRow').hidden=MAIL.kind==='follow';
+function renderTrack(){if(MAIL.plain)MAIL.track=MAIL.aud;const t=MAIL.track||'cust',a=MAIL.aud;$$('#mlTrack button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.track===t)));$('#mlTrackRow').hidden=MAIL.kind==='follow'||!!MAIL.plain;
   $('#mlTrackNote').textContent=t==='lead'?(a==='lead'?'Shows on their lead card. Typed addresses are added as leads.':'These customers are added as leads (and to the Leads group in Customers). Typed addresses become leads too.')
     :a==='lead'?'These leads become customers when it\'s sent, and it shows in the customer pipeline.':'Shows in the customer pipeline.';}
 $('#mlTrack').addEventListener('click',e=>{const b=e.target.closest('[data-track]');if(!b)return;MAIL.track=b.dataset.track;renderTrack();updMode();});
 function renderAud(){const lead=MAIL.aud==='lead';$$('#mlAud button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.aud===MAIL.aud)));$('#mlAud').hidden=MAIL.kind==='follow';
   $('#cuBtns').hidden=lead;$('#ldBtns').hidden=!lead;$('#cuSearch').placeholder=lead?'Search leads':'Search customers, or pick a group';$('#cuSearch').setAttribute('aria-label',$('#cuSearch').placeholder);
   renderTrack();$('#mlTo').placeholder=lead?'Tick leads, or type email addresses separated by commas':'Tick customers, or type email addresses separated by commas';}
+// "Email only": a lead email with no sell sheet; it has its own saved wording and is tracked in Leads
+async function setPlain(v){if(!!MAIL.plain===v)return true;
+  if(tplDirty()){const r=await ask({title:'Keep your changes?',body:`You changed the wording of this email. The ${v?'email-only':'sell sheet'} email has its own wording.`,ok:'Save them first',alt:'Switch without saving',cancel:'Stay here'});if(!r)return false;if(r==='ok')saveTpl();}
+  MAIL.plain=v;if(v)MAIL.track=MAIL.aud;loadWording();renderHow();renderTrack();updMsgPrev();updMode();schedPreview();if(MAIL.aud==='lead')renderLeadPick();return true;}
 async function setAud(a){if(MAIL.aud===a)return;
   if(MAIL.kind==='new'&&tplDirty()){const r=await ask({title:'Keep your changes?',body:`You changed the wording of this email. The ${a==='lead'?'lead':'customer'} email has its own wording.`,ok:'Save them first',alt:'Switch without saving',cancel:'Stay here'});if(!r)return;if(r==='ok')saveTpl();}
-  MAIL.aud=a;MAIL.track=a;CU.q='';$('#cuSearch').value='';if(MAIL.kind==='new')loadWording();renderAud();renderCust(true);updTpl();schedPreview();}
+  MAIL.aud=a;MAIL.track=a;CU.q='';$('#cuSearch').value='';renderHow();if(MAIL.kind==='new')loadWording();renderAud();renderCust(true);updTpl();schedPreview();}
 $('#mlAud').addEventListener('click',e=>{const b=e.target.closest('[data-aud]');if(b)setAud(b.dataset.aud);});
-const leadGot=(l,sid)=>LG.list.filter(e=>e.cust==='lead:'+l.id&&e.sheetId===sid).sort((a,b)=>b.at-a.at)[0];
+const leadGot=(l,sid)=>MAIL.plain?LG.list.filter(e=>e.cust==='lead:'+l.id&&e.plain).sort((a,b)=>b.at-a.at)[0]:LG.list.filter(e=>e.cust==='lead:'+l.id&&e.sheetId===sid).sort((a,b)=>b.at-a.at)[0];
 function renderLeadPick(){const q=CU.q.trim().toLowerCase(),all=CRM.leads.filter(l=>!l.conv),sid=MAIL.line?'line:'+MAIL.line.id:S.id;
   const cnt=k=>all.filter(l=>k==='hot'?l.temp==='hot':l.stage===k).length,chips=[['','All',all.length],...PL_COLS.filter(([k])=>k!=='ordered'&&cnt(k)).map(([k,n])=>[k,n,cnt(k)]),...(cnt('hot')?[['hot','Hot',cnt('hot')]]:[])];
   $('#cuGroups').innerHTML=all.length?chips.map(([k,n,c])=>`<button type="button" data-lpf="${k}" aria-pressed="${LPF===k}">${esc(n)} · ${c}</button>`).join(''):'';
@@ -2449,7 +2456,7 @@ function renderLeadPick(){const q=CU.q.trim().toLowerCase(),all=CRM.leads.filter
   $('#cuCount').textContent=all.length?(shown.length===all.length?`${all.length} lead${all.length>1?'s':''}`:`Showing ${shown.length} of ${all.length}`)+(nSel?` · ${nSel} ticked`:''):'';
   $('#cuList').innerHTML=shown.length?shown.slice(0,300).map((l,n)=>{const on=LSEL.has(l.id)&&!!l.email,g=leadGot(l,sid);
     return`<div class="cu${on?' on':''}"><input type="checkbox" id="ld-${n}" data-ld="${esc(l.id)}" ${on?'checked':''} ${l.email?'':'disabled'}><label class="who" for="ld-${n}"><b>${esc(l.name||l.company||l.email||'(no name)')}</b> <span class="ld-st">${esc(colName(l.stage))}</span>${l.temp==='hot'?' <span class="pl-tmp hot">Hot</span>':''}
-      <small>${l.email?esc([l.name?l.company:'',l.email].filter(Boolean).join(' · ')):'<span class="nn">No email address</span>'}${l.pref&&l.pref!=='email'?` · <span class="ld-pref">Prefers ${esc(prefText(l.pref,l.prefAt).toLowerCase())}</span>`:''}</small>${g?`<span class="last" style="display:block">Already got this sheet ${esc(ago(g.at))}</span>`:''}</label>
+      <small>${l.email?esc([l.name?l.company:'',l.email].filter(Boolean).join(' · ')):'<span class="nn">No email address</span>'}${l.pref&&l.pref!=='email'?` · <span class="ld-pref">Prefers ${esc(prefText(l.pref,l.prefAt).toLowerCase())}</span>`:''}</small>${g?`<span class="last" style="display:block">${MAIL.plain?'Emailed':'Already got this sheet'} ${esc(ago(g.at))}</span>`:''}</label>
       <span class="acts"><button class="tiny" type="button" data-ldopen="${esc(l.id)}" aria-label="Open ${esc(l.name||l.company||l.email)} in the Pipeline" title="Open in the Pipeline">✎</button></span></div>`;}).join('')
     :`<div class="cu-empty">${all.length?'No leads match.':'No leads yet. Add one here or on the Pipeline page.'}</div>`;
   renderChips();renderSync();}
@@ -2463,7 +2470,7 @@ function people(){const out=[],seen=new Set();if(MAIL.aud==='lead')for(const l o
 let nnOk=false;
 function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnOk=false;
   const lead=MAIL.aud==='lead',att=MAIL.att.map(k=>ATT_NAME[k]).join(' + '),inEm=embedParts().length,fromA=MAIL.from||authGet()?.email||'';
-  const inc=MAIL.line?'line sheet PDF attached':att&&inEm?`in the email + ${att} attached`:att?`${att} attached`:inEm?'shown in the email':'nothing of the sell sheet included';
+  const inc=MAIL.plain?'email only, no sell sheet':MAIL.line?'line sheet PDF attached':att&&inEm?`in the email + ${att} attached`:att?`${att} attached`:inEm?'shown in the email':'nothing of the sell sheet included';
   $('#mlSumm').innerHTML=n?`<b>${n} email${n>1?'s':''}</b>${n>1?`, one per ${lead?'lead':'person'}`:''} · ${esc(inc)}${fromA?' · from '+esc(fromA):''}${MAIL.kind==='follow'?'':` · tracked in ${MAIL.track==='lead'?'Leads':'the customer pipeline'}`}`:`Tick ${lead?'leads':'customers'} on the left to send to · ${esc(inc)}`;
   $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
@@ -2612,7 +2619,7 @@ async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   const url=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${SYNC_FILE}:/content`;
   if(method==='GET'){const r=await fetch(url,{headers:H});if(r.status===404)return{data:null};if(!r.ok)throw await httpErr('OneDrive',r);return{data:await r.json().catch(()=>null)};}
   const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:body.json});if(!r.ok)throw await httpErr('OneDrive',r);}
-const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['leadMsg','ss-leadmsg','lead','#mlMsg'],['leadSubj','ss-leadsubj','lead','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj'],['lineMsg','ss-linemsg','line','#mlMsg'],['lineSubj','ss-linesubj','line','#mlSubj']];
+const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsubj','new','#mlSubj'],['leadMsg','ss-leadmsg','lead','#mlMsg'],['leadSubj','ss-leadsubj','lead','#mlSubj'],['plainMsg','ss-plainmsg','plain','#mlMsg'],['cplainMsg','ss-cplainmsg','cplain','#mlMsg'],['cplainSubj','ss-cplainsubj','cplain','#mlSubj'],['plainSubj','ss-plainsubj','plain','#mlSubj'],['pfupMsg','ss-pfupmsg','pfollow','#mlMsg'],['pfupSubj','ss-pfupsubj','pfollow','#mlSubj'],['fupMsg','ss-fupmsg','follow','#mlMsg'],['fupSubj','ss-fupsubj','follow','#mlSubj'],['lineMsg','ss-linemsg','line','#mlMsg'],['lineSubj','ss-linesubj','line','#mlSubj']];
 /* what was last synced: the cloud file's version and a fingerprint of the local data. When neither changed, a sync only asks Drive for the version. */
 const SYNC={ver:'',fp:''};
 const hashS=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+':'+str.length;};
@@ -2769,13 +2776,13 @@ function logSent(m,prov,from,kinds,parts,res){lgLoad();crmLoad();cuLoad();const 
   if(crmCh)crmSave();
   let moved=false;for(const p of ppl){const l=p.lead&&leadById(p.lead);if(l&&l.stage==='new'){l.stage='none';touchX(l);moved=true;}}if(moved)crmSave();
   const L=MAIL.line;
-  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:L?'line:'+L.id:S.id,sheet:L?L.title+' (line sheet)':sheetName(S),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.lead?'lead:'+p.lead:p.cust?(p.key||ck(p.email)):'',
+  for(const p of ppl)LG.list.push({id:uid()+uid(),at:now,sheetId:MAIL.plain?'plain':L?'line:'+L.id:S.id,sheet:MAIL.plain?(fillTokens($('#mlSubj').value,p).trim()||'Email'):L?L.title+' (line sheet)':sheetName(S),...(MAIL.plain?{plain:1}:{}),...(L?{line:L.items}:{}),name:p.name||'',company:p.company||'',email:(p.emails||[])[0]||'',emails:p.emails||[],cust:p.lead?'lead:'+p.lead:p.cust?(p.key||ck(p.email)):'',
     how:howOf(),files:kinds,parts,from:from||'',prov,status:'none',note:'',follow:'',gthread:res?.threadId||'',upd:now});}
 const cleanReply=r=>r&&+r.at?{at:+r.at,subj:String(r.subj||'').slice(0,200),snip:String(r.snip||'').slice(0,300),thread:String(r.thread||'').slice(0,40),seen:!!r.seen}:undefined;
 function mergeLog(a,b){const del=new Map();for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&d.id&&(!del.has(d.id)||del.get(d.id)<d.at))del.set(String(d.id),+d.at||0);
   const m=new Map();for(const e of[...(a.entries||[]),...(b.entries||[])]){if(!e||!e.id||!e.at)continue;const o=m.get(e.id);if(!o||(+e.upd||0)>(+o.upd||0))m.set(String(e.id),e);}
   const str=v=>String(v??'').slice(0,500),arr=v=>Array.isArray(v)?v.map(x=>String(x)).slice(0,20):[];
-  return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),...(e.ext?{ext:1}:{}),
+  return{entries:[...m.values()].filter(e=>!((del.get(e.id)||0)>=(+e.upd||0))).map(e=>({id:str(e.id),at:+e.at,sheetId:str(e.sheetId),sheet:str(e.sheet),name:str(e.name),company:str(e.company),email:str(e.email),emails:arr(e.emails),cust:str(e.cust),...(e.ext?{ext:1}:{}),...(e.plain?{plain:1}:{}),
       how:['embed','attach','both'].includes(e.how)?e.how:'attach',files:arr(e.files),parts:arr(e.parts),from:str(e.from),prov:e.prov==='microsoft'?'microsoft':'google',status:ST_NAME[e.status]?e.status:'none',note:str(e.note).slice(0,2000),follow:/^\d{4}-\d{2}-\d{2}$/.test(e.follow||'')?e.follow:'',color:COLOR_HEX[e.color]?e.color:normHex(e.color),gthread:str(e.gthread),reply:cleanReply(e.reply),value:Math.max(0,Math.min(1e9,+e.value||0))||undefined,line:Array.isArray(e.line)?e.line.map(x=>String(x).slice(0,200)).slice(0,120):undefined,upd:+e.upd||0})).sort((x,y)=>x.at-y.at),
     deleted:[...del].filter(([,at])=>at>Date.now()-365*864e5).map(([id,at])=>({id,at}))};}
 /* ---------- leads, calls & notes, and to-dos ----------
@@ -2833,7 +2840,7 @@ const todoSort=(a,b)=>(lsGet('ss-td-sort')==='urg'?byUrg(a,b)||byDue(a,b):byDue(
 const nextTodo=w=>todosOf(w).filter(t=>!t.done).sort(todoSort)[0]||null;
 const ACT_VERB={call:'Called',emailOut:'Emailed',emailIn:'They emailed',meeting:'Met',note:'Note added'};
 function lastTouch(w){let best=null;for(const a of actsOf(w))if(a.type!=='note'&&(!best||a.at>best.at))best={at:a.at,txt:`${ACT_VERB[a.type]} ${ago(a.at)}`};
-  for(const e of sendsOf(w)){if(!best||e.at>best.at)best={at:e.at,txt:`Sell sheet sent ${ago(e.at)}`};if(e.reply&&e.reply.at>best.at)best={at:e.reply.at,txt:`Replied ${ago(e.reply.at)}`};}return best;}
+  for(const e of sendsOf(w)){if(!best||e.at>best.at)best={at:e.at,txt:`${e.plain?'Emailed':'Sell sheet sent'} ${ago(e.at)}`};if(e.reply&&e.reply.at>best.at)best={at:e.reply.at,txt:`Replied ${ago(e.reply.at)}`};}return best;}
 const noteCount=w=>actsOf(w).filter(a=>a.note).length+sendsOf(w).filter(e=>e.note).length;
 
 /* dates for to-dos */
@@ -2884,7 +2891,7 @@ function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).l
   $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
   $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
   const shown=lgShown(),shownIds=new Set(shown.map(t=>t.root.id));LG.sel=new Set([...LG.sel].filter(id=>shownIds.has(id)));
-  const sentAs=e=>e.ext?'Sent from Gmail (outside this site)':`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
+  const sentAs=e=>e.plain?'Email only (no sell sheet)':e.ext?'Sent from Gmail (outside this site)':`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
   // one listing per customer, under a heading per day (when first sent) or per sell sheet
   const by=lgGroupBy(),groups=new Map();
   const dk=new Map(by==='date'?shown.map(t=>[t,dayStr(t.root.at)]):[]);
@@ -2966,10 +2973,10 @@ $('#lgExport').onclick=()=>{const th=lgShown();if(!th.length){toast('Nothing to 
 // follow up: opens the Email window for the chosen entries' sell sheet, with those people already filled in
 $('#lgFollow').onclick=async()=>{const picked=threads().filter(t=>LG.sel.has(t.root.id)).map(t=>t.root);if(!picked.length)return;const ids=[...new Set(picked.map(e=>e.sheetId))];
   if(ids.length>1){toast('Pick entries for one sell sheet at a time to follow up together');return;}
-  if(ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}if(!await switchTo(sh))return;}
-  logDlg.close();openMail();MAIL.aud='cust';cuLoad();CU.sel.clear();const typed=[];
+  const plainFu=ids[0]==='plain';if(!plainFu&&ids[0]!==S.id){const sh=sheets.find(x=>x.id===ids[0]);if(!sh){toast('That sell sheet is no longer saved on this device. Open it first, then follow up.');return;}if(!await switchTo(sh))return;}
+  logDlg.close();openMail(plainFu?{plain:true,aud:picked.every(e=>String(e.cust).startsWith('lead:'))?'lead':'cust'}:undefined);if(!plainFu)MAIL.aud='cust';cuLoad();CU.sel.clear();const typed=[];
   for(const e of picked){const c=e.cust&&CU.list.find(c=>ck(c.email)===e.cust);if(c)CU.sel.add(ck(c.email));else typed.push(...(e.emails.length?e.emails:[e.email]).filter(Boolean));}
-  $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();renderAud();
+  $('#mlTo').value=[...new Set(typed)].join(', ');MAIL.kind='follow';loadWording();renderAud();renderHow();
   renderCust();updMode();updMsgPrev();toast('Follow-up ready to send. Check the message, then click Send.');};
 
 /* ---------- replies and reminders ----------
@@ -3327,7 +3334,7 @@ async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
     const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
-function checkHow(){return MAIL.line||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
+function checkHow(){return MAIL.line||MAIL.plain||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
 let sending=false;
 const dropSent=sent=>{const typed=new Set();for(const m of sent){if(m.person?.cust)CU.sel.delete(m.person.key);else if(m.person)m.to.forEach(a=>typed.add(ck(a)));}
   if(typed.size)$('#mlTo').value=splitAddr($('#mlTo').value).filter(a=>!typed.has(ck(a))).join(', ');renderCust();updMode();};
@@ -3360,26 +3367,26 @@ $('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
-function openMail(opts){MAIL.line=opts?.line||null;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
+function openMail(opts){MAIL.line=opts?.line||null;MAIL.plain=!!opts?.plain&&!opts?.line;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'||(MAIL.plain&&opts?.aud!=='cust')?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
   if(opts?.pick){if(MAIL.aud==='lead'){LSEL.clear();LSEL.add(opts.pick);}else CU.sel.add(opts.pick);}
   const cc=!!($('#mlCc').value||$('#mlBcc').value);$('#mlCcRow').hidden=!cc;$('#mlCcBtn').hidden=cc;$('#mlMore').open=MAIL.att.some(k=>k!=='pdf')||MAIL.show.length>0;CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;MAIL.kind=MAIL.line?'line':'new';loadWording();
   const ml=$('#mlLine');ml.hidden=!MAIL.line;$('.ml-how').hidden=!!MAIL.line;if(MAIL.line)ml.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>Attached: ${esc(MAIL.line.name)}</b><small>Line sheet with ${MAIL.line.items.length} product${MAIL.line.items.length>1?'s':''} · ${MAIL.line.blob.size<1048576?Math.max(1,Math.round(MAIL.line.blob.size/1024))+' KB':(MAIL.line.blob.size/1048576).toFixed(1)+' MB'}. {product} becomes “${esc(MAIL.line.title)}”.</small></span>`;$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
-  $('#mlShare').hidden=!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
+  $('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
-mailDlg.addEventListener('close',()=>{MAIL.line=null;});
+mailDlg.addEventListener('close',()=>{MAIL.line=null;MAIL.plain=false;});
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
 // the wording is remembered (and synced) as you type, for new emails and follow-ups separately. The product name is stored as {product}
 // so the next sell sheet gets its own name.
 const LINE_DEF_SUBJ='Line sheet: {product}',LINE_DEF_MSG="Hi {name},\n\nPlease find attached our line sheet, {product}. Let me know which styles you'd like, or if you have any questions.\n\nThank you,";
-const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ},lead:{msg:'ss-leadmsg',subj:'ss-leadsubj',defMsg:()=>LEAD_DEF_MSG,defSubj:()=>LEAD_DEF_SUBJ}};
-const wordKind=()=>MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:MAIL.aud==='lead'?'lead':'new',wordKeys=()=>WORD_KEYS[wordKind()];
+const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ},lead:{msg:'ss-leadmsg',subj:'ss-leadsubj',defMsg:()=>LEAD_DEF_MSG,defSubj:()=>LEAD_DEF_SUBJ},plain:{msg:'ss-plainmsg',subj:'ss-plainsubj',defMsg:()=>PLAIN_DEF_MSG,defSubj:()=>PLAIN_DEF_SUBJ},cplain:{msg:'ss-cplainmsg',subj:'ss-cplainsubj',defMsg:()=>CPLAIN_DEF_MSG,defSubj:()=>CPLAIN_DEF_SUBJ},pfollow:{msg:'ss-pfupmsg',subj:'ss-pfupsubj',defMsg:()=>PFUP_DEF_MSG,defSubj:()=>PFUP_DEF_SUBJ}};
+const wordKind=()=>MAIL.plain?(MAIL.kind==='follow'?'pfollow':MAIL.aud==='lead'?'plain':'cplain'):MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:MAIL.aud==='lead'?'lead':'new',wordKeys=()=>WORD_KEYS[wordKind()];
 function loadWording(){$('#mlSubj').value=tplOf('subj');$('#mlMsg').value=tplOf('msg');if(typeof updTpl==='function')updTpl();}
 const tplOf=which=>{const k=wordKeys();return lsGet(k[which])||(which==='msg'?k.defMsg():k.defSubj());};
 // the wording is saved only when you ask; the product's own name is stored as {product}, so the next sell sheet gets its name
 const tplNorm=v=>{const pl=productLabel();if(pl!=='this product'&&(/[\s\d]/.test(pl.trim())||pl.length>=10))v=v.replace(new RegExp('(^|[^\\p{L}\\p{N}])'+pl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),'$1{product}');return v;};
-const TPL_NAME={new:'customer email',lead:'lead email',follow:'follow-up email',line:'line sheet email'};
+const TPL_NAME={new:'customer email',lead:'lead email',plain:'lead email (no sell sheet)',cplain:'customer email (no sell sheet)',pfollow:'follow-up (no sell sheet)',follow:'follow-up email',line:'line sheet email'};
 const tplDirty=()=>tplNorm($('#mlSubj').value)!==tplOf('subj')||tplNorm($('#mlMsg').value)!==tplOf('msg');
 function updTpl(){const d=tplDirty(),n=TPL_NAME[wordKind()];$('#mlTpl').hidden=!d;$('#mlTplSave').textContent='Save as my '+n;$('#mlTplName').textContent=d?'Changed for this email':'Your saved '+n;}
 function saveTpl(){const k=wordKeys(),now=String(Date.now());lsSet(k.subj,tplNorm($('#mlSubj').value));lsSet(k.msg,tplNorm($('#mlMsg').value));lsSet(k.subj+'-upd',now);lsSet(k.msg+'-upd',now);scheduleSync();updTpl();toast(`Saved. Every new ${TPL_NAME[wordKind()]} starts with this wording.`,5000);}
@@ -3391,10 +3398,10 @@ $('.ml-toks').addEventListener('mousedown',e=>{if(e.target.closest('[data-tok]')
 $('.ml-toks').addEventListener('click',e=>{const b=e.target.closest('[data-tok]');if(!b)return;const f=$('#'+tokField),st=f.selectionStart??f.value.length,en=f.selectionEnd??st;f.focus();f.setRangeText(b.dataset.tok,st,en,'end');f.dispatchEvent(new Event('input',{bubbles:true}));});
 $('#mlGreetBy').addEventListener('change',e=>{MAIL.greetBy=e.target.value;saveMail();updMsgPrev();updMode();schedPreview();});
 const ATT_NAME={pdf:'PDF',docx:'Word',jpg:'Image'};
-const incMode=()=>MAIL.att.length&&MAIL.sheetPic?'both':MAIL.sheetPic?'embed':MAIL.att.length?'attach':'';
-function renderHow(){$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
+const incMode=()=>MAIL.plain?'none':MAIL.att.length&&MAIL.sheetPic?'both':MAIL.sheetPic?'embed':MAIL.att.length?'attach':'';
+function renderHow(){$('#mailDlg .ml-top h2').textContent=MAIL.plain?(MAIL.aud==='lead'?'Email leads':'Email customers'):'Email sell sheet';$('[data-inc=none]').hidden=!!MAIL.line;$('#mlMore').hidden=!!MAIL.plain;$('[data-tok="{product}"]').hidden=!!MAIL.plain;$('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
   $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();renderCI();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
-$('.inc-opts').addEventListener('click',e=>{const b=e.target.closest('[data-inc]');if(!b)return;const m=b.dataset.inc;if(m==='embed')MAIL.att=[];else if(!MAIL.att.length)MAIL.att=['pdf'];MAIL.sheetPic=m!=='attach';saveMail();renderHow();updMode();schedPreview();});
+$('.inc-opts').addEventListener('click',async e=>{const b=e.target.closest('[data-inc]');if(!b)return;const m=b.dataset.inc;if(m==='none'){setPlain(true);return;}if(MAIL.plain&&!await setPlain(false))return;if(m==='embed')MAIL.att=[];else if(!MAIL.att.length)MAIL.att=['pdf'];MAIL.sheetPic=m!=='attach';saveMail();renderHow();updMode();schedPreview();});
 $('#mlCcBtn').onclick=()=>{$('#mlCcRow').hidden=false;$('#mlCcBtn').hidden=true;$('#mlCc').focus();};
 $('#mlAtt').addEventListener('change',()=>{MAIL.att=['pdf','docx','jpg'].filter(k=>attKinds().includes(k));saveMail();renderHow();updMode();schedPreview();});
 $('#mlAttBtn').onclick=e=>{e.stopPropagation();const m=$('#mlAtt'),open=m.classList.contains('hide');m.classList.toggle('hide',!open);$('#mlAttBtn').setAttribute('aria-expanded',open);};
@@ -3967,8 +3974,8 @@ function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'?[]:plThre
   if(!$('#plQ'))$('#plBar').innerHTML=`<div class="seg" id="plView" role="group" aria-label="Show">${Object.entries(PL_VIEW).map(([k,n])=>`<button type="button" data-plview="${k}">${n}</button>`).join('')}</div>
     <input class="in" id="plQ" type="search" placeholder="Search name, company, sell sheet, note" aria-label="Search pipeline"><select class="in" id="plDays" aria-label="Period">${[[30,'Last 30 days'],[90,'Last 90 days'],[365,'Last 12 months'],[0,'All time']].map(([v,n])=>`<option value="${v}"${PL.days===v?' selected':''}>${n}</option>`).join('')}</select><select class="in" id="plSheet" aria-label="Sell sheet"></select>
     <button class="btn sm" type="button" id="plHot" aria-pressed="false">Hot leads only</button><span class="pl-kpis" id="plKpis"></span><span class="spacer"></span>
-    <button class="btn sm" type="button" id="plLog">Log a call or email</button><button class="btn sm primary" type="button" id="plAdd">＋ Add lead</button>`;
-  $$('#plView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plview===PL.view)));$('#plHot').setAttribute('aria-pressed',String(PL.hot));$('#plHot').hidden=PL.view!=='leads';
+    <button class="btn sm" type="button" id="plMail">✉ Write an email</button><button class="btn sm" type="button" id="plLog">Log a call or email</button><button class="btn sm primary" type="button" id="plAdd">＋ Add lead</button>`;
+  $$('#plView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plview===PL.view)));$('#plHot').setAttribute('aria-pressed',String(PL.hot));$('#plHot').hidden=PL.view!=='leads';$('#plMail').textContent=PL.view==='leads'?'✉ Email leads':'✉ Email customers';
   $('#plSheet').innerHTML=`<option value="">All sell sheets</option>${sheets.map(n=>`<option value="${esc(n)}"${PL.sheet===n?' selected':''}>${esc(n)}</option>`).join('')}`;
   const due=todosDue();
   $('#plKpis').innerHTML=`<span>Open: <b>${money(open)||esc(SET.currency)+'0'}</b></span><span>Won: <b>${money(won)||esc(SET.currency)+'0'}</b></span><span>Win rate: <b>${nW+nL?Math.round(nW/(nW+nL)*100)+'%':'–'}</b></span>${due?`<span class="due">To-dos due: <b>${due}</b></span>`:''}`;
@@ -4011,6 +4018,7 @@ plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[d
   if(b.id==='plHot'){PL.hot=!PL.hot;renderPipe();return;}
   if(b.id==='plAdd'||d.pladd!==undefined){openPerson('new');return;}
   if(b.id==='plLog'){openPerson('pick');return;}
+  if(b.id==='plMail'){plDlg.close();openMail({plain:true,aud:PL.view==='leads'?'lead':'cust'});return;}
   if(d.plopen){openPerson(d.plopen);return;}
   if(d.pppick){openPerson(d.pppick,{log:true});return;}
   if(await tlAct(b,d,plDlg,renderPerson))return;
@@ -4025,6 +4033,7 @@ plDlg.addEventListener('click',async e=>{const t=e.target,b=t.closest('button,[d
   if(p==='edit'){PL.edit=true;renderPerson();plDlg.querySelector('#plPerson input')?.focus();return;}
   if(p==='convert'&&l){askConvert(l);return;}
   if(p==='cust'&&info?.cust){openCustomer(info.key);return;}
+  if(p==='plain'&&info?.email){plDlg.close();if(l&&!l.conv)openMail({plain:true,aud:'lead',pick:l.id});else{cuLoad();CU.sel.clear();openMail({plain:true,aud:'cust',pick:info.key||l?.conv});}return;}
   if(p==='email'&&info?.email){plDlg.close();openMail({aud:l&&!l.conv?'lead':'cust',pick:l&&!l.conv?l.id:info.key});return;}
   if(p==='del'&&l){if(await ask({title:`Delete ${info.name}?`,body:'The lead, their logged calls and notes are removed. To-dos for them stay, unlinked.',ok:'Delete lead',danger:true})!=='ok')return;
     for(const a of CRM.acts.filter(a=>a.who===PL.person))crmDel('acts',a.id);for(const x of CRM.todos.filter(x=>x.who===PL.person)){x.who='';touchX(x);}crmDel('leads',l.id);if(l.email)leadGroup(l.email,false);closePerson();crmSave();toast('Lead deleted');}});
@@ -4122,7 +4131,7 @@ function tlItem(x){const ed=id=>PL.editNote===id,noteBox=(id,v)=>ed(id)?`<div cl
     const t=a.type==='call'?`Phone call · ${a.dir==='in'?'they called':'I called'}${a.dur?` · ${a.dur} min`:''}`:a.type==='emailOut'?'Email I sent (outside this app)':a.type==='emailIn'?'Email they sent':ACT_NAME[a.type];
     return`<div class="pp-e"><span class="k ${c}" aria-hidden="true">${ic}</span><div><div class="r"><b>${esc(t)}</b><span class="when">${esc(fmtWhen(a.at))}</span></div>${a.result||a.sheet?`<div class="meta">${esc([RES_NAME[a.result],a.sheet].filter(Boolean).join(' · '))}</div>`:''}${noteBox(id,a.note)}
       ${ed(id)?'':`<div class="ea"><button type="button" data-ppnedit="${id}">${a.note?'Edit note':'Add a note'}</button><button type="button" class="x" data-ppactdel="${esc(a.id)}">Delete</button></div>`}</div></div>`;}
-  if(x.k==='send'){const e=x.e,id='s:'+e.id;return`<div class="pp-e"><span class="k ${e.ext?'out':'app'}" aria-hidden="true">${e.ext?'OUT':'APP'}</span><div><div class="r"><b>${e.ext?'Email sent from Gmail':'Sell sheet sent'}: ${esc(e.sheet)}</b><span class="when">${esc(fmtWhen(e.at))}</span></div><div class="meta">${e.ext?'Outside this site · replies are checked':'From this app · '+esc(HOW_NAME[e.how]||'')}${e.status&&e.status!=='none'?' · '+esc(ST_NAME[e.status]):''}</div>${noteBox(id,e.note)}
+  if(x.k==='send'){const e=x.e,id='s:'+e.id;return`<div class="pp-e"><span class="k ${e.ext?'out':'app'}" aria-hidden="true">${e.ext?'OUT':'APP'}</span><div><div class="r"><b>${e.ext?'Email sent from Gmail':e.plain?'Email sent':'Sell sheet sent'}: ${esc(e.sheet)}</b><span class="when">${esc(fmtWhen(e.at))}</span></div><div class="meta">${e.ext?'Outside this site · replies are checked':e.plain?'From this site · no sell sheet':'From this app · '+esc(HOW_NAME[e.how]||'')}${e.status&&e.status!=='none'?' · '+esc(ST_NAME[e.status]):''}</div>${noteBox(id,e.note)}
       ${ed(id)?'':`<div class="ea"><button type="button" data-ppnedit="${id}">${e.note?'Edit note':'Add a note'}</button><button type="button" data-ppsent="${esc(e.email)}">Open in Sent</button></div>`}</div></div>`;}
   if(x.k==='reply'){const e=x.e;return`<div class="pp-e"><span class="k in" aria-hidden="true">RE</span><div><div class="r"><b>Replied${e.reply.subj?': '+esc(e.reply.subj):''}</b><span class="when">${esc(fmtWhen(e.reply.at))}</span></div>${e.reply.snip?`<div class="note">“${esc(e.reply.snip)}”</div>`:''}</div></div>`;}
   return`<div class="pp-e"><span class="k" aria-hidden="true">NEW</span><div><div class="r"><b>Lead added</b><span class="when">${esc(fmtWhen(x.at))}</span></div>${x.l.source?`<div class="meta">From ${esc(x.l.source)}</div>`:''}</div></div>`;}
@@ -4172,7 +4181,7 @@ function renderPerson(){const p=$('#plPerson'),w=PL.person;if(!w){closePerson();
   const sub=[info.company,info.email&&`<a href="mailto:${esc(info.email)}">${esc(info.email)}</a>`,info.phone&&`<a href="tel:${esc(info.phone.replace(/[^\d+]/g,''))}">${esc(info.phone)}</a>`].filter(Boolean).map(s=>s.startsWith('<a')?s:esc(s)).join(' · ')+(info.pref?`<span class="pp-pref">Prefers ${esc(info.pref)}</span>`:'');
   const th=info.kind==='cust'?threads().filter(t=>(t.root.cust||ck(t.root.email))===info.key):[];
   p.innerHTML=ppHead(info.name,sub,info.name)+`<div class="pp-b">
-    <div class="pp-acts"><button class="btn sm primary" type="button" data-pp="email" ${info.email?'':'disabled title="Add an email address first"'}>Email a sell sheet</button>
+    <div class="pp-acts"><button class="btn sm primary" type="button" data-pp="email" ${info.email?'':'disabled title="Add an email address first"'}>Email a sell sheet</button><button class="btn sm" type="button" data-pp="plain" ${info.email?'':'disabled'}>Write an email</button>
       ${l?`<button class="btn sm" type="button" data-pp="edit">Edit details</button>${l.conv?'':'<button class="btn sm" type="button" data-pp="convert">Make customer</button>'}<button class="btn sm ghost danger" type="button" data-pp="del">Delete lead</button>`
         :`${info.cust?'<button class="btn sm" type="button" data-pp="cust">Edit customer</button>':''}<button class="btn sm ghost" type="button" data-ppsent="${esc(info.email)}">Open in Sent</button>`}</div>
     ${l?`<div class="pp-grid"><label class="field"><span>Stage</span><select class="in" data-ppf="stage">${PL_COLS.map(([k,n])=>`<option value="${k}"${l.stage===k?' selected':''}>${n}</option>`).join('')}</select></label>
@@ -4358,7 +4367,7 @@ function homeData(){lgLoad();cuLoad();const now=Date.now(),th=threads(),L=LG.lis
   const wk0=new Date();wk0.setHours(0,0,0,0);wk0.setDate(wk0.getDate()-((wk0.getDay()+6)%7));const weeks=[];
   for(let i=NW-1;i>=0;i--){const da=new Date(wk0);da.setDate(da.getDate()-7*i);const db=new Date(da);db.setDate(db.getDate()+7);const a=+da,b=+db;weeks.push({a,n:L.filter(e=>e.at>=a&&e.at<b).length,r:th.filter(t=>{const r=repOf(t);return r>=a&&r<b;}).length});}
   // products by sends in 90 days
-  const prod=new Map();for(const t of th){if(t.root.at<now-TD*DAY)continue;const k=t.root.sheet||'Untitled';const p=prod.get(k)||{name:k,n:0,r:0};p.n++;if(repOf(t))p.r++;prod.set(k,p);}
+  const prod=new Map();for(const t of th){if(t.root.at<now-TD*DAY||t.root.plain)continue;const k=t.root.sheet||'Untitled';const p=prod.get(k)||{name:k,n:0,r:0};p.n++;if(repOf(t))p.r++;prod.set(k,p);}
   const top=[...prod.values()].sort((a,b)=>b.n-a.n||b.r-a.r).slice(0,6);
   // activity: sends grouped by sheet and minute, replies
   const ev=[],grp=new Map();for(const e of L.slice().sort((a,b)=>b.at-a.at).slice(0,200)){const k=e.sheet+'|'+Math.floor(e.at/60e3);if(!grp.has(k)){grp.set(k,{kind:'sent',at:e.at,sheet:e.sheet,who:[]});ev.push(grp.get(k));}grp.get(k).who.push(e.name||e.company||e.email);}
@@ -4624,7 +4633,7 @@ function npParts(W,isNew){const t=tagHex(W.color),open=W.exp;
     <div class="np-prop np-newprop"><span class="np-k">${npI('add')}<input class="np-in" id="cpdNewK" placeholder="Add a property" list="cpdKeys" aria-label="Property name"><datalist id="cpdKeys">${infoKeys().filter(x=>x!==OTHER.name&&x!==OTHER.company).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></span><div class="np-v"><input class="np-in" id="cpdNewV" placeholder="Value, then press Enter" aria-label="Property value"></div></div></div>`;
   P.note=`<div class="np-sec" id="np-note"><h4>${npI('note')}My note</h4><textarea class="np-body np-auto" data-w="note" rows="3" placeholder="Write anything you want to remember about this customer…">${esc(W.note)}</textarea></div>`;
   P.sent=`<div class="np-sec" id="np-sent"><h4>${npI('sent')}Sent to this customer${sent.length?` <span class="np-count">${sent.length}</span>`:''}</h4>${sent.length?`<div class="np-list">${sent.slice(0,20).map(th=>`<div class="np-row"><span class="np-dot" style="background:${tagHex(th.root.color)||'var(--line2)'}"></span><b>${esc(th.root.sheet)}</b><span>${esc(ago(th.root.at))}${th.fups.length?` · ${th.fups.length} follow-up${th.fups.length>1?'s':''}`:''}</span><em>${esc(ST_NAME[th.root.status||'none'])}</em></div>`).join('')}</div>`:'<p class="np-empty">Nothing sent yet.</p>'}</div>`;
-  P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email this customer</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
+  P.foot=`<div class="cpd-f"><button class="btn sm primary" type="button" data-cpd="save">${isNew?'Add customer':'Save changes'}</button>${isNew?'<button class="btn sm" type="button" data-cpd="saveadd">Add and start another</button>':'<button class="btn sm" type="button" data-cpd="email">Email a sell sheet</button><button class="btn sm" type="button" data-cpd="plainmail">Write an email</button>'}<span class="np-state" id="cpdState">${CP.dirty?'● Unsaved changes':''}</span><span class="spacer"></span>
     ${isNew?'':`<button class="btn sm ghost" type="button" data-cpd="del">Remove customer</button>`}<button class="btn sm ghost" type="button" data-cpd="close">${CP.closeSure?'Discard changes':'Close'}</button></div>`;
   return P;}
 // a customer's contact history: log calls, emails sent elsewhere, meetings and notes; everything sent from here too
@@ -4702,6 +4711,7 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(act==='saveadd'){if(saveCustomer())openCustomer('new');return;}
   if(act==='rminfo'){const k=a.dataset.k;W.keys=W.keys.filter(x=>x!==k);delete W.vals['i:'+k];CP.dirty=true;renderCPDetail();return;}
   if(act==='save'){saveCustomer();return;}
+  if(act==='plainmail'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;closeCPDetail(true);custDlg.close();CU.sel.clear();openMail({plain:true,aud:'cust',pick:k});return;}
   if(act==='email'){if(CP.dirty&&!saveCustomer())return;const k=CP.open;CU.sel.add(k);closeCPDetail(true);custDlg.close();if(mailDlg.open){renderCust();}else openMail();return;}
   if(act==='del'){const c=CU.list.find(x=>ck(x.email)===CP.open);if(!c)return;ask({title:`Remove ${c.name||c.company||c.email}?`,body:'You can undo it for a few seconds afterwards.',ok:'Remove customer',danger:true}).then(r=>{if(r!=='ok')return;removeCustomers([c]);closeCPDetail(true);renderCP();});return;}
   if(act==='merge'||act==='mergeall'){const ds=findDupes(),pick=act==='merge'?[ds[+a.dataset.i]]:ds;let n=0;for(const g of pick)if(g){mergeDupes(g);n++;}cuSave();if(mailDlg.open)renderCust();renderCP();toast(`Merged ${n} duplicate${n===1?'':'s'}`);return;}
