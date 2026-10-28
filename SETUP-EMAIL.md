@@ -179,6 +179,33 @@ How it works:
 - **Deleting a sheet** on one device deletes it on the others.
 - **Saved sheets:** they sync with Google sign-in only. With Outlook, everything else syncs.
 
+## Company: working as a team
+
+Several people can share one company: customers and groups, leads, the Pipeline and Sent history, logged calls and notes, and (if you choose) to-dos and email templates. Everyone signs in with their own Google or Microsoft account and sends from their own mailbox.
+
+It runs on the same Cloudflare Worker as step 4, with a free Cloudflare database (D1) added. Set it up once, as the person who'll be the admin:
+
+1. **Do step 4 first**, so the Worker is deployed and the site knows its address.
+2. **Make the database:** in <https://dash.cloudflare.com> go to **Storage & Databases → D1 SQL Database → Create**. Name it `sellsheet-team` and click **Create**. You don't need to make any tables; the Worker makes them.
+3. **Connect it to the Worker:** open the `sellsheet-token` Worker → **Settings → Bindings → Add → D1 database**. Set **Variable name** to `TEAM_DB` (exactly) and pick `sellsheet-team`. Click **Deploy**.
+4. **Update the Worker's code:** if you deployed it before this feature, click **Edit code**, replace everything with the latest `worker/google-token.js`, and click **Deploy**.
+5. **Start the company:** on the site, open **Settings → Company**, type the company name and your name, and click **Create company**. You're its admin.
+6. **Invite people:** under **People**, type each coworker's sign-in email (the Google or Microsoft address they sign in to the site with) and click **Invite**. Then click **Copy invite link** and send them the link: it points their browser at your Worker.
+7. **Each coworker:** opens the link, signs in with the invited address, and clicks **Join** in **Settings → Company**.
+
+How it works:
+- **What's shared:** the admin ticks what everyone shares in **Settings → Company → What's shared**. Anything not ticked stays on each person's own account.
+- **Sync:** every 3 minutes while the site is open, when you come back to the tab, when you click **Sync now**, and just before you send an email.
+- **Owners:** each customer and lead has an owner. Whoever adds them is the owner. When you join, you become the owner of the customers and leads you already have.
+  - Owners show as a small name tag in the email list and on Pipeline cards.
+  - On a customer's page, or a lead in the Pipeline, anyone can click **Take over**. An admin can pick any owner from a list.
+- **No double emails:** before sending, the site warns you if someone you're emailing belongs to a teammate, or a teammate emailed or called them in the last 14 days. You can send anyway, skip those people, or not send.
+- **Conflicts:** when two people change the same customer or lead, the newest change wins.
+- **Admins** can rename the company, invite and remove people, make someone an admin, and choose what's shared. There's always at least one admin.
+- **Leaving:** **Settings → Company → Leave** stops sharing. Your own copy stays in your browser. When the last person leaves, the company's shared data is deleted from the database.
+
+Your data is kept in your Cloudflare account's database, never anywhere else. The Worker checks each person's sign-in with Google or Microsoft on every request, and only people in the company can read its data.
+
 ## Good to know
 
 - **Signing in is optional.** Without it, customers are saved in that browser, and **Share instead…** in the Email window still hands the files to your device's own email app.
