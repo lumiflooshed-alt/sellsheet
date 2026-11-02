@@ -206,6 +206,43 @@ How it works:
 
 Your data is kept in your Cloudflare account's database, never anywhere else. The Worker checks each person's sign-in with Google or Microsoft on every request, and only people in the company can read its data.
 
+## Warehouse (rack map)
+
+The **Warehouse** tab shows your racks from the front: levels top to bottom, floor spots in front.
+
+**The map**
+- **Spots** are numbered from the bottom level up, left to right. F1, F2… are the floor spots in front.
+- **Click a spot** to record what's on the skid: item, style, size, colour, boxes × per box (the total works itself out), dozens or pieces, a skid total for mixed skids, and notes.
+  - **Copy as new variant** repeats a line so you only change the size or colour.
+  - Names you've used before are suggested as you type.
+- **Move skid…** moves a whole skid, or some boxes of one line. Moving onto a spot that has stock adds to it.
+- **Empty skid** asks for a second tap.
+- **Layout** on a rack changes its levels, skids per level and floor spots (Standard or Skinny, or your own). Stock whose spot no longer exists is kept under **Not on the map**, never deleted.
+- **Racks − / +** sets how many racks there are. **Search** highlights matching skids and lists their locations.
+
+**CSV files**
+- **Export CSV** downloads one row per item. The columns match the old rack map's export: Location, Rack, Position, Item, Style, Size, Colour, Boxes, Per box, Total, Unit, Skid total, Skid total unit, Skid notes.
+- **Import CSV** reads the same columns. You choose:
+  - **Update these spots only:** the spots in the file are replaced and everything else stays.
+  - **Replace everything:** the map becomes exactly the file.
+- Racks are added if the file uses one that isn't on the map yet.
+- **Moving from the old rack map:** open it, click **Export CSV**, then use **Import CSV** here. The old map's rack layouts aren't in its CSV, so set any non-standard rack with **Layout** once.
+
+**Google Sheet, both ways**
+- **Connect a sheet:** click **Google Sheet…**, then either **Create a new Google Sheet** or paste a sheet link and click **Use this sheet**.
+- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV) and a **Racks** tab (each rack's levels, bottom to top, e.g. `1-2-2`, and its floor spots). Rows in the Racks tab set the number of racks.
+- **Dashboard → sheet:** changes go to the sheet within a couple of seconds.
+- **Sheet → dashboard:** changes come in every 3 minutes while the Warehouse page is open, when you open it, and when you click **Sync now**.
+- **Same spot changed in both places** between syncs: the dashboard's version is kept.
+- **An emptied Rack map tab** is filled in again from the dashboard. Clearing the tab never empties the map. To empty a spot from the sheet, delete its rows.
+- **Your Google sign-in:** syncing uses it. A sheet someone else made must be shared with you (Share → Editor). The first time, click **Allow access to the sheet**.
+
+**Sharing**
+- In a company, the rack map is shared by default. It's under **Settings → Company → What's shared → Warehouse rack map**.
+- Everyone sees the same racks and skids. The skid panel says who changed it last.
+- The linked sheet is shared too. Share the sheet with your coworkers in Google Sheets so their dashboards can update it.
+- Without a company, the map syncs between your own devices when you're signed in.
+
 ## Good to know
 
 - **Signing in is optional.** Without it, customers are saved in that browser, and **Share instead…** in the Email window still hands the files to your device's own email app.
