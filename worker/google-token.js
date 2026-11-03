@@ -102,8 +102,8 @@ async function unseal(env, s) {
 }
 
 /* ---------- company: shared customers, leads and history ---------- */
-const KINDS = { cust: ['cust', 'grp'], lead: ['lead'], log: ['log'], act: ['act'], todo: ['todo'], tpl: ['tpl'] };
-const SHARE_DEF = { cust: true, lead: true, log: true, act: true, todo: false, tpl: false };
+const KINDS = { cust: ['cust', 'grp'], lead: ['lead'], log: ['log'], act: ['act'], todo: ['todo'], tpl: ['tpl'], rack: ['skid', 'rackcfg'] };
+const SHARE_DEF = { cust: true, lead: true, log: true, act: true, todo: false, tpl: false, rack: true };
 const ck = v => String(v || '').trim().toLowerCase();
 const okEmail = v => /^[^\s@<>,;"]+@[^\s@<>,;"]+\.[^\s@<>,;"]+$/.test(v) && v.length <= 200;
 const who = new Map(); // token fingerprint -> {email, exp}: saves asking Google/Microsoft on every call

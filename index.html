@@ -154,6 +154,51 @@ svg{flex:none}
 .tm-invf{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.tm-invf .in{height:38px}@media (max-width:560px){.tm-invf{grid-template-columns:minmax(0,1fr) auto}.tm-invf .btn{grid-column:1/-1}}
 .st-note{margin:0 0 8px;color:var(--muted);font-size:13.5px;line-height:1.45}
 .tm-acts{display:flex;justify-content:flex-end;margin-top:10px}.tm-rn,.tm-sync{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tm-rn .in{height:36px;width:220px;max-width:100%}.tm-sync small{color:var(--muted)}
+#whDlg{width:min(1600px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
+.wh-wrap{--up:#1f4fa3;--beam:#d9660f;--fill:#fff3e6;--fill-line:#f0c39a;--hit:#ffd84a;--hit-fg:#3a2c00;grid-template-rows:auto auto minmax(0,1fr);position:relative}
+html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b4524;--hit:#e8bd2c;--hit-fg:#1d1600}
+.wh-bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise)}.wh-bar .spacer{flex:1}
+.wh-search{flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:0 10px;height:38px}.wh-search svg{width:16px;height:16px;flex:none;color:var(--muted)}
+.wh-search input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);outline:none;text-transform:uppercase}.wh-search input::placeholder{text-transform:none}.wh-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.wh-step{display:flex;align-items:center;border:1px solid var(--line2);border-radius:8px;background:var(--panel);overflow:hidden;height:38px}.wh-step span{padding:0 10px;font:600 12px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.wh-step input{width:3.4em;height:100%;text-align:center;border:0;border-inline:1px solid var(--line);background:none;color:var(--ink);font:600 15px var(--ui)}.wh-step button{border:0;background:none;color:var(--ink);font:600 18px var(--ui);width:36px;height:100%;cursor:pointer}.wh-step button:hover{background:var(--raise)}
+.wh-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1d7a46;margin-right:6px;vertical-align:1px}.wh-dot.busy{background:#E0A030}.wh-dot.bad{background:var(--bad)}.wh-bad{color:var(--bad)}
+.wh-main{overflow:auto;padding:16px;display:grid;gap:16px;align-content:start;min-height:0}
+.wh-res{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}.wh-res h3{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
+.wh-r{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:12px;padding:10px 14px;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer}.wh-r:last-child{border-bottom:0}.wh-r:hover{background:var(--fill)}
+.wh-r .code{font:700 15px var(--ui);color:var(--beam)}.wh-r .lines{font-size:13.5px;text-transform:uppercase;min-width:0}.wh-r .lines div{overflow-wrap:anywhere}.wh-r i{color:var(--muted);text-transform:none}
+.wh-racks{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;align-items:start}
+.wh-rack{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 12px 14px;display:grid;gap:8px;min-width:0}.wh-rack header{display:flex;align-items:center;gap:10px}
+.wh-letter{font:800 30px/1 var(--ui);color:var(--up)}.wh-meta{flex:1;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wh-frame{border-inline:6px solid var(--up);padding:0 4px}.wh-shelf{display:grid;gap:6px;padding:6px 0 8px;border-bottom:5px solid var(--beam)}
+.wh-floor{border-top:2px dashed var(--line2);padding-top:8px;margin-top:2px}.wh-fg{display:grid;gap:6px;padding:0 10px}.wh-fl{font:600 10.5px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.wh-rack.skinny .wh-frame,.wh-rack.skinny .wh-floor{width:100%;max-width:180px;justify-self:center}.wh-rack.skinny .wh-fg{padding:0 4px}
+.wh-slot{all:unset;box-sizing:border-box;display:grid;gap:2px;align-content:start;min-height:66px;padding:7px 8px;border:1px dashed var(--line2);border-radius:5px;cursor:pointer;min-width:0}.wh-slot:hover{border-color:var(--muted)}.wh-slot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wh-slot .c{font:700 12.5px var(--ui);color:var(--muted)}.wh-slot .s{font-size:12.5px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere;text-transform:uppercase}.wh-slot .q{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wh-slot.full{border:1px solid var(--fill-line);background:var(--fill)}.wh-slot.full .c{color:var(--beam)}.wh-slot.empty .s{color:var(--muted);text-transform:none}
+.searching .wh-slot.full:not(.hit){opacity:.35}.wh-slot.hit{background:var(--hit);border-color:var(--hit);color:var(--hit-fg)}.wh-slot.hit .c,.wh-slot.hit .q{color:var(--hit-fg)}
+.wh-addrack{border:2px dashed var(--line2);background:none;color:var(--up);font:800 16px var(--ui);text-transform:uppercase;letter-spacing:.03em;border-radius:10px;padding:18px;cursor:pointer;min-height:120px}.wh-addrack:hover{border-color:var(--up);background:var(--panel)}.wh-addrack:disabled{opacity:.45;cursor:default}
+.wh-orph{background:var(--panel);border:1px solid var(--bad);border-radius:10px;padding:12px;display:grid;gap:8px}.wh-orph h3{margin:0;font:800 16px var(--ui);text-transform:uppercase;color:var(--bad)}.wh-orph p{margin:0;font-size:13px;color:var(--muted)}.wh-og{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.wh-side{position:absolute;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--panel);border-left:1px solid var(--line);box-shadow:-16px 0 40px rgba(0,0,0,.16);display:flex;flex-direction:column;z-index:6;animation:fade .2s var(--ease)}.wh-side[hidden]{display:none}
+.wh-sh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.wh-code{font:800 28px/1 var(--ui);color:var(--beam)}.wh-where{font-size:13px;color:var(--muted);margin-top:2px}
+.wh-sb{flex:1;overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start;min-height:0}
+.wh-sf{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--line);align-items:center}.wh-tot{flex:1;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wh-row{border:1px solid var(--line);background:var(--raise);border-radius:8px;padding:10px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.wh-f{display:grid;gap:3px;min-width:0}.wh-f label{font:600 10.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wh-f .in{height:38px;font-size:14px;padding:0 9px;min-width:0}.wh-f textarea.in{height:auto;padding:8px 9px;resize:vertical}
+.wh-row .wh-f input:not([type=number]),.wh-f textarea{text-transform:uppercase}.wh-f input::placeholder,.wh-f textarea::placeholder{text-transform:none}
+.wh-f.wide{grid-column:1/-1}.wh-f.half{grid-column:span 2}.wh-f.third{grid-column:span 2}.wh-f input.auto{background:transparent;border-style:dashed}
+.wh-qu{display:flex;gap:4px;min-width:0}.wh-qu input{flex:1;min-width:0}.wh-qu select.in{flex:0 0 auto;width:auto;padding:0 6px}
+@media (max-width:520px){.wh-f.half{grid-column:span 3}.wh-f.half:nth-of-type(4){grid-column:1/-1}.wh-f.third{grid-column:span 3}}
+.wh-sug{display:grid;border:1px solid var(--accent);border-radius:6px;overflow:hidden;background:var(--panel);margin-top:2px}.wh-sug[hidden]{display:none}
+.wh-sug button{all:unset;box-sizing:border-box;padding:8px 10px;font-size:13.5px;text-transform:uppercase;cursor:pointer;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.wh-sug button:last-child{border-bottom:0}.wh-sug button:hover,.wh-sug button:focus-visible{background:var(--accent-soft)}
+.wh-rt{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}.wh-rt button{border:0;background:none;color:var(--accent-fg);font:600 12.5px var(--ui);cursor:pointer;padding:2px 0}.wh-rt button.x{color:var(--muted)}.wh-rt button.x:hover{color:var(--bad)}
+.wh-hint{margin:0;font-size:13px;color:var(--muted);line-height:1.45}.wh-hint.warn{color:var(--bad)}.wh-hint a{color:var(--accent-fg)}
+.wh-mv{display:grid;gap:10px;padding:14px 16px;border-top:2px solid var(--beam);background:var(--raise)}.wh-mv[hidden]{display:none}.wh-mvh{font:800 15px var(--ui);text-transform:uppercase;overflow-wrap:anywhere}.wh-mvb{display:flex;gap:8px;justify-content:flex-end}
+.wh-sect{font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
+.wh-pre{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.wh-pre button{border:1.5px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;display:grid;gap:2px}.wh-pre b{font-size:14.5px}.wh-pre span{font-size:12.5px;color:var(--muted)}.wh-pre [aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+.wh-lvls{display:grid;gap:6px}.wh-lvl{display:flex;align-items:center;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:6px 6px 6px 12px}.wh-lvl .nm{flex:1;font-size:14px}.wh-lvl small{display:block;color:var(--muted);font-size:12px}
+.wh-mini{display:flex;align-items:center;border:1px solid var(--line2);border-radius:6px;overflow:hidden;background:var(--panel)}.wh-mini button{border:0;background:none;color:var(--ink);font:600 17px var(--ui);width:34px;height:34px;cursor:pointer}.wh-mini button:hover{background:var(--raise)}.wh-mini output{min-width:2em;text-align:center;font-weight:700}
+.wh-lvl .lnk.x{color:var(--muted)}.wh-lvl .lnk.x:hover{color:var(--bad)}
 .ld-st{font:700 11px var(--ui);border-radius:999px;padding:1px 7px;background:var(--raise);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .pl-empty{color:var(--muted);font-size:12.5px;text-align:center;padding:14px 6px;border:1px dashed var(--line2);border-radius:8px}
 #homeDlg{width:min(1320px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
@@ -1059,6 +1104,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
       <button type="button" class="nav-it" data-nav="pipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/></svg><span><b>Pipeline</b><small id="navPipe">Customers from first send to order</small></span></button>
       <button type="button" class="nav-it" data-nav="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span><b>Sent emails</b><small id="navSent"></small></span></button>
       <button type="button" class="nav-it" data-nav="cust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg><span><b>Customers</b><small id="navCust"></small></span></button>
+      <button type="button" class="nav-it" data-nav="wh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M7 21v-8h10v8M7 17h10"/></svg><span><b>Warehouse</b><small id="navWh"></small></span></button>
       <button type="button" class="nav-it nav-sub" data-nav="cust-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span><b>New customer</b></span></button>
       <span class="menu-h">Open a sell sheet</span>
       <button type="button" class="nav-it" data-nav="open-pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>From this computer</b><small>PDF or Word</small></span></button>
@@ -1095,6 +1141,14 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
     <div class="pl-bar" id="plBar"></div>
     <div class="pl-main"><div class="pl-board" id="plBoard"></div><aside class="pl-todo" id="plTodo" aria-label="To-do"></aside></div>
     <aside class="pl-person" id="plPerson" hidden aria-label="Lead or customer"></aside>
+  </div>
+</dialog>
+<dialog id="whDlg" aria-label="Warehouse">
+  <div class="lg-wrap wh-wrap">
+    <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
+    <div class="wh-bar" id="whBar"></div>
+    <div class="wh-main"><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
 <dialog id="invDlg" aria-label="Inventory">
@@ -1269,7 +1323,7 @@ const PRESETS=[['Navy','#1F2A44','#4F8FD6'],['Forest','#1E3A2F','#4FA37A'],['Cha
 /* ---------- state ---------- */
 /* settings: everything adjustable under Settings (the gear, top right). Saved in this browser and synced with your account. */
 const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comfy',currency:'$',followDays:7,replyEvery:5,
-  tabs:['home','editor','inventory','pipeline','sent','customers'],tabsOff:[],sideOff:[],
+  tabs:['home','editor','inventory','pipeline','sent','customers','warehouse'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','todo','chart','activity','top','inv','cust'],secOff:[],side:['todo','top','inv','cust']},
   inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:false}},upd:0};
@@ -2598,7 +2652,8 @@ function afterLogin(prevKey){const a=authGet();if(!a)return;
   const flag='ss-merged:'+a.prov+':'+ck(a.email);if(prevKey==='ss-customers'&&!lsGet(flag)){try{const g=JSON.parse(lsGet('ss-customers')||'[]');const gl=Array.isArray(g)?g:g.customers||[];
       if(gl.length){const k=cuKey(),cur=JSON.parse(lsGet(k)||'{}'),m=mergeCust({customers:cur.customers||[],deleted:cur.deleted||[],groups:cur.groups},{customers:gl.map(c=>({...c,upd:c.upd||1})),deleted:[],groups:Array.isArray(g)?{}:g.groups});lsSet(k,JSON.stringify(m));}
       const gLog=JSON.parse(lsGet('ss-log')||'{}')||{};if((gLog.entries||[]).length){const lk=lgKey(),cl=JSON.parse(lsGet(lk)||'{}')||{};lsSet(lk,JSON.stringify(mergeLog({entries:cl.entries||[],deleted:cl.deleted||[]},{entries:gLog.entries,deleted:[]})));}
-      const gc=lsJ('ss-crm');if(gc){const k=crmKey();lsSet(k,JSON.stringify(mergeCRM(lsJ(k),gc)));}}catch(_){}lsSet(flag,'1');}
+      const gc=lsJ('ss-crm');if(gc){const k=crmKey();lsSet(k,JSON.stringify(mergeCRM(lsJ(k),gc)));}
+      const gr=lsJ('ss-racks');if(gr){const k=rkKey();lsSet(k,JSON.stringify(mergeRacks(lsJ(k),gr)));}}catch(_){}lsSet(flag,'1');}
   crmLoad();lgLoad();renderBadge();CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();teamStart();}
 function signOut(){const all=toksAll(),g=all.google;if(g?.token&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(g.token,()=>{});}catch(_){}
   if(gHelper())for(const k of gKeys())if(all[k]?.rt)helperCall('revoke',{rt:all[k].rt}).catch(()=>{});
@@ -2646,7 +2701,7 @@ const WORD_SYNC=[['mailMsg','ss-mailmsg','new','#mlMsg'],['mailSubj','ss-mailsub
 /* what was last synced: the cloud file's version and a fingerprint of the local data. When neither changed, a sync only asks Drive for the version. */
 const SYNC={ver:'',fp:''};
 const hashS=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36)+':'+str.length;};
-const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet(crmKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
+const syncFp=()=>hashS([lsGet(cuKey()),lsGet(lgKey()),lsGet(crmKey()),lsGet(rkKey()),lsGet('ss-inv-meta'),JSON.stringify(SET),...WORD_SYNC.map(w=>lsGet(w[1])+'@'+lsGet(w[1]+'-upd')),lsGet('ss-sheet-del'),sheets.map(x=>x.id+':'+x.updated).join(',')].join('\n'));
 const blankS=x=>!x.title&&!x.code&&!(x.photos||[]).length;
 /* sell sheets: each saved sheet is its own small file in the app's private Drive folder; the sync file keeps the list (and deletions).
    The newest version of each sheet wins. */
@@ -2695,13 +2750,16 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       const im=mergeInvMeta(ivMetaAll(),rd.invMeta);lsSet('ss-inv-meta',JSON.stringify(im));
       // leads, calls & notes, to-dos: the newest change of each wins
       const ckey=crmKey(),cm=mergeCRM(lsJ(ckey),rd.crm);lsSet(ckey,JSON.stringify(cm));
+      // warehouse rack map: the newest change of each spot wins
+      const rkey=rkKey(),rm=mergeRacks(lsJ(rkey),rd.racks);lsSet(rkey,JSON.stringify(rm));
       // settings: the newest change wins
       if(rd.settings&&typeof rd.settings==='object'&&(+rd.settings.upd||0)>(+SET.upd||0)){setReplace(rd.settings,true);invFolderFromSet();}
       const SHX=acct.prov==='google'?await syncSheets(a,rd.sheets):null;SYNC.ver=remote.version||'';
-      if((SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im,cm])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{},rd.crm||{}])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
-        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,crm:cm,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
+      if((SHX&&JSON.stringify(SHX)!==JSON.stringify(rd.sheets||{}))||JSON.stringify([m.customers,m.deleted,m.groups,WORD_SYNC.map(w=>W8[w[0]]?.text||null),lm.entries,lm.deleted,im,cm,rm])!==JSON.stringify([rd.customers||[],rd.deleted||[],rd.groups||{},WORD_SYNC.map(w=>rd[w[0]]?.text||null),lr.entries||[],lr.deleted||[],rd.invMeta||{},rd.crm||{},rd.racks||null])||JSON.stringify(SET)!==JSON.stringify(rd.settings||null))
+        {const pr=await cloud(a,'PUT',{id:remote.id,json:JSON.stringify({app:'sellsheet',v:1,customers:m.customers,deleted:m.deleted,groups:m.groups,log:lm,...W8,invMeta:im,crm:cm,racks:rm,settings:SET,...(SHX?{sheets:SHX}:rd.sheets?{sheets:rd.sheets}:{}),updated:Date.now()})});SYNC.ver=String(pr?.version||'');}
       if(invDlg.open)renderInv(true);
       if(ckey===crmKey()){crmLoad();crmRefresh();}
+      if(rkey===rkKey()){rkLoad();if(whDlg.open)renderWh();}
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
       lastSync=Date.now();syncErr='';SYNC.fp=syncFp();if(homeDlg.open)renderHome();}
@@ -2849,7 +2907,7 @@ function crmRefresh(){if(plDlg.open){renderPipe();renderPersonTodos();}if(custDl
 const TEAM={info:null,busy:null,last:0,err:'',loading:null,infoAt:0};
 const meEmail=()=>ck(authGet()?.email||'');
 const teamKey=()=>{const a=authGet();return a&&gHelper()?`ss-team:${a.prov}:${ck(a.email)}`:'';};
-const SHARE_NAME=[['cust','Customers and groups'],['lead','Leads'],['log','Pipeline and Sent history','Every sell sheet and email sent from here, its stage, value and replies'],['act','Calls, outside emails and notes','What people log on a customer or lead'],['todo','To-dos'],['tpl','Email templates','Everyone starts from the same saved wording']];
+const SHARE_NAME=[['cust','Customers and groups'],['lead','Leads'],['log','Pipeline and Sent history','Every sell sheet and email sent from here, its stage, value and replies'],['act','Calls, outside emails and notes','What people log on a customer or lead'],['todo','To-dos'],['tpl','Email templates','Everyone starts from the same saved wording'],['rack','Warehouse rack map','Racks, skids and the linked Google Sheet']];
 function teamLoadInfo(){const k=teamKey();TEAM.info=k?lsJ(k):null;}
 const teamOn=()=>!!(teamKey()&&TEAM.info?.company);
 const teamShare=k=>!!(teamOn()&&TEAM.info.company.share?.[k]);
@@ -2871,6 +2929,7 @@ function teamGather(T,sh,first){const out=[],me=meEmail(),now=Date.now(),add=(ki
     for(const[k,kind]of[['leads','lead'],['acts','act'],['todos','todo']])if(sh[kind]){for(const x of CRM[k])if(fresh(x.upd))add(kind,x.id,x,x.upd);for(const d of CRM.deleted)if(d.k===k&&fresh(d.at))add(kind,d.id,null,0,d.at);}}
   if(sh.log){lgLoad();for(const e of LG.list)if(fresh(e.upd||e.at))add('log',e.id,e,e.upd||e.at);for(const d of LG.deleted)if(fresh(d.at))add('log',d.id,null,0,+d.at||now);}
   if(sh.tpl)for(const w of WORD_SYNC){const u=+lsGet(w[1]+'-upd')||0;if(u&&fresh(u)&&lsGet(w[1]))add('tpl',w[1],{text:lsGet(w[1])},u);}
+  if(sh.rack){rkLoad();for(const[loc,x]of Object.entries(RK.skids))if(fresh(x.upd))add('skid',loc,x,x.upd);for(const d of RK.deleted)if(fresh(d.at))add('skid',d.loc,null,0,d.at);if(RK.cfg.upd&&fresh(RK.cfg.upd))add('rackcfg','cfg',RK.cfg,RK.cfg.upd);}
   return out;}
 // what came from the company, merged the same way as between your own devices (the newest change of each item wins)
 function teamApply(items){if(!items.length)return false;const of=k=>items.filter(x=>x.kind===k),live=k=>of(k).filter(x=>!x.del&&x.data&&typeof x.data==='object');
@@ -2880,10 +2939,12 @@ function teamApply(items){if(!items.length)return false;const of=k=>items.filter
   if(of('lead').length||of('act').length||of('todo').length){const d=[];for(const[kind,k]of[['lead','leads'],['act','acts'],['todo','todos']])for(const x of of(kind))if(x.del)d.push({id:x.id,at:x.del,k});
     const m=mergeCRM(lsJ(crmKey()),{leads:live('lead').map(x=>x.data),acts:live('act').map(x=>x.data),todos:live('todo').map(x=>x.data),deleted:d});lsSet(crmKey(),JSON.stringify(m));crmLoad();}
   if(of('log').length){const raw=lsJ(lgKey())||{},m=mergeLog({entries:raw.entries||[],deleted:raw.deleted||[]},{entries:live('log').map(x=>x.data),deleted:of('log').filter(x=>x.del).map(x=>({id:x.id,at:x.del}))});lsSet(lgKey(),JSON.stringify(m));lgLoad();}
+  if(of('skid').length||of('rackcfg').length){const cf=live('rackcfg').find(x=>x.id==='cfg');
+    lsSet(rkKey(),JSON.stringify(mergeRacks(lsJ(rkKey()),{skids:Object.fromEntries(live('skid').map(x=>[x.id,{...x.data,upd:x.upd}])),deleted:of('skid').filter(x=>x.del).map(x=>({loc:x.id,at:x.del})),cfg:cf?{...cf.data,upd:cf.upd}:null})));rkLoad();rkSheetSoon();}
   const okT=new Set(WORD_SYNC.map(w=>w[1]));for(const x of live('tpl'))if(okT.has(x.id)&&typeof x.data.text==='string'&&x.upd>(+lsGet(x.id+'-upd')||0)){lsSet(x.id,x.data.text);lsSet(x.id+'-upd',String(x.upd));}
   return true;}
-function teamRedraw(){renderBadge();if(custDlg.open)renderCP();if(plDlg.open){renderPipe();if(PL.person&&!$('#plPerson').contains(document.activeElement))renderPerson();}if(homeDlg.open)renderHome();if(logDlg.open)renderLog();if(mailDlg.open)renderCust();if(setDlg.open&&ST.sec==='team')renderSettings();}
-async function teamSync(){if(!teamOn())return;if(TEAM.busy)return TEAM.busy;
+function teamRedraw(){renderBadge();if(custDlg.open)renderCP();if(plDlg.open){renderPipe();if(PL.person&&!$('#plPerson').contains(document.activeElement))renderPerson();}if(homeDlg.open)renderHome();if(logDlg.open)renderLog();if(mailDlg.open)renderCust();if(whDlg.open)renderWh();if(setDlg.open&&ST.sec==='team')renderSettings();}
+async function teamSync(){if(!teamOn())return;if(TEAM.busy){TEAM.again=true;return TEAM.busy.then(()=>TEAM.busy);}
   TEAM.busy=(async()=>{try{const co=TEAM.info.company,K=`ss-teamsync:${co.id}:${meEmail()}`,st=lsJ(K)||{seq:0,pushT:0,share:''},sig=JSON.stringify(co.share||{});
       // a newly shared kind: send everything of it, and fetch everything already there
       if(st.share!==sig){st.seq=0;st.pushT=0;st.share=sig;}
@@ -2895,7 +2956,7 @@ async function teamSync(){if(!teamOn())return;if(TEAM.busy)return TEAM.busy;
       const changed=teamApply(got);st.seq=since;st.pushT=t0;lsSet(K,JSON.stringify(st));TEAM.last=Date.now();TEAM.err='';
       if(changed){scheduleSync();teamRedraw();}}
     catch(e){TEAM.err=e.message;if(e.code==='no_company'||e.code==='not_admin')await teamRefresh().catch(()=>{});}
-    finally{TEAM.busy=null;if(setDlg.open&&ST.sec==='team')renderSettings();}})();return TEAM.busy;}
+    finally{TEAM.busy=null;if(setDlg.open&&ST.sec==='team')renderSettings();if(TEAM.again){TEAM.again=false;teamSync();}}})();return TEAM.busy;}
 const TEAM_EVERY=180e3; // sync every 3 minutes while the page is open
 setInterval(()=>{if(teamOn()&&!document.hidden&&navigator.onLine)teamSync();},TEAM_EVERY);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&teamOn()&&Date.now()-TEAM.last>TEAM_EVERY)teamSync();});
@@ -4390,7 +4451,7 @@ const ST_SECS=[['general','General','<circle cx="12" cy="12" r="3"/><path d="M12
   ['nav','Navigation','<path d="M4 6h16M4 12h16M4 18h10"/>'],['email','Email & replies','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'],['inv','Inventory','<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>'],
   ['pipe','Pipeline','<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/>'],['sheet','Sell sheets','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>'],['team','Company','<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.9 5 5.8"/>'],['data','Backup & reset','<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/>']];
 const ACCENTS=[['#0E993F','Green'],['#2563EB','Blue'],['#4F46E5','Indigo'],['#9333EA','Purple'],['#DB2777','Pink'],['#DC2626','Red'],['#EA7317','Orange'],['#CA8A04','Gold'],['#0891B2','Teal'],['#475569','Slate']];
-const SIDE_ITEMS=[['home','Home'],['editor','Sell sheet editor'],['inv','Inventory'],['pipe','Pipeline'],['sent','Sent emails'],['cust','Customers'],['cust-new','New customer'],['open-pc','Open a sell sheet: from this computer'],['open-drive','Open a sell sheet: from Google Drive']];
+const SIDE_ITEMS=[['home','Home'],['editor','Sell sheet editor'],['inv','Inventory'],['pipe','Pipeline'],['sent','Sent emails'],['cust','Customers'],['cust-new','New customer'],['wh','Warehouse'],['open-pc','Open a sell sheet: from this computer'],['open-drive','Open a sell sheet: from Google Drive']];
 const TAB_NAMES={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers'};
 const PIPE_NAMES=()=>Object.fromEntries(PL_COLS.map(c=>[c[0],c[1]]));
 function stSendCard(){const a=authGet(),row=(t,sub,ctl)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${ctl}</div>`,b=(v,t,x='',cls='btn sm')=>`<button class="${cls}" type="button" data-sact="${v}"${x}>${t}</button>`;
@@ -4412,7 +4473,7 @@ function renderSettings(){if(!setDlg.open)return;
   const card=(h,rows)=>`<div class="st-card">${h?`<h4>${h}</h4>`:''}${rows}</div>`;
   const H=SET.home;let body='';
   if(ST.sec==='general')body=`<h3>General</h3><p class="st-lead">How the site looks and where it opens. Changes save as you make them, and sync to your account when you're signed in.</p>
-    ${card('',row('Display name','Shown on the account button (instead of your email) and in Home\'s greeting',txt('name','e.g. Sam Lee',undefined,'text','Display name'))+row('Open on','The page the site starts on',sel('start',[['home','Home'],['editor','Sell sheet editor'],['inventory','Inventory'],['pipeline','Pipeline'],['sent','Sent'],['customers','Customers']],undefined,'Open on'))
+    ${card('',row('Display name','Shown on the account button (instead of your email) and in Home\'s greeting',txt('name','e.g. Sam Lee',undefined,'text','Display name'))+row('Open on','The page the site starts on',sel('start',[['home','Home'],['editor','Sell sheet editor'],['inventory','Inventory'],['pipeline','Pipeline'],['sent','Sent'],['customers','Customers'],['warehouse','Warehouse']],undefined,'Open on'))
       +row('Appearance','',seg('@theme',[['system','Match device'],['light','Light'],['dark','Dark']],lsGet('ss-appear')||'system'))
       +row('Accent colour','Buttons, highlights and charts',`<span class="st-sw">${ACCENTS.map(([c,n])=>`<button type="button" data-sp="accent" data-sv="${c}" style="--c:${c}" title="${n}" aria-label="${n}" aria-pressed="${(normHex(SET.accent)||'')===c}"></button>`).join('')}<input type="color" data-sp="accent" value="${esc((normHex(SET.accent)||'#0E993F').toLowerCase())}" aria-label="Any colour" title="Any colour"></span>`)
       +row('Animations','Hover effects and pages easing in',seg('motion',[['full','Full'],['reduced','Reduced'],['off','Off']]))
@@ -4501,7 +4562,7 @@ setDlg.addEventListener('input',e=>{const t=e.target,p=t.dataset.sp;if(!p||!['te
 async function openSettings(sec){pageShown('settings');if(sec)ST.sec=sec;ST.sure=false;if(!setDlg.open)setDlg.showModal();renderSettings();}
 // one file with everything worth keeping
 function stBackup(){const J=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}};
-  const data={app:'sellsheet-backup',v:1,at:new Date().toISOString(),settings:SET,customers:J(cuKey()),log:J(lgKey()),invMeta:J('ss-inv-meta'),invFields:J('ss-inv-fields'),invFolder:J('ss-inv-folder'),mail:J('ss-mail'),
+  const data={app:'sellsheet-backup',v:1,at:new Date().toISOString(),settings:SET,customers:J(cuKey()),log:J(lgKey()),invMeta:J('ss-inv-meta'),racks:J(rkKey()),invFields:J('ss-inv-fields'),invFolder:J('ss-inv-folder'),mail:J('ss-mail'),
     wording:Object.fromEntries(['ss-mailmsg','ss-mailsubj','ss-fupmsg','ss-fupsubj','ss-linemsg','ss-linesubj'].map(k=>[k,lsGet(k)]).filter(x=>x[1]))};
   save(`Rakaposhica Dashboard backup ${dayStr(Date.now())}.json`,new Blob([JSON.stringify(data,null,1)],{type:'application/json'}));}
 async function stRestore(file){let d;try{d=JSON.parse(await file.text());}catch(_){toast('That file isn\'t a backup from this site.');return;}if(!d||d.app!=='sellsheet-backup'){toast('That file isn\'t a backup from this site.');return;}
@@ -4614,16 +4675,17 @@ homeDlg.addEventListener('focusin',e=>{const b=e.target.closest('[data-tip]');if
 
 /* ---------- sidebar (the logo, top left) ---------- */
 const navDlg=$('#navDlg'),custDlg=$('#custDlg');
-function openNav(){lgLoad();cuLoad();$('#navEd').textContent=S?'Open: '+sheetName(S):'Make and edit sell sheets';$$('#navDlg [data-nav]').forEach(b=>{const cur=b.dataset.nav===({inventory:'inv',pipeline:'pipe',sent:'sent',customers:'cust',home:'home'}[pageNow()]||(pageNow()?'':'editor'));cur?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
+function openNav(){lgLoad();cuLoad();$('#navEd').textContent=S?'Open: '+sheetName(S):'Make and edit sell sheets';$$('#navDlg [data-nav]').forEach(b=>{const cur=b.dataset.nav===({inventory:'inv',pipeline:'pipe',sent:'sent',customers:'cust',home:'home',warehouse:'wh'}[pageNow()]||(pageNow()?'':'editor'));cur?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});const th=threads(),due=th.filter(needsFollow).length,nn=nnCount();
   const nr=th.filter(t=>t.root.reply&&!t.root.reply.seen).length;
   $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   {const d=th.filter(needsFollow).length;$('#navHome').textContent=nr||d?[nr&&`${nr} new repl${nr>1?'ies':'y'}`,d&&`${d} follow-up${d>1?'s':''} due`].filter(Boolean).join(' · '):'Today at a glance';}
   {const n=IV.items.length;$('#navInv').textContent=IV.folder?`${n} product${n===1?'':'s'} · ${IV.folder.name}`:'Your sell sheets folder in Google Drive';}
+  {rkLoad();const n=Object.keys(RK.skids).length;$('#navWh').textContent=n?`${n} skid${n>1?'s':''} on ${rkCount()} rack${rkCount()>1?'s':''}`:'Rack map: what\'s on each skid';}
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
 navDlg.addEventListener('click',e=>{if(e.target===navDlg){navDlg.close();return;}const b=e.target.closest('[data-nav]');if(!b)return;const v=b.dataset.nav;navDlg.close();
-  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='editor')goEditor();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='open-pc')$('#openFile').click();
+  if(v==='sent')openLog();else if(v==='inv')openInv();else if(v==='home')openHome();else if(v==='editor')goEditor();else if(v==='pipe')openPipe();else if(v==='cust')openCP();else if(v==='cust-new')openCustomer('new');else if(v==='wh')openWh();else if(v==='open-pc')$('#openFile').click();
   else if(v==='open-drive')driveOpen('sheet').then(f=>{if(f)openSheetFile(f);});});
 
 /* ---------- small pop-ups shared by the customer screens ---------- */
@@ -4918,7 +4980,308 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 /* ---------- pages and addresses ----------
    Each page has its own address (#home, #inventory, #pipeline, #sent, #customers), so Back works, a refresh stays on the page,
    and a page can be opened in its own browser tab. The sell sheet editor is the site with no #. */
-const PAGES={home:['homeDlg','Home',()=>openHome()],inventory:['invDlg','Inventory',()=>openInv()],pipeline:['plDlg','Pipeline',()=>openPipe()],sent:['logDlg','Sent',()=>openLog()],customers:['custDlg','Customers',()=>openCP()],
+/* ---------- Warehouse: the rack map ----------
+   Racks are drawn front-on: levels top to bottom, floor spots in front. Spots are numbered from the bottom level up,
+   left to right; F1, F2… are floor spots. Each spot holds one skid: item lines (item, style, size, colour, boxes × per box),
+   a skid total for mixed skids, and a note. Kept per account like customers, synced to your devices, shared with your
+   company (Settings → Company → What's shared), and kept two-way with a Google Sheet. */
+const whDlg=$('#whDlg');
+const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
+const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
+const RK={cfg:{rackCount:4,layouts:{},sheet:null,upd:0},skids:{},deleted:[],q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
+/* racks and spots */
+function rackName(i){let n=i+1,s='';while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
+const rackIndex=r=>{let i=0;for(const ch of r)i=i*26+(ch.charCodeAt(0)-64);return i;};
+const rkLayOk=l=>l&&Array.isArray(l.levels)&&l.levels.length>=1&&l.levels.length<=8&&l.levels.every(n=>Number.isInteger(n)&&n>=1&&n<=4)&&Number.isInteger(l.floor)&&l.floor>=0&&l.floor<=4;
+const rkCount=()=>RK.cfg.rackCount;
+const layoutOf=r=>rkLayOk(RK.cfg.layouts[r])?RK.cfg.layouts[r]:RK_STD;
+const sameLay=(a,b)=>a.floor===b.floor&&a.levels.join()===b.levels.join();
+function levelPositions(L){let n=1;return L.levels.map(c=>{const ps=[];for(let i=0;i<c;i++)ps.push(String(n++));return ps;});}
+function posList(r,L=layoutOf(r)){const out=levelPositions(L).flat();for(let i=1;i<=L.floor;i++)out.push('F'+i);return out;}
+// racks after Z (AA, AB…) get a dash, so AF-1 never clashes with rack A's floor spot AF1
+const locId=(r,p)=>r.length>1?r+'-'+p:r+p;
+function splitLoc(loc){if(loc.includes('-')){const[r,p]=loc.split('-');return{rack:r,pos:p};}const m=/^([A-Z]+?)(F\d+|\d+)$/.exec(loc)||[,loc,''];return{rack:m[1],pos:m[2]};}
+const rackLocs=(r,L)=>posList(r,L).map(p=>locId(r,p));
+const visRacks=()=>Array.from({length:rkCount()},(_,i)=>rackName(i));
+const visLocs=()=>visRacks().flatMap(r=>rackLocs(r));
+function orphLocs(){const v=new Set(visLocs());return Object.keys(RK.skids).filter(l=>!v.has(l)).sort();}
+const locOk=l=>/^([A-Z](F[1-4]|[1-9]\d?)|[A-Z]{2,3}-(F[1-4]|[1-9]\d?))$/.test(l);
+function posName(loc){const{rack,pos}=splitLoc(loc);if(rackIndex(rack)>rkCount()||!rackLocs(rack).includes(loc))return'Not on the current map';const L=layoutOf(rack);
+  if(pos[0]==='F'){const k=+pos.slice(1);return'Floor in front'+(L.floor===2?(k===1?', left':', right'):L.floor>2?`, spot ${k}`:'');}
+  let n=+pos,lvl=0;while(n>L.levels[lvl]){n-=L.levels[lvl];lvl++;}const nl=L.levels.length,c=L.levels[lvl];
+  return(nl===1?'Shelf':lvl===0?'Bottom level':lvl===nl-1?'Top level':nl===3?'Middle level':`Level ${lvl+1}`)+(c===2?(n===1?', left':', right'):c>2?`, spot ${n}`:'');}
+/* amounts */
+const unitOf=i=>i.unit==='dz'?'dz':'pcs',pcsOf=i=>(+i.qty||0)*(unitOf(i)==='dz'?12:1);
+const plural=(n,w)=>`${n} ${w}${n===1?'':(w==='box'?'es':'s')}`;
+const itemsAt=loc=>RK.skids[loc]?.items||[];
+const qtyOf=items=>items.reduce((t,i)=>t+pcsOf(i),0),boxesOf=items=>items.reduce((t,i)=>t+(+i.boxes||0),0);
+const skTotal=s=>{const t=s?.total;return t&&+t.count>0?{count:+t.count,unit:RK_TUNIT[t.unit]?t.unit:'boxes'}:null;};
+const skPcs=loc=>{const t=skTotal(RK.skids[loc]);return t&&t.unit!=='boxes'?t.count*(t.unit==='dz'?12:1):qtyOf(itemsAt(loc));};
+const skBoxes=loc=>{const t=skTotal(RK.skids[loc]);return t&&t.unit==='boxes'?t.count:boxesOf(itemsAt(loc));};
+const fmtTot=t=>t.unit==='boxes'?plural(t.count,'box'):`${t.count} ${t.unit}`;
+function skAmt(loc){const items=itemsAt(loc),t=skTotal(RK.skids[loc]);if(t)return`Mixed · ${fmtTot(t)} total`;
+  const b=boxesOf(items),known=items.filter(i=>+i.qty>0),allDz=known.length&&known.every(i=>unitOf(i)==='dz');
+  const q=allDz?`${known.reduce((a,i)=>a+ +i.qty,0)} dz`:(qtyOf(items)?`${qtyOf(items)} pcs`:'');return[b?plural(b,'box'):'',q].filter(Boolean).join(' · ');}
+function lineAmt(i){const b=+i.boxes||0,p=+i.per||0,q=+i.qty||0,u=unitOf(i);if(b&&p)return`${b} × ${p} = <b>${q}</b> ${u}`;
+  const parts=[];if(b)parts.push(`<b>${plural(b,'box')}</b>`);parts.push(q?`<b>${q}</b> ${u}`:'<i>count unknown</i>');return parts.join(' · ');}
+const itemLine=i=>[i.item,i.style,i.size,i.colour].filter(Boolean).join(' · ');
+const itemHit=(i,q)=>[i.item,i.style,i.size,i.colour].join(' ').toLowerCase().includes(q);
+/* the store: the newest change of each spot wins; an emptied spot is remembered so it stays empty everywhere */
+const rkNum=v=>v===''||v==null?0:Math.max(0,Math.min(1e7,Math.round(+v)||0)),rkUp=v=>String(v??'').trim().toUpperCase();
+function rkLine(i){const boxes=rkNum(i.boxes),per=rkNum(i.per);return{item:rkUp(i.item).slice(0,120),style:rkUp(i.style).slice(0,80),size:rkUp(i.size).slice(0,40),colour:rkUp(i.colour).slice(0,60),boxes,per,qty:boxes&&per?boxes*per:rkNum(i.qty),unit:i.unit==='dz'?'dz':'pcs'};}
+const lineHas=i=>i.item||i.style||i.size||i.colour||i.qty||i.boxes;
+function cleanSkid(s){if(!s||typeof s!=='object')return null;const items=(Array.isArray(s.items)?s.items:[]).slice(0,60).map(rkLine).filter(lineHas),note=rkUp(s.note).slice(0,1000),tc=rkNum(s.total?.count);
+  const total=tc?{count:tc,unit:RK_TUNIT[s.total.unit]?s.total.unit:'boxes'}:null;if(!items.length&&!note&&!total)return null;
+  return{items,note,total,upd:+s.upd||0,...(EMAIL_RE.test(String(s.by||''))?{by:ck(s.by)}:{})};}
+function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};const lay={};for(const[k,v]of Object.entries(c.layouts||{}))if(/^[A-Z]{1,3}$/.test(k)&&rkLayOk(v))lay[k]={levels:v.levels.slice(),floor:v.floor};
+  const sh=c.sheet&&/^[\w-]{20,100}$/.test(c.sheet.id||'')?{id:c.sheet.id,name:String(c.sheet.name||'Rack map').slice(0,120)}:null;
+  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,sheet:sh,upd:+c.upd||0};}
+function mergeRacks(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const del=new Map(),m=new Map();
+  for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&locOk(d.loc)&&(!del.has(d.loc)||del.get(d.loc)<+d.at))del.set(d.loc,+d.at||0);
+  for(const src of[a.skids,b.skids])for(const[loc,s]of Object.entries(src&&typeof src==='object'?src:{})){if(!locOk(loc))continue;const c=cleanSkid(s);if(!c)continue;const o=m.get(loc);if(!o||c.upd>o.upd)m.set(loc,c);}
+  const ca=cleanRkCfg(a.cfg),cb=cleanRkCfg(b.cfg),cut=Date.now()-365*864e5;
+  return{cfg:cb.upd>ca.upd?cb:ca,skids:Object.fromEntries([...m].filter(([loc,s])=>!((del.get(loc)||0)>=s.upd))),deleted:[...del].filter(([loc,at])=>at>cut&&!(m.get(loc)?.upd>at)).map(([loc,at])=>({loc,at}))};}
+function rkLoad(){const d=mergeRacks(lsJ(rkKey()),null);RK.cfg=d.cfg;RK.skids=d.skids;RK.deleted=d.deleted;}
+let rkTeamT=0;
+function rkSave(fromSheet){lsSet(rkKey(),JSON.stringify({cfg:RK.cfg,skids:RK.skids,deleted:RK.deleted}));scheduleSync();if(!fromSheet)rkSheetSoon();
+  if(teamShare('rack')){clearTimeout(rkTeamT);rkTeamT=setTimeout(()=>teamSync(),2500);}}
+const rkStamp=x=>{x.upd=Math.max(Date.now(),(+x.upd||0)+1);return x;};
+function setSkid(loc,body){const old=RK.skids[loc];if(body){const c=cleanSkid({...body,upd:0});if(c){RK.skids[loc]={...c,upd:Math.max(Date.now(),(+old?.upd||0)+1),...(meEmail()?{by:meEmail()}:{})};RK.deleted=RK.deleted.filter(d=>d.loc!==loc);return;}}
+  if(!old)return;delete RK.skids[loc];RK.deleted=RK.deleted.filter(d=>d.loc!==loc);RK.deleted.push({loc,at:Math.max(Date.now(),(+old.upd||0)+1)});}
+function writeSkid(loc,body){setSkid(loc,body);rkSave();renderWh();}
+function setRacks(n){n=Math.max(1,Math.min(RK_MAX,Math.round(n)||1));if(n===rkCount()){renderWh();return;}RK.cfg.rackCount=n;rkStamp(RK.cfg);rkSave();renderWh();}
+
+/* drawing */
+function slotHTML(loc){const s=RK.skids[loc],items=itemsAt(loc),full=!!s,hit=RK.q&&items.some(i=>itemHit(i,RK.q));let sum;
+  if(!full)sum='Empty';else if(!items.length)sum=esc(s.note||'Mixed skid');
+  else{const names=[...new Set(items.map(i=>i.item).filter(Boolean))];sum=esc(names[0]||'Unnamed item')+(names.length>1?` +${names.length-1} more`:'')+(items.length>1&&names.length===1?` (${items.length} variants)`:'');}
+  const a=full?skAmt(loc):'';return`<button type="button" class="wh-slot ${full?'full':'empty'}${hit?' hit':''}" data-loc="${loc}" aria-label="${loc}: ${full?esc(sum.replace(/<[^>]+>/g,'')):'empty'}"><span class="c">${loc}</span><span class="s">${sum}</span>${a?`<span class="q">${a}</span>`:''}</button>`;}
+function rackHTML(r){const L=layoutOf(r),locs=rackLocs(r),used=locs.filter(l=>RK.skids[l]).length,pcs=locs.reduce((t,l)=>t+skPcs(l),0),bx=locs.reduce((t,l)=>t+skBoxes(l),0);
+  const shelves=levelPositions(L).reverse().map(ps=>`<div class="wh-shelf" style="grid-template-columns:repeat(${ps.length},minmax(0,1fr))">${ps.map(p=>slotHTML(locId(r,p))).join('')}</div>`).join('');
+  const fl=[];for(let i=1;i<=L.floor;i++)fl.push(slotHTML(locId(r,'F'+i)));
+  const floor=L.floor?`<div class="wh-floor"><div class="wh-fl">Floor</div><div class="wh-fg" style="grid-template-columns:repeat(${L.floor},minmax(0,1fr))">${fl.join('')}</div></div>`:'';
+  return`<section class="wh-rack${Math.max(...L.levels,L.floor||1)===1?' skinny':''}" aria-label="Rack ${r}"><header><span class="wh-letter">${r}</span><span class="wh-meta">${used}/${locs.length} spots${bx?` · ${bx} boxes`:''} · ${pcs} pcs</span><button class="btn sm ghost" type="button" data-whlay="${r}" aria-label="Change layout of rack ${r}">Layout</button></header><div class="wh-frame">${shelves}</div>${floor}</section>`;}
+function whSheetChip(){const sh=RK.cfg.sheet;if(!sh)return`<button class="btn sm" type="button" data-wh="sheet">Google Sheet…</button>`;
+  return`<button class="btn sm${RK.sheetErr?' wh-bad':''}" type="button" data-wh="sheet" title="${esc(RK.sheetErr||'Kept in step with '+sh.name)}"><span class="wh-dot${RK.sheetErr?' bad':RK.sheetBusy?' busy':''}"></span>${RK.sheetErr?'Sheet: needs attention':RK.sheetBusy?'Syncing sheet…':RK.sheetAt?'Sheet synced '+esc(agoMin(RK.sheetAt)):'Google Sheet'}</button>`;}
+function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=orphLocs(),used=vis.filter(l=>RK.skids[l]).length;
+  if(!$('#whQ'))$('#whBar').innerHTML=`<label class="wh-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="whQ" type="search" placeholder="Find item, style, size or colour…" aria-label="Find in the warehouse" autocomplete="off"></label>
+    <span class="wh-step" title="Number of racks"><span>Racks</span><button type="button" data-wh="minus" aria-label="Remove a rack">−</button><input id="whCount" type="number" min="1" max="${RK_MAX}" inputmode="numeric" aria-label="Number of racks"><button type="button" data-wh="plus" aria-label="Add a rack">+</button></span>
+    <span class="spacer"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
+  if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();
+  $('#whSum').textContent=`${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
+  $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="plus" ${n>=RK_MAX?'disabled':''}>＋ Add rack ${rackName(n)}</button>`;
+  $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
+  const res=$('#whRes');if(RK.q){const rows=[];for(const loc of vis.concat(orph)){const hits=itemsAt(loc).filter(i=>itemHit(i,RK.q));if(hits.length)rows.push(`<button type="button" class="wh-r" data-loc="${loc}"><span class="code">${loc}</span><span class="lines">${hits.map(i=>`<div>${esc(itemLine(i))} — ${lineAmt(i)}</div>`).join('')}</span></button>`);}
+    res.innerHTML=`<h3>${rows.length?`${rows.length} location${rows.length>1?'s':''} match “${esc(RK.q.toUpperCase())}”`:`Nothing matches “${esc(RK.q.toUpperCase())}”`}</h3>${rows.join('')}`;res.hidden=false;}else res.hidden=true;}
+async function openWh(){rkLoad();pageShown('warehouse');if(!whDlg.open)whDlg.showModal();renderWh();if(RK.cfg.sheet)rkSheetSync();}
+
+/* the side panel: a skid, a rack's layout, or the Google Sheet */
+const whSide=$('#whSide');
+function sideOpen(kind,code,where,body,foot){RK.side=kind;whSide.hidden=false;whSide.innerHTML=`<div class="wh-sh"><div><div class="wh-code">${code}</div><div class="wh-where">${where}</div></div><button class="btn sm" type="button" data-wh="close">Close</button></div><div class="wh-sb" id="whSb">${body}</div><div class="wh-mv" id="whMv" hidden></div>${foot?`<div class="wh-sf">${foot}</div>`:''}`;}
+function closeSide(){RK.side='';RK.edit=null;RK.lay=null;RK.mv=null;whSide.hidden=true;whSide.innerHTML='';}
+const blankRow=()=>({item:'',style:'',size:'',colour:'',boxes:'',per:'',qty:'',unit:'pcs'}),b0=v=>v===0||v==null?'':v,autoQty=it=>it.boxes!==''&&it.per!==''&&it.boxes!=null&&it.per!=null&&!isNaN(+it.boxes)&&!isNaN(+it.per);
+function openSkid(loc){const{rack,pos}=splitLoc(loc),cur=RK.skids[loc],t=skTotal(cur);
+  RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i)})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
+  if(!RK.edit.items.length)RK.edit.items.push(blankRow());
+  const who=cur?.upd?`Updated ${esc(ago(cur.upd))}${cur.by&&teamOn()?' by '+esc(memberName(cur.by)):''}`:'';
+  sideOpen('skid',esc(loc),`Rack ${esc(rack)} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
+  drawRows();setTimeout(()=>$('#whSb input')?.focus(),30);}
+function drawRows(){const e=RK.edit;
+  $('#whSb').innerHTML=e.items.map((it,ix)=>`<div class="wh-row" data-ix="${ix}">
+    <div class="wh-f wide"><label for="wit-${ix}">Item</label><input class="in" id="wit-${ix}" data-k="item" autocomplete="off" value="${esc(it.item)}" placeholder="e.g. Hoodie"><div class="wh-sug" hidden></div></div>
+    <div class="wh-f half"><label for="wbx-${ix}">Boxes</label><input class="in" id="wbx-${ix}" data-k="boxes" type="number" min="0" inputmode="numeric" value="${esc(it.boxes)}" placeholder="0"></div>
+    <div class="wh-f half"><label for="wpb-${ix}">Per box</label><input class="in" id="wpb-${ix}" data-k="per" type="number" min="0" inputmode="numeric" value="${esc(it.per)}" placeholder="optional"></div>
+    <div class="wh-f half"><label for="wqt-${ix}">Total</label><div class="wh-qu"><input class="in${autoQty(it)?' auto':''}" id="wqt-${ix}" data-k="qty" type="number" min="0" inputmode="numeric" value="${esc(it.qty)}" placeholder="unknown" ${autoQty(it)?'readonly':''}><select class="in" data-k="unit" aria-label="Unit"><option value="pcs"${it.unit!=='dz'?' selected':''}>pcs</option><option value="dz"${it.unit==='dz'?' selected':''}>dozen</option></select></div></div>
+    <div class="wh-f third"><label for="wst-${ix}">Style</label><input class="in" id="wst-${ix}" data-k="style" autocomplete="off" value="${esc(it.style)}" placeholder="e.g. Zip-up"><div class="wh-sug" hidden></div></div>
+    <div class="wh-f third"><label for="wsz-${ix}">Size</label><input class="in" id="wsz-${ix}" data-k="size" autocomplete="off" value="${esc(it.size)}" placeholder="e.g. L"><div class="wh-sug" hidden></div></div>
+    <div class="wh-f third"><label for="wco-${ix}">Colour</label><input class="in" id="wco-${ix}" data-k="colour" autocomplete="off" value="${esc(it.colour)}" placeholder="e.g. Navy"><div class="wh-sug" hidden></div></div>
+    <div class="wh-rt"><button type="button" data-whrow="mv">Move to another skid…</button><button type="button" data-whrow="dup">Copy as new variant</button><button type="button" class="x" data-whrow="rm">Remove</button></div></div>`).join('')
+  +`<button class="btn sm" type="button" data-wh="addrow">＋ Add item</button>
+   <div class="wh-f"><label for="whTc">Skid total, for mixed skids</label><div class="wh-qu"><input class="in" id="whTc" type="number" min="0" inputmode="numeric" value="${esc(e.tc)}" placeholder="optional"><select class="in" id="whTu" aria-label="Skid total unit">${[['boxes','boxes'],['pcs','pcs'],['dz','dozen']].map(([v,n])=>`<option value="${v}"${e.tu===v?' selected':''}>${n}</option>`).join('')}</select></div></div>
+   <div class="wh-f"><label for="whNote">Skid notes</label><textarea class="in" id="whNote" rows="2" placeholder="PO number, condition, received date…">${esc(e.note)}</textarea></div>
+   <p class="wh-hint">Same item in different sizes or colours? Fill one line, then “Copy as new variant” and change what's different. Names you've used before are suggested as you type. On a mixed skid, list every item, leave counts you don't know blank, and put the full count in Skid total.</p>`;
+  updTot();}
+function updTot(){const e=RK.edit,el=$('#whTot');if(!e||!el)return;const rows=e.items.filter(i=>i.item||i.qty||i.boxes),tc=+e.tc||0;
+  if(tc){el.textContent=`${plural(rows.length,'line')} · skid total ${fmtTot({count:tc,unit:e.tu})}`;return;}
+  const b=boxesOf(rows),unk=rows.filter(i=>!(+i.qty>0)).length;el.textContent=`${plural(rows.length,'line')}${b?` · ${plural(b,'box')}`:''} · ${qtyOf(rows)} pcs${unk?` · ${unk} unknown`:''}`;}
+const skidBody=e=>({items:e.items,note:e.note,total:{count:e.tc,unit:e.tu}});
+// suggestions: names already used, shown once you type
+function showSug(inp){const box=inp.parentElement.querySelector('.wh-sug');if(!box)return;const q=rkUp(inp.value);if(!q){box.hidden=true;return;}
+  const k=inp.dataset.k,all=[...new Set(Object.values(RK.skids).flatMap(s=>s.items.map(i=>i[k]).filter(Boolean)))].sort();
+  const list=all.filter(v=>v.startsWith(q)&&v!==q).concat(all.filter(v=>!v.startsWith(q)&&v.includes(q))).slice(0,5);
+  if(!list.length){box.hidden=true;return;}box.innerHTML=list.map(v=>`<button type="button" data-whsug="${esc(v)}">${esc(v)}</button>`).join('');box.hidden=false;}
+/* moving a skid, or some boxes of one line */
+function shortSum(loc){const items=itemsAt(loc),names=[...new Set(items.map(i=>i.item).filter(Boolean))];const n=names.length?names[0]+(names.length>1?` +${names.length-1} more`:''):(RK.skids[loc]?.note?'notes only':'mixed');const a=skAmt(loc);return a?`${n} (${a})`:n;}
+function openMove(mode,ix){const e=RK.edit;if(!e)return;let title,extra='';
+  if(mode==='line'){const it=rkLine(e.items[ix]);if(!lineHas(it))return;title=`Move “${esc(itemLine(it)||'this line')}”`;const b=it.boxes;
+    if(b>1)extra=it.per>0||!(it.qty>0)?`<div class="wh-f"><label for="whMvN">Boxes to move (of ${b})</label><input class="in" id="whMvN" type="number" min="1" max="${b}" value="${b}" inputmode="numeric"></div>`:`<p class="wh-hint">This moves all ${b} boxes. To move only some, fill in Per box first.</p>`;}
+  else title=`Move everything on ${esc(e.loc)}`;
+  RK.mv={mode,ix};const locs=visLocs().filter(l=>l!==e.loc),first=locs.find(l=>!RK.skids[l])||'',P=$('#whMv');
+  P.innerHTML=`<div class="wh-mvh">${title}</div><div class="wh-f"><label for="whMvTo">Move to</label><select class="in" id="whMvTo">${locs.map(l=>`<option value="${l}"${l===first?' selected':''}>${l} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`).join('')}</select></div>${extra}<p class="wh-hint" id="whMvInfo"></p>
+    <div class="wh-mvb"><button class="btn sm" type="button" data-wh="mvcancel">Cancel</button><button class="btn sm primary" type="button" data-wh="mvgo">Move</button></div>`;
+  P.hidden=false;mvInfo();$('#whMvTo').focus();}
+function mvInfo(){const to=$('#whMvTo')?.value;if(to)$('#whMvInfo').textContent=RK.skids[to]?`${to} already has stock. This is added to it, not replaced.`:`${to} is empty.`;}
+function doMove(){const e=RK.edit,mv=RK.mv;if(!e||!mv)return;const to=$('#whMvTo').value;if(!to||to===e.loc)return;
+  const d0=RK.skids[to],dst=d0?JSON.parse(JSON.stringify(d0)):{items:[],note:'',total:null};let src;
+  if(mv.mode==='skid'){const s=cleanSkid(skidBody(e));if(!s){closeSide();return;}dst.items=dst.items.concat(s.items);const a=skTotal(dst),b=skTotal(s);let note=[dst.note,s.note].filter(Boolean).join(' / ');
+    if(b){if(!d0)dst.total=b;else if(a&&a.unit===b.unit)dst.total={count:a.count+b.count,unit:a.unit};else note=[note,`FROM ${e.loc}: SKID TOTAL ${fmtTot(b).toUpperCase()}`].filter(Boolean).join(' / ');}
+    dst.note=note;src=null;}
+  else{const line=rkLine(e.items[mv.ix]),b=line.boxes,nEl=$('#whMvN'),n=nEl?Math.max(1,Math.min(b,Math.round(+nEl.value)||b)):b,moved={...line};let rest=null;
+    if(b&&n<b){moved.boxes=n;rest={...line,boxes:b-n};if(line.per){moved.qty=n*line.per;rest.qty=(b-n)*line.per;}}
+    dst.items.push(moved);const items=e.items.slice();if(rest)items[mv.ix]=rest;else items.splice(mv.ix,1);src={...skidBody(e),items};}
+  const from=e.loc;closeSide();setSkid(to,dst);setSkid(from,src);rkSave();renderWh();toast(`Moved from ${from} to ${to}`);}
+/* a rack's layout */
+function openLayout(r){const L=layoutOf(r);RK.lay={rack:r,levels:L.levels.slice(),floor:L.floor};sideOpen('layout',`Rack ${esc(r)}`,'Layout','',`<span class="wh-tot" id="whTot"></span><button class="btn sm primary" type="button" data-wh="savelay">Save</button>`);drawLayout();}
+function drawLayout(){const y=RK.lay,r=y.rack,L={levels:y.levels,floor:y.floor},lp=levelPositions(L),nl=y.levels.length;
+  const ln=i=>nl===1?'Shelf':i===0?'Bottom level':i===nl-1?'Top level':`Level ${i+1}`,mini=(a,i,v,lab)=>`<span class="wh-mini"><button type="button" data-whl="${a}-" data-i="${i}" aria-label="Fewer ${lab}">−</button><output>${v}</output><button type="button" data-whl="${a}+" data-i="${i}" aria-label="More ${lab}">+</button></span>`;
+  const fl=[];for(let i=1;i<=y.floor;i++)fl.push(locId(r,'F'+i));const nw=new Set(rackLocs(r,L)),lost=Object.keys(RK.skids).filter(l=>splitLoc(l).rack===r&&!nw.has(l));
+  $('#whSb').innerHTML=`<div class="wh-sect">Quick pick</div><div class="wh-pre">${RK_PRESETS.map((p,i)=>`<button type="button" data-whl="preset" data-i="${i}" aria-pressed="${sameLay(p.lay,L)}"><b>${p.name}</b><span>${p.desc}</span></button>`).join('')}</div>
+    <div class="wh-sect">Levels, top to bottom · skids per level</div><div class="wh-lvls">${y.levels.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<div class="wh-lvl"><span class="nm">${ln(i)}<small>${lp[i].map(p=>locId(r,p)).join(' ')}</small></span>${mini('lv',i,c,'skids on '+ln(i))}${nl>1?`<button class="lnk x" type="button" data-whl="lvrm" data-i="${i}">Remove</button>`:''}</div>`).join('')}</div>
+    ${nl<8?'<button class="btn sm" type="button" data-whl="lvadd">＋ Add a level on top</button>':''}
+    <div class="wh-sect">Floor in front</div><div class="wh-lvl"><span class="nm">Floor spots<small>${fl.join(' ')||'None'}</small></span>${mini('fl',0,y.floor,'floor spots')}</div>
+    ${lost.length?`<p class="wh-hint warn">${lost.join(', ')} ${lost.length>1?'have':'has'} stock and won't be on this layout. ${lost.length>1?'They':'It'} will be kept under “Not on the map” so you can move ${lost.length>1?'them':'it'}. Nothing is deleted.</p>`:''}
+    <p class="wh-hint">Spots are numbered from the bottom level up, left to right.</p>`;
+  $('#whTot').textContent=`${rackLocs(r,L).length} spots`;}
+function layClick(b){const y=RK.lay,i=+b.dataset.i,a=b.dataset.whl;
+  if(a==='preset'){const p=RK_PRESETS[i].lay;y.levels=p.levels.slice();y.floor=p.floor;}if(a==='lv-')y.levels[i]=Math.max(1,y.levels[i]-1);if(a==='lv+')y.levels[i]=Math.min(4,y.levels[i]+1);
+  if(a==='lvrm'&&y.levels.length>1)y.levels.splice(i,1);if(a==='lvadd'&&y.levels.length<8)y.levels.push(y.levels[y.levels.length-1]||1);if(a==='fl-')y.floor=Math.max(0,y.floor-1);if(a==='fl+')y.floor=Math.min(4,y.floor+1);drawLayout();}
+function saveLayout(){const y=RK.lay;if(!y)return;const L={levels:y.levels.slice(),floor:y.floor};if(sameLay(L,RK_STD))delete RK.cfg.layouts[y.rack];else RK.cfg.layouts[y.rack]=L;rkStamp(RK.cfg);closeSide();rkSave();renderWh();}
+
+/* CSV: the same columns as the rack map's own export */
+const RK_HEAD=['Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
+const RK_RHEAD=['Rack','Levels (bottom to top, skids per level)','Floor spots'];
+function rkRows(skids=RK.skids){const out=[],seen=new Set(),locs=visLocs().concat(Object.keys(skids).filter(l=>!visLocs().includes(l)).sort());
+  for(const loc of locs){if(seen.has(loc))continue;seen.add(loc);const s=skids[loc];if(!s)continue;const{rack,pos}=splitLoc(loc),t=skTotal(s),items=s.items.length?s.items:[{}];
+    items.forEach(i=>out.push([loc,rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'']));}
+  return out;}
+const rkRackRows=()=>visRacks().map(r=>{const L=layoutOf(r);return[r,L.levels.join('-'),L.floor];});
+function csvText(rows){const q=v=>{v=String(v??'');return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};return rows.map(r=>r.map(q).join(',')).join('\n');}
+// rows (a header row first) → skids by location; unknown rows are counted, not guessed
+function rkParse(rows){const h=(rows[0]||[]).map(x=>String(x).trim().toLowerCase()),col=n=>h.indexOf(n.toLowerCase());
+  const c={};for(const n of RK_HEAD)c[n]=col(n);if(c.Location<0&&(c.Rack<0||c.Position<0))return null;
+  const skids={},v=(r,n)=>c[n]>=0?String(r[c[n]]??'').trim():'';let bad=0;
+  for(const r of rows.slice(1)){if(!r.some(x=>String(x).trim()))continue;let loc=rkUp(v(r,'Location'));if(!loc&&v(r,'Rack'))loc=locId(rkUp(v(r,'Rack')),rkUp(v(r,'Position')));
+    if(!locOk(loc)){bad++;continue;}const s=skids[loc]||(skids[loc]={items:[],note:'',total:null});
+    const it=rkLine({item:v(r,'Item'),style:v(r,'Style'),size:v(r,'Size'),colour:v(r,'Colour'),boxes:v(r,'Boxes'),per:v(r,'Per box'),qty:/^unknown$/i.test(v(r,'Total'))?'':v(r,'Total'),unit:/^(dz|dozen)$/i.test(v(r,'Unit'))?'dz':'pcs'});
+    if(lineHas(it))s.items.push(it);const tc=rkNum(v(r,'Skid total'));if(tc)s.total={count:tc,unit:/^(dz|dozen)$/i.test(v(r,'Skid total unit'))?'dz':/^pcs$/i.test(v(r,'Skid total unit'))?'pcs':'boxes'};if(v(r,'Skid notes'))s.note=rkUp(v(r,'Skid notes'));}
+  for(const k of Object.keys(skids))if(!cleanSkid(skids[k]))delete skids[k];return{skids,bad};}
+function rkParseRacks(rows){const out={layouts:{},count:0};for(const r of rows.slice(1)){const k=rkUp(r[0]);if(!/^[A-Z]{1,3}$/.test(k))continue;const lv=String(r[1]??'').split(/[-,\s]+/).filter(Boolean).map(Number),L={levels:lv,floor:Math.round(+r[2]||0)};
+  out.count=Math.max(out.count,rackIndex(k));if(rkLayOk(L)&&!sameLay(L,RK_STD))out.layouts[k]=L;}return out.count?out:null;}
+async function whImport(f){let rows;try{rows=parseCSV(await f.text());}catch(_){toast('That file couldn\'t be read.');return;}
+  const p=rkParse(rows);if(!p){toast('That file needs a Location column (or Rack and Position), like the rack map\'s Export CSV.',6000);return;}
+  const n=Object.keys(p.skids).length,has=Object.keys(RK.skids).length;if(!n){toast('No skids found in that file.');return;}
+  const r=has?await ask({title:`Import ${plural(n,'skid')}?`,body:`Replace everything: the map becomes exactly this file (spots not in it are emptied).\nUpdate these spots only: the ${n} spot${n>1?'s':''} in the file are replaced, everything else stays.${p.bad?`\n\n${p.bad} row${p.bad>1?'s':''} without a valid location will be skipped.`:''}`,ok:'Update these spots only',alt:'Replace everything',cancel:'Cancel'}):'ok';if(!r)return;
+  if(r==='alt')for(const loc of Object.keys(RK.skids))if(!p.skids[loc])setSkid(loc,null);
+  for(const[loc,s]of Object.entries(p.skids))setSkid(loc,s);
+  const top=Math.max(...Object.keys(p.skids).map(l=>rackIndex(splitLoc(l).rack)));if(top>rkCount()&&top<=RK_MAX){RK.cfg.rackCount=top;rkStamp(RK.cfg);}
+  rkSave();renderWh();toast(`Imported ${plural(n,'skid')}${p.bad?` · ${p.bad} row${p.bad>1?'s':''} skipped`:''}`);}
+function whExport(){save(`rack-inventory-${dayStr(Date.now())}.csv`,new Blob([csvText([RK_HEAD,...rkRows()])],{type:'text/csv'}));}
+
+/* Google Sheets, both ways. Two tabs: "Rack map" (one row per item, like Export CSV) and "Racks" (each rack's layout).
+   Each sync reads the sheet first: spots edited in the sheet since the last sync come in, then the sheet is rewritten from
+   the dashboard. If one spot was changed in both places in between, the dashboard's version is kept. */
+const GS='https://sheets.googleapis.com/v4/spreadsheets',RK_TABS=['Rack map','Racks'];
+const rkSnapKey=()=>'ss-racksheet:'+rkKey();
+const skSig=s=>{const c=cleanSkid(s);return c?JSON.stringify([c.items.map(i=>[i.item,i.style,i.size,i.colour,i.boxes,i.per,i.qty,i.unit]),c.note,c.total]):'';};
+const cfgSig=(count,lay)=>JSON.stringify([count,Object.keys(lay).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,lay[k].levels.join('-'),lay[k].floor])]);
+async function gsCall(tok,path,o={}){let r;try{r=await fetch(GS+path,{method:o.method||'GET',headers:{Authorization:'Bearer '+tok,...(o.body?{'Content-Type':'application/json'}:{})},...(o.body?{body:JSON.stringify(o.body)}:{})});}
+  catch(_){throw new Error('Couldn\'t reach Google Sheets. Check your connection.');}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error?.message||'Google Sheets error '+r.status),{status:r.status});return j;}
+async function gsTok(){const t=await silentTok('google');if(!t)throw Object.assign(new Error('Sign in with Google to keep the sheet in step.'),{code:'signin'});return t.token;}
+let rkSheetT=0;const rkSheetSoon=()=>{if(!RK.cfg.sheet)return;clearTimeout(rkSheetT);rkSheetT=setTimeout(rkSheetSync,1500);};
+async function rkSheetSync(){const sh=RK.cfg.sheet;if(!sh)return;if(RK.sheetBusy){RK.sheetAgain=true;return RK.sheetBusy;}
+  RK.sheetBusy=(async()=>{const id=sh.id;renderChip();try{const tok=await gsTok();
+      const meta=await gsCall(tok,`/${id}?fields=properties.title,sheets.properties.title`),have=(meta.sheets||[]).map(s=>s.properties?.title);
+      const miss=RK_TABS.filter(t=>!have.includes(t));if(miss.length)await gsCall(tok,`/${id}:batchUpdate`,{method:'POST',body:{requests:miss.map(title=>({addSheet:{properties:{title}}}))}});
+      if(meta.properties?.title&&meta.properties.title!==sh.name){sh.name=meta.properties.title;}
+      const g=await gsCall(tok,`/${id}/values:batchGet?${RK_TABS.map(t=>'ranges='+encodeURIComponent(`'${t}'!A1:N5000`)).join('&')}`),vr=g.valueRanges||[],mapRows=vr[0]?.values||[],rackRows=vr[1]?.values||[];
+      let snap=lsJ(rkSnapKey());if(!snap||snap.id!==id)snap={id,skids:{},cfg:null};
+      // 1. what was changed in the sheet comes in
+      // an emptied tab (no header row) is written again from the dashboard rather than emptying the map
+      const P=mapRows.length?rkParse(mapRows):null,inS=P?.skids||{};let ch=false;
+      if(P)for(const loc of new Set([...Object.keys(inS),...Object.keys(snap.skids)])){const sS=skSig(inS[loc]),prev=snap.skids[loc]||'';if(sS===prev)continue;
+        if(skSig(RK.skids[loc])!==prev)continue;setSkid(loc,inS[loc]||null);ch=true;}
+      const R=rkParseRacks(rackRows);if(R){const sC=cfgSig(R.count,R.layouts);if(sC!==snap.cfg&&cfgSig(rkCount(),RK.cfg.layouts)===snap.cfg){RK.cfg.rackCount=Math.min(RK_MAX,R.count);RK.cfg.layouts=R.layouts;rkStamp(RK.cfg);ch=true;}}
+      if(ch){rkSave(true);renderWh();}
+      // 2. the sheet is rewritten from the dashboard when it differs
+      const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=rows=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(14).fill('')).slice(0,14)).filter(r=>r.some(Boolean)));
+      const pad=(rows,old,w)=>rows.concat(Array.from({length:Math.max(0,old-rows.length)},()=>Array(w).fill(''))).map(r=>r.concat(Array(w).fill('')).slice(0,w));
+      const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:N${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,14)});
+      if(norm(wantR)!==norm(rackRows))data.push({range:`'Racks'!A1:C${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,3)});
+      if(data.length)await gsCall(tok,`/${id}/values:batchUpdate`,{method:'POST',body:{valueInputOption:'RAW',data}});
+      lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSig(rkCount(),RK.cfg.layouts)}));
+      RK.sheetAt=Date.now();RK.sheetErr='';RK.sheetNeed='';}
+    catch(e){RK.sheetErr=e.message;RK.sheetNeed=e.code==='signin'?'signin':e.status===403||e.status===404?'access':'';}
+    finally{RK.sheetBusy=null;renderChip();if(RK.side==='sheet')openSheetPanel();if(RK.sheetAgain){RK.sheetAgain=false;rkSheetSync();}}})();return RK.sheetBusy;}
+function renderChip(){const c=$('#whSheetChip');if(c&&whDlg.open)c.innerHTML=whSheetChip();}
+setInterval(()=>{if(RK.cfg.sheet&&!document.hidden&&navigator.onLine&&whDlg.open)rkSheetSync();},180e3);
+function sheetIdFrom(v){const m=String(v||'').match(/\/spreadsheets\/d\/([\w-]{20,100})/)||String(v||'').trim().match(/^([\w-]{30,100})$/);return m?m[1]:'';}
+function openSheetPanel(){const sh=RK.cfg.sheet,a=authGet();
+  const body=sh?`<p class="wh-hint">The dashboard and <a href="https://docs.google.com/spreadsheets/d/${esc(sh.id)}/edit" target="_blank" rel="noopener"><b>${esc(sh.name)}</b></a> are kept in step, both ways. The <b>Rack map</b> tab has one row per item (the same columns as Export CSV); the <b>Racks</b> tab has each rack's levels and floor spots.</p>
+      <p class="wh-hint">Changes here go to the sheet within a couple of seconds. Changes made in the sheet come in every 3 minutes while this page is open, when you open it, and when you press Sync now. If the same spot was changed in both places in between, the dashboard's version is kept.</p>
+      ${RK.sheetErr?`<p class="wh-hint warn">${esc(RK.sheetErr)}</p>${RK.sheetNeed==='access'?`<p class="wh-hint">If the sheet was made by someone else, make sure it's shared with you in Google Sheets (Share → Editor), then allow access.</p><button class="btn sm primary" type="button" data-wh="allow">Allow access to the sheet</button>`:RK.sheetNeed==='signin'?'<button class="btn sm primary" type="button" data-wh="signin">Sign in with Google</button>':''}`:''}
+      <p class="wh-hint">${RK.sheetBusy?'Syncing…':RK.sheetAt?'Last synced '+esc(agoMin(RK.sheetAt)):'Not synced yet on this device.'}</p>
+      ${teamShare('rack')?'<p class="wh-hint">Everyone in your company uses this sheet. Share it with them in Google Sheets (Share → Editor) so their dashboards can update it too.</p>':''}`
+    :`<p class="wh-hint">Keep a Google Sheet in step with the rack map, both ways: what you change here is written to the sheet, and what you change in the sheet comes back here.</p>
+      ${a?'':'<p class="wh-hint warn">Sign in with Google first.</p>'}
+      <button class="btn sm primary" type="button" data-wh="newsheet" ${a?'':'disabled'}>Create a new Google Sheet</button>
+      <div class="wh-sect">Or use a sheet you already have</div><div class="wh-f"><label for="whSheetUrl">Google Sheet link</label><input class="in" id="whSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off"></div>
+      <button class="btn sm" type="button" data-wh="linksheet" ${a?'':'disabled'}>Use this sheet</button>
+      <p class="wh-hint">An existing sheet gets two tabs added if they're missing: <b>Rack map</b> and <b>Racks</b>. Spots filled in the sheet come in; spots only in the dashboard are added to the sheet.</p>`;
+  const foot=sh?`<button class="btn sm ghost danger" type="button" data-wh="unlink">Stop syncing</button><span class="wh-tot"></span><a class="btn sm" href="https://docs.google.com/spreadsheets/d/${esc(sh.id)}/edit" target="_blank" rel="noopener">Open sheet</a><button class="btn sm primary" type="button" data-wh="sheetsync">Sync now</button>`:'';
+  sideOpen('sheet','Google Sheet',sh?esc(sh.name):'Not connected',body,foot);}
+async function newSheet(){try{const tok=await gsTok(),j=await gsCall(tok,'',{method:'POST',body:{properties:{title:`Rack map${SET.mc?.company?' · '+SET.mc.company:''}`},sheets:RK_TABS.map(title=>({properties:{title}}))}});
+    RK.cfg.sheet={id:j.spreadsheetId,name:j.properties?.title||'Rack map'};rkStamp(RK.cfg);lsDel(rkSnapKey());rkSave(true);await rkSheetSync();openSheetPanel();renderWh();toast('Google Sheet created and filled in');}
+  catch(e){toast(e.message,6000);}}
+async function linkSheet(){const id=sheetIdFrom($('#whSheetUrl').value);if(!id){toast('Paste the sheet\'s link from the address bar in Google Sheets.');$('#whSheetUrl').focus();return;}
+  try{await browseToken('https://www.googleapis.com/auth/drive');}catch(e){toast(e.message,6000);return;}
+  RK.cfg.sheet={id,name:'Google Sheet'};rkStamp(RK.cfg);lsDel(rkSnapKey());rkSave(true);await rkSheetSync();openSheetPanel();renderWh();if(!RK.sheetErr)toast('Connected. The sheet and the map are in step.');}
+
+/* events */
+whDlg.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
+  const E=RK.edit;if(!E||RK.side!=='skid')return;
+  if(t.id==='whNote'){E.note=t.value;return;}if(t.id==='whTc'){E.tc=t.value;updTot();return;}if(t.id==='whTu'){E.tu=t.value;updTot();return;}
+  const row=t.closest('.wh-row');if(!row)return;const it=E.items[+row.dataset.ix],k=t.dataset.k;if(!k)return;it[k]=t.value;
+  if(['item','style','size','colour'].includes(k))showSug(t);
+  if(k==='boxes'||k==='per'){const qi=row.querySelector('[data-k="qty"]'),on=autoQty(it);if(on){it.qty=String(+it.boxes*+it.per);qi.value=it.qty;}qi.readOnly=on;qi.classList.toggle('auto',on);}
+  updTot();});
+whDlg.addEventListener('change',e=>{const t=e.target;if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
+  if(t.id==='whTu'&&RK.edit){RK.edit.tu=t.value;updTot();return;}
+  if(t.dataset.k==='unit'&&RK.edit){const row=t.closest('.wh-row');RK.edit.items[+row.dataset.ix].unit=t.value;updTot();}});
+whDlg.addEventListener('pointerdown',e=>{if(e.target.closest('.wh-sug button'))e.preventDefault();});
+whDlg.addEventListener('focusout',e=>{if(e.target.matches('.wh-row input'))setTimeout(()=>{const b=e.target.parentElement?.querySelector('.wh-sug');if(b&&!b.contains(document.activeElement))b.hidden=true;},150);});
+let whEmptyArm=0;
+whDlg.addEventListener('click',async e=>{const t=e.target;
+  const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
+  const sl=t.closest('[data-loc]');if(sl){openSkid(sl.dataset.loc);return;}
+  const ly=t.closest('[data-whlay]');if(ly){openLayout(ly.dataset.whlay);return;}
+  const lb=t.closest('[data-whl]');if(lb&&RK.lay){layClick(lb);return;}
+  const rb=t.closest('[data-whrow]');if(rb&&RK.edit){const E=RK.edit,ix=+rb.closest('.wh-row').dataset.ix,a=rb.dataset.whrow;
+    if(a==='rm'){E.items.splice(ix,1);if(!E.items.length)E.items.push(blankRow());drawRows();}
+    if(a==='dup'){E.items.splice(ix+1,0,{...E.items[ix]});drawRows();const f=$(`#wsz-${ix+1}`);f?.focus();f?.select();}
+    if(a==='mv')openMove('line',ix);return;}
+  const b=t.closest('[data-wh]');if(!b)return;const a=b.dataset.wh;
+  if(a==='plus'){setRacks(rkCount()+1);if(b.classList.contains('wh-addrack'))requestAnimationFrame(()=>$('#whRacks .wh-addrack')?.scrollIntoView({block:'nearest'}));return;}
+  if(a==='minus'){setRacks(rkCount()-1);return;}
+  if(a==='import'){$('#whFile').click();return;}if(a==='export'){whExport();return;}
+  if(a==='sheet'){openSheetPanel();return;}if(a==='close'||a==='mvcancel'&&!RK.mv){closeSide();return;}
+  if(a==='mvcancel'){RK.mv=null;$('#whMv').hidden=true;return;}if(a==='mvgo'){doMove();return;}
+  if(a==='addrow'&&RK.edit){RK.edit.items.push(blankRow());drawRows();$$('#whSb .wh-row').at(-1)?.querySelector('input')?.focus();return;}
+  if(a==='save'&&RK.edit){writeSkid(RK.edit.loc,skidBody(RK.edit));closeSide();return;}
+  if(a==='empty'&&RK.edit){if(Date.now()-whEmptyArm<3000){whEmptyArm=0;const l=RK.edit.loc;closeSide();writeSkid(l,null);toast(`${l} is empty`);return;}whEmptyArm=Date.now();b.textContent='Tap again to empty';setTimeout(()=>{if(b.isConnected)b.textContent='Empty skid';},3000);return;}
+  if(a==='move'&&RK.edit){openMove('skid');return;}
+  if(a==='savelay'){saveLayout();return;}
+  if(a==='newsheet'){b.disabled=true;await newSheet();return;}if(a==='linksheet'){b.disabled=true;await linkSheet();b.disabled=false;return;}
+  if(a==='sheetsync'){rkSheetSync();openSheetPanel();return;}
+  if(a==='allow'){try{await browseToken('https://www.googleapis.com/auth/drive');rkSheetSync();}catch(err){toast(err.message,6000);}return;}
+  if(a==='signin'){$('#acctBtn')?.click();return;}
+  if(a==='unlink'){if(await ask({title:'Stop syncing with the sheet?',body:'The sheet stays in your Google Drive as it is. The rack map stops updating it.'+(teamShare('rack')?' This applies to everyone in your company.':''),ok:'Stop syncing'})!=='ok')return;RK.cfg.sheet=null;rkStamp(RK.cfg);lsDel(rkSnapKey());rkSave(true);closeSide();renderWh();}});
+whDlg.addEventListener('keydown',e=>{if(e.key==='Escape'&&RK.side){e.preventDefault();e.stopPropagation();closeSide();}},true);
+$('#whClose').onclick=()=>whDlg.close();
+
+const PAGES={home:['homeDlg','Home',()=>openHome()],inventory:['invDlg','Inventory',()=>openInv()],pipeline:['plDlg','Pipeline',()=>openPipe()],sent:['logDlg','Sent',()=>openLog()],customers:['custDlg','Customers',()=>openCP()],warehouse:['whDlg','Warehouse',()=>openWh()],
   settings:['setDlg','Settings',()=>openSettings()],
   'line-sheet':['lineDlg','Line sheet',()=>LN.keys.length?(pageShown('line-sheet'),lineDlg.open||lineDlg.showModal()):openInv()]};
 const PG={hold:false,routing:false};
@@ -4927,9 +5290,9 @@ const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAG
 function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
   if(pageNow()!==name)history[location.hash&&!PG.inRoute?'pushState':'replaceState'](null,'','#'+name);
   navCur(name);}
-const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',settings:'Settings','line-sheet':'Line sheet'};
+const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',warehouse:'Warehouse',settings:'Settings','line-sheet':'Line sheet'};
 function navCur(name){document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Rakaposhica Dashboard';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
-const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span></button>${['home','editor','inventory','pipeline','sent','customers'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
+const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span></button>${['home','editor','inventory','pipeline','sent','customers','warehouse'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
 // light/dark and the account button, on every page (copies that work the editor's own buttons)
 const GEAR='<button class="btn icon ghost pg-gear" type="button" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>';
 const PG_RIGHT=`<span class="pg-right">${GEAR}<button class="btn icon ghost pg-theme" type="button" title="Switch light / dark" aria-label="Switch light / dark">${$('#themeBtn').innerHTML}</button><button class="btn ghost acct pg-acct" type="button">${$('#acctBtn').innerHTML.replace('id="acctLbl"','class="pg-acct-lbl"')}</button></span>`;
@@ -4992,7 +5355,7 @@ document.body.appendChild(cmdDlg);
 const CMD={i:0,items:[],mode:''};
 const cmdGo=(fn)=>()=>{cmdDlg.close();fn();};
 function cmdBase(){const pg=(k,n,sub)=>({g:'Pages',t:n,sub,run:cmdGo(()=>k==='editor'?goEditor():PAGES[k][2]())});
-  const out=[pg('home','Home','Today at a glance'),pg('editor','Sell sheet editor','Make and edit sell sheets'),pg('inventory','Inventory','Your sell sheets in Google Drive'),pg('pipeline','Pipeline','From first send to order'),pg('sent','Sent','Emails, replies and follow-ups'),pg('customers','Customers','Your customer list'),pg('settings','Settings','Make the site yours'),
+  const out=[pg('home','Home','Today at a glance'),pg('editor','Sell sheet editor','Make and edit sell sheets'),pg('inventory','Inventory','Your sell sheets in Google Drive'),pg('pipeline','Pipeline','From first send to order'),pg('sent','Sent','Emails, replies and follow-ups'),pg('customers','Customers','Your customer list'),pg('warehouse','Warehouse','Rack map: what\'s on each skid'),pg('settings','Settings','Make the site yours'),
     {g:'Actions',t:'New sell sheet',run:cmdGo(()=>{goEditor();$('#newSheet').click();})},{g:'Actions',t:'Email this sell sheet',sub:sheetName(S||{}),run:cmdGo(()=>{goEditor();openMail();})},{g:'Actions',t:'New customer',run:cmdGo(()=>openCustomer('new'))},
     {g:'Actions',t:'Open a sell sheet from this computer',run:cmdGo(()=>$('#openFile').click())},{g:'Actions',t:'Open a sell sheet from Google Drive',run:cmdGo(()=>driveOpen('sheet').then(f=>{if(f)openSheetFile(f);}))},
     {g:'Actions',t:'Show follow-ups that are due',run:cmdGo(()=>{lgF.q='';lgF.status='follow';openLog();})},{g:'Actions',t:'Show replies',run:cmdGo(()=>{lgF.q='';lgF.status='reply';openLog();})},
@@ -5034,7 +5397,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='?'){e.preventDefault();cmdOpen('keys');return;}
   if(e.key==='/'){const q=$('dialog.page[open] input[type=search]');if(q){e.preventDefault();q.focus();q.select?.();}return;}
   if(e.key==='g'||e.key==='G'){gAt=Date.now();return;}
-  if(Date.now()-gAt<1200){const m={h:'home',e:'editor',i:'inventory',p:'pipeline',s:'sent',c:'customers',',':'settings'}[e.key.toLowerCase()];gAt=0;if(m){e.preventDefault();m==='editor'?goEditor():PAGES[m][2]();}}});
+  if(Date.now()-gAt<1200){const m={h:'home',e:'editor',i:'inventory',p:'pipeline',s:'sent',c:'customers',w:'warehouse',',':'settings'}[e.key.toLowerCase()];gAt=0;if(m){e.preventDefault();m==='editor'?goEditor():PAGES[m][2]();}}});
 // don't lose work by closing the tab mid-send or with unsaved customer edits
 window.addEventListener('beforeunload',e=>{if(sending||drSaving||(CP.mode==='cust'&&CP.dirty)){e.preventDefault();e.returnValue='';}});
 // offline notice
