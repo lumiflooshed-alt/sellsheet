@@ -154,6 +154,7 @@ svg{flex:none}
 .tm-invf{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.tm-invf .in{height:38px}@media (max-width:560px){.tm-invf{grid-template-columns:minmax(0,1fr) auto}.tm-invf .btn{grid-column:1/-1}}
 .st-note{margin:0 0 8px;color:var(--muted);font-size:13.5px;line-height:1.45}
 .pg-sel{display:none;flex:1 1 auto;min-width:0;max-width:220px;height:36px;margin-left:4px;padding:0 30px 0 10px;border:1px solid var(--line2);border-radius:9px;background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center/16px;-webkit-appearance:none;appearance:none;font:700 15px var(--ui);color:var(--ink);text-overflow:ellipsis}
+.lg-lk{display:flex;gap:8px;flex-wrap:wrap}.lg-sum{margin:4px 0;padding-left:20px;display:grid;gap:6px;font-size:14px}.lg-url{display:block;font-size:13px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-wrap:anywhere;user-select:all}
 .tm-acts{display:flex;justify-content:flex-end;margin-top:10px}.tm-rn,.tm-sync{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tm-rn .in{height:36px;width:220px;max-width:100%}.tm-sync small{color:var(--muted)}
 #whDlg{width:min(1600px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
 .wh-wrap{--up:#1f4fa3;--beam:#d9660f;--fill:#fff3e6;--fill-line:#f0c39a;--hit:#ffd84a;--hit-fg:#3a2c00;grid-template-rows:auto auto minmax(0,1fr);position:relative}
@@ -1503,7 +1504,7 @@ window.addEventListener('resize',moveInd);
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;renderRail();renderPanel();});
 const inp=(k,v,o={})=>`<input class="in${o.num?' num':''}" ${o.type?`type="${o.type}"`:''} ${o.mode?`inputmode="${o.mode}"`:''} data-k="${k}" value="${esc(v)}" placeholder="${esc(o.ph||'')}" ${o.id?`id="${o.id}"`:''} aria-label="${esc(o.label||'')}">`;
 const fld=(label,html,hint)=>`<label class="field"><span>${label}</span>${html}${hint?`<small class="hint">${hint}</small>`:''}</label>`;
-function renderPanel(){
+function renderPanel(){whereSet('editor',tab);
   const P=$('#panel'); let h='';
   if(tab==='product'){
     h=`<h2>Product</h2><p class="lead">The basics at the top of the sheet.</p>
@@ -1752,7 +1753,7 @@ $('#newSheet').onclick=()=>{if(madeBusy())return;const s=blankSheet();s.theme={.
 $('#dupSheet').onclick=()=>{if(madeBusy())return;const s=JSON.parse(JSON.stringify(S));s.id=uid();s.code=s.code?s.code+' copy':'';s.rows.forEach(r=>{const o=r.id;r.id=uid();for(const k of Object.keys(s.fmt||{}))if(k.startsWith('row:'+o+':')){s.fmt[k.replace('row:'+o+':','row:'+r.id+':')]=s.fmt[k];delete s.fmt[k];}});sheets.unshift(s);switchTo(s);touch();toast('Copy made');};
 
 /* ---------- mobile view toggle ---------- */
-$$('.mtoggle [data-view]').forEach(b=>b.onclick=()=>{$('#app').dataset.view=b.dataset.view;$$('.mtoggle [data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(fitMode)requestAnimationFrame(fit);});
+$$('.mtoggle [data-view]').forEach(b=>b.onclick=()=>{$('#app').dataset.view=b.dataset.view;whereSet('view',b.dataset.view==='preview'?'preview':'');$$('.mtoggle [data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(fitMode)requestAnimationFrame(fit);});
 
 /* ---------- background removal ---------- */
 const M=320; let session=null, modelP=null;
@@ -3123,7 +3124,7 @@ function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||day
   return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):lgF.status==='reply'?!!e.reply:(e.status||'none')===lgF.status))
     &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
     &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
-function renderLog(){const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
+function renderLog(){whereSet('sent',lgF.status);const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
   $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
   const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
   $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option><option value="reply">↩ Has a reply</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
@@ -3162,7 +3163,7 @@ function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'Int
 function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
   mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
 $('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
-function openLog(){pageShown('sent');LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
+function openLog(){if(PG.boot&&!logDlg.open){const v=whereGet().sent;if(typeof v==='string')lgF.status=v;}pageShown('sent');LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
   if(LG.fresh.size){for(const t of threads())if(LG.fresh.has(t.root.id)){t.root.reply.seen=true;t.root.upd=Date.now();}lgSave();}
   if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
@@ -4218,7 +4219,7 @@ const plDlg=$('#plDlg'),PL={q:'',days:SET.pipe.days,sheet:'',view:lsGet('ss-pl-v
 const money=v=>v?esc(SET.currency)+Math.round(v).toLocaleString():'';
 function plThreads(){lgLoad();const q=PL.q.trim().toLowerCase(),cut=PL.days?Date.now()-PL.days*DAY:0;
   return threads().filter(t=>{const e=t.root,last=Math.max(t.last,e.reply?.at||0,e.upd||0);return last>=cut&&(!PL.sheet||e.sheet===PL.sheet)&&(!q||[e.name,e.company,e.email,e.sheet,e.note].some(v=>String(v||'').toLowerCase().includes(q)));});}
-function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'?[]:plThreads().filter(t=>!String(t.root.cust||'').startsWith('lead:')),ld=plLeadsShown(),by=new Map(PL_COLS.map(c=>[c[0],[]]));
+function renderPipe(){if(!plDlg.open)return;whereSet('pipe',isWho(PL.person||'')?PL.person:'');const th=PL.view==='leads'?[]:plThreads().filter(t=>!String(t.root.cust||'').startsWith('lead:')),ld=plLeadsShown(),by=new Map(PL_COLS.map(c=>[c[0],[]]));
   for(const t of th)(by.get(t.root.status||'none')||by.get('none')).push({t,last:t.last});for(const l of ld)by.get(l.stage).push({l,last:Math.max(l.created,lastTouch('lead:'+l.id)?.at||0)});
   const val=x=>+(x.t?x.t.root.value:x.l.value)||0,sum=k=>by.get(k).reduce((a,x)=>a+val(x),0),open=['replied','interested','quoted'].reduce((a,k)=>a+sum(k),0),won=sum('ordered'),nW=by.get('ordered').length,nL=by.get('declined').length;
   const cols=PL_COLS.filter(c=>!SET.pipe.colsOff.includes(c[0])&&!(c[0]==='new'&&PL.view==='cust')),off=PL_COLS.filter(c=>SET.pipe.colsOff.includes(c[0])),nOff=off.reduce((a,c)=>a+by.get(c[0]).length,0);
@@ -4240,7 +4241,7 @@ function renderPipe(){if(!plDlg.open)return;const th=PL.view==='leads'?[]:plThre
     <div class="pl-cards">${l.length?l.slice(0,150).map(x=>x.t?card(x.t):leadCard(x.l)).join(''):`<div class="pl-empty">${k==='new'?'New leads show here':'Drag a card here'}</div>`}${l.length>150?`<div class="pl-empty">and ${l.length-150} more: search to narrow down</div>`:''}${k==='new'?'<button class="pl-addc" type="button" data-pladd>＋ Add lead</button>':''}</div></section>`;}).join('');
   $('#plBoard').scrollLeft=sc;renderPlTodo();}
 function plSet(id,patch){lgLoad();const e=LG.list.find(x=>x.id===id);if(!e)return;Object.assign(e,patch,{upd:Date.now()});lgSave();}
-async function openPipe(){cuLoad();lgLoad();crmLoad();pageShown('pipeline');const fresh=!plDlg.open;if(!plDlg.open)plDlg.showModal();renderPipe();if(fresh){const b=$('#plBoard');b.classList.add('anim');setTimeout(()=>b.classList.remove('anim'),900);}}
+async function openPipe(){cuLoad();lgLoad();crmLoad();pageShown('pipeline');const fresh=!plDlg.open,who=PG.boot&&fresh?whereGet().pipe:'';if(!plDlg.open)plDlg.showModal();renderPipe();if(who&&whoInfo(who))openPerson(who);if(fresh){const b=$('#plBoard');b.classList.add('anim');setTimeout(()=>b.classList.remove('anim'),900);}}
 plDlg.addEventListener('input',e=>{if(e.target.id==='ppCust'){const m=e.target.value.match(/<([^<>]+)>\s*$/),c=m&&CU.list.find(c=>ck(c.email)===ck(m[1]));if(!c)return;const f=e.target.form,inf=infoOf(c),pv=String(inf[PREF_KEY]||'').split('\n')[0],pk=Object.keys(PREF_NAME).find(k=>pv.startsWith(PREF_NAME[k]))||'';
     const set=(n,v)=>{if(f.elements[n]&&v)f.elements[n].value=v;};set('name',c.name);set('company',c.company);set('email',c.email);set('phone',phoneOf(c));set('city',String(inf.City||'').split('\n')[0]);set('pref',pk);set('prefAt',pk?pv.slice(PREF_NAME[pk].length).replace(/^\s*·\s*/,''):'');f.elements.cust.value=ck(c.email);return;}
   if(e.target.id==='plQ'){PL.q=e.target.value;clearTimeout(PL.t);PL.t=setTimeout(renderPipe,120);}else if(e.target.id==='ppQ')renderPick();});
@@ -4338,7 +4339,7 @@ function convertLead(l,quiet){cuLoad();const k=ck(l.email);if(!CU.list.some(c=>[
 /* the panel for one person: details, log a call or email, to-dos and the whole history */
 function openPerson(who,o={}){if(!plDlg.open)openPipe();const v=who.startsWith('lead:')?(leadById(whoId(who))?.conv?'cust':'leads'):who.startsWith('cust:')?'cust':who==='new'?'leads':'';if(v&&v!==PL.view){PL.view=v;lsSet('ss-pl-view',v);renderPipe();}PL.person=who;PL.editNote='';if(who!=='new'&&!o.keepEdit)PL.edit=!!o.edit;PL.logFocus=!!o.log;renderPerson();
   const p=$('#plPerson');requestAnimationFrame(()=>{const f=o.log?p.querySelector('.pp-log [data-lt]'):p.querySelector('input:not([type=hidden]),button.pp-x');f?.focus();if(o.log)p.querySelector('.pp-log')?.scrollIntoView({block:'nearest'});});}
-function closePerson(){PL.person=null;PL.edit=false;const p=$('#plPerson');p.hidden=true;p.innerHTML='';}
+function closePerson(){PL.person=null;whereSet('pipe','');PL.edit=false;const p=$('#plPerson');p.hidden=true;p.innerHTML='';}
 const ppHead=(t,sub,av)=>`<div class="pp-h">${av?`<span class="av" aria-hidden="true">${esc(initials(av))}</span>`:''}<div style="flex:1;min-width:0"><h3>${esc(t)}</h3>${sub?`<small>${sub}</small>`:''}</div><button class="btn icon sm ghost pp-x" type="button" data-pp="close" aria-label="Close panel">✕</button></div>`;
 const sheetNames=()=>[...new Set([...sheets.map(sheetName),...LG.list.map(e=>e.sheet)].filter(Boolean))].sort((a,b)=>COLL.compare(a,b)).slice(0,300);
 function leadForm(l){const v=k=>esc(l?.[k]??''),isNew=!l;
@@ -4427,7 +4428,7 @@ function gmTrack(){lgLoad();crmLoad();cuLoad();const sheetIn=($('#gmSheet')?.val
   lgSave();crmSave();toast(`Tracking ${n} email${n>1?'s':''}${added?`, ${added} new lead${added>1?'s':''} added`:''}. Replies show here when they come in.`,6000);
   if(PL.gmFor)openPerson(PL.gmFor);else closePerson();renderPipe();checkReplies(false);}
 function renderPersonTodos(){const box=$('#ppTodos');if(!box||!PL.person)return;box.innerHTML=todoBlock(todosOf(PL.person),false,'p');}
-function renderPerson(){const p=$('#plPerson'),w=PL.person;if(!w){closePerson();return;}p.hidden=false;
+function renderPerson(){const p=$('#plPerson'),w=PL.person;whereSet('pipe',isWho(w||'')?w:'');if(!w){closePerson();return;}p.hidden=false;
   if(w==='new'){p.innerHTML=ppHead('Add a lead','Someone who might buy. Fill in what you know; you can add the rest later.')+leadForm(null);return;}
   if(w==='pick'){p.innerHTML=ppHead('Log a call or email','Who was it?')+`<div class="pp-b"><input class="in" id="ppQ" type="search" placeholder="Search leads and customers" aria-label="Search leads and customers" autocomplete="off"><div class="pp-pick" id="ppPick"></div><div class="pp-acts"><button class="btn sm" type="button" data-pp="newlead">＋ Someone new: add a lead</button><button class="btn sm" type="button" data-pp="gmailany">Pick emails from my Gmail Sent</button></div></div>`;renderPick();return;}
   if(w==='gmail'){p.innerHTML=gmRender();return;}
@@ -4480,7 +4481,7 @@ function setReplace(obj,fromSync){const n=setNorm(obj);for(const k of Object.key
 const getP=(o,p)=>p.split('.').reduce((a,k)=>a?.[k],o),setP=(o,p,v)=>{const ks=p.split('.'),l=ks.pop();ks.reduce((a,k)=>a[k],o)[l]=v;};
 const ST_SECS=[['general','General','<circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8L7 17M17 7l2.8-2.8"/>'],['home','Home dashboard','<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'],
   ['nav','Navigation','<path d="M4 6h16M4 12h16M4 18h10"/>'],['email','Email & replies','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'],['inv','Inventory','<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>'],
-  ['pipe','Pipeline','<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/>'],['sheet','Sell sheets','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>'],['team','Company','<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.9 5 5.8"/>'],['data','Backup & reset','<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/>']];
+  ['pipe','Pipeline','<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/>'],['sheet','Sell sheets','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>'],['team','Company','<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.9 5 5.8"/>'],['data','Backup & reset','<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/>'],['legal','Privacy & terms','<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>']];
 const ACCENTS=[['#0E993F','Green'],['#2563EB','Blue'],['#4F46E5','Indigo'],['#9333EA','Purple'],['#DB2777','Pink'],['#DC2626','Red'],['#EA7317','Orange'],['#CA8A04','Gold'],['#0891B2','Teal'],['#475569','Slate']];
 const SIDE_ITEMS=[['home','Home'],['editor','Sell sheet editor'],['inv','Inventory'],['pipe','Pipeline'],['sent','Sent emails'],['cust','Customers'],['cust-new','New customer'],['wh','Warehouse'],['open-pc','Open a sell sheet: from this computer'],['open-drive','Open a sell sheet: from Google Drive']];
 const TAB_NAMES={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers'};
@@ -4492,7 +4493,7 @@ function stSendCard(){const a=authGet(),row=(t,sub,ctl)=>`<div class="st-row"><s
     ${gKeys().filter(k=>k!=='google'&&toksAll()[k]?.email&&ck(toksAll()[k].email)!==ck(a.email)).map(k=>row(esc(toksAll()[k].email),'Added for sending only. Customers and the Sent list stay with '+esc(a.email),b('rmFrom','Remove',` data-k="${esc(k)}"`,'btn sm ghost'))).join('')}
     ${row('Addresses from Gmail','To add one, open Gmail → Settings → Accounts → "Send mail as", then refresh here',`<span style="display:flex;gap:8px;flex-wrap:wrap">${b('saRefresh','Refresh')}${b('addFrom','Add Gmail account','','btn sm ghost')}</span>`)}
     ${row('Stay signed in',lasting?'On: this device stays signed in to Google until you sign out':gHelper()?'The helper is set up. Sign in once more on this device to stay signed in':'Off: Google signs you out after about an hour. Set up the free helper to stay signed in (SETUP-EMAIL.md)',lasting?'<span class="iv-sync">On</span>':gHelper()?b('relogin','Sign in','','btn sm primary'):b('helper','Set up…'))}</div>`;}
-function renderSettings(){if(!setDlg.open)return;
+function renderSettings(){if(!setDlg.open)return;whereSet('settings',ST.sec);
   $('#stNav').innerHTML=ST_SECS.map(([k,n,ic])=>`<button type="button" data-ssec="${k}" aria-current="${ST.sec===k}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('');
   const row=(t,sub,ctl,wide)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${wide?`<div class="st-wide">${ctl}</div>`:ctl}</div>`;
   const seg=(p,opts,cur)=>{const v=cur!==undefined?cur:getP(SET,p);return`<span class="st-seg" role="group">${opts.map(([val,lab])=>`<button type="button" data-sp="${p}" data-sv="${esc(String(val))}" aria-pressed="${String(v)===String(val)}">${lab}</button>`).join('')}</span>`;};
@@ -4541,6 +4542,11 @@ function renderSettings(){if(!setDlg.open)return;
   else if(ST.sec==='sheet')body=`<h3>Sell sheets</h3><p class="st-lead">Defaults for new sell sheets.</p>
     ${card('',row('Contact email on new sheets','Shown in the footer of every new sell sheet',txt('sheet.contact','sales@yourcompany.com','','email').replace('value=""',`value="${esc(SET.sheet.contact)}"`)))}`;
   else if(ST.sec==='team')body=teamSettingsHTML(row,card);
+  else if(ST.sec==='legal'){const base=location.origin+location.pathname.replace(/[^/]*$/,''),lk=(f,n)=>`<span class="lg-lk"><a class="btn sm" href="${f}" target="_blank" rel="noopener">Open</a><button class="btn sm ghost" type="button" data-sact="copyurl" data-url="${esc(base+f)}">Copy link</button></span>`;
+    body=`<h3>Privacy &amp; terms</h3><p class="st-lead">What the app does with your Google and Microsoft data, and the terms for using it.</p>
+    ${card('',row('Privacy policy','What the app reads, what it keeps and where, and how to delete it',lk('privacy.html'))+row('Terms of service','The rules for using the app and the email you send from it',lk('terms.html')))}
+    ${card('In short',`<ul class="lg-sum"><li>Your data stays in this browser, your own Google Drive or OneDrive, and (with Company) your company's own Cloudflare account.</li><li>Email is sent from your own mailbox, only when you press Send.</li><li>Gmail is read only to spot replies from people you emailed from here.</li><li>No ads, no tracking, nothing sold.</li></ul>`)}
+    ${card('For Google\'s sign-in setup',`<p class="st-note">Paste these into Google Cloud → Google Auth Platform → Branding.</p>`+row('Application home page','',`<code class="lg-url">${esc(base)}</code>`,true)+row('Privacy policy link','',`<code class="lg-url">${esc(base)}privacy.html</code>`,true)+row('Terms of service link','',`<code class="lg-url">${esc(base)}terms.html</code>`,true))}`;}
   else body=`<h3>Backup & reset</h3><p class="st-lead">Keep a copy of everything, or start your settings over.</p>
     ${card('',row('Download a backup','Settings, customers, the Sent list, your email wording and inventory notes, in one file',`<button class="btn sm" type="button" data-sact="backup">Download</button>`)
       +row('Restore from a backup','Adds the backup\'s customers and Sent list to what\'s here, and uses its settings',`<button class="btn sm" type="button" data-sact="restore">Choose file…</button><input type="file" id="stRestore" accept=".json,application/json" hidden>`)
@@ -4574,6 +4580,7 @@ setDlg.addEventListener('click',e=>{const t=e.target;
   else if(v==='saRefresh'){Promise.all(gKeys().map(k=>loadSendAs(k,true))).then(()=>{renderSettings();toast('Addresses updated from Gmail');});}
   else if(v==='rmFrom'){removeSender(ac.dataset.k);renderSettings();toast('Removed');}
   else if(v==='ivFields'){openInv().then(()=>{IV.add={mode:'fields'};IV.open=null;renderInvDetail(true);});}
+  else if(v==='copyurl'){const u=ac.dataset.url;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast('Link copied')).catch(()=>prompt('Copy this link',u));}
   else if(v==='backup')stBackup();
   else if(v==='restore')$('#stRestore').click();
   else if(v==='reset'){ask({title:'Reset all settings?',body:'Every setting goes back to how it started. Customers, sell sheets and the Sent list are kept.',ok:'Reset settings',danger:true}).then(r=>{if(r!=='ok')return;setReplace({});SET.upd=Date.now();setSave();stSaved();renderSettings();toast('Settings are back to the defaults');});}});
@@ -4590,7 +4597,7 @@ setDlg.addEventListener('change',e=>{const t=e.target;if(t.dataset.tshare||t.dat
   if(p==='accent'){v=normHex(v)||SET.accent;}if(p==='currency'){v=String(v).trim().slice(0,6)||'$';}
   setP(SET,p,v);stChanged(t.type!=='text'&&t.type!=='email'&&t.type!=='number');});
 setDlg.addEventListener('input',e=>{const t=e.target,p=t.dataset.sp;if(!p||!['text','email'].includes(t.type)||p.startsWith('@')||p==='currency')return;setP(SET,p,t.value.slice(0,120));setSave();stSaved();if(p==='name')renderTopAcct();});
-async function openSettings(sec){pageShown('settings');if(sec)ST.sec=sec;ST.sure=false;if(!setDlg.open)setDlg.showModal();renderSettings();}
+async function openSettings(sec){pageShown('settings');if(!sec&&!setDlg.open){const v=whereGet().settings;if(ST_SECS.some(x=>x[0]===v))sec=v;}if(sec)ST.sec=sec;ST.sure=false;if(!setDlg.open)setDlg.showModal();renderSettings();}
 // one file with everything worth keeping
 function stBackup(){const J=k=>{try{return JSON.parse(lsGet(k)||'null');}catch(_){return null;}};
   const data={app:'sellsheet-backup',v:1,at:new Date().toISOString(),settings:SET,customers:J(cuKey()),log:J(lgKey()),invMeta:J('ss-inv-meta'),racks:J(rkKey()),invFields:J('ss-inv-fields'),invFolder:J('ss-inv-folder'),mail:J('ss-mail'),
@@ -4769,7 +4776,7 @@ $('#gSug').addEventListener('click',e=>{const b=e.target.closest('[data-gi],[dat
 
 /* ---------- Customers page: every customer with every detail; opens each one in a large tab ---------- */
 const CP={q:'',nn:false,gsel:new Set(),color:'',mode:'',open:null,W:null,dirty:false,closeSure:false,delSure:false};
-function openCP(){crmLoad();lgLoad();pageShown('customers');if(!custDlg.open){cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;custDlg.showModal();renderCP(true);
+function openCP(){crmLoad();lgLoad();pageShown('customers');if(!custDlg.open){const boot=PG.boot,w=boot?whereGet().cust:null;cuLoad();CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));CP.mode='';CP.open=null;CP.W=null;$('#cpQ').value=CP.q;if(w&&Array.isArray(w.g))CP.gsel=new Set(w.g);custDlg.showModal();renderCP(true);if(w?.open&&CU.list.some(c=>ck(c.email)===w.open))setTimeout(()=>openCustomer(w.open),0);
   if(authGet())syncNow().then(()=>{if(custDlg.open)renderCP();});}}
 function openCustomer(key){if(custDlg.open&&CP.mode==='cust'&&CP.dirty&&CP.open!==key&&!closeCPDetail(false,()=>openCustomer(key)))return;const was=custDlg.open;openCP();CP.mode='cust';CP.open=key;CP.W=null;CP.dirty=false;if(was)cpSelectRow(key);renderCPDetail();
   if(key==='new')setTimeout(()=>{if(!$('#cpDetail').contains(document.activeElement))$('#cpDetail [data-alt="name|0"]')?.focus();},60);}
@@ -4802,7 +4809,8 @@ function renderCPFoot(){const shown=CP.rows||[],ticked=CU.list.filter(c=>CU.sel.
 // highlight the open customer's row without redrawing the table
 function cpSelectRow(key){$('#cpTable tr.on')?.classList.remove('on');if(key&&CP.mode==='cust'){const tr=[...$$('#cpTable tr[data-cp]')].find(r=>r.dataset.cp===key);tr?.classList.add('on');}}
 // reset=true when a filter changed (go back to the top of the list)
-function renderCP(reset){const nn=nnCount();if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
+const cpWhere=()=>whereSet('cust',{g:[...CP.gsel],open:CP.mode==='cust'&&CP.open&&CP.open!=='new'?CP.open:''});
+function renderCP(reset){cpWhere();const nn=nnCount();if(!nn)CP.nn=false;const keep=new Set(allGroups().map(g=>gKey(g.name)));CP.gsel=new Set([...CP.gsel].filter(k=>keep.has(k)));
   const dupes=findDupes();
   $('#cpSum').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:'';
   $('#cpColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cuColors()].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;
@@ -4844,7 +4852,7 @@ custDlg.addEventListener('drop',e=>{const f=e.target.closest?.('#cpFolders [data
   if(d.folder){if(d.folder===to)return;if(gMove(d.folder,to)){if(to)G_OPEN.add(to);lsSet('ss-gopen',JSON.stringify([...G_OPEN]));renderCP();toast(to?`Moved into ${gPath(to)}`:'Moved to the top level');}}
   else if(d.cust&&to)gfAdd(to,d.cust);});
 // the large customer tab (also used for duplicates and the groups list)
-function renderCPDetail(){const d=$('#cpDetail');if(!CP.mode){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;d.classList.toggle('is-np',CP.mode==='cust');
+function renderCPDetail(){cpWhere();const d=$('#cpDetail');if(!CP.mode){d.hidden=true;d.innerHTML='';d.dataset.for='';return;}d.hidden=false;d.classList.toggle('is-np',CP.mode==='cust');
   const key=CP.mode+':'+(CP.open||''),same=d.dataset.for===key;if(!same){d.dataset.for=key;CP.closeSure=false;CP.delSure=false;}
   const sc=same?d.querySelector('.cpd-b')?.scrollTop||0:0;d.innerHTML=CP.mode==='dupes'?dupesHTML():CP.mode==='groups'?groupsHTML():custHTML();if(!CP.mode){renderCPDetail();return;}const b=d.querySelector('.cpd-b');if(b)b.scrollTop=sc;d.querySelectorAll('.np-auto').forEach(npSize);
   if(CP.mode==='cust'){const gi=$('#cpdGrpIn');if(gi)groupSuggest(gi,{allowNew:true,selected:()=>new Set(CP.W.groups.map(gKey)),pick:(k,name)=>{if(!CP.W.groups.some(g=>gKey(g)===k)){CP.W.groups.push(allGroups().find(g=>gKey(g.name)===k)?.name||name);CP.dirty=true;}renderCPDetail();$('#cpdGrpIn')?.focus();}});}}
@@ -5323,6 +5331,10 @@ const PAGES={home:['homeDlg','Home',()=>openHome()],inventory:['invDlg','Invento
   settings:['setDlg','Settings',()=>openSettings()],
   'line-sheet':['lineDlg','Line sheet',()=>LN.keys.length?(pageShown('line-sheet'),lineDlg.open||lineDlg.showModal()):openInv()]};
 const PG={hold:false,routing:false};
+/* a reload keeps you where you were: the page is in the address, the tab inside it is remembered here */
+function whereGet(){try{return JSON.parse(sessionStorage.getItem('ss-where')||'{}')||{};}catch(_){return{};}}
+var WHERE_ON=false; // nothing is remembered until the page has loaded and put you back
+function whereSet(k,v){if(!WHERE_ON)return;const o=whereGet();if(v==null||v===''||(Array.isArray(v)&&!v.length))delete o[k];else o[k]=v;try{sessionStorage.setItem('ss-where',JSON.stringify(o));}catch(_){}}
 const pageNow=()=>{const h=decodeURIComponent(location.hash.slice(1));return PAGES[h]?h:'';};
 // a page is being shown: close the other pages and put its address in the bar
 function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGES)){const d=$('#'+id);if(n!==name&&d.open)d.close();}PG.routing=false;
@@ -5402,7 +5414,7 @@ function cmdBase(){const pg=(k,n,sub)=>({g:'Pages',t:n,sub,run:cmdGo(()=>k==='ed
     {g:'Actions',t:'Show follow-ups that are due',run:cmdGo(()=>{lgF.q='';lgF.status='follow';openLog();})},{g:'Actions',t:'Show replies',run:cmdGo(()=>{lgF.q='';lgF.status='reply';openLog();})},
     {g:'Actions',t:'Make a line sheet',sub:'Pick products in Inventory',run:cmdGo(()=>openInv())},{g:'Actions',t:isDark()?'Switch to light mode':'Switch to dark mode',run:cmdGo(()=>$('#themeBtn').click())},
     {g:'Actions',t:'Hide or show the editor toolbar',sub:'Ctrl+Shift+F',run:cmdGo(()=>{goEditor();$('#tbToggle').click();})},{g:'Actions',t:'Download a backup',run:cmdGo(()=>stBackup())},{g:'Actions',t:'Keyboard shortcuts',sub:'?',run:()=>cmdOpen('keys')}];
-  const SKW={general:'display name start open page appearance dark light theme accent colour color animations motion density compact currency',home:'dashboard tiles figures sections greeting chart period layout columns checklist',nav:'tabs side panel menu navigation',email:'greeting attachments follow-up reminder replies gmail notifications',inv:'inventory cards list view sort size info',pipe:'pipeline columns period',sheet:'contact email default new sheet',data:'backup restore reset export download'};
+  const SKW={general:'display name start open page appearance dark light theme accent colour color animations motion density compact currency',home:'dashboard tiles figures sections greeting chart period layout columns checklist',nav:'tabs side panel menu navigation',email:'greeting attachments follow-up reminder replies gmail notifications',inv:'inventory cards list view sort size info',pipe:'pipeline columns period',sheet:'contact email default new sheet',data:'backup restore reset export download',legal:'privacy policy terms of service legal google data'};
   for(const[k,n]of ST_SECS)out.push({g:'Settings',t:n,sub:'Settings',hay:SKW[k]||'',run:cmdGo(()=>openSettings(k))});
   for(const sh of sheets)out.push({g:'Sell sheets',t:sheetName(sh),sub:'Saved on this device · '+ago(sh.updated||Date.now()),run:cmdGo(async()=>{goEditor();await switchTo(sh);})});
   cuLoad();for(const c of CU.list)out.push({g:'Customers',t:c.name||c.company||c.email,sub:[c.name&&c.company?c.company:'',c.email].filter(Boolean).join(' · '),hay:[c.name,c.company,c.email,...altOf(c),...grpsOf(c)].join(' '),run:cmdGo(()=>openCustomer(ck(c.email)))});
@@ -5449,7 +5461,7 @@ let errAt=0;window.addEventListener('error',e=>{if(!e.error||Date.now()-errAt<15
 
 /* ---------- boot ---------- */
 (async()=>{
-  applyAppear();renderRail();finishSignIn();
+  applyAppear();renderRail();{const w=whereGet();if(w.editor&&w.editor!==tab&&$(`#rail [data-tab="${w.editor}"]`)){tab=w.editor;renderRail();}}finishSignIn();
   const all=await dbAll();
   if(all===null){$('#status').innerHTML='<i style="background:var(--warn)"></i>Not saved on this device';}
   sheets=(all||[]).sort((a,b)=>b.updated-a.updated).map(ensureStyle);
@@ -5459,7 +5471,7 @@ let errAt=0;window.addEventListener('error',e=>{if(!e.error||Date.now()-errAt<15
   S=sheets.find(s=>s.id===lsGet('ss-last'))||sheets[0];loadFont(S.style.font);
   refreshPicker();renderPanel();renderSheet();fit();moveInd();renderTopAcct();lgLoad();renderBadge();if(authGet())syncNow();
   setTimeout(()=>$('#app').classList.remove('intro'),1200);
-  applySettings();route();renderBadge();if(!navigator.onLine)netNote();invFolderFromSet();
+  applySettings();PG.boot=true;route();PG.boot=false;setTimeout(()=>{WHERE_ON=true;},0);renderBadge();if(whereGet().view==='preview')$('.mtoggle [data-view=preview]')?.click();if(!navigator.onLine)netNote();invFolderFromSet();
 })();
 })();
 </script>
