@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 590" role="img" aria-label="Rakaposhica Dashboard">
+  <defs><clipPath id="c"><rect width="1000" height="400"/></clipPath></defs>
+  <g clip-path="url(#c)"><rect x="0" y="0" width="1000" height="137.0" fill="#2C3E7A"/><rect x="0" y="136.0" width="1000" height="53.0" fill="#6A4FA3"/><rect x="0" y="188.0" width="1000" height="49.0" fill="#D9475A"/><rect x="0" y="236.0" width="1000" height="45.0" fill="#F27A3D"/><rect x="0" y="280.0" width="1000" height="121.0" fill="#F7B548"/><circle cx="612.5" cy="117.2" r="26.6" fill="#F7B548" opacity=".9"/><polygon points="-1.6,400.0 -1.6,335.9 253.1,312.5 315.6,290.6 343.8,257.8 417.2,239.1 432.8,204.7 453.1,153.1 473.4,137.5 496.9,92.2 512.5,106.2 528.1,117.2 548.4,145.3 575.0,160.9 603.1,192.2 628.1,187.5 653.1,212.5 690.6,228.1 737.5,257.8 1001.6,281.2 1001.6,400.0" fill="#1A1C3A"/><polygon points="496.9,92.2 512.5,106.2 528.1,117.2 534.4,129.7 523.4,123.4 515.6,132.8 507.8,120.3 500.0,128.1 492.2,115.6 484.4,125.0 479.7,128.1 473.4,137.5" fill="#fff"/><polygon points="603.1,192.2 628.1,187.5 637.5,196.9 629.7,195.3 623.4,203.1 615.6,195.3 609.4,200.0" fill="#fff"/><polygon points="-1.6,400.0 -1.6,367.2 331.2,353.1 393.8,360.9 464.1,373.4 534.4,365.6 612.5,353.1 1001.6,350.0 1001.6,400.0" fill="#0E1026"/><path d="M496.9 93.8 V62.5" stroke="#1A1C3A" stroke-width="3.1" stroke-linecap="round"/>
+      <path d="M496.9 62.5 L520.3 70.3 L496.9 78.1 Z" fill="#F7B548" stroke="#1A1C3A" stroke-width="2.3" stroke-linejoin="round"/><g fill="#1A1C3A" stroke="#1A1C3A" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="381.8" cy="159.4" r="10.2" stroke="none"/>
+      <path d="M369.3 150.3 L394.3 150.3" fill="none" stroke-width="4.0"/><path d="M375.0 150.3 C375.0 136.7 388.6 136.7 388.6 150.3 Z" stroke="none"/>
+      <rect x="355.7" y="168.4" width="15.9" height="28.3" rx="4.5" stroke="none"/>
+      <path d="M379.5 171.8 L375.0 204.7" fill="none" stroke-width="12.5"/>
+      <path d="M375.0 204.7 L389.7 219.4 L393.1 236.4" fill="none" stroke-width="7.9"/>
+      <path d="M375.0 204.7 L364.8 223.9 L359.1 240.9" fill="none" stroke-width="7.9"/>
+      <path d="M379.5 179.8 L394.3 193.4" fill="none" stroke-width="6.8"/>
+      <path d="M396.5 179.8 L403.3 233.0" fill="none" stroke-width="4.0"/>
+    </g></g>
+  <rect width="1000" height="400" fill="none" stroke="#1A1C3A" stroke-width="10"/>
+  <text x="500.0" y="528" text-anchor="middle" font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="132" letter-spacing="-3" fill="#1A1C3A">rakaposhica</text>
+  <text x="500.0" y="580" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="34" letter-spacing="18" fill="#1A1C3A">DASHBOARD</text>
+</svg>
