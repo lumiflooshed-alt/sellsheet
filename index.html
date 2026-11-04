@@ -153,6 +153,7 @@ svg{flex:none}
 .tm-inv>span,.tm-mem>span{flex:1 1 200px;min-width:0}.tm-inv small,.tm-mem small{display:block;color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}.tm-mem em{font-style:normal;color:var(--muted);font-size:13px}.tm-mem select.in{height:34px;width:auto;font-size:13px}
 .tm-invf{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.tm-invf .in{height:38px}@media (max-width:560px){.tm-invf{grid-template-columns:minmax(0,1fr) auto}.tm-invf .btn{grid-column:1/-1}}
 .st-note{margin:0 0 8px;color:var(--muted);font-size:13.5px;line-height:1.45}
+.pg-sel{display:none;flex:1 1 auto;min-width:0;max-width:220px;height:36px;margin-left:4px;padding:0 30px 0 10px;border:1px solid var(--line2);border-radius:9px;background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center/16px;-webkit-appearance:none;appearance:none;font:700 15px var(--ui);color:var(--ink);text-overflow:ellipsis}
 .tm-acts{display:flex;justify-content:flex-end;margin-top:10px}.tm-rn,.tm-sync{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tm-rn .in{height:36px;width:220px;max-width:100%}.tm-sync small{color:var(--muted)}
 #whDlg{width:min(1600px,calc(100vw - 24px));height:min(940px,calc(100vh - 24px))}
 .wh-wrap{--up:#1f4fa3;--beam:#d9660f;--fill:#fff3e6;--fill-line:#f0c39a;--hit:#ffd84a;--hit-fg:#3a2c00;grid-template-rows:auto auto minmax(0,1fr);position:relative}
@@ -169,7 +170,7 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-r .code{font:700 15px var(--ui);color:var(--beam)}.wh-r .lines{font-size:13.5px;text-transform:uppercase;min-width:0}.wh-r .lines div{overflow-wrap:anywhere}.wh-r i{color:var(--muted);text-transform:none}
 .wh-racks{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;align-items:start}
 .wh-rack{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 12px 14px;display:grid;gap:8px;min-width:0}.wh-rack header{display:flex;align-items:center;gap:10px}
-.wh-letter{font:800 30px/1 var(--ui);color:var(--up)}.wh-meta{flex:1;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wh-letter{font:800 30px/1 var(--ui);color:var(--up)}.wh-name{display:block;font:700 14.5px var(--ui);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wh-meta{flex:1;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .wh-frame{border-inline:6px solid var(--up);padding:0 4px}.wh-shelf{display:grid;gap:6px;padding:6px 0 8px;border-bottom:5px solid var(--beam)}
 .wh-floor{border-top:2px dashed var(--line2);padding-top:8px;margin-top:2px}.wh-fg{display:grid;gap:6px;padding:0 10px}.wh-fl{font:600 10.5px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .wh-rack.skinny .wh-frame,.wh-rack.skinny .wh-floor{width:100%;max-width:180px;justify-self:center}.wh-rack.skinny .wh-fg{padding:0 4px}
@@ -901,6 +902,17 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   .status{display:none}
   .top .dl-word span{display:none}
 }
+
+/* phones: the page tabs become a dropdown, every Settings section shows, Company rows stack neatly */
+@media (max-width:600px){
+.pg-nav a{display:none}.pg-nav .pg-sel{display:block}.pg-nav{overflow:visible;flex:1 1 auto}
+.st-nav{flex-wrap:wrap;overflow:visible;gap:6px;padding:10px 12px}
+.st-nav button{padding:6px 10px;font-size:13px;gap:6px;background:var(--raise);border:1px solid var(--line)}.st-nav button svg{width:15px;height:15px}
+.st-nav button[aria-current=true]{background:var(--accent-soft);border-color:var(--accent)}
+.st-row:has(>.st-sw2){grid-template-columns:minmax(0,1fr) auto}
+.tm-mem>span,.tm-inv>span{flex:1 0 100%}.tm-mem select.in{flex:1 1 auto}
+.tm-rn{width:100%}.tm-rn .in{flex:1 1 auto;width:auto}
+}
 </style>
 
 <div class="app intro" id="app" data-view="edit">
@@ -1147,7 +1159,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main"><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main"><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -2601,6 +2613,21 @@ function gRefresh(k){const o=toksAll()[k];if(!o?.rt||!gHelper())return Promise.r
 async function silentTok(p){return tokGet(p)||(p==='microsoft'?await msRefresh():await gRefresh(p));}
 // which slot a Google sign-in is kept in: 'google' is the site's account; other Gmail accounts used only for sending are 'gx:<email>'
 const gSlot=(key,email)=>key!=='extra'?key:(authGet()?.prov==='google'&&ck(authGet().email)===ck(email))?'google':'gx:'+ck(email);
+/* On phones and tablets (and wherever the sign-in window is blocked, e.g. in the Gmail or Instagram app), sign-in happens in this
+   tab instead: off to Google or Microsoft and straight back. A sign-in window on a phone opens as a separate tab that the
+   browser pauses, so the site never sees it finish. */
+const SIGNIN={site:null},SIGNIN_KEY='ss-signin-pending';
+const byRedirect=()=>matchMedia('(pointer: coarse)').matches&&Math.min(screen.width,innerWidth)<820;
+function goSignIn(url,o){try{sessionStorage.setItem(SIGNIN_KEY,JSON.stringify({...o,site:SIGNIN.site,back:location.hash,at:Date.now()}));}catch(_){throw new Error('This browser blocks what sign-in needs. Open the site in Safari or Chrome and try again.');}
+  location.assign(url);return new Promise(()=>{});}
+async function finishSignIn(){const sp=new URLSearchParams(location.search),st=sp.get('state');if(!st||!(sp.get('code')||sp.get('error'))||window.opener)return;
+  let P=null;try{P=JSON.parse(sessionStorage.getItem(SIGNIN_KEY)||'null');}catch(_){}if(!P||P.state!==st||Date.now()-P.at>15*60e3)return;
+  try{sessionStorage.removeItem(SIGNIN_KEY);}catch(_){}history.replaceState(null,'',location.pathname+(P.back||''));
+  if(sp.get('error')){toast(sp.get('error')==='access_denied'?'Sign-in was cancelled, or Google said "access denied". If the app is in Testing, add this address under Audience → Test users (see SETUP-EMAIL.md).':'Sign-in failed: '+(sp.get('error_description')||sp.get('error')),8000);return;}
+  try{const t=P.kind==='ms'?await msFinish(sp.get('code'),P.verifier,P.hint):await gCodeFinish(sp.get('code'),P.verifier,P.key,P.hint,P.scope);
+    if(P.site){authSet({prov:P.site.p,email:t.email});afterLogin(P.site.before);}else{renderTopAcct();if(setDlg.open)renderSettings();}
+    toast(t.email?'Signed in as '+t.email:'Signed in');}
+  catch(e){toast(e.message,8000);}}
 // the sign-in window comes back to this page with ?code=…; it is read here (same origin) and closed
 function popupCode(w,state){return new Promise((res,rej)=>{const iv=setInterval(()=>{if(w.closed){clearInterval(iv);rej(new Error('Sign-in was cancelled.'));return;}
     let u;try{u=new URL(w.location.href);}catch(_){return;}if(u.origin!==location.origin)return;const sp=u.searchParams;if(!sp.get('code')&&!sp.get('error'))return;
@@ -2608,16 +2635,18 @@ function popupCode(w,state){return new Promise((res,rej)=>{const iv=setInterval(
     sp.get('error')?rej(new Error(sp.get('error')==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':sp.get('error_description')||sp.get('error'))):res(sp.get('code'));},250);});}
 async function pkce(){const rnd=n=>crypto.getRandomValues(new Uint8Array(n)),verifier=b64url(rnd(48));return{verifier,challenge:b64url(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),state:b64url(rnd(16))};}
 async function gUserEmail(token){try{return(await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}})).json()).email||'';}catch(_){return'';}}
-async function gCodeLogin(choose,hint,scope,key){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
-  try{const{verifier,challenge,state}=await pkce();
-    w.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+new URLSearchParams({client_id:EMAIL_SETUP.google,redirect_uri:redirectUri(),response_type:'code',scope,access_type:'offline',include_granted_scopes:'true',
+async function gCodeLogin(choose,hint,scope,key){const w=byRedirect()?null:window.open('about:blank','ss-login','width=520,height=680');
+  try{const{verifier,challenge,state}=await pkce(),url='https://accounts.google.com/o/oauth2/v2/auth?'+new URLSearchParams({client_id:EMAIL_SETUP.google,redirect_uri:redirectUri(),response_type:'code',scope,access_type:'offline',include_granted_scopes:'true',
       prompt:choose?'select_account consent':'consent',state,code_challenge:challenge,code_challenge_method:'S256',...(!choose&&hint?{login_hint:hint}:{})});
+    if(!w)return goSignIn(url,{kind:'g',state,verifier,key,hint,scope});
+    w.location.href=url;
     let code;try{code=await popupCode(w,state);}catch(e){if(/cancelled/.test(e.message))e.message+=` If Google showed "redirect_uri_mismatch", add ${redirectUri()} under Authorized redirect URIs in your Google client (SETUP-EMAIL.md, "Stay signed in").`;throw e;}
-    const j=await helperCall('exchange',{code,redirect_uri:redirectUri(),code_verifier:verifier});
+    return await gCodeFinish(code,verifier,key,hint,scope);}
+  catch(e){try{w&&w.close();}catch(_){}throw e;}}
+async function gCodeFinish(code,verifier,key,hint,scope){const j=await helperCall('exchange',{code,redirect_uri:redirectUri(),code_verifier:verifier});
     if(!String(j.scope||'').split(/\s+/).includes(GMAIL_SEND))throw new Error('Please allow "Send email on your behalf" so the site can send the sell sheet.');
     const email=(await gUserEmail(j.access_token))||hint||'',k=gSlot(key,email);
     const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email,scope:j.scope||scope,rt:j.rt||toksAll()[k]?.rt||''};tokSet(k,t);return t;}
-  catch(e){try{w.close();}catch(_){}throw e;}}
 const b64url=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
 // key: 'google' (the site's account), 'gx:<email>' (a sending account), or 'extra' (add a sending account)
@@ -2632,20 +2661,22 @@ function googleLogin(choose,hint,extra,key='google'){
       const t={...toksAll()[k],token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,email,scope:r.scope||scope};tokSet(k,t);res(t);},
     error_callback:e=>rej(new Error(e?.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'The sign-in window was closed. If Google showed an error such as "origin_mismatch" or "invalid_client", check the steps under "If sign-in doesn\'t work" in SETUP-EMAIL.md.'))});
   c.requestAccessToken();});}
-async function msLogin(choose,hint){const w=window.open('about:blank','ss-login','width=520,height=680');if(!w)throw new Error('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.');
-  try{const scope=MS_SCOPE,rnd=n=>crypto.getRandomValues(new Uint8Array(n));
-    const{verifier,challenge,state}=await pkce();
-    w.location.href='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,...(!choose&&hint?{login_hint:hint}:{prompt:'select_account'})});
-    const code=await popupCode(w,state);
+async function msLogin(choose,hint){const w=byRedirect()?null:window.open('about:blank','ss-login','width=520,height=680');
+  try{const scope=MS_SCOPE;
+    const{verifier,challenge,state}=await pkce(),url='https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'+new URLSearchParams({client_id:EMAIL_SETUP.microsoft,response_type:'code',redirect_uri:redirectUri(),response_mode:'query',scope,code_challenge:challenge,code_challenge_method:'S256',state,...(!choose&&hint?{login_hint:hint}:{prompt:'select_account'})});
+    if(!w)return goSignIn(url,{kind:'ms',state,verifier,hint});
+    w.location.href=url;
+    return await msFinish(await popupCode(w,state),verifier,hint);}
+  catch(e){try{w&&w.close();}catch(_){}throw e;}}
+async function msFinish(code,verifier,hint){const scope=MS_SCOPE;
     const r=await fetch(MS_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams({client_id:EMAIL_SETUP.microsoft,scope,code,redirect_uri:redirectUri(),grant_type:'authorization_code',code_verifier:verifier})});
     const j=await r.json();if(!r.ok||!j.access_token)throw new Error(j.error_description||'Sign-in failed.');
     let email='';try{const me=await (await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+j.access_token}})).json();email=me.mail||me.userPrincipalName||'';}catch(_){}
     const t={token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:email||hint||'',rt:j.refresh_token||''};tokSet('microsoft',t);return t;}
-  catch(e){try{w.close();}catch(_){}throw e;}}
 // signs in as the site's account (customers and sent log sync to it). Reuses or renews the current sign-in first, unless fresh.
-async function login(p,choose,fresh,extra){const before=cuKey(),hint=choose?'':meFor(p);
-  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint,extra):msLogin(choose,hint));
+async function login(p,choose,fresh,extra){const before=cuKey(),hint=choose?'':meFor(p);SIGNIN.site={p,before};
+  const t=(!choose&&!fresh&&authGet()?.prov===p&&await silentTok(p))||await (p==='google'?googleLogin(choose,hint,extra):msLogin(choose,hint));SIGNIN.site=null;
   authSet({prov:p,email:t.email});afterLogin(before);return t;}
 function afterLogin(prevKey){const a=authGet();if(!a)return;
   // the first time an account signs in on this browser, copy the customers saved here into it
@@ -2998,7 +3029,7 @@ function teamSettingsHTML(row,card){const a=authGet(),me=meEmail();
   const adm=I.role==='admin',sh=C.share||{},mem=I.members||[],link=`${location.origin}${location.pathname}#join=${encodeURIComponent(gHelper())}`;
   return h+err+card('',row('Company',adm?'You\'re an admin':'You\'re a member',adm?`<span class="tm-rn"><input class="in" id="tmRen" value="${esc(C.name)}" maxlength="80" aria-label="Company name"><button class="btn sm" type="button" data-tm="rename">Rename</button></span>`:`<b>${esc(C.name)}</b>`)
       +row('Sync','Every 3 minutes, and just before you send',`<span class="tm-sync"><small>${TEAM.busy?'Syncing…':TEAM.last?'Synced '+esc(agoMin(TEAM.last)):'Not synced yet'}</small><button class="btn sm" type="button" data-tm="sync">Sync now</button></span>`))
-    +card('What\'s shared',`<p class="st-note">${adm?'Tick what everyone in the company shares.':'Your admin chooses what\'s shared.'} Things not ticked stay on your own account only.</p>`+SHARE_NAME.map(([k,n,sub])=>row(n,sub||'',`<label class="st-sw2"><input type="checkbox" data-tshare="${k}" ${sh[k]?'checked':''} ${adm?'':'disabled'}><i></i></label>`)).join(''))
+    +card('What\'s shared',`<p class="st-note">${adm?'Tick what everyone in the company shares.':'Your admin chooses what\'s shared.'} Things not ticked stay on your own account only.</p>`+SHARE_NAME.map(([k,n,sub])=>{const old=!(k in sh);return row(n,old?'<span style="color:var(--bad)">Your company server is running older code. To share this, paste the latest <b>worker/google-token.js</b> into your Cloudflare Worker and deploy (SETUP-EMAIL.md → Company, step 4).</span>':sub||'',`<label class="st-sw2"><input type="checkbox" data-tshare="${k}" ${sh[k]?'checked':''} ${adm&&!old?'':'disabled'}><i></i></label>`);}).join(''))
     +card('People',mem.map(m=>`<div class="tm-mem"><span><b>${esc(m.email===me?'You':m.name||m.email)}</b><small>${esc(m.email)}${m.status==='invited'?' · invited, not joined yet':''}</small></span>${adm&&m.email!==me?`<select class="in" data-trole="${esc(m.email)}" aria-label="Role for ${esc(m.email)}"><option value="member"${m.role==='member'?' selected':''}>Member</option><option value="admin"${m.role==='admin'?' selected':''}>Admin</option></select><button class="btn sm ghost" type="button" data-tm="remove" data-em="${esc(m.email)}">Remove</button>`:`<em>${m.role==='admin'?'Admin':'Member'}</em>`}</div>`).join('')
       +(adm?`<div class="tm-invf"><input class="in" id="tmInv" type="email" placeholder="coworker@deals4ever.ca" aria-label="Email to invite"><select class="in" id="tmInvRole" aria-label="Role"><option value="member">Member</option><option value="admin">Admin</option></select><button class="btn sm primary" type="button" data-tm="invite">Invite</button></div>
         <p class="st-note">They sign in with that email, then open Settings → Company and press Join. Send them this link so their browser finds the company server: <button class="lnk" type="button" data-tm="copylink" data-link="${esc(link)}">Copy invite link</button></p>`:''))
@@ -4988,13 +5019,13 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 const whDlg=$('#whDlg');
 const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
 const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
-const RK={cfg:{rackCount:4,layouts:{},sheet:null,upd:0},skids:{},deleted:[],q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,upd:0},skids:{},deleted:[],q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
 const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
 /* racks and spots */
 function rackName(i){let n=i+1,s='';while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
 const rackIndex=r=>{let i=0;for(const ch of r)i=i*26+(ch.charCodeAt(0)-64);return i;};
 const rkLayOk=l=>l&&Array.isArray(l.levels)&&l.levels.length>=1&&l.levels.length<=8&&l.levels.every(n=>Number.isInteger(n)&&n>=1&&n<=4)&&Number.isInteger(l.floor)&&l.floor>=0&&l.floor<=4;
-const rkCount=()=>RK.cfg.rackCount;
+const rkCount=()=>RK.cfg.rackCount,rackNm=r=>RK.cfg.names?.[r]||'',rackTitle=r=>rackNm(r)?`Rack ${r} · ${rackNm(r)}`:`Rack ${r}`;
 const layoutOf=r=>rkLayOk(RK.cfg.layouts[r])?RK.cfg.layouts[r]:RK_STD;
 const sameLay=(a,b)=>a.floor===b.floor&&a.levels.join()===b.levels.join();
 function levelPositions(L){let n=1;return L.levels.map(c=>{const ps=[];for(let i=0;i<c;i++)ps.push(String(n++));return ps;});}
@@ -5036,7 +5067,8 @@ function cleanSkid(s){if(!s||typeof s!=='object')return null;const items=(Array.
   return{items,note,total,upd:+s.upd||0,...(EMAIL_RE.test(String(s.by||''))?{by:ck(s.by)}:{})};}
 function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};const lay={};for(const[k,v]of Object.entries(c.layouts||{}))if(/^[A-Z]{1,3}$/.test(k)&&rkLayOk(v))lay[k]={levels:v.levels.slice(),floor:v.floor};
   const sh=c.sheet&&/^[\w-]{20,100}$/.test(c.sheet.id||'')?{id:c.sheet.id,name:String(c.sheet.name||'Rack map').slice(0,120)}:null;
-  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,sheet:sh,upd:+c.upd||0};}
+  const nm={};for(const[k,v]of Object.entries(c.names&&typeof c.names==='object'?c.names:{}))if(/^[A-Z]{1,3}$/.test(k)&&String(v??'').trim())nm[k]=String(v).trim().slice(0,40);
+  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,names:nm,sheet:sh,upd:+c.upd||0};}
 function mergeRacks(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const del=new Map(),m=new Map();
   for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&locOk(d.loc)&&(!del.has(d.loc)||del.get(d.loc)<+d.at))del.set(d.loc,+d.at||0);
   for(const src of[a.skids,b.skids])for(const[loc,s]of Object.entries(src&&typeof src==='object'?src:{})){if(!locOk(loc))continue;const c=cleanSkid(s);if(!c)continue;const o=m.get(loc);if(!o||c.upd>o.upd)m.set(loc,c);}
@@ -5061,23 +5093,24 @@ function rackHTML(r){const L=layoutOf(r),locs=rackLocs(r),used=locs.filter(l=>RK
   const shelves=levelPositions(L).reverse().map(ps=>`<div class="wh-shelf" style="grid-template-columns:repeat(${ps.length},minmax(0,1fr))">${ps.map(p=>slotHTML(locId(r,p))).join('')}</div>`).join('');
   const fl=[];for(let i=1;i<=L.floor;i++)fl.push(slotHTML(locId(r,'F'+i)));
   const floor=L.floor?`<div class="wh-floor"><div class="wh-fl">Floor</div><div class="wh-fg" style="grid-template-columns:repeat(${L.floor},minmax(0,1fr))">${fl.join('')}</div></div>`:'';
-  return`<section class="wh-rack${Math.max(...L.levels,L.floor||1)===1?' skinny':''}" aria-label="Rack ${r}"><header><span class="wh-letter">${r}</span><span class="wh-meta">${used}/${locs.length} spots${bx?` · ${bx} boxes`:''} · ${pcs} pcs</span><button class="btn sm ghost" type="button" data-whlay="${r}" aria-label="Change layout of rack ${r}">Layout</button></header><div class="wh-frame">${shelves}</div>${floor}</section>`;}
+  return`<section class="wh-rack${Math.max(...L.levels,L.floor||1)===1?' skinny':''}" aria-label="Rack ${r}"><header><span class="wh-letter">${r}</span><span class="wh-meta">${rackNm(r)?`<b class="wh-name">${esc(rackNm(r))}</b>`:''}${used}/${locs.length} spots${bx?` · ${bx} boxes`:''} · ${pcs} pcs</span><button class="btn sm ghost" type="button" data-whlay="${r}" aria-label="Name and layout of rack ${r}">Edit</button></header><div class="wh-frame">${shelves}</div>${floor}</section>`;}
 function whSheetChip(){const sh=RK.cfg.sheet;if(!sh)return`<button class="btn sm" type="button" data-wh="sheet">Google Sheet…</button>`;
   return`<button class="btn sm${RK.sheetErr?' wh-bad':''}" type="button" data-wh="sheet" title="${esc(RK.sheetErr||'Kept in step with '+sh.name)}"><span class="wh-dot${RK.sheetErr?' bad':RK.sheetBusy?' busy':''}"></span>${RK.sheetErr?'Sheet: needs attention':RK.sheetBusy?'Syncing sheet…':RK.sheetAt?'Sheet synced '+esc(agoMin(RK.sheetAt)):'Google Sheet'}</button>`;}
 function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=orphLocs(),used=vis.filter(l=>RK.skids[l]).length;
   if(!$('#whQ'))$('#whBar').innerHTML=`<label class="wh-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="whQ" type="search" placeholder="Find item, style, size or colour…" aria-label="Find in the warehouse" autocomplete="off"></label>
-    <span class="wh-step" title="Number of racks"><span>Racks</span><button type="button" data-wh="minus" aria-label="Remove a rack">−</button><input id="whCount" type="number" min="1" max="${RK_MAX}" inputmode="numeric" aria-label="Number of racks"><button type="button" data-wh="plus" aria-label="Add a rack">+</button></span>
+    <span class="wh-step" title="Number of racks"><span>Racks</span><button type="button" data-wh="minus" aria-label="Remove a rack">−</button><input id="whCount" type="number" min="1" max="${RK_MAX}" inputmode="numeric" aria-label="Number of racks"><button type="button" data-wh="newrack" aria-label="Add a rack">+</button></span>
     <span class="spacer"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
+  {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
   if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();
   $('#whSum').textContent=`${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
-  $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="plus" ${n>=RK_MAX?'disabled':''}>＋ Add rack ${rackName(n)}</button>`;
+  $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
   const res=$('#whRes');if(RK.q){const rows=[];for(const loc of vis.concat(orph)){const hits=itemsAt(loc).filter(i=>itemHit(i,RK.q));if(hits.length)rows.push(`<button type="button" class="wh-r" data-loc="${loc}"><span class="code">${loc}</span><span class="lines">${hits.map(i=>`<div>${esc(itemLine(i))} — ${lineAmt(i)}</div>`).join('')}</span></button>`);}
     res.innerHTML=`<h3>${rows.length?`${rows.length} location${rows.length>1?'s':''} match “${esc(RK.q.toUpperCase())}”`:`Nothing matches “${esc(RK.q.toUpperCase())}”`}</h3>${rows.join('')}`;res.hidden=false;}else res.hidden=true;}
 async function openWh(){rkLoad();pageShown('warehouse');if(!whDlg.open)whDlg.showModal();renderWh();if(RK.cfg.sheet)rkSheetSync();}
 
 /* the side panel: a skid, a rack's layout, or the Google Sheet */
-const whSide=$('#whSide');
+const whSide=$('#whSide'),whFocus=sel=>setTimeout(()=>{if(!whSide.contains(document.activeElement)&&!matchMedia('(pointer: coarse)').matches)$(sel)?.focus();},30);
 function sideOpen(kind,code,where,body,foot){RK.side=kind;whSide.hidden=false;whSide.innerHTML=`<div class="wh-sh"><div><div class="wh-code">${code}</div><div class="wh-where">${where}</div></div><button class="btn sm" type="button" data-wh="close">Close</button></div><div class="wh-sb" id="whSb">${body}</div><div class="wh-mv" id="whMv" hidden></div>${foot?`<div class="wh-sf">${foot}</div>`:''}`;}
 function closeSide(){RK.side='';RK.edit=null;RK.lay=null;RK.mv=null;whSide.hidden=true;whSide.innerHTML='';}
 const blankRow=()=>({item:'',style:'',size:'',colour:'',boxes:'',per:'',qty:'',unit:'pcs'}),b0=v=>v===0||v==null?'':v,autoQty=it=>it.boxes!==''&&it.per!==''&&it.boxes!=null&&it.per!=null&&!isNaN(+it.boxes)&&!isNaN(+it.per);
@@ -5085,8 +5118,8 @@ function openSkid(loc){const{rack,pos}=splitLoc(loc),cur=RK.skids[loc],t=skTotal
   RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i)})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
   if(!RK.edit.items.length)RK.edit.items.push(blankRow());
   const who=cur?.upd?`Updated ${esc(ago(cur.upd))}${cur.by&&teamOn()?' by '+esc(memberName(cur.by)):''}`:'';
-  sideOpen('skid',esc(loc),`Rack ${esc(rack)} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
-  drawRows();setTimeout(()=>$('#whSb input')?.focus(),30);}
+  sideOpen('skid',esc(loc),`${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
+  drawRows();whFocus('#whSb input');}
 function drawRows(){const e=RK.edit;
   $('#whSb').innerHTML=e.items.map((it,ix)=>`<div class="wh-row" data-ix="${ix}">
     <div class="wh-f wide"><label for="wit-${ix}">Item</label><input class="in" id="wit-${ix}" data-k="item" autocomplete="off" value="${esc(it.item)}" placeholder="e.g. Hoodie"><div class="wh-sug" hidden></div></div>
@@ -5118,7 +5151,7 @@ function openMove(mode,ix){const e=RK.edit;if(!e)return;let title,extra='';
     if(b>1)extra=it.per>0||!(it.qty>0)?`<div class="wh-f"><label for="whMvN">Boxes to move (of ${b})</label><input class="in" id="whMvN" type="number" min="1" max="${b}" value="${b}" inputmode="numeric"></div>`:`<p class="wh-hint">This moves all ${b} boxes. To move only some, fill in Per box first.</p>`;}
   else title=`Move everything on ${esc(e.loc)}`;
   RK.mv={mode,ix};const locs=visLocs().filter(l=>l!==e.loc),first=locs.find(l=>!RK.skids[l])||'',P=$('#whMv');
-  P.innerHTML=`<div class="wh-mvh">${title}</div><div class="wh-f"><label for="whMvTo">Move to</label><select class="in" id="whMvTo">${locs.map(l=>`<option value="${l}"${l===first?' selected':''}>${l} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`).join('')}</select></div>${extra}<p class="wh-hint" id="whMvInfo"></p>
+  P.innerHTML=`<div class="wh-mvh">${title}</div><div class="wh-f"><label for="whMvTo">Move to</label><select class="in" id="whMvTo">${locs.map(l=>`<option value="${l}"${l===first?' selected':''}>${l}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`).join('')}</select></div>${extra}<p class="wh-hint" id="whMvInfo"></p>
     <div class="wh-mvb"><button class="btn sm" type="button" data-wh="mvcancel">Cancel</button><button class="btn sm primary" type="button" data-wh="mvgo">Move</button></div>`;
   P.hidden=false;mvInfo();$('#whMvTo').focus();}
 function mvInfo(){const to=$('#whMvTo')?.value;if(to)$('#whMvInfo').textContent=RK.skids[to]?`${to} already has stock. This is added to it, not replaced.`:`${to} is empty.`;}
@@ -5132,11 +5165,13 @@ function doMove(){const e=RK.edit,mv=RK.mv;if(!e||!mv)return;const to=$('#whMvTo
     dst.items.push(moved);const items=e.items.slice();if(rest)items[mv.ix]=rest;else items.splice(mv.ix,1);src={...skidBody(e),items};}
   const from=e.loc;closeSide();setSkid(to,dst);setSkid(from,src);rkSave();renderWh();toast(`Moved from ${from} to ${to}`);}
 /* a rack's layout */
-function openLayout(r){const L=layoutOf(r);RK.lay={rack:r,levels:L.levels.slice(),floor:L.floor};sideOpen('layout',`Rack ${esc(r)}`,'Layout','',`<span class="wh-tot" id="whTot"></span><button class="btn sm primary" type="button" data-wh="savelay">Save</button>`);drawLayout();}
+function openLayout(r,isNew){const L=isNew?layoutOf(rackName(rkCount()-1)):layoutOf(r);RK.lay={rack:r,levels:L.levels.slice(),floor:L.floor,name:isNew?'':rackNm(r),isNew:!!isNew};
+  sideOpen('layout',isNew?`New rack ${esc(r)}`:`Rack ${esc(r)}`,isNew?'Name it and pick its shape':'Name and layout','',`<span class="wh-tot" id="whTot"></span><button class="btn sm primary" type="button" data-wh="savelay">${isNew?'Add rack':'Save'}</button>`);drawLayout();if(isNew)whFocus('#whRackName');}
 function drawLayout(){const y=RK.lay,r=y.rack,L={levels:y.levels,floor:y.floor},lp=levelPositions(L),nl=y.levels.length;
   const ln=i=>nl===1?'Shelf':i===0?'Bottom level':i===nl-1?'Top level':`Level ${i+1}`,mini=(a,i,v,lab)=>`<span class="wh-mini"><button type="button" data-whl="${a}-" data-i="${i}" aria-label="Fewer ${lab}">−</button><output>${v}</output><button type="button" data-whl="${a}+" data-i="${i}" aria-label="More ${lab}">+</button></span>`;
   const fl=[];for(let i=1;i<=y.floor;i++)fl.push(locId(r,'F'+i));const nw=new Set(rackLocs(r,L)),lost=Object.keys(RK.skids).filter(l=>splitLoc(l).rack===r&&!nw.has(l));
-  $('#whSb').innerHTML=`<div class="wh-sect">Quick pick</div><div class="wh-pre">${RK_PRESETS.map((p,i)=>`<button type="button" data-whl="preset" data-i="${i}" aria-pressed="${sameLay(p.lay,L)}"><b>${p.name}</b><span>${p.desc}</span></button>`).join('')}</div>
+  $('#whSb').innerHTML=`<div class="wh-f"><label for="whRackName">Rack name (optional)</label><input class="in" id="whRackName" maxlength="40" autocomplete="off" value="${esc(y.name)}" placeholder="e.g. Front wall, Cold room, Aisle 3"></div><p class="wh-hint">Spots keep the short code ${esc(r)} (${esc(locId(r,'1'))}, ${esc(locId(r,'2'))}…); the name shows on the map and in the sheet.</p>
+    <div class="wh-sect">Quick pick</div><div class="wh-pre">${RK_PRESETS.map((p,i)=>`<button type="button" data-whl="preset" data-i="${i}" aria-pressed="${sameLay(p.lay,L)}"><b>${p.name}</b><span>${p.desc}</span></button>`).join('')}</div>
     <div class="wh-sect">Levels, top to bottom · skids per level</div><div class="wh-lvls">${y.levels.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<div class="wh-lvl"><span class="nm">${ln(i)}<small>${lp[i].map(p=>locId(r,p)).join(' ')}</small></span>${mini('lv',i,c,'skids on '+ln(i))}${nl>1?`<button class="lnk x" type="button" data-whl="lvrm" data-i="${i}">Remove</button>`:''}</div>`).join('')}</div>
     ${nl<8?'<button class="btn sm" type="button" data-whl="lvadd">＋ Add a level on top</button>':''}
     <div class="wh-sect">Floor in front</div><div class="wh-lvl"><span class="nm">Floor spots<small>${fl.join(' ')||'None'}</small></span>${mini('fl',0,y.floor,'floor spots')}</div>
@@ -5146,16 +5181,18 @@ function drawLayout(){const y=RK.lay,r=y.rack,L={levels:y.levels,floor:y.floor},
 function layClick(b){const y=RK.lay,i=+b.dataset.i,a=b.dataset.whl;
   if(a==='preset'){const p=RK_PRESETS[i].lay;y.levels=p.levels.slice();y.floor=p.floor;}if(a==='lv-')y.levels[i]=Math.max(1,y.levels[i]-1);if(a==='lv+')y.levels[i]=Math.min(4,y.levels[i]+1);
   if(a==='lvrm'&&y.levels.length>1)y.levels.splice(i,1);if(a==='lvadd'&&y.levels.length<8)y.levels.push(y.levels[y.levels.length-1]||1);if(a==='fl-')y.floor=Math.max(0,y.floor-1);if(a==='fl+')y.floor=Math.min(4,y.floor+1);drawLayout();}
-function saveLayout(){const y=RK.lay;if(!y)return;const L={levels:y.levels.slice(),floor:y.floor};if(sameLay(L,RK_STD))delete RK.cfg.layouts[y.rack];else RK.cfg.layouts[y.rack]=L;rkStamp(RK.cfg);closeSide();rkSave();renderWh();}
+function saveLayout(){const y=RK.lay;if(!y)return;const L={levels:y.levels.slice(),floor:y.floor},nm=String($('#whRackName')?.value??y.name).trim().slice(0,40);if(sameLay(L,RK_STD))delete RK.cfg.layouts[y.rack];else RK.cfg.layouts[y.rack]=L;
+  RK.cfg.names={...RK.cfg.names};if(nm)RK.cfg.names[y.rack]=nm;else delete RK.cfg.names[y.rack];if(y.isNew)RK.cfg.rackCount=Math.max(rkCount(),rackIndex(y.rack));
+  rkStamp(RK.cfg);closeSide();rkSave();renderWh();if(y.isNew){toast(`Added ${rackTitle(y.rack)}`);requestAnimationFrame(()=>$(`#whRacks [aria-label="Rack ${y.rack}"]`)?.scrollIntoView({block:'nearest'}));}}
 
 /* CSV: the same columns as the rack map's own export */
 const RK_HEAD=['Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
-const RK_RHEAD=['Rack','Levels (bottom to top, skids per level)','Floor spots'];
+const RK_RHEAD=['Rack','Levels (bottom to top, skids per level)','Floor spots','Name'];
 function rkRows(skids=RK.skids){const out=[],seen=new Set(),locs=visLocs().concat(Object.keys(skids).filter(l=>!visLocs().includes(l)).sort());
   for(const loc of locs){if(seen.has(loc))continue;seen.add(loc);const s=skids[loc];if(!s)continue;const{rack,pos}=splitLoc(loc),t=skTotal(s),items=s.items.length?s.items:[{}];
     items.forEach(i=>out.push([loc,rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'']));}
   return out;}
-const rkRackRows=()=>visRacks().map(r=>{const L=layoutOf(r);return[r,L.levels.join('-'),L.floor];});
+const rkRackRows=()=>visRacks().map(r=>{const L=layoutOf(r);return[r,L.levels.join('-'),L.floor,rackNm(r)];});
 function csvText(rows){const q=v=>{v=String(v??'');return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};return rows.map(r=>r.map(q).join(',')).join('\n');}
 // rows (a header row first) → skids by location; unknown rows are counted, not guessed
 function rkParse(rows){const h=(rows[0]||[]).map(x=>String(x).trim().toLowerCase()),col=n=>h.indexOf(n.toLowerCase());
@@ -5166,8 +5203,8 @@ function rkParse(rows){const h=(rows[0]||[]).map(x=>String(x).trim().toLowerCase
     const it=rkLine({item:v(r,'Item'),style:v(r,'Style'),size:v(r,'Size'),colour:v(r,'Colour'),boxes:v(r,'Boxes'),per:v(r,'Per box'),qty:/^unknown$/i.test(v(r,'Total'))?'':v(r,'Total'),unit:/^(dz|dozen)$/i.test(v(r,'Unit'))?'dz':'pcs'});
     if(lineHas(it))s.items.push(it);const tc=rkNum(v(r,'Skid total'));if(tc)s.total={count:tc,unit:/^(dz|dozen)$/i.test(v(r,'Skid total unit'))?'dz':/^pcs$/i.test(v(r,'Skid total unit'))?'pcs':'boxes'};if(v(r,'Skid notes'))s.note=rkUp(v(r,'Skid notes'));}
   for(const k of Object.keys(skids))if(!cleanSkid(skids[k]))delete skids[k];return{skids,bad};}
-function rkParseRacks(rows){const out={layouts:{},count:0};for(const r of rows.slice(1)){const k=rkUp(r[0]);if(!/^[A-Z]{1,3}$/.test(k))continue;const lv=String(r[1]??'').split(/[-,\s]+/).filter(Boolean).map(Number),L={levels:lv,floor:Math.round(+r[2]||0)};
-  out.count=Math.max(out.count,rackIndex(k));if(rkLayOk(L)&&!sameLay(L,RK_STD))out.layouts[k]=L;}return out.count?out:null;}
+function rkParseRacks(rows){const out={layouts:{},names:{},count:0};for(const r of rows.slice(1)){const k=rkUp(r[0]);if(!/^[A-Z]{1,3}$/.test(k))continue;const lv=String(r[1]??'').split(/[-,\s]+/).filter(Boolean).map(Number),L={levels:lv,floor:Math.round(+r[2]||0)};
+  out.count=Math.max(out.count,rackIndex(k));if(rkLayOk(L)&&!sameLay(L,RK_STD))out.layouts[k]=L;const nm=String(r[3]??'').trim().slice(0,40);if(nm)out.names[k]=nm;}return out.count?out:null;}
 async function whImport(f){let rows;try{rows=parseCSV(await f.text());}catch(_){toast('That file couldn\'t be read.');return;}
   const p=rkParse(rows);if(!p){toast('That file needs a Location column (or Rack and Position), like the rack map\'s Export CSV.',6000);return;}
   const n=Object.keys(p.skids).length,has=Object.keys(RK.skids).length;if(!n){toast('No skids found in that file.');return;}
@@ -5184,7 +5221,7 @@ function whExport(){save(`rack-inventory-${dayStr(Date.now())}.csv`,new Blob([cs
 const GS='https://sheets.googleapis.com/v4/spreadsheets',RK_TABS=['Rack map','Racks'];
 const rkSnapKey=()=>'ss-racksheet:'+rkKey();
 const skSig=s=>{const c=cleanSkid(s);return c?JSON.stringify([c.items.map(i=>[i.item,i.style,i.size,i.colour,i.boxes,i.per,i.qty,i.unit]),c.note,c.total]):'';};
-const cfgSig=(count,lay)=>JSON.stringify([count,Object.keys(lay).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,lay[k].levels.join('-'),lay[k].floor])]);
+const cfgSig=(count,lay,nm={})=>JSON.stringify([count,Object.keys(lay).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,lay[k].levels.join('-'),lay[k].floor]),Object.keys(nm).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,nm[k]])]);
 async function gsCall(tok,path,o={}){let r;try{r=await fetch(GS+path,{method:o.method||'GET',headers:{Authorization:'Bearer '+tok,...(o.body?{'Content-Type':'application/json'}:{})},...(o.body?{body:JSON.stringify(o.body)}:{})});}
   catch(_){throw new Error('Couldn\'t reach Google Sheets. Check your connection.');}
   const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error?.message||'Google Sheets error '+r.status),{status:r.status});return j;}
@@ -5202,15 +5239,15 @@ async function rkSheetSync(){const sh=RK.cfg.sheet;if(!sh)return;if(RK.sheetBusy
       const P=mapRows.length?rkParse(mapRows):null,inS=P?.skids||{};let ch=false;
       if(P)for(const loc of new Set([...Object.keys(inS),...Object.keys(snap.skids)])){const sS=skSig(inS[loc]),prev=snap.skids[loc]||'';if(sS===prev)continue;
         if(skSig(RK.skids[loc])!==prev)continue;setSkid(loc,inS[loc]||null);ch=true;}
-      const R=rkParseRacks(rackRows);if(R){const sC=cfgSig(R.count,R.layouts);if(sC!==snap.cfg&&cfgSig(rkCount(),RK.cfg.layouts)===snap.cfg){RK.cfg.rackCount=Math.min(RK_MAX,R.count);RK.cfg.layouts=R.layouts;rkStamp(RK.cfg);ch=true;}}
+      const R=rkParseRacks(rackRows);if(R){const sC=cfgSig(R.count,R.layouts,R.names);if(sC!==snap.cfg&&cfgSig(rkCount(),RK.cfg.layouts,RK.cfg.names)===snap.cfg){RK.cfg.rackCount=Math.min(RK_MAX,R.count);RK.cfg.layouts=R.layouts;RK.cfg.names=R.names;rkStamp(RK.cfg);ch=true;}}
       if(ch){rkSave(true);renderWh();}
       // 2. the sheet is rewritten from the dashboard when it differs
       const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=rows=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(14).fill('')).slice(0,14)).filter(r=>r.some(Boolean)));
       const pad=(rows,old,w)=>rows.concat(Array.from({length:Math.max(0,old-rows.length)},()=>Array(w).fill(''))).map(r=>r.concat(Array(w).fill('')).slice(0,w));
       const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:N${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,14)});
-      if(norm(wantR)!==norm(rackRows))data.push({range:`'Racks'!A1:C${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,3)});
+      if(norm(wantR)!==norm(rackRows))data.push({range:`'Racks'!A1:D${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,4)});
       if(data.length)await gsCall(tok,`/${id}/values:batchUpdate`,{method:'POST',body:{valueInputOption:'RAW',data}});
-      lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSig(rkCount(),RK.cfg.layouts)}));
+      lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSig(rkCount(),RK.cfg.layouts,RK.cfg.names)}));
       RK.sheetAt=Date.now();RK.sheetErr='';RK.sheetNeed='';}
     catch(e){RK.sheetErr=e.message;RK.sheetNeed=e.code==='signin'?'signin':e.status===403||e.status===404?'access':'';}
     finally{RK.sheetBusy=null;renderChip();if(RK.side==='sheet')openSheetPanel();if(RK.sheetAgain){RK.sheetAgain=false;rkSheetSync();}}})();return RK.sheetBusy;}
@@ -5241,6 +5278,7 @@ async function linkSheet(){const id=sheetIdFrom($('#whSheetUrl').value);if(!id){
 /* events */
 whDlg.addEventListener('input',e=>{const t=e.target;
   if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
+  if(t.id==='whRackName'&&RK.lay){RK.lay.name=t.value;return;}
   const E=RK.edit;if(!E||RK.side!=='skid')return;
   if(t.id==='whNote'){E.note=t.value;return;}if(t.id==='whTc'){E.tc=t.value;updTot();return;}if(t.id==='whTu'){E.tu=t.value;updTot();return;}
   const row=t.closest('.wh-row');if(!row)return;const it=E.items[+row.dataset.ix],k=t.dataset.k;if(!k)return;it[k]=t.value;
@@ -5263,7 +5301,7 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
     if(a==='dup'){E.items.splice(ix+1,0,{...E.items[ix]});drawRows();const f=$(`#wsz-${ix+1}`);f?.focus();f?.select();}
     if(a==='mv')openMove('line',ix);return;}
   const b=t.closest('[data-wh]');if(!b)return;const a=b.dataset.wh;
-  if(a==='plus'){setRacks(rkCount()+1);if(b.classList.contains('wh-addrack'))requestAnimationFrame(()=>$('#whRacks .wh-addrack')?.scrollIntoView({block:'nearest'}));return;}
+  if(a==='newrack'){if(rkCount()<RK_MAX)openLayout(rackName(rkCount()),true);return;}
   if(a==='minus'){setRacks(rkCount()-1);return;}
   if(a==='import'){$('#whFile').click();return;}if(a==='export'){whExport();return;}
   if(a==='sheet'){openSheetPanel();return;}if(a==='close'||a==='mvcancel'&&!RK.mv){closeSide();return;}
@@ -5291,7 +5329,7 @@ function pageShown(name){PG.routing=true;for(const[n,[id]]of Object.entries(PAGE
   if(pageNow()!==name)history[location.hash&&!PG.inRoute?'pushState':'replaceState'](null,'','#'+name);
   navCur(name);}
 const PAGE_TITLE={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:'Pipeline',sent:'Sent',customers:'Customers',warehouse:'Warehouse',settings:'Settings','line-sheet':'Line sheet'};
-function navCur(name){document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Rakaposhica Dashboard';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
+function navCur(name){$$('.pg-sel').forEach(x=>{x.value=[...x.options].some(o=>o.value===name)?name:'';});document.title=(PAGE_TITLE[name]?PAGE_TITLE[name]+' · ':'')+'Rakaposhica Dashboard';if(typeof renderBadge==='function')renderBadge();$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(name==='settings')));$$('.pg-nav a').forEach(a=>{const cur=a.getAttribute('href')==='#'+(name==='line-sheet'?'inventory':name);cur?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});}
 const NAV_HTML=`<nav class="pg-nav" aria-label="Pages"><button class="pg-brand" type="button" data-pgmenu aria-haspopup="dialog" title="Menu"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="vh">Menu</span></button>${['home','editor','inventory','pipeline','sent','customers','warehouse'].map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('')}</nav>`;
 // light/dark and the account button, on every page (copies that work the editor's own buttons)
 const GEAR='<button class="btn icon ghost pg-gear" type="button" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>';
@@ -5324,7 +5362,10 @@ $('#editor .ed-top').insertAdjacentHTML('beforeend','<button class="btn icon sm 
 $('#edClose').onclick=()=>$('#edCancel').click();
 // the tab bar and side panel follow Settings → Navigation
 const tabsHTML=()=>SET.tabs.filter(k=>!SET.tabsOff.includes(k)).map(n=>`<a href="#${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}${n==='sent'?'<i hidden></i>':''}</a>`).join('');
-function renderTabs(){for(const nav of $$('.pg-nav')){nav.querySelectorAll('a').forEach(a=>a.remove());nav.insertAdjacentHTML('beforeend',tabsHTML());}
+// on a phone the tabs are a dropdown of the same pages
+const selHTML=()=>`<select class="pg-sel" aria-label="Go to page"><option value="" hidden>Pages</option>${SET.tabs.filter(k=>!SET.tabsOff.includes(k)).map(n=>`<option value="${n}">${n==='editor'?'Sell sheet':PAGES[n][1]}</option>`).join('')}<option value="settings">Settings</option></select>`;
+document.addEventListener('change',e=>{const x=e.target.closest?.('.pg-sel');if(!x||!x.value)return;const v=x.value;if(v==='editor')goEditor();else if(v==='settings')openSettings();else PAGES[v][2]();});
+function renderTabs(){for(const nav of $$('.pg-nav')){nav.querySelectorAll('a,.pg-sel').forEach(a=>a.remove());nav.insertAdjacentHTML('beforeend',selHTML()+tabsHTML());}
   const cur=pageNow()||'editor';navCur(cur);$$('.pg-gear').forEach(g=>g.setAttribute('aria-pressed',String(cur==='settings')));if(typeof renderBadge==='function')renderBadge();}
 // readable versions of an accent colour: a fill white text reads on, text that reads on light and dark backgrounds
 function accentSet(h){const rgb=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16)),hex=c=>'#'+c.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
@@ -5408,7 +5449,7 @@ let errAt=0;window.addEventListener('error',e=>{if(!e.error||Date.now()-errAt<15
 
 /* ---------- boot ---------- */
 (async()=>{
-  applyAppear();renderRail();
+  applyAppear();renderRail();finishSignIn();
   const all=await dbAll();
   if(all===null){$('#status').innerHTML='<i style="background:var(--warn)"></i>Not saved on this device';}
   sheets=(all||[]).sort((a,b)=>b.updated-a.updated).map(ensureStyle);

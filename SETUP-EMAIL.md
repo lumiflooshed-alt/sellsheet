@@ -217,8 +217,11 @@ The **Warehouse** tab shows your racks from the front: levels top to bottom, flo
   - Names you've used before are suggested as you type.
 - **Move skid…** moves a whole skid, or some boxes of one line. Moving onto a spot that has stock adds to it.
 - **Empty skid** asks for a second tap.
-- **Layout** on a rack changes its levels, skids per level and floor spots (Standard or Skinny, or your own). Stock whose spot no longer exists is kept under **Not on the map**, never deleted.
-- **Racks − / +** sets how many racks there are. **Search** highlights matching skids and lists their locations.
+- **Naming racks:** every rack has a short letter code (A, B, C…) used in spot codes like A1, plus an optional name such as "Front wall" or "Cold room".
+  - **＋ Add a rack** (or **+** next to Racks) asks for the name and shape before adding it.
+  - **Edit** on a rack changes its name, levels, skids per level and floor spots (Standard or Skinny, or your own).
+  - Stock whose spot no longer exists is kept under **Not on the map**, never deleted.
+- **Racks −** removes the last rack; typing a number sets the count. **Search** highlights matching skids and lists their locations.
 
 **CSV files**
 - **Export CSV** downloads one row per item. The columns match the old rack map's export: Location, Rack, Position, Item, Style, Size, Colour, Boxes, Per box, Total, Unit, Skid total, Skid total unit, Skid notes.
@@ -226,11 +229,11 @@ The **Warehouse** tab shows your racks from the front: levels top to bottom, flo
   - **Update these spots only:** the spots in the file are replaced and everything else stays.
   - **Replace everything:** the map becomes exactly the file.
 - Racks are added if the file uses one that isn't on the map yet.
-- **Moving from the old rack map:** open it, click **Export CSV**, then use **Import CSV** here. The old map's rack layouts aren't in its CSV, so set any non-standard rack with **Layout** once.
+- **Moving from the old rack map:** open it, click **Export CSV**, then use **Import CSV** here. The old map's rack layouts aren't in its CSV, so set any non-standard rack (and its name) with **Edit** once.
 
 **Google Sheet, both ways**
 - **Connect a sheet:** click **Google Sheet…**, then either **Create a new Google Sheet** or paste a sheet link and click **Use this sheet**.
-- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV) and a **Racks** tab (each rack's levels, bottom to top, e.g. `1-2-2`, and its floor spots). Rows in the Racks tab set the number of racks.
+- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV) and a **Racks** tab (each rack's levels, bottom to top, e.g. `1-2-2`, its floor spots and its name). Rows in the Racks tab set the number of racks; names and layouts can be changed there too.
 - **Dashboard → sheet:** changes go to the sheet within a couple of seconds.
 - **Sheet → dashboard:** changes come in every 3 minutes while the Warehouse page is open, when you open it, and when you click **Sync now**.
 - **Same spot changed in both places** between syncs: the dashboard's version is kept.
@@ -242,6 +245,15 @@ The **Warehouse** tab shows your racks from the front: levels top to bottom, flo
 - Everyone sees the same racks and skids. The skid panel says who changed it last.
 - The linked sheet is shared too. Share the sheet with your coworkers in Google Sheets so their dashboards can update it.
 - Without a company, the map syncs between your own devices when you're signed in.
+
+## On a phone
+
+Everything works the same on a phone; only the layout changes.
+- **Pages:** the page tabs become a dropdown at the top.
+- **Settings:** all sections show as buttons above the page.
+- **Sign-in:** on phones and tablets, signing in happens in the same tab. You go to Google or Microsoft, then straight back to the page you were on, already signed in. It also works inside apps that block pop-up windows, such as the Gmail or Instagram app's built-in browser.
+  - This uses the same redirect address as the stay-signed-in helper (step 4), so there's nothing new to set up.
+  - Without the helper, Google sign-in on a phone still uses Google's own sign-in window.
 
 ## Good to know
 
