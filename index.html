@@ -520,7 +520,7 @@ textarea.np-in{display:block;overflow:hidden}
 .sheet .hd .c{text-align:right;flex:none;max-width:45%}
 .sheet .hd .c small{display:block;color:var(--pale);font-weight:700;font-size:10px;letter-spacing:.02em}
 .sheet .hd .c b{display:block;color:#fff;font-size:var(--s-code);line-height:1.15}
-.sheet .phs{display:grid;gap:21px;margin-top:var(--gap);height:var(--phH);position:relative}
+.sheet .phs{display:grid;gap:21px;margin-top:var(--gap);grid-auto-rows:var(--phH);position:relative}
 .sheet .phs{grid-template-columns:repeat(var(--np,1),minmax(0,1fr))}
 .sheet .phbox{border:1px solid var(--line);background:#fff;display:grid;place-items:center;overflow:hidden;cursor:pointer;position:relative}
 .sheet .phbox img{max-width:100%;max-height:calc(var(--phH) - 14px);display:block}
@@ -1334,7 +1334,7 @@ const I={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
-const MAX_PHOTOS=4;
+const phCols=n=>n<=4?Math.max(1,n):Math.ceil(n/Math.ceil(n/4));   // photos per row
 const TABS=[['product','Product'],['photos','Photos'],['colours','Colours'],['details','Details'],['contact','Contact'],['style','Style']];
 const DEF_STYLE={font:'Arial',sz:{title:23,code:22,heading:11.5,thead:10,table:14,label:10.7,value:14,contactH:17,email:13.3},phH:233,lw:166,gap:20,blocks:{header:{w:100,h:0},photos:{w:100},colours:{w:100,h:0},details:{w:100,h:0},footer:{w:100,h:0}}};
 const BLOCK_NAMES={header:'Header',photos:'Photos',colours:'Colours table',details:'Details table',footer:'Footer'};
@@ -1477,8 +1477,8 @@ function sheetHTML(forExport){
   const blk=(name,inner,extra='')=>`<div class="blk${selBlock===name&&!forExport?' selected':''}" data-block="${name}" style="width:${B[name].w}%;${extra}">${inner}${forExport||selBlock!==name?'':frame(name)}</div>`;
   let photos='';
   if(isHid('photos'))photos='';
-  else if(ph.length) photos=blk('photos',`<div class="phs${forExport?'':' hzp'}" style="--np:${ph.length}">${forExport?'':hz('photos','the photos')}${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${photoSrc(p.url)}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
-  else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos<small style="display:block;font-weight:500;font-size:13px;margin-top:4px;opacity:.8">Up to ${MAX_PHOTOS} · backgrounds are removed automatically</small></span></div></div>`);
+  else if(ph.length) photos=blk('photos',`<div class="phs${forExport?'':' hzp'}" style="--np:${phCols(ph.length)}">${forExport?'':hz('photos','the photos')}${ph.map(p=>`<div class="phbox" data-photo="${p.id}"><img src="${photoSrc(p.url)}" alt=""${p.id===freshPhoto?' class="fresh"':''}></div>`).join('')}</div>`);
+  else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos<small style="display:block;font-weight:500;font-size:13px;margin-top:4px;opacity:.8">As many as you like · backgrounds are removed automatically</small></span></div></div>`);
   const L=!forExport, th=(t,k,lbl)=>`<th style="${gH}"${k&&L?' class="hzp"':''}>${t}${k&&L?hz(k,lbl):''}</th>`, td=v=>`<td style="${gT}">${v}</td>`;
   const cols=tableCols(c);
   const head=cols.map(col=>col.k==='name'?th('Colour'):th(esc(col.head),col.hk,col.k==='size'?'the size columns':'the '+col.head+' column')).join('');
@@ -1582,13 +1582,13 @@ function renderPanel0(){whereSet('editor',tab);
     <p class="note">Tip: you can also click any text on the sheet and type to change it.</p>`;
   }
   else if(tab==='photos'){
-    h=`<h2>Photos</h2><p class="lead">Up to ${MAX_PHOTOS} photos, spaced evenly across the sheet. Backgrounds are removed on this device.</p>
+    h=`<h2>Photos</h2><p class="lead">Add as many photos as you like. Up to 4 sit side by side; more continue on the next row. Backgrounds are removed on this device.</p>
     <div class="seg" role="group" aria-label="Photos on the sheet"><button type="button" data-hidset="photos:0" aria-pressed="${!isHid('photos')}">Show photos</button><button type="button" data-hidset="photos:1" aria-pressed="${isHid('photos')}">Hide photos</button></div>
     ${isHid('photos')?'<p class="note">Hidden on the sheet, in downloads and in emails. Your photos are kept.</p>':''}
     <div class="photos">${S.photos.map((p,i)=>`<div class="ph"><img src="${photoSrc(p.url)}" alt="Photo ${i+1}"><div style="display:grid;gap:8px"><strong>Photo ${i+1}</strong><div class="b">
       <button class="btn sm" data-pedit="${p.id}">Edit</button><button class="btn sm" data-pmove="${i}" ${i===0?'disabled':''}>Move left</button><button class="btn sm danger" data-pdel="${p.id}">Remove</button></div></div></div>`).join('')}</div>
-    ${S.photos.length<MAX_PHOTOS?`<div class="ph-add"><button class="add" data-addphoto="1">${I.plus}Add photo</button><button class="add" data-pastephoto="1">${I.paste}Paste image</button></div>
-    <p class="note">You can also copy a picture (e.g. right-click → Copy image) and press <b>${/Mac|iP/.test(navigator.platform)?'⌘':'Ctrl'}+V</b> anywhere, or drag a picture onto the page.</p>`:''}
+    <div class="ph-add"><button class="add" data-addphoto="1">${I.plus}Add photo</button><button class="add" data-pastephoto="1">${I.paste}Paste image</button></div>
+    <p class="note">You can also copy a picture (e.g. right-click → Copy image) and press <b>${/Mac|iP/.test(navigator.platform)?'⌘':'Ctrl'}+V</b> anywhere, or drag a picture onto the page.</p>
     <p class="note">Hangers: thin hooks are removed automatically. If part of a hanger is left, open <b>Edit</b> and use <b>Erase</b> to brush it away.</p>`;
   }
   else if(tab==='colours'){
@@ -1885,8 +1885,8 @@ const saveBrush=()=>lsSet('ss-brush',JSON.stringify(BR));
 const SWATCHES=['#000000','#FFFFFF','#7F7F7F','#C2413B','#E0A030','#F2D541','#0E993F','#2F6FEB','#7C4DFF','#8B5A2B'];
 const hexRgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)), rgbHex=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
 const warmModel=()=>{getModel().catch(()=>{});}; // loads while the person is still choosing a file
-function pickPhoto(replaceId){if(!replaceId&&S.photos.length>=MAX_PHOTOS){toast(`Up to ${MAX_PHOTOS} photos. Remove one to add another.`);return;}target=replaceId||null;warmModel();$('#file').click();}
-function addPhotoFile(f){if(S.photos.length>=MAX_PHOTOS){toast(`Up to ${MAX_PHOTOS} photos. Remove one to add another.`);return;}
+function pickPhoto(replaceId){target=replaceId||null;warmModel();$('#file').click();}
+function addPhotoFile(f){
   if(!/^image\//.test(f.type||'')&&!/\.(jpe?g|png|webp|gif|bmp|avif|heic)$/i.test(f.name||'')){toast('That isn\'t a picture. Paste or choose a JPG or PNG image.');return;}
   warmModel();const url=URL.createObjectURL(f);const img=new Image();img.onload=()=>startEdit(img,null,url);img.onerror=()=>{URL.revokeObjectURL(url);toast('That image could not be opened. Try a JPG or PNG.');};img.src=url;}
 $('#file').addEventListener('change',()=>{const f=$('#file').files[0];$('#file').value='';if(f)addPhotoFile(f);});
@@ -2236,7 +2236,7 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
   const hc=single(ci-1),hd=single(di-1);if(hc&&hc!==T(title)&&!/item\s*code/i.test(hc))t.headings.colours=nice(hc);if(hd&&hd!==hc&&!/item\s*code/i.test(hd))t.headings.details=nice(hd);
   if(email)t.email=email;if(contactH&&contactH.length<40)t.headings.contact=nice(contactH);
   if(theme){t.theme.primary=theme.primary;if(theme.accent)t.theme.accent=theme.accent;}
-  const lim=ci>=0?ci:di>=0?di:Infinity;t.photos=photos.filter(p=>p.at<=lim).slice(0,MAX_PHOTOS).map(p=>({id:uid(),url:p.url}));
+  const lim=ci>=0?ci:di>=0?di:Infinity;t.photos=photos.filter(p=>p.at<=lim).map(p=>({id:uid(),url:p.url}));
   const s=fixRows(cleanSheet(t));s._how=from;s._read=[t.title&&'name',code&&'item code',colours.length&&`${colours.length} colour${colours.length>1?'s':''}`,details.length&&`${details.length} detail${details.length>1?'s':''}`,s.photos.length&&`${s.photos.length} photo${s.photos.length>1?'s':''}`,email&&'contact email'].filter(Boolean);
   return s;}
 // Rebuild an opened sheet field by field so only expected, well-formed values come in.
@@ -2251,7 +2251,7 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
   const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto),...(x?.hidden===true?{hidden:true}:{})}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
   const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
   t.theme={primary:hex(r.theme?.primary)||t.theme.primary,accent:hex(r.theme?.accent)||t.theme.accent};
-  t.photos=arr(r.photos).slice(0,MAX_PHOTOS).filter(p=>typeof p?.url==='string'&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(p.url)).map(p=>({id:uid(),url:p.url}));
+  t.photos=arr(r.photos).filter(p=>typeof p?.url==='string'&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(p.url)).map(p=>({id:uid(),url:p.url}));
   const st=obj(r.style),so=t.style;so.font=fontOk(st.font)||so.font;so.phH=num(st.phH,so.phH,100,460);so.lw=num(st.lw,so.lw,60,400);so.gap=num(st.gap,so.gap,0,60);
   for(const k in so.sz)so.sz[k]=num(obj(st.sz)[k],so.sz[k],6,60);
   for(const k in so.blocks){const b=obj(obj(st.blocks)[k]);so.blocks[k].w=num(b.w,so.blocks[k].w,30,100);if('h'in so.blocks[k])so.blocks[k].h=num(b.h,0,0,460);}
@@ -2301,11 +2301,12 @@ async function buildDocx(){
   // photos
   if(S.photos.length&&!isHid('photos')){
     const imgs=await Promise.all(S.photos.map(async p=>{const b=await (await fetch(p.url)).arrayBuffer();const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=p.url;});return{b,w:im.naturalWidth,h:im.naturalHeight};}));
-    const n=imgs.length,SP=312,iw=(FULL-SP*(n-1))/n, pw=scale(imgs.flatMap((_,i)=>i?[SP,iw]:[iw]),B.photos.w), maxH=S.style.phH-14;
+    const n=phCols(imgs.length),SP=312,iw=(FULL-SP*(n-1))/n, pw=scale(Array.from({length:n},(_,i)=>i?[SP,iw]:[iw]).flat(),B.photos.w), maxH=S.style.phH-14;
     const pcell=(im,w)=>{const maxW=(w-200)/15;let hh=maxH,ww=hh*im.w/im.h;if(ww>maxW){ww=maxW;hh=ww*im.h/im.w;}
       return cell(w,[para(new ImageRun({data:im.b,transformation:{width:Math.round(ww),height:Math.round(hh)}}),AlignmentType.CENTER)],{fill:'FFFFFF',b:{top:ln(L,6),bottom:ln(L,6),left:ln(L,6),right:ln(L,6)},m:[60,60,60,60]});};
-    const cells=pw.map((w,i)=>i%2?cell(w,[para(run('',20))],{m:[90,40,90,40]}):pcell(imgs[i/2],w));
-    out.push(table(pw,[new TableRow({height:{value:S.style.phH*15,rule:HeightRule.EXACT},children:cells})]));
+    const prow=row=>new TableRow({height:{value:S.style.phH*15,rule:HeightRule.EXACT},children:pw.map((w,i)=>i%2||!row[i/2]?cell(w,[para(run('',20))],{m:[90,40,90,40]}):pcell(row[i/2],w))});
+    const prs=[];for(let i=0;i<imgs.length;i+=n){if(i)prs.push(new TableRow({height:{value:300,rule:HeightRule.EXACT},children:pw.map(w=>cell(w,[para(run('',2))],{m:[0,0,0,0]}))}));prs.push(prow(imgs.slice(i,i+n)));}
+    out.push(table(pw,prs));
     out.push(gap(G*6));
   }
   // colours table
@@ -3585,11 +3586,11 @@ function emailHTML(msg,inline,parts,edit){const tv=themeVars(),F="Arial,Helvetic
   if(sheetImg)sum+=`<tr><td style="padding:0 28px 6px"><img src="cid:${sheetImg.cid}" width="544" alt="Sell sheet: ${esc(sheetName(S))}" style="display:block;width:100%;max-width:544px;height:auto;border:1px solid ${tv.line}"></td></tr>`;
   if(['photos','table','details','contact'].some(has)){if(sheetImg)sum+='<tr><td style="height:14px"></td></tr>';const c=calc(),sz=S.showSizes,cell=(v,o='')=>`<td style="padding:7px 10px;border-bottom:1px solid ${tv.line};font:14px ${F};color:#222;${o}">${v}</td>`;
     const th=v=>`<th style="padding:7px 10px;background:${tv.tint};border-top:3px solid ${tv.a};color:${tv.a};font:bold 11px ${F};text-transform:uppercase;text-align:center">${v}</th>`;
-    const pw=photos.length?Math.floor((544-(photos.length-1)*12)/photos.length):0;
+    const pn=phCols(photos.length),pw=photos.length?Math.floor((544-(pn-1)*12)/pn):0;
     if(!(isHid('title')&&isHid('code')))sum+=`<tr><td style="padding:0 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${tv.p};border-bottom:4px solid ${tv.a}"><tr>
       <td style="padding:16px 20px;font:bold 20px ${F};color:#fff">${isHid('title')?'':esc(S.title.toUpperCase())}</td>
       <td align="right" style="padding:16px 20px;white-space:nowrap">${S.code&&!isHid('code')?`<div style="font:bold 10px ${F};color:${tv.pale}">ITEM CODE</div><div style="font:bold 18px ${F};color:#fff">${esc(S.code.toUpperCase())}</div>`:''}</td></tr></table></td></tr>`;
-    if(photos.length)sum+=`<tr><td style="padding:16px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${photos.map((p,i)=>`${i?'<td width="12"></td>':''}<td align="center" valign="middle" style="border:1px solid ${tv.line};padding:6px;background:#fff"><img src="cid:${p.cid}" width="${Math.min(pw-14,p.w)}" alt="Product photo ${i+1}" style="display:block;max-width:100%;height:auto;border:0"></td>`).join('')}</tr></table></td></tr>`;
+    if(photos.length)for(let r0=0;r0<photos.length;r0+=pn)sum+=`<tr><td style="padding:${r0?12:16}px 28px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${photos.slice(r0,r0+pn).map((p,k)=>`${k?'<td width="12"></td>':''}<td align="center" valign="middle" width="${pw}" style="border:1px solid ${tv.line};padding:6px;background:#fff"><img src="cid:${p.cid}" width="${Math.min(pw-14,p.w)}" alt="Product photo ${r0+k+1}" style="display:block;max-width:100%;height:auto;border:0"></td>`).join('')}${Array.from({length:pn-photos.slice(r0,r0+pn).length},()=>`<td width="12"></td><td width="${pw}"></td>`).join('')}</tr></table></td></tr>`;
     if(has('table')&&S.showColours!==false&&c.rows.length){const cols=tableCols(c);
       sum+=`<tr><td style="padding:18px 28px 0">${isHid('h:colours')?'':`<div style="font:bold 13px ${F};color:${tv.a};margin-bottom:6px">${esc(S.headings.colours.toUpperCase())}</div>`}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${cols.map(col=>th(esc(col.head))).join('')}</tr>
         ${c.rows.map(r=>`<tr>${cols.map(col=>col.k==='name'?cell(esc(r.name||'–')):cell(col.v(r),'text-align:center')).join('')}</tr>`).join('')}
