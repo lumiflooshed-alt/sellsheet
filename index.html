@@ -91,10 +91,30 @@ svg{flex:none}
 .td-u.med{background:color-mix(in srgb,#E0A030 20%,var(--panel));border-color:color-mix(in srgb,#E0A030 50%,var(--panel));color:var(--ink)}
 .td-u.low{background:var(--raise);border-color:var(--line);color:var(--ink)}
 .td-list{display:grid}.td-empty{color:var(--muted);font-size:13px;margin:6px 0}
-.td{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.td{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:4px 8px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
 .td>input[type=checkbox]{width:18px;height:18px;margin:4px 0 0;accent-color:var(--accent);cursor:pointer}
 .td-t{display:block;width:100%;border:0;background:none;font:500 14px var(--ui);color:var(--ink);padding:2px 4px;margin-left:-4px;border-radius:5px;text-overflow:ellipsis}.td-t:hover{background:var(--raise)}.td-t:focus{outline:2px solid var(--accent);background:var(--panel)}
 .td.done .td-t{color:var(--muted);text-decoration:line-through}
+.td-open{width:26px;height:26px;padding:0;min-width:0;display:grid;place-items:center;color:var(--muted)}.td-open svg{width:15px;height:15px}.td-open:hover{color:var(--accent-fg)}
+.td-ind{font-weight:600;color:var(--muted)}
+/* a to-do opened as its own page */
+.tdp{border:0;border-radius:16px;padding:0;width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 32px);background:var(--panel);color:var(--ink);box-shadow:0 24px 70px rgba(10,14,22,.35);overflow:hidden}
+.tdp[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}.tdp::backdrop{background:rgba(10,14,22,.45)}
+.tdp-top{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}.tdp-top .sp{flex:1;font-size:12.5px;color:var(--muted)}
+.tdp-b{overflow:auto;padding:22px 32px 28px;display:grid;gap:18px;align-content:start}
+.tdp-title{border:0;background:none;resize:none;font:700 26px/1.25 var(--ui);color:var(--ink);padding:2px 0;width:100%;overflow:hidden;outline:none}.tdp-title::placeholder{color:var(--muted)}
+.tdp.done .tdp-title{text-decoration:line-through;color:var(--muted)}
+.tdp-props{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 12px;align-items:center;font-size:14px}.tdp-props>:nth-child(odd){color:var(--muted);font-size:13.5px}
+.tdp-props .in{height:34px;max-width:280px}.tdp-props select.in{max-width:340px}
+.tdp-pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;font:600 12.5px var(--ui);background:var(--raise);border:1px solid var(--line)}.tdp-pill.done{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-fg)}
+.tdp h4{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}.tdp h4 small{font-weight:600;color:var(--muted)}
+.tdp-subs{display:grid;gap:2px}.tdp-sub{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center}
+.tdp-sub input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin:0}.tdp-sub .st{border:0;background:none;font:14px var(--ui);color:var(--ink);padding:5px 4px;border-radius:5px;width:100%}.tdp-sub .st:hover{background:var(--raise)}.tdp-sub .st:focus{outline:2px solid var(--accent);background:var(--panel)}
+.tdp-sub.done .st{text-decoration:line-through;color:var(--muted)}
+.tdp-subadd .in{height:34px;width:100%}
+.tdp-notes{width:100%;min-height:220px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:15px/1.6 var(--ui);color:var(--ink);background:var(--panel)}
+.tdp-notes:focus{outline:2px solid var(--accent);border-color:transparent}
+@media (max-width:600px){.tdp-b{padding:16px}.tdp-props{grid-template-columns:90px minmax(0,1fr)}.tdp-title{font-size:22px}}
 .td-m{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:center;font-size:12px;color:var(--muted)}
 .td-m input[type=date]{border:0;background:none;font:12px var(--ui);color:inherit;padding:0;width:8.6em;cursor:pointer}
 .td-m .late{color:var(--bad);font-weight:700}.td-m .today{color:var(--ink);font-weight:700}
@@ -148,6 +168,7 @@ svg{flex:none}
 .ml-tpl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.ml-tpl[hidden]{display:none}.ml-tpl span{flex:1 1 160px}
 .ml-summ{flex:1 1 260px;font-size:14px;min-width:0}.ml-summ b{font-size:15px}
 .ml-opt{font-weight:500;color:var(--muted)}
+.ml-preset{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ml-preset label{font:600 13.5px var(--ui)}.ml-preset select{height:34px;flex:1 1 180px;min-width:0;max-width:340px}.ml-preset select[hidden]{display:none}
 .ml-whys{display:flex;flex-wrap:wrap;gap:6px;margin-top:-6px}.ml-whys:empty{display:none}
 .ml-whys button{height:30px;padding:0 12px;border-radius:15px;border:1px solid var(--line2);background:var(--panel);font:500 13px var(--ui);color:var(--ink);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ml-whys button:hover,.ml-whys button[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
@@ -1096,6 +1117,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
       <section class="ml-form" aria-label="Email">
         <div class="ml-pane" id="mlWrite">
         <h3 class="ml-sh"><span class="ml-step" aria-hidden="true">2</span>Your email<span class="ml-tplname" id="mlTplName"></span></h3>
+        <div class="ml-preset"><label for="mlPreset">Preset</label><select class="in" id="mlPreset" aria-label="Start from a saved preset"></select><button class="btn sm ghost" type="button" id="mlPresetSave">Save as preset</button><button class="lnk" type="button" id="mlPresetDel" hidden>Delete preset</button></div>
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
         <div class="ml-line" id="mlLine" hidden></div>
         <label class="field" id="mlWhyF"><span>Why you're writing <small class="ml-opt">(one line, optional)</small></span><input class="in" id="mlWhy" type="text" maxlength="200" placeholder="e.g. Following up on our call." autocomplete="off"></label>
@@ -1324,7 +1346,25 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="db-list" id="dbList"></div>
   <div class="ml-bot"><span class="note" id="dbNote"></span><div class="bgrp"><button class="btn sm ghost" id="dbCancel" type="button">Cancel</button><button class="btn sm primary" id="dbOk" type="button">Choose this folder</button></div></div>
 </div></dialog>
-<dialog id="askDlg" class="ask" aria-labelledby="askT"><form method="dialog"><h3 id="askT"></h3><p id="askB"></p><div class="ask-acts" id="askA"></div></form></dialog>
+<dialog id="tdDlg" class="tdp" aria-label="To-do">
+  <div class="tdp-top"><button class="btn sm" type="button" id="tdpDone"></button><span class="sp" id="tdpSaved"></span><button class="btn sm ghost" type="button" id="tdpDel">Delete</button><button class="btn icon sm ghost" type="button" id="tdpClose" aria-label="Close">✕</button></div>
+  <div class="tdp-b">
+    <textarea class="tdp-title" id="tdpTitle" rows="1" maxlength="500" placeholder="Untitled to-do" aria-label="To-do"></textarea>
+    <div class="tdp-props">
+      <span>Status</span><span id="tdpStatus"></span>
+      <label for="tdpDue">Due date</label><input class="in" type="date" id="tdpDue">
+      <label for="tdpUrg">Urgency</label><select class="in" id="tdpUrg"></select>
+      <label for="tdpWho">For</label><select class="in" id="tdpWho"></select>
+      <span>Created</span><span id="tdpCreated"></span>
+    </div>
+    <h4>Checklist <small id="tdpSubN"></small></h4>
+    <div class="tdp-subs" id="tdpSubs"></div>
+    <form class="tdp-subadd" id="tdpSubAdd"><input class="in" name="s" maxlength="300" placeholder="＋ Add a step, then press Enter" aria-label="Add a checklist step" autocomplete="off"></form>
+    <h4>Notes</h4>
+    <textarea class="tdp-notes" id="tdpNotes" maxlength="20000" placeholder="Write anything here: details, links, what was said, next steps…" aria-label="Notes"></textarea>
+  </div>
+</dialog>
+<dialog id="askDlg" class="ask" aria-labelledby="askT"><form method="dialog"><h3 id="askT"></h3><p id="askB"></p><input class="in" id="askI" hidden autocomplete="off" maxlength="60"><div class="ask-acts" id="askA"></div></form></dialog>
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <div class="offline" id="offline" role="status" popover="manual">You're offline. Everything you do is saved on this device and syncs when you're back online.</div>
 <div class="ctx hide" id="ctx" role="menu" aria-label="Text formatting"></div>
@@ -1405,12 +1445,19 @@ const PRESETS=[['Navy','#1F2A44','#4F8FD6'],['Forest','#1E3A2F','#4FA37A'],['Cha
 const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comfy',currency:'$',followDays:7,replyEvery:5,
   tabs:['home','editor','inventory','pipeline','sent','customers','warehouse'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
-    secs:['steps','attention','todo','chart','activity','top','inv','cust'],secOff:[],side:['todo','top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:true}},upd:0};
+    secs:['steps','todo','attention','chart','activity','top','inv','cust'],secOff:[],side:['top','inv','cust'],tdMain:false},
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},presets:[],mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:true}},upd:0};
+// an email preset: your own name for it, the subject, message, why-you're-writing line, inbox name, style and attachments
+function cleanPreset(x){if(!x||typeof x!=='object'||!x.id||!String(x.name||'').trim())return null;const st=(v,n)=>String(v==null?'':v).slice(0,n);
+  return{id:st(x.id,40),name:st(x.name,60).trim(),subj:st(x.subj,300),msg:st(x.msg,5000),reason:st(x.reason,200),...(typeof x.fromName==='string'?{fromName:st(x.fromName,80)}:{}),
+    look:x.look==='styled'||x.look==='plain'?x.look:'',att:Array.isArray(x.att)?x.att.filter(k=>['pdf','docx','jpg'].includes(k)):null,upd:+x.upd||0};}
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   // known items keep your order; a new one goes in after the item it follows by default
   const fix=(arr,def)=>{const out=arr.filter((k,i)=>def.includes(k)&&arr.indexOf(k)===i);def.forEach((k,i)=>{if(out.includes(k))return;const prev=def.slice(0,i).reverse().find(x=>out.includes(x));out.splice(prev?out.indexOf(prev)+1:0,0,k);});return out;};d.tabs=fix(d.tabs,SET_DEF.tabs);d.home.kpis=fix(d.home.kpis,SET_DEF.home.kpis);d.home.secs=fix(d.home.secs,SET_DEF.home.secs);
+  // once: the to-do list moves to Home's main column, under Get set up
+  if(!d.home.tdMain){d.home.side=d.home.side.filter(k=>k!=='todo');d.home.secOff=d.home.secOff.filter(k=>k!=='todo');const hs=d.home.secs.filter(k=>k!=='todo');hs.splice(hs.indexOf('steps')+1,0,'todo');d.home.secs=hs;d.home.tdMain=true;}
+  d.presets=(Array.isArray(d.presets)?d.presets:[]).map(cleanPreset).filter(Boolean).slice(0,50);
   d.currency=String(d.currency).trim().slice(0,6)||'$';if(!d.name&&d.home.name)d.name=d.home.name;if(typeof sv.upd==='number')d.upd=sv.upd;try{if(!sv.start&&localStorage.getItem('ss-home-start')==='0')d.start='editor';}catch(_){}return d;}
 const SET=setNorm((()=>{try{return JSON.parse(localStorage.getItem('ss-settings')||'{}');}catch(_){return{};}})());
 function setSave(){SET.upd=Date.now();try{localStorage.setItem('ss-settings',JSON.stringify(SET));}catch(_){}if(typeof scheduleSync==='function')scheduleSync();}
@@ -3070,7 +3117,7 @@ const cleanLead=l=>!l||typeof l!=='object'||!l.id?null:{id:cs(l.id,40),name:cs(l
 const cleanAct=a=>!a||typeof a!=='object'||!a.id||!+a.at||!isWho(a.who)?null:{id:cs(a.id,40),who:cs(a.who,200),type:ACT_NAME[a.type]?a.type:'note',at:+a.at,dur:Math.max(0,Math.min(1440,parseInt(a.dur)||0)),dir:a.dir==='in'?'in':'out',
   result:RES_NAME[a.result]?a.result:'',sheet:cs(a.sheet,200),note:cs(a.note,4000),by:EMAIL_RE.test(String(a.by||'').trim())?ck(a.by):'',upd:+a.upd||0};
 const URG_NAME={high:'High',med:'Medium',low:'Low'},URG_RANK={high:0,med:1,low:2,'':3},isTdWho=v=>isWho(v)||/^grp:./.test(String(v||''));
-const cleanTodo=t=>!t||typeof t!=='object'||!t.id?null:{id:cs(t.id,40),text:cs(t.text,500),due:/^\d{4}-\d\d-\d\d$/.test(t.due||'')?t.due:'',done:+t.done||0,who:isTdWho(t.who)?cs(t.who,200):'',urg:URG_NAME[t.urg]?t.urg:'',created:+t.created||+t.upd||0,upd:+t.upd||0};
+const cleanTodo=t=>!t||typeof t!=='object'||!t.id?null:{id:cs(t.id,40),text:cs(t.text,500),due:/^\d{4}-\d\d-\d\d$/.test(t.due||'')?t.due:'',done:+t.done||0,who:isTdWho(t.who)?cs(t.who,200):'',urg:URG_NAME[t.urg]?t.urg:'',created:+t.created||+t.upd||0,upd:+t.upd||0,notes:cs(t.notes,20000),subs:(Array.isArray(t.subs)?t.subs:[]).slice(0,100).map(x=>x&&typeof x==='object'&&x.id?{id:cs(x.id,40),text:cs(x.text,300),done:+x.done?1:0}:null).filter(Boolean)};
 function mergeCRM(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const arr=v=>Array.isArray(v)?v:[],del=new Map();
   const dk=new Map();for(const d of[...arr(a.deleted),...arr(b.deleted)])if(d&&d.id){const k=String(d.id);if(!del.has(k)||del.get(k)<+d.at)del.set(k,+d.at||0);if(['leads','acts','todos'].includes(d.k))dk.set(k,d.k);}
   const one=(k,clean)=>{const m=new Map();for(const x of[...arr(a[k]),...arr(b[k])]){const c=clean(x);if(!c)continue;const o=m.get(c.id);if(!o||c.upd>o.upd)m.set(c.id,c);}return[...m.values()].filter(x=>!((del.get(x.id)||0)>=x.upd));};
@@ -3083,7 +3130,7 @@ const touchX=x=>{x.upd=Math.max(Date.now(),(+x.upd||0)+1);return x;};
 function crmDel(kind,id){const x=CRM[kind].find(y=>y.id===id);CRM[kind]=CRM[kind].filter(y=>y.id!==id);CRM.deleted.push({id,at:Math.max(Date.now(),(+x?.upd||0)+1),k:kind});}
 const newId=()=>uid()+uid();
 // everything that shows leads, calls or to-dos follows a change
-function crmRefresh(){if(plDlg.open){renderPipe();renderPersonTodos();}if(custDlg.open&&typeof renderCustHist==='function'&&!$('#np-hist')?.contains(document.activeElement))renderCustHist();if(homeDlg.open)renderHome();if(mailDlg.open&&MAIL.aud==='lead')renderCust();}
+function crmRefresh(){if($('#tdDlg')?.open)renderTdp();if(plDlg.open){renderPipe();renderPersonTodos();}if(custDlg.open&&typeof renderCustHist==='function'&&!$('#np-hist')?.contains(document.activeElement))renderCustHist();if(homeDlg.open)renderHome();if(mailDlg.open&&MAIL.aud==='lead')renderCust();}
 /* ---------- Company: several people sharing customers, leads and history ----------
    Data goes through the helper Worker (a D1 database). Each person signs in with their own Google or Microsoft account;
    the Worker checks who they are. What's shared is chosen by an admin in Settings → Company. It syncs every 3 minutes,
@@ -3251,9 +3298,9 @@ function whoOptions(sel){const L=CRM.leads.filter(l=>!l.conv).map(l=>['lead:'+l.
 const todoForm=(who,id)=>`<form class="td-add" data-tdform="${esc(who||'')}"><input class="in" name="t" id="${id}" placeholder="Add a to-do…" aria-label="New to-do" maxlength="500" autocomplete="off"><button class="btn sm primary" type="submit">Add</button>
   <div class="td-more"><input class="in" type="date" name="d" aria-label="Due date (optional)" title="Due date (optional)"><select class="in" name="u" aria-label="Urgency"><option value="">Urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>${who?'':`<select class="in td-w" name="w" aria-label="Who it's for (optional)">${whoOptions('')}</select>`}</div></form>`;
 function todoItems(list,showWho){return list.map(t=>{const d=dueInfo(t.due),wn=showWho&&t.who?whoName(t.who):'';
-  return`<div class="td${t.done?' done':''}"><input type="checkbox" data-tddone="${esc(t.id)}" ${t.done?'checked':''} aria-label="Done: ${esc(t.text)}"><div style="min-width:0"><input class="td-t" data-tdtext="${esc(t.id)}" value="${esc(t.text)}" aria-label="To-do" maxlength="500">
-    <div class="td-m">${t.done?`<span>Done ${esc(ago(t.done))}</span>`:`<span class="${d.cls}">${d.txt}</span><input type="date" data-tddue="${esc(t.id)}" value="${t.due}" aria-label="Due date for ${esc(t.text)}"><select class="td-u ${t.urg||'none'}" data-tdurg="${esc(t.id)}" aria-label="Urgency for ${esc(t.text)}"><option value="">No urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}"${t.urg===k?' selected':''}>${n}</option>`).join('')}</select>`}${wn?`<button class="td-who" type="button" data-tdwho="${esc(t.who)}">${esc(wn)}</button>`:''}</div></div>
-    <button class="tiny x" type="button" data-tddel="${esc(t.id)}" aria-label="Delete to-do: ${esc(t.text)}">${I.x}</button></div>`;}).join('');}
+  return`<div class="td${t.done?' done':''}" data-tdrow="${esc(t.id)}"><input type="checkbox" data-tddone="${esc(t.id)}" ${t.done?'checked':''} aria-label="Done: ${esc(t.text)}"><div style="min-width:0"><input class="td-t" data-tdtext="${esc(t.id)}" value="${esc(t.text)}" aria-label="To-do" maxlength="500">
+    <div class="td-m">${t.done?`<span>Done ${esc(ago(t.done))}</span>`:`<span class="${d.cls}">${d.txt}</span><input type="date" data-tddue="${esc(t.id)}" value="${t.due}" aria-label="Due date for ${esc(t.text)}"><select class="td-u ${t.urg||'none'}" data-tdurg="${esc(t.id)}" aria-label="Urgency for ${esc(t.text)}"><option value="">No urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}"${t.urg===k?' selected':''}>${n}</option>`).join('')}</select>`}${wn?`<button class="td-who" type="button" data-tdwho="${esc(t.who)}">${esc(wn)}</button>`:''}${t.subs?.length?`<span class="td-ind" title="Checklist">☑ ${t.subs.filter(x=>x.done).length}/${t.subs.length}</span>`:''}${t.notes?.trim()?`<span class="td-ind" title="Has notes">✎ Notes</span>`:''}</div></div>
+    <button class="tiny td-open" type="button" data-tdopen="${esc(t.id)}" aria-label="Open to-do: ${esc(t.text)}" title="Open for notes and a checklist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4l-8 8"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button><button class="tiny x" type="button" data-tddel="${esc(t.id)}" aria-label="Delete to-do: ${esc(t.text)}">${I.x}</button></div>`;}).join('');}
 // open ones first (soonest due first), then the done ones behind a button
 function todoBlock(list,showWho,key){const open=list.filter(t=>!t.done).sort(todoSort),done=list.filter(t=>t.done).sort((a,b)=>b.done-a.done),sd=TD_SHOW.has(key);
   return`<div class="td-list">${open.length?todoItems(open,showWho):'<p class="td-empty">Nothing to do. Add one above.</p>'}</div>${done.length?`<button class="lnk td-sd" type="button" data-tdshow="${key}">${sd?'Hide':'Show'} ${done.length} done</button>${sd?`<div class="td-list">${todoItems(done,showWho)}</div>`:''}`:''}`;}
@@ -3265,7 +3312,37 @@ document.addEventListener('change',e=>{const el=e.target,d=el.dataset||{};if(el.
   if(d.tddone){t.done=el.checked?Date.now():0;if(el.checked)toast('To-do done',5000,{label:'Undo',fn:()=>{t.done=0;touchX(t);crmSave();}});}
   else if(d.tddue)t.due=el.value;else if(d.tdurg)t.urg=URG_NAME[el.value]?el.value:'';else{const v=el.value.trim();if(!v){el.value=t.text;return;}t.text=v.slice(0,500);}touchX(t);crmSave();});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset?.tdtext)e.target.blur();});
-document.addEventListener('click',e=>{const x=e.target.closest('[data-tddel],[data-tdwho],[data-tdshow],[data-tdmin]');if(!x)return;const d=x.dataset;
+/* a to-do opened as its own page: title, properties, a checklist and notes. Every change saves (and syncs) as you type. */
+const tdDlg=$('#tdDlg');let TDP='',tdpT=0;
+const tdpGet=()=>CRM.todos.find(x=>x.id===TDP)||null;
+function openTodo(id){if(!CRM.todos.some(x=>x.id===id))return;TDP=id;renderTdp(true);if(!tdDlg.open)tdDlg.showModal();const t=$('#tdpTitle');if(!t.value)t.focus();else $('#tdpClose').focus();}
+const tdpGrow=()=>{const t=$('#tdpTitle');t.style.height='auto';t.style.height=t.scrollHeight+'px';};
+function renderTdp(all){const t=tdpGet();if(!t){if(tdDlg.open)tdDlg.close();return;}const ae=document.activeElement,set=(id,v)=>{const el=$('#'+id);if(all||ae!==el)el.value=v;};
+  tdDlg.classList.toggle('done',!!t.done);set('tdpTitle',t.text);tdpGrow();set('tdpNotes',t.notes||'');set('tdpDue',t.due||'');
+  $('#tdpUrg').innerHTML=`<option value="">No urgency</option>${Object.entries(URG_NAME).map(([k,n])=>`<option value="${k}"${t.urg===k?' selected':''}>${n}</option>`).join('')}`;
+  if(all||ae!==$('#tdpWho'))$('#tdpWho').innerHTML=whoOptions(t.who||'');
+  const d=dueInfo(t.due);$('#tdpStatus').innerHTML=t.done?`<span class="tdp-pill done">✓ Done ${esc(ago(t.done))}</span>`:`<span class="tdp-pill">Open${t.due?' · '+esc(d.txt):''}</span>`;
+  $('#tdpDone').textContent=t.done?'Mark as not done':'✓ Mark done';$('#tdpCreated').textContent=t.created?DTF_DAY.format(new Date(t.created)):'–';
+  const subs=t.subs||[];$('#tdpSubN').textContent=subs.length?`${subs.filter(x=>x.done).length} of ${subs.length} done`:'';
+  if(all||!$('#tdpSubs').contains(ae))$('#tdpSubs').innerHTML=subs.map(x=>`<div class="tdp-sub${x.done?' done':''}"><input type="checkbox" data-subdone="${esc(x.id)}" ${x.done?'checked':''} aria-label="Done: ${esc(x.text)}"><input class="st" data-subtext="${esc(x.id)}" value="${esc(x.text)}" maxlength="300" aria-label="Step"><button class="tiny x" type="button" data-subdel="${esc(x.id)}" aria-label="Remove step: ${esc(x.text)}">${I.x}</button></div>`).join('');}
+function tdpSave(fn,now){const t=tdpGet();if(!t)return;fn(t);touchX(t);clearTimeout(tdpT);$('#tdpSaved').textContent='Saving…';const go=()=>{crmSave();$('#tdpSaved').textContent='Saved';};if(now)go();else tdpT=setTimeout(go,500);}
+$('#tdpTitle').addEventListener('input',e=>{tdpGrow();const v=e.target.value.replace(/\s*\n\s*/g,' ');if(v!==e.target.value)e.target.value=v;if(v.trim())tdpSave(t=>{t.text=v.trim().slice(0,500);});});
+$('#tdpTitle').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#tdpNotes').focus();}});
+$('#tdpNotes').addEventListener('input',e=>tdpSave(t=>{t.notes=e.target.value.slice(0,20000);}));
+$('#tdpDue').addEventListener('change',e=>tdpSave(t=>{t.due=/^\d{4}-\d\d-\d\d$/.test(e.target.value)?e.target.value:'';},true));
+$('#tdpUrg').addEventListener('change',e=>tdpSave(t=>{t.urg=URG_NAME[e.target.value]?e.target.value:'';},true));
+$('#tdpWho').addEventListener('change',e=>tdpSave(t=>{t.who=isTdWho(e.target.value)?e.target.value:'';},true));
+$('#tdpDone').onclick=()=>{tdpSave(t=>{t.done=t.done?0:Date.now();},true);renderTdp();};
+$('#tdpDel').onclick=()=>{const t=tdpGet();if(!t)return;tdDlg.close();crmDel('todos',t.id);crmSave();toast('To-do deleted',6000,{label:'Undo',fn:()=>{CRM.deleted=CRM.deleted.filter(z=>z.id!==t.id);touchX(t);CRM.todos.push(t);crmSave();}});};
+$('#tdpClose').onclick=()=>tdDlg.close();
+tdDlg.addEventListener('close',()=>{if(tdpT){clearTimeout(tdpT);tdpT=0;crmSave();}const t=$('#tdpTitle');if(!t.value.trim()){const x=tdpGet();if(x)t.value=x.text;}TDP='';});
+$('#tdpSubAdd').addEventListener('submit',e=>{e.preventDefault();const i=e.target.elements.s,v=i.value.trim();if(!v)return;tdpSave(t=>{t.subs=[...(t.subs||[]),{id:newId(),text:v.slice(0,300),done:0}].slice(0,100);},true);i.value='';renderTdp(true);$('#tdpSubAdd input').focus();});
+$('#tdpSubs').addEventListener('change',e=>{const d=e.target.dataset;if(d.subdone)tdpSave(t=>{const x=(t.subs||[]).find(y=>y.id===d.subdone);if(x)x.done=e.target.checked?1:0;},true);
+  else if(d.subtext){const v=e.target.value.trim();tdpSave(t=>{if(v){const x=(t.subs||[]).find(y=>y.id===d.subtext);if(x)x.text=v.slice(0,300);}else t.subs=(t.subs||[]).filter(y=>y.id!==d.subtext);},true);}renderTdp(true);});
+$('#tdpSubs').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.subtext){e.preventDefault();e.target.blur();$('#tdpSubAdd input').focus();}});
+$('#tdpSubs').addEventListener('click',e=>{const b=e.target.closest('[data-subdel]');if(!b)return;tdpSave(t=>{t.subs=(t.subs||[]).filter(y=>y.id!==b.dataset.subdel);},true);renderTdp(true);});
+document.addEventListener('click',e=>{const x=e.target.closest('[data-tddel],[data-tdwho],[data-tdshow],[data-tdmin],[data-tdopen]');if(!x)return;const d=x.dataset;
+  if(d.tdopen){openTodo(d.tdopen);return;}
   if(d.tdmin!==undefined){lsSet('ss-pl-todo',d.tdmin==='1'?'min':'');renderPlTodo();$('#plTodo button')?.focus();return;}
   if(d.tdshow){TD_SHOW.has(d.tdshow)?TD_SHOW.delete(d.tdshow):TD_SHOW.add(d.tdshow);crmRefresh();return;}
   if(d.tdwho){if(d.tdwho.startsWith('grp:')){const k=whoId(d.tdwho);if(plDlg.open)plDlg.close();if(homeDlg.open)homeDlg.close();openCP();CP.gsel=new Set([k]);renderCP(true);return;}openPerson(d.tdwho);return;}
@@ -3789,14 +3866,14 @@ $('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
-function openMail(opts){$('#mlOpts').open=false;MAIL.line=opts?.line||null;MAIL.plain=!!opts?.plain&&!opts?.line;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'||(MAIL.plain&&opts?.aud!=='cust')?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
+function openMail(opts){$('#mlOpts').open=false;MAIL.presetId='';MAIL.line=opts?.line||null;MAIL.plain=!!opts?.plain&&!opts?.line;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'||(MAIL.plain&&opts?.aud!=='cust')?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
   if(opts?.pick){if(MAIL.aud==='lead'){LSEL.clear();LSEL.add(opts.pick);}else CU.sel.add(opts.pick);}
   const cc=!!($('#mlCc').value||$('#mlBcc').value);$('#mlCcRow').hidden=!cc;$('#mlCcBtn').hidden=cc;$('#mlMore').open=MAIL.att.some(k=>k!=='pdf')||MAIL.show.length>0;CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;MAIL.kind=MAIL.line?'line':'new';loadWording();
   const ml=$('#mlLine');ml.hidden=!MAIL.line;$('.ml-how').hidden=!!MAIL.line;if(MAIL.line)ml.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>Attached: ${esc(MAIL.line.name)}</b><small>Line sheet with ${MAIL.line.items.length} product${MAIL.line.items.length>1?'s':''} · ${MAIL.line.blob.size<1048576?Math.max(1,Math.round(MAIL.line.blob.size/1024))+' KB':(MAIL.line.blob.size/1048576).toFixed(1)+' MB'}. {product} becomes “${esc(MAIL.line.title)}”.</small></span>`;$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
-  $('#mlWhy').value=MAIL.reason||'';renderWhys();renderFromName();
+  $('#mlWhy').value=MAIL.reason||'';renderWhys();renderFromName();renderPresets();updTpl();
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();updGets();}
 mailDlg.addEventListener('close',()=>{MAIL.line=null;MAIL.plain=false;});
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
@@ -3815,9 +3892,26 @@ const tplDirty=()=>tplNorm($('#mlSubj').value)!==tplOf('subj')||tplNorm($('#mlMs
 function pullSubject(quiet){const t=$('#mlMsg'),m=t.value.match(/^\s*subject\s*:[ \t]*([^\n]*)(\n|$)/i);if(!m)return false;const sj=m[1].trim();t.value=t.value.slice(m[0].length).replace(/^[ \t]*\n/,'');
   if(sj)$('#mlSubj').value=sj;if(!quiet)toast('Moved the “Subject:” line out of the message and into the subject',4000);return true;}
 $('#mlMsg').addEventListener('input',()=>{if(pullSubject()){updTpl();updMsgPrev();updMode();schedPreview();}});
-function updTpl(){const d=tplDirty(),n=TPL_NAME[wordKind()];$('#mlTpl').hidden=!d;$('#mlTplSave').textContent='Save as my '+n;$('#mlTplName').textContent=d?'Changed for this email':'Your saved '+n;}
+/* presets: named emails you save and pick again, kept in your settings (so they sync) */
+const curPreset=()=>MAIL.presetId?SET.presets.find(x=>x.id===MAIL.presetId)||null:null;
+function renderPresets(){const sel=$('#mlPreset'),L=SET.presets.slice().sort((a,b)=>COLL.compare(a.name,b.name));if(MAIL.presetId&&!curPreset())MAIL.presetId='';
+  sel.innerHTML=`<option value="">${L.length?'Choose a preset…':'No presets yet'}</option>`+L.map(x=>`<option value="${esc(x.id)}"${x.id===MAIL.presetId?' selected':''}>${esc(x.name)}</option>`).join('');
+  sel.disabled=!L.length;$('#mlPresetDel').hidden=!MAIL.presetId;$('#mlPresetSave').textContent=MAIL.presetId?'Save as new preset':'Save as preset';}
+function presetNow(name,id){return cleanPreset({id:id||newId(),name,subj:$('#mlSubj').value,msg:$('#mlMsg').value,reason:MAIL.reason||'',fromName:fnTpl(),look:MAIL.plain||MAIL.line?'':lookNow(),att:MAIL.plain||MAIL.line?null:MAIL.att.slice(),upd:Date.now()});}
+function applyPreset(x){MAIL.presetId=x?x.id:'';if(!x){loadWording();}else{$('#mlSubj').value=x.subj;$('#mlMsg').value=x.msg;MAIL.reason=x.reason||'';$('#mlWhy').value=MAIL.reason;if(typeof x.fromName==='string')MAIL.fromName=x.fromName;
+    if(x.look&&!MAIL.plain&&!MAIL.line){MAIL.looks[MAIL.aud==='lead'?'lead':'cust']=x.look;if(x.look==='plain')MAIL.sheetPic=false;}if(x.att&&!MAIL.plain&&!MAIL.line)MAIL.att=x.att.slice();saveMail();}
+  renderPresets();renderHow();renderWhys();renderFromName();updTpl();updMsgPrev();updMode();schedPreview();}
+function putPreset(x){SET.presets=[...SET.presets.filter(y=>y.id!==x.id&&y.name.toLowerCase()!==x.name.toLowerCase()),x].slice(-50);setSave();MAIL.presetId=x.id;renderPresets();updTpl();}
+$('#mlPreset').addEventListener('change',e=>applyPreset(SET.presets.find(x=>x.id===e.target.value)||null));
+$('#mlPresetSave').onclick=async()=>{const r=await ask({title:'Save as a preset',body:'Saves the subject, message, why-you\'re-writing line, inbox name and style, so you can pick them again next time.',ok:'Save',input:{value:'',placeholder:'e.g. Trade show follow-up',label:'Preset name'}});
+  if(r!=='ok')return;const name=ask.value.slice(0,60);if(!name){toast('Give the preset a name');return;}const same=SET.presets.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  if(same&&(await ask({title:`Replace “${same.name}”?`,body:'A preset with this name already exists.',ok:'Replace'}))!=='ok')return;putPreset(presetNow(name,same?.id));toast(`Saved preset “${name}”`);};
+$('#mlPresetDel').onclick=async()=>{const x=curPreset();if(!x)return;if((await ask({title:`Delete “${x.name}”?`,body:'The email you\'re writing stays as it is.',ok:'Delete',danger:true}))!=='ok')return;
+  SET.presets=SET.presets.filter(y=>y.id!==x.id);setSave();MAIL.presetId='';renderPresets();updTpl();toast('Preset deleted');};
+function updTpl(){const pr=curPreset();if(pr){const ch=$('#mlSubj').value!==pr.subj||$('#mlMsg').value!==pr.msg;$('#mlTpl').hidden=!ch;$('#mlTplSave').textContent=`Save changes to “${pr.name}”`;$('#mlTplName').textContent=ch?'Changed for this email':'Preset: '+pr.name;return;}
+  const d=tplDirty(),n=TPL_NAME[wordKind()];$('#mlTpl').hidden=!d;$('#mlTplSave').textContent='Save as my '+n;$('#mlTplName').textContent=d?'Changed for this email':'Your saved '+n;}
 function saveTpl(){const k=wordKeys(),now=String(Date.now());lsSet(k.subj,tplNorm($('#mlSubj').value));lsSet(k.msg,tplNorm($('#mlMsg').value));lsSet(k.subj+'-upd',now);lsSet(k.msg+'-upd',now);scheduleSync();updTpl();toast(`Saved. Every new ${TPL_NAME[wordKind()]} starts with this wording.`,5000);}
-$('#mlTplSave').onclick=saveTpl;$('#mlTplUndo').onclick=()=>{loadWording();updMsgPrev();updMode();schedPreview();};
+$('#mlTplSave').onclick=()=>{const pr=curPreset();if(pr){putPreset(presetNow(pr.name,pr.id));toast(`Saved “${pr.name}”`);return;}saveTpl();};$('#mlTplUndo').onclick=()=>{const pr=curPreset();if(pr){applyPreset(pr);return;}loadWording();updMsgPrev();updMode();schedPreview();};
 $('#mlMsg').addEventListener('input',updTpl);$('#mlSubj').addEventListener('input',updTpl);
 // insert {name}, {company} or {product} where the cursor is (in the subject or the message, whichever was used last)
 let tokField='mlMsg';for(const id of['mlSubj','mlMsg'])$('#'+id).addEventListener('focus',()=>{tokField=id;});
@@ -5145,10 +5239,12 @@ function groupsHTML(){const gs=gFlat();return`<div class="cpd-h"><h3>Groups<smal
     <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button></div></div>
   <div class="cpd-f"><span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
 /* a proper confirm window (instead of "click again"). Resolves 'ok', 'alt' or false (cancelled / Esc). */
-function ask({title,body='',ok='OK',danger=false,alt='',cancel='Cancel'}){const d=$('#askDlg');if(d.open)d.close();
-  return new Promise(res=>{$('#askT').textContent=title;$('#askB').textContent=body;$('#askB').hidden=!body;
+// input:{value,label,placeholder} adds a text box; what was typed is in ask.value afterwards
+function ask({title,body='',ok='OK',danger=false,alt='',cancel='Cancel',input=null}){const d=$('#askDlg');if(d.open)d.close();
+  return new Promise(res=>{$('#askT').textContent=title;$('#askB').textContent=body;$('#askB').hidden=!body;const ai=$('#askI');ai.hidden=!input;ai.value=input?.value||'';ai.placeholder=input?.placeholder||'';ai.setAttribute('aria-label',input?.label||title);
     $('#askA').innerHTML=`<button class="btn sm ghost" value="cancel">${esc(cancel)}</button>${alt?`<button class="btn sm" value="alt">${esc(alt)}</button>`:''}<button class="btn sm ${danger?'danger':'primary'}" value="ok">${esc(ok)}</button>`;
-    d.onclose=()=>{d.onclose=null;res(d.returnValue==='ok'?'ok':d.returnValue==='alt'?'alt':false);};d.returnValue='';d.showModal();d.querySelector(danger?'[value="cancel"]':'[value="ok"]').focus();});}
+    d.onclose=()=>{d.onclose=null;ask.value=$('#askI').value.trim();res(d.returnValue==='ok'?'ok':d.returnValue==='alt'?'alt':false);};d.returnValue='';d.showModal();if(input){ai.focus();ai.select();}else d.querySelector(danger?'[value="cancel"]':'[value="ok"]').focus();});}
+$('#askI').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#askA [value=ok]').click();}});
 // closing a customer with unsaved changes asks: save, discard or keep editing. then() runs once it's closed.
 function closeCPDetail(force,then){if(CP.mode==='cust'&&CP.dirty&&!force){ask({title:'Save your changes?',body:'You changed this customer and haven\'t saved yet.',ok:'Save',alt:'Discard changes',cancel:'Keep editing'})
       .then(r=>{if(r==='ok'){if(saveCustomer()){closeCPDetail(true);then?.();}}else if(r==='alt'){closeCPDetail(true);then?.();}});return false;}
