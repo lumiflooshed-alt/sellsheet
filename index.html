@@ -2825,7 +2825,7 @@ $('#mlAcct').addEventListener('click',async e=>{if(e.target.id==='mlSetup'){open
 async function chooseFrom(v){if(v!=='+'){MAIL.from=v;saveMail();return;}
   try{const t=await googleLogin(true,'',[],'extra');const k=gSlot('extra',t.email);await loadSendAs(k,true);const l=lsJ('ss-sendas:'+ck(t.email))||[];MAIL.from=k+'|'+((l.find(x=>x.def)||l[0])?.email||t.email);saveMail();toast(`You can now send from ${t.email}`);}
   catch(err){toast(err.message,6000);}}
-$('#mlAcct').addEventListener('change',async e=>{if(e.target.id!=='mlFrom')return;await chooseFrom(e.target.value);renderAcct();});
+$('#mlAcct').addEventListener('change',async e=>{if(e.target.id!=='mlFrom')return;await chooseFrom(e.target.value);renderAcct();buildPreview();});
 const mlStatus=(m,bad)=>{const s=$('#mlStatus');s.textContent=m||'';s.style.color=bad?'var(--bad)':'';};
 
 /* sync: merge by email; newest edit wins; deletions are remembered so they don't come back */
@@ -3792,6 +3792,8 @@ $('#mlShow').addEventListener('change',()=>{MAIL.show=$$('#mlShow input:checked'
 function updMsgPrev(){const P=people(),p=P[0]||null,first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';
   $('#mlMsgPrev').textContent=!first?'':p?`${p.name||p.company?`For ${p.name||p.company}`:`For ${p.email}`}: “${first}”${P.length>1?` (and ${P.length-1} more, each with their own name)`:''}`:`With no customer ticked, it reads: “${first}”`;}
 $('#mlMsg').addEventListener('input',()=>{updMsgPrev();updMode();});$('#mlTo').addEventListener('input',updMsgPrev);
+// the From line in the preview: the address picked in "Send from" (Gmail), else the signed-in account
+function fromShown(me){const f=MAIL.prov==='google'&&me?curFrom():null;return f?(f.name?f.name+' <'+f.email+'>':f.email):me;}
 // Preview tab: the real email for each recipient, names filled in
 // live preview next to the form, refreshed shortly after each change
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
@@ -3805,7 +3807,7 @@ async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let p
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
   const files=MAIL.line?[MAIL.line.name]:attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
   const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
-  if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(me||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
+  if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(fromShown(me)||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
     +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
     +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Style',msgPlain(m)?(lookNow()==='plain'?'Plain, like a normal email':'Plain: first email to this lead'):'Styled')+row('Attached',(msgPlain(m)&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line?[fileBase()+'.pdf']:files).map(esc).join(', ')||'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
     +(m.person&&!greetName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
