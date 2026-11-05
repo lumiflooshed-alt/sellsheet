@@ -178,7 +178,16 @@ The site sends through your own Gmail or Outlook account, so each email looks th
 - **Each email is personal.** It uses the person's name, plus an optional **Why you're writing** line, such as "Following up on our call." That line goes under the greeting as `{reason}`.
 - **A natural subject**, such as "Hi-vis vest with sherpa lining – details for Acme Safety". If the customer has no company, the subject ends at "details".
 - **A real signature** with your name, company, phone and website. Set it under **More options → Your signature**.
-- **One email at a time.** When you send to several people, the emails go out 30 to 90 seconds apart. Keep the window open while they send. **Stop sending** stops after the current one, and the people not yet emailed stay ticked.
+- **One email at a time.** When you send to several people, each gap is picked at random, anywhere from 30 to 90 seconds. Keep the window open while they send. **Stop sending** stops after the current one, and the people not yet emailed stay ticked.
+- **No second email the same day by mistake.** Anyone who already got an email today (from you or a teammate) is marked "Emailed today at …" in the list. Before sending, the site asks: **Send anyway**, **Skip them** or **Don't send**. Pipeline cards show when each email went out, e.g. "Sent today, 2:14 PM".
+- **The name in their inbox** is the brand and product by default, e.g. "Hiker - HIVIZ Vest", or just the product when the sell sheet has no Brand. Change it under **More options → Sending → Name they see in their inbox**. Pick **Your own name** to go back to your name. Outlook always shows the name on your Microsoft account.
+- **Presets.** **Save as preset** stores the following under a name you choose, such as "Trade show follow-up":
+  - the subject and message
+  - the why-you're-writing line
+  - the inbox name
+  - the style
+
+  Pick a preset from the **Preset** list to use it again. Presets sync with your settings.
 
 If emails still go to spam, send one to a Gmail address you own. Open it and choose **⋮ → Show original**. **SPF**, **DKIM** and **DMARC** should all say PASS:
 
