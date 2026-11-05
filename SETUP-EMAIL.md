@@ -161,6 +161,28 @@ To turn it off, clear the helper address in **Sign-in setup**. To cut off access
     - Your customers and the Sent list stay with the account you signed in to the site with.
     - Replies to that account are checked too.
 - Your choice is remembered. You can also change it in **Settings → Email → Send from**. To refresh the list after adding an address in Gmail, click **Refresh** there.
+- The **From** line in the preview shows the address you picked.
+
+## Landing in the inbox, not spam
+
+The site sends through your own Gmail or Outlook account, so each email looks the same to the receiver as one you typed yourself. To help it land in the inbox, sell sheet emails are set up like this:
+
+- **Plain text**, not a styled card. **More options → What's included** can still switch to Styled.
+- **The sell sheet goes as a PDF attachment** with a plain name, such as `Hi-vis-vest-sherpa-lining-sell-sheet.pdf`. It isn't shown as a picture inside the email.
+- **The key facts are written in the email.** `{details}` becomes a few lines from the sell sheet:
+  - sizes and colours
+  - price and MOQ
+  - lead time
+
+  To include an MOQ or lead time, add a line called "MOQ" or "Lead time" under **Product details** on the sell sheet. The email window says when one is missing.
+- **Each email is personal.** It uses the person's name, plus an optional **Why you're writing** line, such as "Following up on our call." That line goes under the greeting as `{reason}`.
+- **A natural subject**, such as "Hi-vis vest with sherpa lining – details for Acme Safety". If the customer has no company, the subject ends at "details".
+- **A real signature** with your name, company, phone and website. Set it under **More options → Your signature**.
+- **One email at a time.** When you send to several people, the emails go out 30 to 90 seconds apart. Keep the window open while they send. **Stop sending** stops after the current one, and the people not yet emailed stay ticked.
+
+If emails still go to spam, send one to a Gmail address you own. Open it and choose **⋮ → Show original**. **SPF**, **DKIM** and **DMARC** should all say PASS:
+
+- If one fails while you're sending from an address on your own domain, that domain's DNS records need to allow Google (or Microsoft) to send for it. Ask whoever manages the domain.
 
 ## Sync between devices
 

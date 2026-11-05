@@ -147,6 +147,17 @@ svg{flex:none}
 .ml-toks button{height:28px;padding:0 10px;border-radius:7px;border:1px dashed color-mix(in srgb,var(--accent) 55%,var(--line2));background:var(--accent-soft);font:600 12.5px var(--ui);color:var(--accent-fg);cursor:pointer}
 .ml-tpl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13.5px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.ml-tpl[hidden]{display:none}.ml-tpl span{flex:1 1 160px}
 .ml-summ{flex:1 1 260px;font-size:14px;min-width:0}.ml-summ b{font-size:15px}
+.ml-opt{font-weight:500;color:var(--muted)}
+.ml-whys{display:flex;flex-wrap:wrap;gap:6px;margin-top:-6px}.ml-whys:empty{display:none}
+.ml-whys button{height:30px;padding:0 12px;border-radius:15px;border:1px solid var(--line2);background:var(--panel);font:500 13px var(--ui);color:var(--ink);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ml-whys button:hover,.ml-whys button[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+.ml-gets{display:grid;border:1px solid var(--line);border-radius:12px;background:var(--raise);padding:2px 12px}
+.ml-get{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;font-size:14px;min-width:0}.ml-get+.ml-get{border-top:1px solid var(--line)}
+.ml-get svg{width:18px;height:18px;color:var(--muted)}.ml-get span{min-width:0;overflow-wrap:anywhere}.ml-get small{display:block;color:var(--muted);font-size:12.5px}
+.ml-get.bad span{color:var(--bad)}.ml-get .lnk{font-size:13px;white-space:nowrap}
+.ml-keynote{margin:0;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;line-height:1.4}.ml-keynote[hidden]{display:none}
+.ml-opts>summary{cursor:pointer;font:600 14px var(--ui);color:var(--accent-fg);padding:4px 0;width:max-content;max-width:100%}
+.ml-opts-b{display:grid;gap:14px;padding-top:10px}.ml-opts-b .group{gap:10px}
 .own-tag{font:700 11px var(--ui);border-radius:999px;padding:1px 7px;margin-left:4px;white-space:nowrap;color:#7650C9;background:color-mix(in srgb,#7650C9 12%,var(--panel));border:1px solid color-mix(in srgb,#7650C9 40%,var(--panel))}
 .own-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13.5px}.own-row>span:first-child{font:700 11.5px var(--ui);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.own-row .own-sel{height:34px;width:auto;max-width:260px;font-size:13.5px}.own-v{font-weight:600}
 .tm-inv,.tm-mem{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.tm-inv:first-of-type,.tm-mem:first-of-type{border-top:0}
@@ -1079,17 +1090,29 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
         <div class="cu-groups" id="cuGroups"></div>
         <div class="cu-list" id="cuList"></div>
         <div class="bgrp" id="ldBtns" hidden><button class="btn sm" id="ldAdd" type="button">＋ Add lead</button></div>
-        <div class="bgrp" id="cuBtns"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
+        <div class="bgrp" id="cuBtns"><button class="btn sm" id="cuAdd" type="button">＋ Add customer</button><button class="btn sm ghost" id="cuImport" hidden type="button" aria-haspopup="menu" title="Import an Excel (.xlsx) or CSV file with Name, Company and Email columns">Import</button><button class="btn sm ghost" id="cuExport" hidden type="button">Export</button><input type="file" id="cuFile" accept=".xlsx,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" hidden></div>
         <p class="hint" style="margin:0" id="cuSync"></p>
       </section>
       <section class="ml-form" aria-label="Email">
         <div class="ml-pane" id="mlWrite">
+        <h3 class="ml-sh"><span class="ml-step" aria-hidden="true">2</span>Your email<span class="ml-tplname" id="mlTplName"></span></h3>
         <div class="field"><span>To</span><div class="chips" id="mlChips"></div><input class="in" id="mlTo" type="text" placeholder="Tick customers, or type email addresses separated by commas" aria-label="To"></div>
-        <div class="ml-track" id="mlTrackRow"><span class="lbl">Track in</span><div class="seg" role="group" aria-label="Track this email in" id="mlTrack"><button type="button" data-track="cust" aria-pressed="true">Customer pipeline</button><button type="button" data-track="lead" aria-pressed="false">Leads</button></div><small class="ml-tnote" id="mlTrackNote"></small></div>
+        <div class="ml-line" id="mlLine" hidden></div>
+        <label class="field" id="mlWhyF"><span>Why you're writing <small class="ml-opt">(one line, optional)</small></span><input class="in" id="mlWhy" type="text" maxlength="200" placeholder="e.g. Following up on our call." autocomplete="off"></label>
+        <div class="ml-whys" id="mlWhys" role="group" aria-label="Quick picks for why you're writing"></div>
+        <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
+        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="10"></textarea></label>
+        <div class="ml-tpl" id="mlTpl" hidden><span>You changed the wording. It's used for this email only, unless you save it.</span><button class="btn sm" type="button" id="mlTplSave">Save as my customer email</button><button class="btn sm ghost" type="button" id="mlTplUndo">Undo changes</button></div>
+        <p class="ml-keynote" id="mlKeyNote" hidden></p>
+        <div class="ml-gets" id="mlGets" aria-label="What they get"></div>
+        <details class="ml-opts" id="mlOpts"><summary>More options</summary>
+        <div class="ml-opts-b">
+        <div class="group" id="mlFromG"><h3 class="ml-sh">Sending</h3>
         <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span><button class="lnk" id="mlCcBtn" type="button">Add Cc / Bcc</button></div>
         <div class="row2" id="mlCcRow"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
-        <div class="group ml-inc"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">2</span>What's included</h3>
-        <div class="ml-line" id="mlLine" hidden></div>
+        <div class="ml-track" id="mlTrackRow"><span class="lbl">Track in</span><div class="seg" role="group" aria-label="Track this email in" id="mlTrack"><button type="button" data-track="cust" aria-pressed="true">Customer pipeline</button><button type="button" data-track="lead" aria-pressed="false">Leads</button></div><small class="ml-tnote" id="mlTrackNote"></small></div>
+        </div>
+        <div class="group ml-inc" id="mlIncG"><h3 class="ml-sh">What's included</h3>
         <div class="ml-how">
           <div class="ml-look"><span class="lbl">Email style</span><div class="seg" id="mlLook" role="group" aria-label="Email style"><button type="button" data-look="plain">Plain, like a normal email</button><button type="button" data-look="styled">Styled</button></div><small class="ml-tnote" id="mlLookNote"></small></div>
           <div class="inc-opts" role="group" aria-label="How to include the sell sheet">
@@ -1117,7 +1140,9 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
 </div></div>
           </details>
         </div>
-          <div class="ml-ci" id="mlCI"><span class="lbl">Your signature (plain text under your message)</span>
+        </div>
+        <div class="group" id="mlSigG"><h3 class="ml-sh">Your signature</h3>
+          <div class="ml-ci" id="mlCI">
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="name"><span>Name</span></label><input class="in" data-ci="name" placeholder="Your name" aria-label="Your name" autocomplete="name"></div>
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="company"><span>Company</span></label><input class="in" data-ci="company" placeholder="e.g. Deals4Ever" aria-label="Company" autocomplete="organization"></div>
             <div class="ci-r"><label class="ci-on"><input type="checkbox" data-cion="email"><span>Email</span></label><input class="in" data-ci="email" type="email" placeholder="you@yourcompany.com" aria-label="Your email" autocomplete="email"></div>
@@ -1126,25 +1151,25 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
             <small class="hint">Tick the lines to include. Saved for every email, and synced when you're signed in.</small></div>
           <label class="switch"><input type="checkbox" id="mlAvail"><span class="sw-ui" aria-hidden="true"></span><span><b>“Subject to availability”</b><small>Adds this small note at the end of the email</small></span></label>
         </div>
-        <div class="group ml-msgg"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">3</span>Message<span class="ml-tplname" id="mlTplName"></span></h3>
-        <label class="field"><span>Subject</span><input class="in" id="mlSubj" type="text"></label>
-        <label class="field"><span>Message</span><textarea class="in" id="mlMsg" rows="7"></textarea></label>
-        <div class="ml-toks" role="group" aria-label="Insert into the message"><span>Insert:</span><button type="button" data-tok="{name}">Their name</button><button type="button" data-tok="{company}">Company</button><button type="button" data-tok="{product}">Product name</button></div>
-        <div class="ml-tpl" id="mlTpl" hidden><span>You changed the wording. It's used for this email only, unless you save it.</span><button class="btn sm" type="button" id="mlTplSave">Save as my customer email</button><button class="btn sm ghost" type="button" id="mlTplUndo">Undo changes</button></div>
+        <div class="group" id="mlWordG"><h3 class="ml-sh">Wording</h3>
+        <div class="ml-toks" role="group" aria-label="Insert into the message"><span>Insert:</span><button type="button" data-tok="{name}">Their name</button><button type="button" data-tok="{company}">Company</button><button type="button" data-tok="{product}">Product name</button><button type="button" data-tok="{details}">Product details</button><button type="button" data-tok="{reason}">Why you're writing</button></div>
         <small class="hint">The highlighted words are filled in for each person: {name} becomes their name (never their company), {company} their company and {product} the product. You can also edit the message right in the preview.</small><small class="ml-msgprev" id="mlMsgPrev"></small>
         <div class="gr-def"><label for="mlGreetBy">Greet customers by</label><select class="in" id="mlGreetBy"><option value="first">First name</option><option value="last">Last name</option><option value="full">Full name</option></select><small>Change it for one customer, or add Mr., Mrs. and so on, in the preview or on their customer page.</small></div>
         </div>
+        <div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share with another app instead…</button></div>
+        </div>
+        </details>
         </div>
         <div class="ml-pane" id="mlPrev">
           <div class="ml-count" id="mlCount" role="status"></div>
-          <div class="prev-h"><h3>Preview</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for each customer"></select></div>
+          <div class="prev-h"><h3>What they see</h3><select class="in" id="mlPrevWho" aria-label="Preview the email for each customer"></select></div>
           <div class="ml-meta" id="mlPrevMeta"></div>
-          <small class="prev-tip">Click the subject or message to edit them here; the editor on the left follows along. Highlighted words are filled in for each customer.</small>
+          <small class="prev-tip">This is exactly what they get. You can click the words to change them.</small>
           <iframe id="mlPrevFrame" title="Email preview" sandbox="allow-same-origin allow-popups"></iframe>
         </div>
       </section>
     </div>
-    <div class="ml-bot"><span class="ml-summ" id="mlSumm" aria-live="polite"></span><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlShare" type="button" title="Open your device's own email or share options with the files attached">Share instead…</button><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
+    <div class="ml-bot"><span class="ml-summ" id="mlSumm" aria-live="polite"></span><span class="note" id="mlStatus" role="status"></span><div class="bgrp"><button class="btn sm ghost" id="mlCancel" type="button">Cancel</button><button class="btn primary" id="mlSend" type="button">Send</button></div></div>
   </div>
 </dialog>
 <dialog id="navDlg" class="nav-dlg" aria-label="Menu">
@@ -1380,7 +1405,7 @@ const SET_DEF={name:'',start:'home',accent:'#0E993F',motion:'full',density:'comf
   tabs:['home','editor','inventory','pipeline','sent','customers','warehouse'],tabsOff:[],sideOff:[],
   home:{greet:true,name:'',newBtn:true,layout:'two',days:30,weeks:12,topDays:90,kpis:['sent','reached','replies','rate','due','orders','pipe'],kpiOff:[],
     secs:['steps','attention','todo','chart','activity','top','inv','cust'],secOff:[],side:['todo','top','inv','cust']},
-  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:false}},upd:0};
+  inv:{size:'m',auto:true,every:15,folder:{id:'',name:''}},pipe:{colsOff:[],days:90},sheet:{contact:''},mc:{name:'',company:'',email:'',phone:'',web:'',where:'below',on:{name:true,company:true,email:true,phone:true,web:true}},upd:0};
 function setNorm(sv){sv=sv&&typeof sv==='object'?sv:{};const d=JSON.parse(JSON.stringify(SET_DEF));
   const mrg=(a,b)=>{for(const k in b){if(!(k in a))continue;if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))mrg(a[k],b[k]);else if(typeof b[k]===typeof a[k])a[k]=b[k];}};mrg(d,sv);
   // known items keep your order; a new one goes in after the item it follows by default
@@ -2146,6 +2171,8 @@ async function save(name,blob){if(!downloads){
     toast('Saving files is not available in this view.');return;}
   try{await downloads.save({filename:name,data:blob});toast('Saved '+name);}catch(e){toast(e&&e.code==='declined'?'Not saved.':'Could not save. Please try again.');}}
 const fileBase=()=>(S.code||S.title||'Sell sheet').replace(/[\\/:*?"<>|]+/g,'').trim()+' Sell Sheet';
+// attached to an email: a plain name like Hi-vis-vest-sherpa-lining-sell-sheet.pdf
+const mailBase=()=>{const t=String(S.title||S.code||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase().slice(0,80).replace(/-+$/,''),v=(t?t+'-':'')+'sell-sheet';return v.charAt(0).toUpperCase()+v.slice(1);};
 async function busy(btn,fn){const t=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin" style="width:18px;height:18px;border-width:3px"></span>Preparing…';try{await fn();}catch(e){console.error(e);toast('Something went wrong while making the file.');}finally{btn.disabled=false;btn.innerHTML=t;}}
 // scale: 2.5 for the saved PDF / image; the sheet picture inside an email only needs ~1.5 (it is shown 544 px wide)
 async function sheetCanvas(scale=2.5){await loadScript('h2c');
@@ -2387,11 +2414,11 @@ async function buildDocx(){
 /* ---------- email: customers, sign-in (Gmail / Outlook) and sending ---------- */
 // Sending runs entirely in the browser with the person's own account; see SETUP-EMAIL.md for the one-time sign-in setup.
 const MAIL_TYPES={pdf:['application/pdf','.pdf'],docx:['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'],jpg:['image/jpeg','.jpg']};
-const MAIL_DEF_SUBJ='Sell sheet: {product}',FUP_DEF_SUBJ='Following up: {product}',FUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
+const MAIL_DEF_SUBJ='{product} – details for {company}',FUP_DEF_SUBJ='Following up on {product}',FUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on the sell sheet I sent for {product}. Let me know if you have any questions, or if you'd like to place an order.\n\nThank you,";
 const PLAIN_DEF_SUBJ='Quick introduction',PLAIN_DEF_MSG="Hi {name},\n\nI'd love to tell you about what we carry and how we could help {company}. Would you have a few minutes for a quick call this week?\n\nThank you,",PFUP_DEF_SUBJ='Following up',PFUP_DEF_MSG="Hi {name},\n\nI wanted to follow up on my last email. Let me know if you'd like to talk, or if I can send you anything.\n\nThank you,";
 const CPLAIN_DEF_SUBJ='What are you looking for this season?',CPLAIN_DEF_MSG="Hi {name},\n\nI wanted to check in and see what {company} is looking for this season. Are there any styles, colours or quantities you need? Let me know and I'll put some options together for you.\n\nThank you,";
-const LEAD_DEF_SUBJ='Introducing {product}',LEAD_DEF_MSG="Hi {name},\n\nI'd like to introduce {product}. I've attached the sell sheet with the colours, sizes and pricing. If it's a fit for your store, I'd be happy to send samples or answer any questions.\n\nThank you,";
-const MAIL_DEF_MSG="Hi {name},\n\nPlease find attached the sell sheet for {product}. Let me know if you have any questions or would like to place an order.\n\nThank you,";
+const LEAD_DEF_SUBJ='{product} – details for {company}',LEAD_DEF_MSG="Hi {name},\n\n{reason}\n\nI'd like to introduce {product}:\n{details}\n\nThe sell sheet is attached as a PDF. If it's a fit, I'd be happy to send samples or answer any questions.\n\nThank you,";
+const MAIL_DEF_MSG="Hi {name},\n\n{reason}\n\nHere are the key details on {product}:\n{details}\n\nThe sell sheet is attached as a PDF. Let me know if you'd like samples, a quote or to place an order.\n\nThank you,";
 const MAIL=Object.assign({prov:'google',att:['pdf'],mode:'each'},(()=>{try{return JSON.parse(lsGet('ss-mail')||'{}');}catch(_){return{};}})());
 // deliver: 'embed' | 'attach' | 'both'. embed: parts shown inside the email. Older settings (one "summary" checkbox) carry over.
 if(!MAIL.deliver){const had=lsGet('ss-mail')!=null;MAIL.deliver=had&&MAIL.summary===false?'attach':'both';MAIL.embed=had&&MAIL.summary!==false?['photos','table','details','contact']:['sheet'];}
@@ -2400,7 +2427,7 @@ if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
 if(!Array.isArray(MAIL.show))MAIL.show=[];MAIL.show=MAIL.show.filter(x=>x!=='contact');if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,looks:MAIL.looks,greetBy:MAIL.greetBy,from:MAIL.from||''}));
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,looks:MAIL.looks,greetBy:MAIL.greetBy,from:MAIL.from||'',v2:MAIL.v2||0}));
 const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
 // your contact details under the message: each one shows when it has a value and is ticked
 const ciEmail=()=>String(SET.mc.email||authGet()?.email||'').trim(),webHref=v=>/^https?:\/\//i.test(v)?v:'https://'+v;
@@ -2410,7 +2437,11 @@ const sigLines=()=>[['name',sigName()],['company',String(SET.mc.company||'').tri
 /* Email style. Plain: just your words, like an email typed in Gmail (text plus a bare <p>/<br> copy, no card, banner, images or links).
    Styled: the card layout with the sell sheet picture and tables. First emails to new leads always go plain. */
 if(!MAIL.looks||typeof MAIL.looks!=='object')MAIL.looks={};
-const lookNow=()=>MAIL.looks[MAIL.aud==='lead'?'lead':'cust']||(MAIL.aud==='lead'?'plain':'styled');
+const lookNow=()=>MAIL.looks[MAIL.aud==='lead'?'lead':'cust']||'plain';
+// once: everyone moves to what lands in the inbox, not spam: plain text with the sell sheet attached as a PDF, and a website in the signature.
+// Styled emails can still be picked under More options.
+if(!MAIL.v2){MAIL.v2=1;MAIL.looks={cust:'plain',lead:'plain'};MAIL.sheetPic=false;MAIL.show=[];if(!MAIL.att.includes('pdf'))MAIL.att=['pdf',...MAIL.att];
+  if(SET.mc&&SET.mc.on&&SET.mc.on.web!==true){SET.mc.on.web=true;SET.upd=Date.now();try{localStorage.setItem('ss-settings',JSON.stringify(SET));}catch(_){}}saveMail();}
 const toLead=()=>(MAIL.kind==='follow'?MAIL.aud:(MAIL.track||MAIL.aud))==='lead';
 const firstContact=p=>!!p&&!LG.list.some(e=>(p.lead&&e.cust==='lead:'+p.lead)||[e.email,...(e.emails||[])].some(a=>a&&ck(a)===ck(p.email)));
 const msgPlain=m=>lookNow()==='plain'||(toLead()&&firstContact(m?.person));
@@ -2516,7 +2547,7 @@ function renderCust(reset){renderAud();if(MAIL.aud==='lead'){renderLeadPick();re
       <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Open'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Open and edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`;CU.row=row;
   const moreBtn=()=>`<button class="btn sm ghost cu-more" type="button" data-cumore>Show ${Math.min(60,shown.length-CU.n)} more</button>`;
   $('#cuList').innerHTML=shown.length?shown.slice(0,CU.n).map(row).join('')+(CU.n<shown.length?moreBtn():'')
-    :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add them here, or import an Excel (.xlsx) or CSV file.'}</div>`;
+    :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add one here, or type email addresses in To. You can import a list on the Customers page.'}</div>`;
   renderChips();renderSync();cuObserve();}
 // the next 100 customers, appended when the list is scrolled near its end (or "Show more" is clicked)
 let cuIO=null;
@@ -2682,8 +2713,8 @@ let nnOk=false,teamOk=false;
 function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnOk=false;teamOk=false;
   const lead=MAIL.aud==='lead',att=MAIL.att.map(k=>ATT_NAME[k]).join(' + '),inEm=embedParts().length,fromA=MAIL.from||authGet()?.email||'';
   const inc=MAIL.plain?'email only, no sell sheet':MAIL.line?'line sheet PDF attached':att&&inEm?`in the email + ${att} attached`:att?`${att} attached`:inEm?'shown in the email':'nothing of the sell sheet included';
-  $('#mlSumm').innerHTML=n?`<b>${n} email${n>1?'s':''}</b>${n>1?`, one per ${lead?'lead':'person'}`:''} · ${esc(inc)}${fromA?' · from '+esc(fromA):''}${MAIL.kind==='follow'?'':` · tracked in ${MAIL.track==='lead'?'Leads':'the customer pipeline'}`}`:`Tick ${lead?'leads':'customers'} on the left to send to · ${esc(inc)}`;
-  $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';
+  $('#mlSumm').innerHTML=n?`<b>${n} email${n>1?'s':''}</b>${n>1?` · one at a time, about ${gapMins(n)} min in all`:''}`:`Tick ${lead?'leads':'customers'} on the left`;
+  $('#mlSend').textContent=n>1?`Send ${n} emails`:'Send';updGets();
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
       +(splitAddr($('#mlCc').value).length||splitAddr($('#mlBcc').value).length?`<small>Cc/Bcc get a copy of every email${n>1?` (${n} each)`:''}.</small>`:'')
@@ -3583,15 +3614,28 @@ const BY_NAME={first:'First name',last:'Last name',full:'Full name',custom:'Type
 // {name}: the name this customer is greeted by, with their title. Never the company.
 function greetName(p){if(!p)return'';const g=greetOf(p),by=g.by||MAIL.greetBy,n=nameParts(p.name);
   const v=by==='custom'?String(g.name||'').trim():by==='last'?n.last||n.first:by==='full'?n.full:n.first;if(!v)return'';const h=String(g.hon||'').trim();return h?h+' '+v:v;}
-const tokVals=p=>({name:greetName(p),company:p?.company||'',product:productLabel()});
+// the key facts from the sell sheet as real lines of text, so the email says it even without the picture or the file
+const rowFind=re=>S.rows.find(r=>!r.auto&&!r.hidden&&re.test(String(r.label||''))&&String(r.value||'').trim());
+const KEY_MOQ=/\bmoq\b|minimum/i,KEY_LEAD=/lead|delivery|ready|ship|eta|availab/i;
+function keyInfo(){if(MAIL.line)return'';const L=[],sz=S.sizes.filter((z,j)=>String(z||'').trim()&&anyUses(j)),co=S.colours.map(c=>String(c.name||'').trim()).filter(Boolean);
+  const pr=S.rows.find(r=>r.auto==='price'&&!r.hidden)?priceText():'',moq=rowFind(KEY_MOQ),lead=rowFind(KEY_LEAD);
+  const a=[sz.length&&'Sizes: '+sz.join(', '),co.length&&(co.length>6?co.length+' colours':'Colours: '+co.join(', '))].filter(Boolean);if(a.length)L.push('- '+a.join(' · '));
+  const b=[pr&&'Price: '+pr,moq&&moq.label.trim()+': '+String(moq.value).trim()].filter(Boolean);if(b.length)L.push('- '+b.join(' · '));
+  if(lead)L.push('- '+lead.label.trim()+': '+String(lead.value).trim());return L.join('\n');}
+const keyMissing=()=>[!(S.rows.find(r=>r.auto==='price'&&!r.hidden)&&priceText())&&'a price',!rowFind(KEY_MOQ)&&'an MOQ',!rowFind(KEY_LEAD)&&'a lead time'].filter(Boolean);
+const MAIL_TOK=/(\s?)\{(name|company|product|reason|details)\}/g;
+const reasonText=p=>String(MAIL.reason||'').trim().replace(/\{(name|company|product)\}/g,(m,k)=>({name:greetName(p),company:p?.company||'',product:productLabel()})[k]||'');
+const tokVals=p=>({name:greetName(p),company:p?.company||'',product:productLabel(),reason:reasonText(p),details:keyInfo()});
 function fillTokens(text,p){const v=tokVals(p);
-  return text.replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k)=>v[k]?sp+v[k]:'');}
+  return text.replace(MAIL_TOK,(m,sp,k)=>v[k]?sp+v[k]:'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n');}
+// a subject never ends on a dangling "for" when the customer has no company
+const fillSubj=(t,p)=>fillTokens(t,p).replace(/\s+(for|to|at|with)\s*$/i,'').replace(/\s*[–—-]\s*$/,'').trim();
 // the same text as HTML for editing in the preview: filled-in words are highlighted chips that turn back into {name}, {company}, {product}
-const TOK_TIP={name:'Each customer\'s name',company:'Each customer\'s company',product:'The product name'};
+const TOK_TIP={name:'Each customer\'s name',company:'Each customer\'s company',product:'The product name',reason:'Why you\'re writing (the line above)',details:'Sizes, colours, price, MOQ and lead time from the sell sheet'};
 function tokHTML(text,p){const v=tokVals(p),lit=t=>esc(t).replace(/\r?\n/g,'<br>');let out='',i=0;
-  String(text).replace(/(\s?)\{(name|company|product)\}/g,(m,sp,k,at)=>{out+=lit(String(text).slice(i,at));i=at+m.length;
-    out+=v[k]?lit(sp)+`<span class="tok" data-tok="${k}" contenteditable="false" title="${TOK_TIP[k]}: filled in for each email">${esc(v[k])}</span>`
-      :`<span class="tok empty" data-tok="${k}" data-sp="${esc(sp)}" contenteditable="false" title="${TOK_TIP[k]}: missing for this customer, so it's left out">${sp===' '?' ':''}no ${k}</span>`;return m;});
+  String(text).replace(MAIL_TOK,(m,sp,k,at)=>{out+=lit(String(text).slice(i,at));i=at+m.length;
+    out+=v[k]?lit(sp)+`<span class="tok" data-tok="${k}" contenteditable="false" title="${TOK_TIP[k]}: filled in for each email">${lit(v[k])}</span>`
+      :`<span class="tok empty" data-tok="${k}" data-sp="${esc(sp)}" contenteditable="false" title="${TOK_TIP[k]}: missing for this customer, so it's left out">${sp===' '?' ':''}${k==='reason'?'no reason line':k==='details'?'no product details':'no '+k}</span>`;return m;});
   return out+lit(String(text).slice(i));}
 // …and back to text with {tokens}
 function tokText(root){let s='';const BLOCK=/^(DIV|P|LI|H\d|TR)$/;
@@ -3656,16 +3700,16 @@ const encWord=v=>/^[\x20-\x7e]*$/.test(v)?hdr(v):'=?UTF-8?B?'+b64(hdr(v))+'?=';
 function mime(m){const B='ss'+uid()+uid(),R='rel'+uid(),A='alt'+uid(),L=[];
   const h=(k,v)=>{if(v&&v.length)L.push(`${k}: ${Array.isArray(v)?v.map(hdr).join(', '):v}`);};
   if(m.from)h('From',fromHdr(m.from));h('To',m.to);h('Cc',m.cc);h('Bcc',m.bcc);if(m.replyTo)h('Reply-To',hdr(m.replyTo));h('Subject',encWord(m.subject));L.push('MIME-Version: 1.0');
-  const alt=[`Content-Type: multipart/alternative; boundary="${A}"`,'',`--${A}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.text)),`--${A}`,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.html)),`--${A}--`];
-  // nothing attached or embedded: just the text and its HTML copy, like an email typed in Gmail
-  if(!m.files.length&&!m.inline.length){L.push(...alt,'');return L.join('\r\n');}
-  L.push(`Content-Type: multipart/mixed; boundary="${B}"`,'',`--${B}`,`Content-Type: multipart/related; boundary="${R}"`,'',`--${R}`,...alt);
-  for(const p of m.inline)L.push(`--${R}`,'Content-Type: image/jpeg',`Content-ID: <${p.cid}>`,`Content-Disposition: inline; filename="${p.name}"`,'Content-Transfer-Encoding: base64','',wrap76(p.b64));
-  L.push(`--${R}--`);
+  // a plain email is text only; a styled one has the text and its HTML copy
+  const txt=['Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.text))];
+  const alt=m.html?[`Content-Type: multipart/alternative; boundary="${A}"`,'',`--${A}`,...txt,`--${A}`,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',wrap76(b64(m.html)),`--${A}--`]:txt;
+  const body=m.inline.length?[`Content-Type: multipart/related; boundary="${R}"`,'',`--${R}`,...alt,...m.inline.flatMap(p=>[`--${R}`,'Content-Type: image/jpeg',`Content-ID: <${p.cid}>`,`Content-Disposition: inline; filename="${p.name}"`,'Content-Transfer-Encoding: base64','',wrap76(p.b64)]),`--${R}--`]:alt;
+  if(!m.files.length){L.push(...body,'');return L.join('\r\n');}
+  L.push(`Content-Type: multipart/mixed; boundary="${B}"`,'',`--${B}`,...body);
   for(const f of m.files){const ascii=f.name.replace(/[^\x20-\x7e]/g,'_').replace(/"/g,"'");L.push(`--${B}`,`Content-Type: ${f.type}; name="${ascii}"`,`Content-Disposition: attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(f.name)}`,'Content-Transfer-Encoding: base64','',wrap76(f.b64));}
   L.push(`--${B}--`,'');return L.join('\r\n');}
 function graphMail(m){const r=a=>a.map(x=>({emailAddress:{address:x}}));
-  return{message:{subject:m.subject,body:{contentType:'HTML',content:m.html},...(m.replyTo?{replyTo:r([m.replyTo])}:{}),toRecipients:r(m.to),ccRecipients:r(m.cc),bccRecipients:r(m.bcc),
+  return{message:{subject:m.subject,body:m.html?{contentType:'HTML',content:m.html}:{contentType:'Text',content:m.text},...(m.replyTo?{replyTo:r([m.replyTo])}:{}),toRecipients:r(m.to),ccRecipients:r(m.cc),bccRecipients:r(m.bcc),
     attachments:[...m.files.map(f=>({'@odata.type':'#microsoft.graph.fileAttachment',name:f.name,contentType:f.type,contentBytes:f.b64})),
       ...m.inline.map(p=>({'@odata.type':'#microsoft.graph.fileAttachment',name:p.name,contentType:'image/jpeg',contentBytes:p.b64,isInline:true,contentId:p.cid}))]},saveToSentItems:true};}
 async function sendOne(p,tok,m){
@@ -3689,14 +3733,19 @@ function planMessages(meEmail){const P=people(),solo=toLead(),cc=solo?[]:splitAd
   if(!P.length&&!cc.length&&!bcc.length)throw new Error(solo?'Add at least one recipient: tick a lead or type an email address.':'Add at least one recipient: tick a customer or type an email address.');
   if(P.length)return P.map(p=>({to:p.emails,cc,bcc,person:p,people:[p]}));
   return[{to:[],cc,bcc,person:null,people:[]}];}
-async function buildAttachments(kinds,say=mlStatus){const out=[];let cv=null;
+async function buildAttachments(kinds,say=mlStatus,base=fileBase){const out=[];let cv=null;
   for(const k of kinds){say(`Preparing ${k==='docx'?'Word file':k==='jpg'?'image':'PDF'}…`);
     if((k==='pdf'||k==='jpg')&&!cv)cv=await sheetCanvas();
-    const blob=await makeFile(k,cv);out.push({name:fileBase()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
+    const blob=await makeFile(k,cv);out.push({name:base()+MAIL_TYPES[k][1],type:MAIL_TYPES[k][0],blob,b64:await blobB64(blob)});}
   if(cv)cv.width=cv.height=0;return out;}
 const attKinds=()=>$$('#mlAtt input:checked').map(i=>i.value);
 function checkHow(){if(!MAIL.line&&!MAIL.plain&&lookNow()==='plain'&&!attachParts().length)return'Pick "Attach a file" or "Email only" (a plain email can\'t show the sell sheet inside it).';return MAIL.line||MAIL.plain||attachParts().length||embedParts().length?'':'Nothing of the sell sheet is included. Choose a file type under "Attach as", turn on Embed, or add something to the email.';}
-let sending=false;
+let sending=false,stopReq=false;
+// several emails go out one at a time, 30 to 90 seconds apart, the way you'd send them yourself
+const SEND_GAP={min:30,max:90};
+async function gapWait(secs,say){const end=Date.now()+secs*1000;while(Date.now()<end){if(stopReq)return false;say(Math.ceil((end-Date.now())/1000));await new Promise(r=>setTimeout(r,Math.min(250,Math.max(1,end-Date.now()))));}return!stopReq;}
+const gapMins=n=>Math.max(1,Math.round((n-1)*(SEND_GAP.min+SEND_GAP.max)/2/60));
+addEventListener('beforeunload',e=>{if(sending){e.preventDefault();e.returnValue='';}});
 const dropSent=sent=>{const typed=new Set();for(const m of sent){if(m.person?.cust)CU.sel.delete(m.person.key);else if(m.person)m.to.forEach(a=>typed.add(ck(a)));}
   if(typed.size)$('#mlTo').value=splitAddr($('#mlTo').value).filter(a=>!typed.has(ck(a))).join(', ');renderCust();updMode();};
 $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');const sent=[];
@@ -3709,47 +3758,54 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   if(teamOn()&&!teamOk){$('#mlSend').disabled=true;mlStatus('Checking with your company…');await Promise.race([teamSync(),new Promise(r=>setTimeout(r,6000))]);$('#mlSend').disabled=false;mlStatus('');
     const cl=teamClashes(plan);if(cl.length){const r=await ask({title:cl.length>1?`${cl.length} of these are a teammate's`:'A teammate has this one',body:cl.slice(0,8).map(c=>`${c.name}: ${c.why}`).join('\n')+(cl.length>8?`\nand ${cl.length-8} more`:'')+'\n\nCheck with them first so they don\'t get two emails.',ok:'Send anyway',alt:plan.length>cl.length?'Skip those':'',cancel:'Don\'t send'});
       if(!r)return;if(r==='alt'){const skip=new Set(cl.map(c=>c.m));plan=plan.filter(m=>!skip.has(m));toast(`Skipped ${cl.length}`);}}}
-  sending=true;$('#mlSend').disabled=true;
+  sending=true;stopReq=false;$('#mlSend').disabled=true;$('#mlCancel').textContent='Stop sending';
   const fr=p==='google'?curFrom():null,fk=fr&&fr.key!=='google'?fr.key:p;
   try{let tok=await silentTok(fk);if(!tok){mlStatus(authGet()?.prov===p?'Reconnecting…':'Signing in…');tok=fk===p?await login(p,false):await googleLogin(false,fr.acct,[],fk);renderAcct();}
-    const files=MAIL.line?[{name:MAIL.line.name,type:'application/pdf',blob:MAIL.line.blob,b64:await blobB64(MAIL.line.blob)}]:kinds.length?await buildAttachments(kinds):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
-    let done=0,fpFiles=null;const fails=[];
-    for(const m of plan){mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
+    const files=MAIL.line?[{name:MAIL.line.name,type:'application/pdf',blob:MAIL.line.blob,b64:await blobB64(MAIL.line.blob)}]:kinds.length?await buildAttachments(kinds,mlStatus,mailBase):[];mlStatus('Preparing email…');const inline=parts.length?await emailInline(parts):[];const tpl=$('#mlMsg').value;
+    let done=0,fpFiles=null,stopped=false;const fails=[];
+    for(const [i,m] of plan.entries()){
+      if(i>0){const sec=Math.round(SEND_GAP.min+Math.random()*(SEND_GAP.max-SEND_GAP.min));
+        if(sec>0&&!await gapWait(sec,left=>mlStatus(`Sent ${done} of ${plan.length}. The next one goes in ${left} s, so they arrive one at a time like emails you send yourself. Keep this window open.`))){stopped=true;break;}
+        tok=(await silentTok(fk).catch(()=>null))||tok;}
+      if(stopReq){stopped=true;break;}
+      mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const pl=msgPlain(m),mp=pl?[]:parts;let fl=files,kk=kinds;
-      if(pl&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line){fpFiles=fpFiles||await buildAttachments(['pdf']);fl=fpFiles;kk=['pdf'];}// a first email to a lead stays plain: the sell sheet goes as a PDF instead of a picture
-      const full={...m,from:fr,replyTo:fr?.email||tok.email||'',subject:fillTokens(subj,m.person),text:pl?plainText(msg):emailText(msg,mp),html:pl?plainHTML(msg):emailHTML(msg,inline,mp),files:fl,inline:pl?[]:inline};
+      if(pl&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line){fpFiles=fpFiles||await buildAttachments(['pdf'],mlStatus,mailBase);fl=fpFiles;kk=['pdf'];}// a first email to a lead stays plain: the sell sheet goes as a PDF instead of a picture
+      const full={...m,from:fr,replyTo:fr?.email||tok.email||'',subject:fillSubj(subj,m.person),text:pl?plainText(msg):emailText(msg,mp),html:pl?'':emailHTML(msg,inline,mp),files:fl,inline:pl?[]:inline};
       try{const res=await sendOne(p,tok,full);done++;sent.push(m);logSent(m,p,fr?.email||tok.email,kk,mp,res);lgSave();}catch(e){if(e.status===401){tokSet(fk,null);renderAcct();throw new Error(`Your sign-in expired${done?` after ${done} of ${plan.length} were sent (they're taken off the list)`:''}. Click Send again to sign in and send the rest.`);}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     const left=plan.length-done-fails.length;
     if(fails.length){mlStatus(`Sent ${done} of ${plan.length}${done?' (taken off the list)':''}. Not sent: ${fails.join(' · ')}${left>0?` · ${left} more not tried`:''}`,true);}
+    else if(stopped){mlStatus(`Stopped. Sent ${done} of ${plan.length}. The others are still ticked, so you can send them later.`);}
     else{mlStatus('');mailDlg.close();toast(plan.length>1?`Sent ${done} emails`:'Email sent');}}
   catch(e){console.error(e);mlStatus(e.message||'Sending failed.',true);}
-  finally{sending=false;$('#mlSend').disabled=false;if(sent.length&&sent.length<plan.length)dropSent(sent);}};
+  finally{sending=false;stopReq=false;$('#mlSend').disabled=false;$('#mlCancel').textContent='Cancel';if(sent.length&&sent.length<plan.length)dropSent(sent);}};
 // Share: hands the files to the device's own email / share options (no sign-in needed)
 $('#mlShare').onclick=async()=>{if(MAIL.line){try{const fl=[new File([MAIL.line.blob],MAIL.line.name,{type:'application/pdf'})];if(!navigator.canShare?.({files:fl})){mlStatus('This browser can\'t share files. Download the PDF and attach it yourself.',true);return;}await navigator.share({files:fl,title:$('#mlSubj').value});}catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);}return;}
   const kinds=MAIL.att;if(!kinds.length){mlStatus('Choose at least one file type to share.',true);return;}
   if(!navigator.canShare){mlStatus('Sharing files isn\'t supported in this browser. Try Chrome, Edge or Safari, or download the file and attach it yourself.',true);return;}
-  try{const files=(await buildAttachments(kinds)).map(f=>new File([f.blob],f.name,{type:f.type}));mlStatus('');
+  try{const files=(await buildAttachments(kinds,mlStatus,mailBase)).map(f=>new File([f.blob],f.name,{type:f.type}));mlStatus('');
     if(!navigator.canShare({files})){mlStatus('This browser can\'t share these files. Download them and attach them yourself.',true);return;}
     await navigator.share({files,title:$('#mlSubj').value,text:fillTokens($('#mlMsg').value,null)});}
   catch(e){if(e.name!=='AbortError')mlStatus('Sharing failed: '+e.message,true);else mlStatus('');}};
-function openMail(opts){MAIL.line=opts?.line||null;MAIL.plain=!!opts?.plain&&!opts?.line;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'||(MAIL.plain&&opts?.aud!=='cust')?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
+function openMail(opts){$('#mlOpts').open=false;MAIL.line=opts?.line||null;MAIL.plain=!!opts?.plain&&!opts?.line;cuLoad();lgLoad();crmLoad();MAIL.aud=opts?.aud==='lead'||(MAIL.plain&&opts?.aud!=='cust')?'lead':'cust';MAIL.track=MAIL.aud;LPF='';CU.q='';$('#cuSearch').value='';
   if(opts?.pick){if(MAIL.aud==='lead'){LSEL.clear();LSEL.add(opts.pick);}else CU.sel.add(opts.pick);}
   const cc=!!($('#mlCc').value||$('#mlBcc').value);$('#mlCcRow').hidden=!cc;$('#mlCcBtn').hidden=cc;$('#mlMore').open=MAIL.att.some(k=>k!=='pdf')||MAIL.show.length>0;CU.sel=new Set([...CU.sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));const a=authGet();if(a)MAIL.prov=a.prov;syncNow();
   inlineCache=null;MAIL.kind=MAIL.line?'line':'new';loadWording();
   const ml=$('#mlLine');ml.hidden=!MAIL.line;$('.ml-how').hidden=!!MAIL.line;if(MAIL.line)ml.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>Attached: ${esc(MAIL.line.name)}</b><small>Line sheet with ${MAIL.line.items.length} product${MAIL.line.items.length>1?'s':''} · ${MAIL.line.blob.size<1048576?Math.max(1,Math.round(MAIL.line.blob.size/1024))+' KB':(MAIL.line.blob.size/1048576).toFixed(1)+' MB'}. {product} becomes “${esc(MAIL.line.title)}”.</small></span>`;$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
-  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();}
+  $('#mlWhy').value=MAIL.reason||'';renderWhys();
+  ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();updGets();}
 mailDlg.addEventListener('close',()=>{MAIL.line=null;MAIL.plain=false;});
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
 // the wording is remembered (and synced) as you type, for new emails and follow-ups separately. The product name is stored as {product}
 // so the next sell sheet gets its own name.
-const LINE_DEF_SUBJ='Line sheet: {product}',LINE_DEF_MSG="Hi {name},\n\nPlease find attached our line sheet, {product}. Let me know which styles you'd like, or if you have any questions.\n\nThank you,";
+const LINE_DEF_SUBJ='{product} – line sheet for {company}',LINE_DEF_MSG="Hi {name},\n\nPlease find attached our line sheet, {product}. Let me know which styles you'd like, or if you have any questions.\n\nThank you,";
 const WORD_KEYS={line:{msg:'ss-linemsg',subj:'ss-linesubj',defMsg:()=>LINE_DEF_MSG,defSubj:()=>LINE_DEF_SUBJ},new:{msg:'ss-mailmsg',subj:'ss-mailsubj',defMsg:()=>MAIL_DEF_MSG,defSubj:()=>MAIL_DEF_SUBJ},follow:{msg:'ss-fupmsg',subj:'ss-fupsubj',defMsg:()=>FUP_DEF_MSG,defSubj:()=>FUP_DEF_SUBJ},lead:{msg:'ss-leadmsg',subj:'ss-leadsubj',defMsg:()=>LEAD_DEF_MSG,defSubj:()=>LEAD_DEF_SUBJ},plain:{msg:'ss-plainmsg',subj:'ss-plainsubj',defMsg:()=>PLAIN_DEF_MSG,defSubj:()=>PLAIN_DEF_SUBJ},cplain:{msg:'ss-cplainmsg',subj:'ss-cplainsubj',defMsg:()=>CPLAIN_DEF_MSG,defSubj:()=>CPLAIN_DEF_SUBJ},pfollow:{msg:'ss-pfupmsg',subj:'ss-pfupsubj',defMsg:()=>PFUP_DEF_MSG,defSubj:()=>PFUP_DEF_SUBJ}};
 const wordKind=()=>MAIL.plain?(MAIL.kind==='follow'?'pfollow':MAIL.aud==='lead'?'plain':'cplain'):MAIL.kind==='follow'||MAIL.kind==='line'?MAIL.kind:MAIL.aud==='lead'?'lead':'new',wordKeys=()=>WORD_KEYS[wordKind()];
 function loadWording(){$('#mlSubj').value=tplOf('subj');$('#mlMsg').value=tplOf('msg');pullSubject(true);if(typeof updTpl==='function')updTpl();}
-const tplOf=which=>{const k=wordKeys();return lsGet(k[which])||(which==='msg'?k.defMsg():k.defSubj());};
+const tplOf=which=>{const k=wordKeys(),v=lsGet(k[which]);return v&&!(which==='subj'&&/^\s*(sell|line) sheet\s*:/i.test(v))?v:(which==='msg'?k.defMsg():k.defSubj());};
 // the wording is saved only when you ask; the product's own name is stored as {product}, so the next sell sheet gets its name
 const tplNorm=v=>{const pl=productLabel();if(pl!=='this product'&&(/[\s\d]/.test(pl.trim())||pl.length>=10))v=v.replace(new RegExp('(^|[^\\p{L}\\p{N}])'+pl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),'$1{product}');return v;};
 const TPL_NAME={new:'customer email',lead:'lead email',plain:'lead email (no sell sheet)',cplain:'customer email (no sell sheet)',pfollow:'follow-up (no sell sheet)',follow:'follow-up email',line:'line sheet email'};
@@ -3774,9 +3830,35 @@ function renderLook(){const l=lookNow(),pl=l==='plain';$$('#mlLook button').forE
   $('#mlLookNote').textContent=(pl?'Just your words and signature, like an email you typed. No card, banner, pictures or links, so it reads as a personal email.':'The card layout with the sell sheet picture and tables.')+(toLead()?' First emails to new leads always go plain, whichever you pick.':'');}
 $('#mlLook').addEventListener('click',e=>{const b=e.target.closest('[data-look]');if(!b)return;MAIL.looks[MAIL.aud==='lead'?'lead':'cust']=b.dataset.look;
   if(b.dataset.look==='plain'&&!MAIL.plain){MAIL.sheetPic=false;if(!MAIL.att.length)MAIL.att=['pdf'];}saveMail();renderHow();updMode();schedPreview();});
-function renderHow(){renderLook();$('#mailDlg .ml-top h2').textContent=MAIL.plain?(MAIL.aud==='lead'?'Email leads':'Email customers'):'Email sell sheet';$('[data-inc=none]').hidden=!!MAIL.line;$('#mlMore').hidden=!!MAIL.plain;$('[data-tok="{product}"]').hidden=!!MAIL.plain;$('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
-  $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();renderCI();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));}
+function renderHow(){renderLook();$('#mailDlg .ml-top h2').textContent=MAIL.plain?(MAIL.aud==='lead'?'Email leads':'Email customers'):'Email sell sheet';$('[data-inc=none]').hidden=!!MAIL.line;$('#mlMore').hidden=!!MAIL.plain;$('[data-tok="{product}"]').hidden=!!MAIL.plain;$('[data-tok="{details}"]').hidden=!!MAIL.plain||!!MAIL.line;$('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;$$('[data-inc]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inc===incMode())));$$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));$('#mlAttLbl').textContent=MAIL.att.length?MAIL.att.map(k=>ATT_NAME[k]).join(' + '):'No attachment';
+  $('#mlSheetPic').checked=!!MAIL.sheetPic;$('#mlAvail').checked=availOn();renderCI();$$('#mlShow input').forEach(i=>i.checked=MAIL.show.includes(i.value));updGets();}
 $('.inc-opts').addEventListener('click',async e=>{const b=e.target.closest('[data-inc]');if(!b)return;const m=b.dataset.inc;if(m==='none'){setPlain(true);return;}if(MAIL.plain&&!await setPlain(false))return;if(m==='embed')MAIL.att=[];else if(!MAIL.att.length)MAIL.att=['pdf'];MAIL.sheetPic=m!=='attach';saveMail();renderHow();updMode();schedPreview();});
+// why you're writing: one line under the greeting ({reason}); a few ready-made ones to tap
+const WHY_PICKS=()=>['Following up on our call.','Following up on your email.',MAIL.plain?'':`You asked about ${productLabel()}.`,'Great meeting you at the trade show.'].filter(Boolean);
+function renderWhys(){const v=$('#mlWhy').value.trim();$('#mlWhys').innerHTML=WHY_PICKS().map(t=>`<button type="button" data-why="${esc(t)}" aria-pressed="${t===v}">${esc(t)}</button>`).join('');}
+function setWhy(v){MAIL.reason=String(v||'').slice(0,200);const t=$('#mlMsg');
+  if(MAIL.reason.trim()&&!/\{reason\}/.test(t.value)){const g=t.value.match(/^[^\n]*\b(hi|hello|dear|hey|good (morning|afternoon|day))\b[^\n]*\n\s*\n?/i);t.value=g?t.value.slice(0,g[0].length).replace(/\n?$/,'\n')+'{reason}\n\n'+t.value.slice(g[0].length).replace(/^\s*/,''):'{reason}\n\n'+t.value;updTpl();}
+  renderWhys();updMsgPrev();schedPreview();}
+$('#mlWhy').addEventListener('input',e=>setWhy(e.target.value));
+$('#mlWhys').addEventListener('click',e=>{const b=e.target.closest('[data-why]');if(!b)return;$('#mlWhy').value=b.dataset.why;setWhy(b.dataset.why);});
+// "What they get": the attachment, the style, who it's from, the signature and the pacing, each with a Change link into More options
+const GI={file:'<path d="M21 12.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
+function updGets(){if(!mailDlg.open)return;const n=people().length,p=MAIL.prov,a=authGet(),me=a&&a.prov===p?a.email:'',files=MAIL.line?[MAIL.line.name]:attachParts().map(k=>mailBase()+MAIL_TYPES[k][1]),pl=lookNow()==='plain'||MAIL.plain,sig=sigLines();
+  const row=(ic,html,go,bad)=>`<div class="ml-get${bad?' bad':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GI[ic]}</svg><span>${html}</span>${go?`<button class="lnk" type="button" data-goto="${go}">Change</button>`:''}</div>`;
+  const inEm=embedParts().length;
+  $('#mlGets').innerHTML=(MAIL.plain?row('file','No sell sheet, just your message','mlIncG'):row('file',files.length?files.map(f=>`<b>${esc(f)}</b>`).join(', ')+(inEm?'<small>and shown inside the email</small>':''):inEm?'Shown inside the email, no file':'Nothing attached',MAIL.line?'':'mlIncG',!files.length&&!inEm))
+    +row('mail',pl?'Plain text, like an email you typed yourself':'Styled email with pictures<small>Plain text is less likely to go to spam</small>',MAIL.plain||MAIL.line?'':'mlIncG')
+    +(!EMAIL_SETUP[p]?row('user',`${PROV_NAME[p]} sign-in isn't set up yet`,'mlFromG',true):row('user',me?'From <b>'+esc(fromShown(me))+'</b>':`From your ${PROV_NAME[p]} account<small>You'll sign in when you press Send</small>`,'mlFromG'))
+    +row('pen',sig.length?'Signed '+sig.map(esc).join(' · '):'No signature yet','mlSigG',!sig.length)
+    +(n>1?row('clock',`Sent one at a time, 30 to 90 seconds apart<small>About ${gapMins(n)} min for ${n} emails. Keep this window open.</small>`):'');
+  const kn=$('#mlKeyNote'),msg=$('#mlMsg').value;
+  if(MAIL.plain||MAIL.line){kn.hidden=true;}
+  else if(!/\{details\}/.test(msg)){kn.hidden=false;kn.innerHTML=`<span>Tip: put the sizes, price and lead time in the message as words too.</span><button class="lnk" type="button" id="mlAddKey">Add product details</button>`;}
+  else{const miss=keyMissing();kn.hidden=!miss.length;if(miss.length)kn.innerHTML=`<span>Your sell sheet has no ${miss.join(', ').replace(/, ([^,]*)$/,' or $1')} yet. Add ${miss.length>1?'them':'it'} as a line under Product details and ${miss.length>1?'they':'it'}'ll show in the email.</span>`;}}
+$('#mlGets').addEventListener('click',e=>{const b=e.target.closest('[data-goto]');if(!b)return;const o=$('#mlOpts');o.open=true;const g=$('#'+b.dataset.goto);if(!g)return;g.scrollIntoView({block:'start',behavior:'smooth'});setTimeout(()=>g.querySelector('button:not([hidden]):not([disabled]),input,select')?.focus({preventScroll:true}),350);});
+$('#mlKeyNote').addEventListener('click',e=>{if(e.target.id!=='mlAddKey')return;const t=$('#mlMsg'),m=t.value.match(/\n\s*\n(?=[^\n]*(thank|regards|best|cheers|sincerely)[^\n]*\s*$)/i);
+  if(m)t.value=t.value.slice(0,m.index)+'\n\n{details}'+t.value.slice(m.index);else t.value=t.value.replace(/\s*$/,'')+'\n\n{details}';t.dispatchEvent(new Event('input',{bubbles:true}));updGets();});
+$('#mlMsg').addEventListener('input',()=>updGets());
 $('#mlCcBtn').onclick=()=>{$('#mlCcRow').hidden=false;$('#mlCcBtn').hidden=true;$('#mlCc').focus();};
 $('#mlAtt').addEventListener('change',()=>{MAIL.att=['pdf','docx','jpg'].filter(k=>attKinds().includes(k));saveMail();renderHow();updMode();schedPreview();});
 $('#mlAttBtn').onclick=e=>{e.stopPropagation();const m=$('#mlAtt'),open=m.classList.contains('hide');m.classList.toggle('hide',!open);$('#mlAttBtn').setAttribute('aria-expanded',open);};
@@ -3799,17 +3881,17 @@ function fromShown(me){const f=MAIL.prov==='google'&&me?curFrom():null;return f?
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;
+async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;updGets();
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
   if(keep&&+keep<plan.length)sel.value=keep;sel.disabled=plan.length<2;
   const m=plan[+sel.value||0],parts=embedParts(),howErr=checkHow(),tpl=$('#mlMsg').value,msg=fillTokens(tpl,m.person);
-  const files=MAIL.line?[MAIL.line.name]:attachParts().map(k=>fileBase()+MAIL_TYPES[k][1]);
+  const files=MAIL.line?[MAIL.line.name]:attachParts().map(k=>mailBase()+MAIL_TYPES[k][1]);
   const row=(k,v)=>v?`<b>${k}</b><span>${v}</span>`:'';const ae=document.activeElement,who=m.person?ck(m.person.email):'',meta=$('#mlPrevMeta'),typing=!force&&meta.dataset.who===who&&ae&&meta.contains(ae)&&ae.nodeName!=='SELECT';meta.dataset.who=who;
   if(typing){const o=$('#mlGrOut');if(o&&m.person)o.innerHTML=greetLine(m.person);}else $('#mlPrevMeta').innerHTML=row('From',esc(fromShown(me)||`your ${PROV_NAME[MAIL.prov]} account`))+row('To',esc(m.to.join(', ')||'(no recipient yet)'))+row('Cc',esc(m.cc.join(', ')))+row('Bcc',esc(m.bcc.join(', ')))
     +(m.person?row('Greeting',greetCtl(greetOf(m.person),m.person.name,'data-pg')+`<span class="gr-out" id="mlGrOut">${greetLine(m.person)}</span>`):'')
-    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Style',msgPlain(m)?(lookNow()==='plain'?'Plain, like a normal email':'Plain: first email to this lead'):'Styled')+row('Attached',(msgPlain(m)&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line?[fileBase()+'.pdf']:files).map(esc).join(', ')||'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
+    +row('Subject',`<span class="ml-subj" id="mlPrevSubj" contenteditable="true" spellcheck="true" role="textbox" aria-label="Subject (edit it here)">${tokHTML($('#mlSubj').value,m.person)}</span>`)+row('Style',msgPlain(m)?(lookNow()==='plain'?'Plain, like a normal email':'Plain: first email to this lead'):'Styled')+row('Attached',(msgPlain(m)&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line?[mailBase()+'.pdf']:files).map(esc).join(', ')||'(nothing attached)')+(howErr?row('Note',`<span style="color:var(--bad)">${esc(howErr)}</span>`):'')
     +(m.person&&!greetName(m.person)?row('Name',`<span style="color:var(--bad)">⚠ No name for this customer, so there's no name in the greeting.</span>${m.person.cust?` <button class="lnk" type="button" data-fixname="${esc(m.person.key)}">Add name</button>`:''}`):'');
   const fr=$('#mlPrevFrame'),ed=()=>({tpl:$('#mlMsg').value,person:m.person}),prep=h=>h.replace('<head>','<head><base target="_blank"><style>'+PREV_CSS+'</style>');
   if(msgPlain(m)){fr.srcdoc=prep(plainHTML(msg,ed()));fr._stale=false;return;}
@@ -3820,7 +3902,7 @@ async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let p
   let html=emailHTML(msg,inline,parts,ed());for(const p of inline)html=html.split('cid:'+p.cid).join('data:image/jpeg;base64,'+p.b64);
   fr.srcdoc=prep(html);}
 $('#mlPrevWho').addEventListener('change',buildPreview);
-const PREV_CSS='.tok{background:#eaf1ff;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px;cursor:default}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}#ssEdit{outline:none;cursor:text}#ssEdit:hover{box-shadow:inset 0 0 0 1px #d5dbe3}#ssEdit:focus{box-shadow:inset 0 0 0 2px #7aa2f7}';
+const PREV_CSS='body{font:14px/1.55 Arial,Helvetica,sans-serif;color:#222}.tok{background:#eaf1ff;border-radius:3px;box-shadow:0 0 0 1px #c6d8fb;padding:0 1px;cursor:default}.tok.empty{background:#fdeceb;color:#b42318;box-shadow:0 0 0 1px #f3bfba}#ssEdit{outline:none;cursor:text}#ssEdit:hover{box-shadow:inset 0 0 0 1px #d5dbe3}#ssEdit:focus{box-shadow:inset 0 0 0 2px #7aa2f7}';
 const prevPerson=()=>prevPlan[+$('#mlPrevWho').value||0]?.person||null;
 // how the greeting reads for this recipient
 function greetLine(p){const first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';return first?`Their email starts “${esc(first.trim())}”`:'';}
@@ -3840,7 +3922,8 @@ $('#mlPrevMeta').addEventListener('change',e=>{const t=e.target,k=t.dataset?.pg;
 $('#mlPrevMeta').addEventListener('focusin',e=>{if(e.target.id==='mlPrevSubj'&&!e.target._wired){e.target._wired=1;plainEditing(e.target,document,true);}});
 $('#mlPrevMeta').addEventListener('focusout',e=>{if(e.target.id==='mlPrevSubj')setTimeout(()=>{if(!$('#mlPrevMeta').contains(document.activeElement))schedPreview();});});
 $('#mlPrevMeta').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
-$('#mlClose').onclick=$('#mlCancel').onclick=()=>mailDlg.close();
+$('#mlClose').onclick=$('#mlCancel').onclick=()=>{if(sending){stopReq=true;mlStatus('Stopping after this one…');return;}mailDlg.close();};
+mailDlg.addEventListener('cancel',e=>{if(sending){e.preventDefault();stopReq=true;mlStatus('Stopping after this one…');}});
 
 /* ---------- where to open from: this computer or Google Drive ---------- */
 // small menu under a button; lives inside the button's window (if any) so it shows above it
