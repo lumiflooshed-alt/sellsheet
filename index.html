@@ -2767,7 +2767,7 @@ function updMode(){const P=people(),n=P.length,nn=P.filter(p=>!greetName(p));nnO
   $('#mlCount').innerHTML=!n?'<span>Tick customers on the left (or type addresses in To). Each one gets their own email.</span>'
     :`<div class="big"><b>${n}</b>email${n>1?'s':''} will be sent${n>1?', one to each customer. Nobody sees who else got it.':'.'}</div>`
       +(splitAddr($('#mlCc').value).length||splitAddr($('#mlBcc').value).length?`<small>Cc/Bcc get a copy of every email${n>1?` (${n} each)`:''}.</small>`:'')
-      +(()=>{const td=P.map(p=>[p,sentToday(p.emails)]).filter(x=>x[1]);return td.length?`<div class="today"><b>⚠ ${td.length} already got an email today</b><ul>${td.slice(0,50).map(([p,e])=>`<li>${esc(p.name||p.company||p.email)}, at ${esc(DTF_TIME.format(e.at))}</li>`).join('')}</ul><small>You'll be asked before it sends. One email a day is plenty.</small></div>`:'';})()
+      +(()=>{const td=P.map(p=>[p,sentToday(p.emails)]).filter(x=>x[1]);return td.length?`<div class="today"><b>⚠ ${td.length} already got an email today</b><ul>${td.slice(0,50).map(([p,e])=>`<li>${esc(p.name||p.company||p.email)}, ${esc(sentAtBy(e))}</li>`).join('')}</ul><small>You'll be asked before it sends. One email a day is plenty.</small></div>`:'';})()
       +(nn.length?`<div class="warn"><b>⚠ ${nn.length} ${nn.length>1?'have':'has'} no name, so the email starts “${esc(fillTokens(($('#mlMsg').value.split(/\r?\n/).find(l=>l.includes('{name}'))||'Hi {name},').trim(),null))}”:</b><ul>${nn.slice(0,50).map(p=>`<li>${esc(p.company||p.email)}${p.cust?` <button type="button" data-fixname="${esc(p.key)}">Add name</button>`:p.lead?' <small>(lead: add their name on the Pipeline page)</small>':' <small>(typed address: save as a customer to add a name)</small>'}</li>`).join('')}${nn.length>50?`<li>and ${nn.length-50} more</li>`:''}</ul></div>`:'');}
 $('#mlCount').addEventListener('click',e=>{const b=e.target.closest('[data-fixname]');if(!b)return;const c=CU.list.find(c=>ck(c.email)===b.dataset.fixname);if(c)openCustomer(ck(c.email));});
 for(const id of['mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',updMode);
@@ -3078,7 +3078,9 @@ function fmtSent(t){const t0=dayStart(),d=new Date(t);return(t>=t0?'today':t>=t0
 // the latest sell sheet or follow-up sent to any of these addresses since midnight (by you or a teammate)
 function sentToday(addrs){const a=new Set((Array.isArray(addrs)?addrs:[addrs]).filter(Boolean).map(ck)),t0=dayStart();let best=null;
   for(const e of LG.list)if(e.at>=t0&&[e.email,...(e.emails||[])].some(x=>x&&a.has(ck(x)))&&(!best||e.at>best.at))best=e;return best;}
-const todayTag=addrs=>{const e=sentToday(addrs);return e?`<span class="sent-today">⚠ Emailed today at ${esc(DTF_TIME.format(e.at))}</span>`:'';};
+// "at 2:14 PM", plus "by Jo" when a teammate sent it
+const sentAtBy=e=>'at '+DTF_TIME.format(e.at)+(e.by&&ck(e.by)!==ck(authGet()?.email||'')?' by '+memberName(e.by):'');
+const todayTag=addrs=>{const e=sentToday(addrs);return e?`<span class="sent-today">⚠ Emailed today ${esc(sentAtBy(e))}</span>`:'';};
 const ago=t=>{const d=Math.floor((dayStr(Date.now())>dayStr(t)?(new Date(dayStr(Date.now()))-new Date(dayStr(t)))/864e5:0));return d<=0?'today':d===1?'yesterday':d<31?`${d} days ago`:DTF_DAY.format(t);};
 const HOW_NAME={embed:'In the email',attach:'Attached',both:'In the email + attached'};
 function renderBadge(){const th=threads(),n=th.filter(needsFollow).length,r=th.filter(t=>t.root.reply&&!t.root.reply.seen).length,b=$('#sentBadge'),rb=$('#replyBadge');
@@ -3843,9 +3845,9 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
   const subj=$('#mlSubj').value.trim();if(!subj){mlStatus('Add a subject.',true);$('#mlSubj').focus();return;}
   const nn=plan.filter(m=>m.person&&!greetName(m.person)&&/\{name\}/.test($('#mlMsg').value+subj));
   if(nn.length&&!nnOk){ask({title:`${nn.length} ${nn.length>1?'customers have':'customer has'} no name`,body:'Their email will start without a name (e.g. “Hello,”). You can add names in the list on the right first.',ok:'Send anyway',cancel:'Add names first'}).then(r=>{if(r==='ok'){nnOk=true;$('#mlSend').click();}});return;}
-  {const td=plan.filter(m=>m.person&&sentToday(m.to));if(td.length){const at=m=>DTF_TIME.format(sentToday(m.to).at);
+  {const td=plan.filter(m=>m.person&&sentToday(m.to));if(td.length){const at=m=>sentAtBy(sentToday(m.to));
     const r=await ask({title:td.length>1?`${td.length} of these were already emailed today`:`${td[0].person.name||td[0].person.company||td[0].to[0]} was already emailed today`,
-      body:td.slice(0,8).map(m=>`${m.person.name||m.person.company||m.to[0]}: at ${at(m)}`).join('\n')+(td.length>8?`\nand ${td.length-8} more`:'')+'\n\nMore than one email a day can feel like too much, and makes spam filters more likely to step in.',
+      body:td.slice(0,8).map(m=>`${m.person.name||m.person.company||m.to[0]}: ${at(m)}`).join('\n')+(td.length>8?`\nand ${td.length-8} more`:'')+'\n\nMore than one email a day can feel like too much, and makes spam filters more likely to step in.',
       ok:'Send anyway',alt:plan.length>td.length?(td.length>1?'Skip them':'Skip them, send the rest'):'',cancel:'Don\'t send'});
     if(!r)return;if(r==='alt'){const skip=new Set(td);plan=plan.filter(m=>!skip.has(m));toast(`Skipped ${td.length} already emailed today`);}}}
   if(teamOn()&&!teamOk){$('#mlSend').disabled=true;mlStatus('Checking with your company…');await Promise.race([teamSync(),new Promise(r=>setTimeout(r,6000))]);$('#mlSend').disabled=false;mlStatus('');
