@@ -1108,6 +1108,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
         <details class="ml-opts" id="mlOpts"><summary>More options</summary>
         <div class="ml-opts-b">
         <div class="group" id="mlFromG"><h3 class="ml-sh">Sending</h3>
+        <div class="field" id="mlFnF"><label for="mlFromName">Name they see in their inbox</label><input class="in" id="mlFromName" type="text" maxlength="80" placeholder="Your name" autocomplete="off"><div class="ml-whys" id="mlFnPicks" role="group" aria-label="Quick picks for the name they see"></div><small class="hint" id="mlFnNote">Shown next to your email address, in bold in their inbox list. {brand} and {product} come from the sell sheet. Leave it empty to show your own name.</small></div>
         <div class="ml-from"><span class="lbl">Send from</span><div class="seg" role="group" aria-label="Email account" id="mlProv"><button type="button" data-prov="google">Gmail</button><button type="button" data-prov="microsoft">Outlook</button></div><span class="ml-acct" id="mlAcct"></span><button class="lnk" id="mlCcBtn" type="button">Add Cc / Bcc</button></div>
         <div class="row2" id="mlCcRow"><label class="field"><span>Cc</span><input class="in" id="mlCc" type="text" aria-label="Cc"></label><label class="field"><span>Bcc</span><input class="in" id="mlBcc" type="text" aria-label="Bcc"></label></div>
         <div class="ml-track" id="mlTrackRow"><span class="lbl">Track in</span><div class="seg" role="group" aria-label="Track this email in" id="mlTrack"><button type="button" data-track="cust" aria-pressed="true">Customer pipeline</button><button type="button" data-track="lead" aria-pressed="false">Leads</button></div><small class="ml-tnote" id="mlTrackNote"></small></div>
@@ -2427,7 +2428,7 @@ if(!Array.isArray(MAIL.embed))MAIL.embed=['sheet'];
 if(MAIL.sheetPic===undefined){MAIL.sheetPic=MAIL.deliver!=='attach'&&MAIL.embed.includes('sheet');MAIL.show=MAIL.deliver!=='attach'?MAIL.embed.filter(x=>x!=='sheet'):[];if(MAIL.deliver==='embed')MAIL.att=[];}
 if(!Array.isArray(MAIL.show))MAIL.show=[];MAIL.show=MAIL.show.filter(x=>x!=='contact');if(!Array.isArray(MAIL.att))MAIL.att=['pdf'];
 if(!['first','last','full'].includes(MAIL.greetBy))MAIL.greetBy='first';
-const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,looks:MAIL.looks,greetBy:MAIL.greetBy,from:MAIL.from||'',v2:MAIL.v2||0}));
+const saveMail=()=>lsSet('ss-mail',JSON.stringify({prov:MAIL.prov,att:MAIL.att,mode:MAIL.mode,sheetPic:MAIL.sheetPic,show:MAIL.show,avail:MAIL.avail!==false,looks:MAIL.looks,greetBy:MAIL.greetBy,from:MAIL.from||'',v2:MAIL.v2||0,fromName:MAIL.fromName}));
 const AVAIL_NOTE='Subject to availability.',availOn=()=>MAIL.avail!==false;
 // your contact details under the message: each one shows when it has a value and is ticked
 const ciEmail=()=>String(SET.mc.email||authGet()?.email||'').trim(),webHref=v=>/^https?:\/\//i.test(v)?v:'https://'+v;
@@ -3771,7 +3772,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
       mlStatus(plan.length>1?`Sending ${done+fails.length+1} of ${plan.length}…`:'Sending…');const msg=fillTokens(tpl,m.person);
       const pl=msgPlain(m),mp=pl?[]:parts;let fl=files,kk=kinds;
       if(pl&&!files.length&&parts.length&&!MAIL.plain&&!MAIL.line){fpFiles=fpFiles||await buildAttachments(['pdf'],mlStatus,mailBase);fl=fpFiles;kk=['pdf'];}// a first email to a lead stays plain: the sell sheet goes as a PDF instead of a picture
-      const full={...m,from:fr,replyTo:fr?.email||tok.email||'',subject:fillSubj(subj,m.person),text:pl?plainText(msg):emailText(msg,mp),html:pl?'':emailHTML(msg,inline,mp),files:fl,inline:pl?[]:inline};
+      const full={...m,from:fromFor(fr),replyTo:fr?.email||tok.email||'',subject:fillSubj(subj,m.person),text:pl?plainText(msg):emailText(msg,mp),html:pl?'':emailHTML(msg,inline,mp),files:fl,inline:pl?[]:inline};
       try{const res=await sendOne(p,tok,full);done++;sent.push(m);logSent(m,p,fr?.email||tok.email,kk,mp,res);lgSave();}catch(e){if(e.status===401){tokSet(fk,null);renderAcct();throw new Error(`Your sign-in expired${done?` after ${done} of ${plan.length} were sent (they're taken off the list)`:''}. Click Send again to sign in and send the rest.`);}fails.push(`${m.to.join(', ')||'Bcc list'}: ${e.message}`);if(e.message.startsWith('Too large'))break;}
       if(p==='microsoft'&&plan.length>25)await new Promise(r=>setTimeout(r,2100));} // Outlook allows about 30 emails a minute
     const left=plan.length-done-fails.length;
@@ -3795,7 +3796,7 @@ function openMail(opts){$('#mlOpts').open=false;MAIL.line=opts?.line||null;MAIL.
   const ml=$('#mlLine');ml.hidden=!MAIL.line;$('.ml-how').hidden=!!MAIL.line;if(MAIL.line)ml.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>Attached: ${esc(MAIL.line.name)}</b><small>Line sheet with ${MAIL.line.items.length} product${MAIL.line.items.length>1?'s':''} · ${MAIL.line.blob.size<1048576?Math.max(1,Math.round(MAIL.line.blob.size/1024))+' KB':(MAIL.line.blob.size/1048576).toFixed(1)+' MB'}. {product} becomes “${esc(MAIL.line.title)}”.</small></span>`;$('#mlGreetBy').value=MAIL.greetBy;renderHow();
   $$('#mlAtt input').forEach(i=>i.checked=MAIL.att.includes(i.value));mlStatus('');renderCust(true);renderAcct();
   $('#mlShare').hidden=!!MAIL.plain||!navigator.canShare;if(MAIL.prov==='google'&&EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
-  $('#mlWhy').value=MAIL.reason||'';renderWhys();
+  $('#mlWhy').value=MAIL.reason||'';renderWhys();renderFromName();
   ['jspdf','h2c'].forEach(k=>loadScript(k).catch(()=>{}));if(!mailDlg.open)mailDlg.showModal();updGets();}
 mailDlg.addEventListener('close',()=>{MAIL.line=null;MAIL.plain=false;});
 $('#emailBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openMail();};
@@ -3874,14 +3875,28 @@ $('#mlShow').addEventListener('change',()=>{MAIL.show=$$('#mlShow input:checked'
 function updMsgPrev(){const P=people(),p=P[0]||null,first=fillTokens($('#mlMsg').value,p).split(/\r?\n/).find(l=>l.trim())||'';
   $('#mlMsgPrev').textContent=!first?'':p?`${p.name||p.company?`For ${p.name||p.company}`:`For ${p.email}`}: “${first}”${P.length>1?` (and ${P.length-1} more, each with their own name)`:''}`:`With no customer ticked, it reads: “${first}”`;}
 $('#mlMsg').addEventListener('input',()=>{updMsgPrev();updMode();});$('#mlTo').addEventListener('input',updMsgPrev);
+// the name shown in bold in their inbox list: the brand and product by default ("{brand} - {product}" → "Hiker - HIVIZ Vest",
+// just the product when there's no brand). An empty name means your own name, as set in Gmail.
+const fnTpl=()=>typeof MAIL.fromName==='string'?MAIL.fromName:'{brand} - {product}';
+const brandOf=()=>{const r=S.rows.find(r=>!r.auto&&/^\s*brand\s*$/i.test(String(r.label||''))&&String(r.value||'').trim());return r?String(r.value).trim():'';};
+function fromNameText(){const t=fnTpl().trim();if(!t)return'';
+  const pl=productLabel();return t.replace(/\{brand\}/g,brandOf()).replace(/\{product\}/g,pl==='this product'?'':pl).replace(/\s+/g,' ').replace(/^\s*[-–—|·:]\s*|\s*[-–—|·:]\s*$/g,'').trim().slice(0,80);}
+// the sender used for this email: the picked address, with the name you set
+const fromFor=f=>f&&fromNameText()?{...f,name:fromNameText()}:f;
 // the From line in the preview: the address picked in "Send from" (Gmail), else the signed-in account
-function fromShown(me){const f=MAIL.prov==='google'&&me?curFrom():null;return f?(f.name?f.name+' <'+f.email+'>':f.email):me;}
+function fromShown(me){const f=MAIL.prov==='google'&&me?fromFor(curFrom()):null;return f?(f.name?f.name+' <'+f.email+'>':f.email):me;}
+function renderFromName(){const i=$('#mlFromName');if(document.activeElement!==i)i.value=fnTpl();const g=MAIL.prov==='google',v=fnTpl().trim(),b=brandOf();
+  i.disabled=!g;$('#mlFnNote').textContent=g?'Shown next to your email address, in bold in their inbox list. {brand} and {product} come from the sell sheet. Leave it empty to show your own name.':'Outlook always shows the name on your Microsoft account.';
+  const picks=[['','Your own name'],...(b?[['{brand} - {product}',b+' - '+productLabel()]]:[]),['{product}',productLabel()]];
+  $('#mlFnPicks').innerHTML=g?picks.map(([t,l])=>`<button type="button" data-fn="${esc(t)}" aria-pressed="${t===v||(!!t&&l===fromNameText())}">${esc(l)}</button>`).join(''):'';}
+$('#mlFromName').addEventListener('input',e=>{MAIL.fromName=e.target.value.slice(0,80);saveMail();renderFromName();schedPreview();});
+$('#mlFnPicks').addEventListener('click',e=>{const b=e.target.closest('[data-fn]');if(!b)return;MAIL.fromName=b.dataset.fn;saveMail();$('#mlFromName').value=fnTpl();renderFromName();schedPreview();});
 // Preview tab: the real email for each recipient, names filled in
 // live preview next to the form, refreshed shortly after each change
 let prevT=0;function schedPreview(){clearTimeout(prevT);prevT=setTimeout(()=>{if(mailDlg.open)buildPreview();},250);}
 for(const id of['mlMsg','mlSubj','mlTo','mlCc','mlBcc'])$('#'+id).addEventListener('input',schedPreview);
 let prevPlan=[],prevSeq=0;
-async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;updGets();
+async function buildPreview(force){const seq=++prevSeq,me=meFor(MAIL.prov);let plan;updGets();renderFromName();
   try{plan=planMessages(me||'you@your-account.com');}catch(e){plan=[{to:[],cc:splitAddr($('#mlCc').value),bcc:splitAddr($('#mlBcc').value),person:null,note:e.message}];}
   prevPlan=plan;const sel=$('#mlPrevWho'),keep=sel.value;
   sel.innerHTML=plan.map((m,i)=>`<option value="${i}">${esc(m.note?'Nobody yet: '+m.note:m.person?`${plan.length>1?(i+1)+'. ':''}${m.person.name||'⚠ No name'}${m.person.company?' · '+m.person.company:''} <${m.to.join(', ')}>`:m.to.join(', ')||'(Cc/Bcc only)')}</option>`).join('');
