@@ -242,6 +242,14 @@ Your data is kept in your Cloudflare account's database, never anywhere else. Th
 
 The **Warehouse** tab shows your racks from the front: levels top to bottom, floor spots in front.
 
+**Warehouses**
+- **Several warehouses:** **＋ Add warehouse** makes a new one with its own name, racks, rack names and layouts. It starts with 4 standard racks.
+- **Switching:** click a warehouse above the racks to show its racks. The page remembers which one you were on.
+- **Rename** works on any warehouse, including the first. Your racks from before warehouses existed are the first one, called "Main warehouse" until you rename it.
+- **Delete this warehouse** removes it along with its skids, after asking. The first warehouse can't be deleted.
+- **Spot codes stay short** (A1, B3…) in every warehouse. The warehouse name shows above the racks and in the skid panel.
+- **Moving between warehouses:** **Move skid…** lists this warehouse's spots first, then every other warehouse's.
+
 **The map**
 - **Spots** are numbered from the bottom level up, left to right. F1, F2… are the floor spots in front.
 - **Click a spot** to record what's on the skid: item, style, size, colour, boxes × per box (the total works itself out), dozens or pieces, a skid total for mixed skids, and notes.
@@ -253,19 +261,30 @@ The **Warehouse** tab shows your racks from the front: levels top to bottom, flo
   - **＋ Add a rack** (or **+** next to Racks) asks for the name and shape before adding it.
   - **Edit** on a rack changes its name, levels, skids per level and floor spots (Standard or Skinny, or your own).
   - Stock whose spot no longer exists is kept under **Not on the map**, never deleted.
-- **Racks −** removes the last rack; typing a number sets the count. **Search** highlights matching skids and lists their locations.
+- **Racks −** removes the last rack; typing a number sets the count. These apply to the warehouse you're looking at.
+- **Search looks in every warehouse.** It lists each matching item with:
+  - its amount
+  - its warehouse
+  - its rack (letter and name)
+  - its spot and where that is on the rack
+
+  The top line shows the number of matches and the total boxes and pieces. Each warehouse button shows how many matches it has. Click a result to open that skid, switching warehouse if needed. Matching skids are also highlighted on the racks shown.
 
 **CSV files**
-- **Export CSV** downloads one row per item. The columns match the old rack map's export: Location, Rack, Position, Item, Style, Size, Colour, Boxes, Per box, Total, Unit, Skid total, Skid total unit, Skid notes.
-- **Import CSV** reads the same columns. You choose:
-  - **Update these spots only:** the spots in the file are replaced and everything else stays.
-  - **Replace everything:** the map becomes exactly the file.
+- **Export CSV** downloads one row per item, for every warehouse. The columns are Warehouse, then the old rack map's columns: Location, Rack, Position, Item, Style, Size, Colour, Boxes, Per box, Total, Unit, Skid total, Skid total unit, Skid notes.
+- **Import CSV** reads the same columns.
+  - The **Warehouse** column picks the warehouse by name. A name you don't have yet makes a new warehouse; you're told which before anything changes.
+  - Rows without a Warehouse go to the warehouse you're looking at, so older CSV files still work.
+  - You choose:
+    - **Update these spots only:** the spots in the file are replaced and everything else stays.
+    - **Replace everything:** the warehouses in the file become exactly the file.
 - Racks are added if the file uses one that isn't on the map yet.
 - **Moving from the old rack map:** open it, click **Export CSV**, then use **Import CSV** here. The old map's rack layouts aren't in its CSV, so set any non-standard rack (and its name) with **Edit** once.
 
 **Google Sheet, both ways**
 - **Connect a sheet:** click **Google Sheet…**, then either **Create a new Google Sheet** or paste a sheet link and click **Use this sheet**.
-- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV) and a **Racks** tab (each rack's levels, bottom to top, e.g. `1-2-2`, its floor spots and its name). Rows in the Racks tab set the number of racks; names and layouts can be changed there too.
+- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV, Warehouse first) and a **Racks** tab (each warehouse's racks: levels, bottom to top, e.g. `1-2-2`, floor spots and name). Rows in the Racks tab set the number of racks; names and layouts can be changed there too.
+- **Warehouses in the sheet:** typing a new warehouse name in either tab adds that warehouse. Renaming a warehouse is done on the dashboard; the sheet follows. A sheet made before warehouses existed gets the Warehouse column on its next sync, with everything in the first warehouse.
 - **Dashboard → sheet:** changes go to the sheet within a couple of seconds.
 - **Sheet → dashboard:** changes come in every 3 minutes while the Warehouse page is open, when you open it, and when you click **Sync now**.
 - **Same spot changed in both places** between syncs: the dashboard's version is kept.
