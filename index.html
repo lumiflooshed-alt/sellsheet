@@ -202,7 +202,16 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-step input{width:3.4em;height:100%;text-align:center;border:0;border-inline:1px solid var(--line);background:none;color:var(--ink);font:600 15px var(--ui)}.wh-step button{border:0;background:none;color:var(--ink);font:600 18px var(--ui);width:36px;height:100%;cursor:pointer}.wh-step button:hover{background:var(--raise)}
 .wh-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1d7a46;margin-right:6px;vertical-align:1px}.wh-dot.busy{background:#E0A030}.wh-dot.bad{background:var(--bad)}.wh-bad{color:var(--bad)}
 .wh-main{overflow:auto;padding:16px;display:grid;gap:16px;align-content:start;min-height:0}
-.wh-res{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}.wh-res h3{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
+.wh-whs{display:grid;gap:6px}.wh-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.wh-tab{display:grid;gap:1px;text-align:left;min-width:140px;padding:8px 14px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);font:inherit;cursor:pointer}
+.wh-tab b{font-size:14px}.wh-tab small{font-size:12px;color:var(--muted)}.wh-tab[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.wh-tab.add{place-items:center;min-width:0;border-style:dashed;color:var(--accent-fg);font-weight:600}.wh-tabx{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}.wh-tabx .x{color:var(--bad)}
+.wh-rh{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1.3fr);gap:12px;padding:6px 14px;font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+.wh-res:has(.wh-r.multi) .wh-rh{grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr)}
+.wh-res .wh-r{grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1.3fr);align-items:center}.wh-res .wh-r.multi{grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr)}
+.wh-r small{display:none}.wh-r .code{font-family:var(--mono,ui-monospace,monospace)}.wh-r .sp,.wh-r .rk,.wh-r .wn{font-size:13px;min-width:0;overflow-wrap:anywhere}
+@media (max-width:700px){.wh-rh{display:none}.wh-res .wh-r,.wh-res .wh-r.multi{grid-template-columns:minmax(0,1fr) auto}.wh-r .wn,.wh-r .rk,.wh-r .sp{grid-column:1/-1}.wh-r small{display:inline;color:var(--muted);margin-right:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}.wh-tab{min-width:0;flex:1 1 130px}}
+.wh-res{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:clip}.wh-res h3{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
 .wh-r{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:12px;padding:10px 14px;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer}.wh-r:last-child{border-bottom:0}.wh-r:hover{background:var(--fill)}
 .wh-r .code{font:700 15px var(--ui);color:var(--beam)}.wh-r .lines{font-size:13.5px;text-transform:uppercase;min-width:0}.wh-r .lines div{overflow-wrap:anywhere}.wh-r i{color:var(--muted);text-transform:none}
 .wh-racks{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;align-items:start}
@@ -1252,7 +1261,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main"><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -5062,7 +5071,7 @@ function openNav(){lgLoad();cuLoad();$('#navEd').textContent=S?'Open: '+sheetNam
   $('#navSent').textContent=th.length?`${th.length} sent${nr?` · ${nr} new repl${nr>1?'ies':'y'}`:''}${due?` · ${due} need${due===1?'s':''} a follow-up`:''}`:'Nothing sent yet';
   {const d=th.filter(needsFollow).length;$('#navHome').textContent=nr||d?[nr&&`${nr} new repl${nr>1?'ies':'y'}`,d&&`${d} follow-up${d>1?'s':''} due`].filter(Boolean).join(' · '):'Today at a glance';}
   {const n=IV.items.length;$('#navInv').textContent=IV.folder?`${n} product${n===1?'':'s'} · ${IV.folder.name}`:'Your sell sheets folder in Google Drive';}
-  {rkLoad();const n=Object.keys(RK.skids).length;$('#navWh').textContent=n?`${n} skid${n>1?'s':''} on ${rkCount()} rack${rkCount()>1?'s':''}`:'Rack map: what\'s on each skid';}
+  {rkLoad();const n=Object.keys(RK.skids).length,nw=whList().length;$('#navWh').textContent=n?`${n} skid${n>1?'s':''}${nw>1?` in ${nw} warehouses`:` on ${rkCount()} rack${rkCount()>1?'s':''}`}`:'Rack map: what\'s on each skid';}
   $('#navCust').textContent=CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}${nn?` · ${nn} without a name`:''}`:'Add or import your customer list';
   if(!navDlg.open)navDlg.showModal();}
 $('#navBtn').onclick=openNav;$('#navClose').onclick=()=>navDlg.close();
@@ -5373,25 +5382,41 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 const whDlg=$('#whDlg');
 const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
 const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
-const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,upd:0},skids:{},deleted:[],q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
 const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
+/* warehouses: each has its own name, racks, layouts and rack names. The first one ("main") keeps the plain spot codes (A1, B3…),
+   so everything saved before warehouses existed stays where it was; the others put their id in front (w4k2q:A1). */
+const WH_MAX=20,WH_DEF='Main warehouse';
+const whOf=k=>{k=String(k);const i=k.indexOf(':');return i>0?{wid:k.slice(0,i),loc:k.slice(i+1)}:{wid:'main',loc:k};};
+const codeOf=k=>whOf(k).loc,kOf=(wid,loc)=>wid==='main'?loc:wid+':'+loc;
+const whList=()=>[{id:'main',name:RK.cfg.mainName||WH_DEF},...(RK.cfg.whs||[]).map(w=>({id:w.id,name:w.name}))];
+const whMulti=()=>(RK.cfg.whs||[]).length>0;
+// a warehouse's racks: rackCount, layouts, names
+const W=(wid=RK.wh)=>wid==='main'?RK.cfg:(RK.cfg.whs||[]).find(w=>w.id===wid)||RK.cfg;
+const whName=(wid=RK.wh)=>whList().find(w=>w.id===wid)?.name||WH_DEF;
+function inWh(wid,fn){const o=RK.wh;RK.wh=wid;try{return fn();}finally{RK.wh=o;}}
+function setWh(wid){if(!whList().some(w=>w.id===wid))wid='main';if(wid===RK.wh)return;RK.wh=wid;lsSet('ss-wh-cur',wid);closeSide();}
+// a warehouse by name (any case); a new one is made when there's none and room for it
+function whEnsure(name){name=String(name||'').trim().slice(0,40);if(!name)return null;const f=whList().find(w=>w.name.toLowerCase()===name.toLowerCase());if(f)return f.id;
+  if(whList().length>=WH_MAX)return null;const id='w'+Math.random().toString(36).slice(2,8);RK.cfg.whs=[...(RK.cfg.whs||[]),{id,name,rackCount:4,layouts:{},names:{}}];rkStamp(RK.cfg);return id;}
 /* racks and spots */
 function rackName(i){let n=i+1,s='';while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
 const rackIndex=r=>{let i=0;for(const ch of r)i=i*26+(ch.charCodeAt(0)-64);return i;};
 const rkLayOk=l=>l&&Array.isArray(l.levels)&&l.levels.length>=1&&l.levels.length<=8&&l.levels.every(n=>Number.isInteger(n)&&n>=1&&n<=4)&&Number.isInteger(l.floor)&&l.floor>=0&&l.floor<=4;
-const rkCount=()=>RK.cfg.rackCount,rackNm=r=>RK.cfg.names?.[r]||'',rackTitle=r=>rackNm(r)?`Rack ${r} · ${rackNm(r)}`:`Rack ${r}`;
-const layoutOf=r=>rkLayOk(RK.cfg.layouts[r])?RK.cfg.layouts[r]:RK_STD;
+const rkCount=()=>W().rackCount,rackNm=r=>W().names?.[r]||'',rackTitle=r=>rackNm(r)?`Rack ${r} · ${rackNm(r)}`:`Rack ${r}`;
+const layoutOf=r=>rkLayOk(W().layouts?.[r])?W().layouts[r]:RK_STD;
 const sameLay=(a,b)=>a.floor===b.floor&&a.levels.join()===b.levels.join();
 function levelPositions(L){let n=1;return L.levels.map(c=>{const ps=[];for(let i=0;i<c;i++)ps.push(String(n++));return ps;});}
 function posList(r,L=layoutOf(r)){const out=levelPositions(L).flat();for(let i=1;i<=L.floor;i++)out.push('F'+i);return out;}
 // racks after Z (AA, AB…) get a dash, so AF-1 never clashes with rack A's floor spot AF1
-const locId=(r,p)=>r.length>1?r+'-'+p:r+p;
-function splitLoc(loc){if(loc.includes('-')){const[r,p]=loc.split('-');return{rack:r,pos:p};}const m=/^([A-Z]+?)(F\d+|\d+)$/.exec(loc)||[,loc,''];return{rack:m[1],pos:m[2]};}
+const code=(r,p)=>r.length>1?r+'-'+p:r+p,locId=(r,p)=>kOf(RK.wh,code(r,p));
+function splitLoc(loc){loc=codeOf(loc);if(loc.includes('-')){const[r,p]=loc.split('-');return{rack:r,pos:p};}const m=/^([A-Z]+?)(F\d+|\d+)$/.exec(loc)||[,loc,''];return{rack:m[1],pos:m[2]};}
 const rackLocs=(r,L)=>posList(r,L).map(p=>locId(r,p));
 const visRacks=()=>Array.from({length:rkCount()},(_,i)=>rackName(i));
 const visLocs=()=>visRacks().flatMap(r=>rackLocs(r));
-function orphLocs(){const v=new Set(visLocs());return Object.keys(RK.skids).filter(l=>!v.has(l)).sort();}
-const locOk=l=>/^([A-Z](F[1-4]|[1-9]\d?)|[A-Z]{2,3}-(F[1-4]|[1-9]\d?))$/.test(l);
+function orphLocs(){const v=new Set(visLocs());return Object.keys(RK.skids).filter(l=>whOf(l).wid===RK.wh&&!v.has(l)).sort();}
+const codeOk=l=>/^([A-Z](F[1-4]|[1-9]\d?)|[A-Z]{2,3}-(F[1-4]|[1-9]\d?))$/.test(l);
+const locOk=k=>{const{wid,loc}=whOf(k);return(wid==='main'?!String(k).includes(':'):/^[a-z0-9]{2,12}$/.test(wid))&&codeOk(loc);};
 function posName(loc){const{rack,pos}=splitLoc(loc);if(rackIndex(rack)>rkCount()||!rackLocs(rack).includes(loc))return'Not on the current map';const L=layoutOf(rack);
   if(pos[0]==='F'){const k=+pos.slice(1);return'Floor in front'+(L.floor===2?(k===1?', left':', right'):L.floor>2?`, spot ${k}`:'');}
   let n=+pos,lvl=0;while(n>L.levels[lvl]){n-=L.levels[lvl];lvl++;}const nl=L.levels.length,c=L.levels[lvl];
@@ -5419,16 +5444,19 @@ const lineHas=i=>i.item||i.style||i.size||i.colour||i.qty||i.boxes;
 function cleanSkid(s){if(!s||typeof s!=='object')return null;const items=(Array.isArray(s.items)?s.items:[]).slice(0,60).map(rkLine).filter(lineHas),note=rkUp(s.note).slice(0,1000),tc=rkNum(s.total?.count);
   const total=tc?{count:tc,unit:RK_TUNIT[s.total.unit]?s.total.unit:'boxes'}:null;if(!items.length&&!note&&!total)return null;
   return{items,note,total,upd:+s.upd||0,...(EMAIL_RE.test(String(s.by||''))?{by:ck(s.by)}:{})};}
-function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};const lay={};for(const[k,v]of Object.entries(c.layouts||{}))if(/^[A-Z]{1,3}$/.test(k)&&rkLayOk(v))lay[k]={levels:v.levels.slice(),floor:v.floor};
-  const sh=c.sheet&&/^[\w-]{20,100}$/.test(c.sheet.id||'')?{id:c.sheet.id,name:String(c.sheet.name||'Rack map').slice(0,120)}:null;
+function cleanWhRacks(c){c=c&&typeof c==='object'?c:{};const lay={};for(const[k,v]of Object.entries(c.layouts||{}))if(/^[A-Z]{1,3}$/.test(k)&&rkLayOk(v))lay[k]={levels:v.levels.slice(),floor:v.floor};
   const nm={};for(const[k,v]of Object.entries(c.names&&typeof c.names==='object'?c.names:{}))if(/^[A-Z]{1,3}$/.test(k)&&String(v??'').trim())nm[k]=String(v).trim().slice(0,40);
-  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,names:nm,sheet:sh,upd:+c.upd||0};}
+  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,names:nm};}
+function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};
+  const sh=c.sheet&&/^[\w-]{20,100}$/.test(c.sheet.id||'')?{id:c.sheet.id,name:String(c.sheet.name||'Rack map').slice(0,120)}:null;
+  const seen=new Set(['main']),whs=(Array.isArray(c.whs)?c.whs:[]).filter(w=>w&&/^[a-z0-9]{2,12}$/.test(w.id||'')&&String(w.name||'').trim()&&!seen.has(w.id)&&seen.add(w.id)).slice(0,WH_MAX-1).map(w=>({id:w.id,name:String(w.name).trim().slice(0,40),...cleanWhRacks(w)}));
+  return{...cleanWhRacks(c),sheet:sh,mainName:String(c.mainName||'').trim().slice(0,40),whs,upd:+c.upd||0};}
 function mergeRacks(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const del=new Map(),m=new Map();
   for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&locOk(d.loc)&&(!del.has(d.loc)||del.get(d.loc)<+d.at))del.set(d.loc,+d.at||0);
   for(const src of[a.skids,b.skids])for(const[loc,s]of Object.entries(src&&typeof src==='object'?src:{})){if(!locOk(loc))continue;const c=cleanSkid(s);if(!c)continue;const o=m.get(loc);if(!o||c.upd>o.upd)m.set(loc,c);}
   const ca=cleanRkCfg(a.cfg),cb=cleanRkCfg(b.cfg),cut=Date.now()-365*864e5;
   return{cfg:cb.upd>ca.upd?cb:ca,skids:Object.fromEntries([...m].filter(([loc,s])=>!((del.get(loc)||0)>=s.upd))),deleted:[...del].filter(([loc,at])=>at>cut&&!(m.get(loc)?.upd>at)).map(([loc,at])=>({loc,at}))};}
-function rkLoad(){const d=mergeRacks(lsJ(rkKey()),null);RK.cfg=d.cfg;RK.skids=d.skids;RK.deleted=d.deleted;}
+function rkLoad(){const d=mergeRacks(lsJ(rkKey()),null);RK.cfg=d.cfg;RK.skids=d.skids;RK.deleted=d.deleted;if(!whList().some(w=>w.id===RK.wh))RK.wh='main';}
 let rkTeamT=0;
 function rkSave(fromSheet){lsSet(rkKey(),JSON.stringify({cfg:RK.cfg,skids:RK.skids,deleted:RK.deleted}));scheduleSync();if(!fromSheet)rkSheetSoon();
   if(teamShare('rack')){clearTimeout(rkTeamT);rkTeamT=setTimeout(()=>teamSync(),2500);}}
@@ -5436,13 +5464,13 @@ const rkStamp=x=>{x.upd=Math.max(Date.now(),(+x.upd||0)+1);return x;};
 function setSkid(loc,body){const old=RK.skids[loc];if(body){const c=cleanSkid({...body,upd:0});if(c){RK.skids[loc]={...c,upd:Math.max(Date.now(),(+old?.upd||0)+1),...(meEmail()?{by:meEmail()}:{})};RK.deleted=RK.deleted.filter(d=>d.loc!==loc);return;}}
   if(!old)return;delete RK.skids[loc];RK.deleted=RK.deleted.filter(d=>d.loc!==loc);RK.deleted.push({loc,at:Math.max(Date.now(),(+old.upd||0)+1)});}
 function writeSkid(loc,body){setSkid(loc,body);rkSave();renderWh();}
-function setRacks(n){n=Math.max(1,Math.min(RK_MAX,Math.round(n)||1));if(n===rkCount()){renderWh();return;}RK.cfg.rackCount=n;rkStamp(RK.cfg);rkSave();renderWh();}
+function setRacks(n){n=Math.max(1,Math.min(RK_MAX,Math.round(n)||1));if(n===rkCount()){renderWh();return;}W().rackCount=n;rkStamp(RK.cfg);rkSave();renderWh();}
 
 /* drawing */
 function slotHTML(loc){const s=RK.skids[loc],items=itemsAt(loc),full=!!s,hit=RK.q&&items.some(i=>itemHit(i,RK.q));let sum;
   if(!full)sum='Empty';else if(!items.length)sum=esc(s.note||'Mixed skid');
   else{const names=[...new Set(items.map(i=>i.item).filter(Boolean))];sum=esc(names[0]||'Unnamed item')+(names.length>1?` +${names.length-1} more`:'')+(items.length>1&&names.length===1?` (${items.length} variants)`:'');}
-  const a=full?skAmt(loc):'';return`<button type="button" class="wh-slot ${full?'full':'empty'}${hit?' hit':''}" data-loc="${loc}" aria-label="${loc}: ${full?esc(sum.replace(/<[^>]+>/g,'')):'empty'}"><span class="c">${loc}</span><span class="s">${sum}</span>${a?`<span class="q">${a}</span>`:''}</button>`;}
+  const a=full?skAmt(loc):'';return`<button type="button" class="wh-slot ${full?'full':'empty'}${hit?' hit':''}" data-loc="${loc}" aria-label="${codeOf(loc)}: ${full?esc(sum.replace(/<[^>]+>/g,'')):'empty'}"><span class="c">${codeOf(loc)}</span><span class="s">${sum}</span>${a?`<span class="q">${a}</span>`:''}</button>`;}
 function rackHTML(r){const L=layoutOf(r),locs=rackLocs(r),used=locs.filter(l=>RK.skids[l]).length,pcs=locs.reduce((t,l)=>t+skPcs(l),0),bx=locs.reduce((t,l)=>t+skBoxes(l),0);
   const shelves=levelPositions(L).reverse().map(ps=>`<div class="wh-shelf" style="grid-template-columns:repeat(${ps.length},minmax(0,1fr))">${ps.map(p=>slotHTML(locId(r,p))).join('')}</div>`).join('');
   const fl=[];for(let i=1;i<=L.floor;i++)fl.push(slotHTML(locId(r,'F'+i)));
@@ -5456,11 +5484,22 @@ function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=o
     <span class="spacer"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
   {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
   if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();
-  $('#whSum').textContent=`${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
+  renderWhs();
+  $('#whSum').textContent=`${whMulti()?whName()+' · ':''}${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
   $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
-  const res=$('#whRes');if(RK.q){const rows=[];for(const loc of vis.concat(orph)){const hits=itemsAt(loc).filter(i=>itemHit(i,RK.q));if(hits.length)rows.push(`<button type="button" class="wh-r" data-loc="${loc}"><span class="code">${loc}</span><span class="lines">${hits.map(i=>`<div>${esc(itemLine(i))} — ${lineAmt(i)}</div>`).join('')}</span></button>`);}
-    res.innerHTML=`<h3>${rows.length?`${rows.length} location${rows.length>1?'s':''} match “${esc(RK.q.toUpperCase())}”`:`Nothing matches “${esc(RK.q.toUpperCase())}”`}</h3>${rows.join('')}`;res.hidden=false;}else res.hidden=true;}
+  const res=$('#whRes');if(RK.q){const H=whHits(),whs=new Set(H.map(h=>h.wid)),pcs=H.reduce((t,h)=>t+pcsOf(h.i),0),bx=H.reduce((t,h)=>t+(+h.i.boxes||0),0),Q=esc(RK.q.toUpperCase());
+    res.innerHTML=`<h3>${H.length?`${H.length} match${H.length===1?'':'es'} for “${Q}”${whMulti()?` in ${plural(whs.size,'warehouse')}`:''} · ${bx?plural(bx,'box')+' · ':''}${pcs} pcs in all`:`Nothing matches “${Q}”${whMulti()?' in any warehouse':''}`}</h3>
+      ${H.length?`<div class="wh-rh" aria-hidden="true"><span>Item</span><span>Amount</span>${whMulti()?'<span>Warehouse</span>':''}<span>Rack</span><span>Spot</span></div>`:''}${H.map(h=>`<button type="button" class="wh-r${whMulti()?' multi':''}" data-loc="${h.loc}"><span class="it"><b>${esc(itemLine(h.i)||'Unnamed item')}</b></span><span class="am">${lineAmt(h.i)}</span>${whMulti()?`<span class="wn"><small>Warehouse</small>${esc(whName(h.wid))}</span>`:''}<span class="rk"><small>Rack</small>${esc(h.rack)}</span><span class="sp"><small>Spot</small><b class="code">${esc(codeOf(h.loc))}</b> ${esc(h.pos)}</span></button>`).join('')}`;res.hidden=false;}else res.hidden=true;}
+// every item line that matches the search, in every warehouse: where it is and how much
+function whHits(){const out=[];for(const w of whList())inWh(w.id,()=>{for(const loc of visLocs().concat(orphLocs())){const{rack}=splitLoc(loc);
+  for(const i of itemsAt(loc))if(itemHit(i,RK.q))out.push({wid:w.id,loc,i,rack:rackTitle(rack),pos:posName(loc)});}});return out;}
+const whHitN=wid=>RK.q?inWh(wid,()=>visLocs().concat(orphLocs()).reduce((t,l)=>t+itemsAt(l).filter(i=>itemHit(i,RK.q)).length,0)):0;
+function renderWhs(){const el=$('#whWhs');if(!el)return;
+  el.innerHTML=`<div class="wh-tabs" role="group" aria-label="Warehouses">${whList().map(w=>{const n=Object.keys(RK.skids).filter(k=>whOf(k).wid===w.id).length,h=whHitN(w.id);
+    return`<button type="button" class="wh-tab" data-whgo="${w.id}" aria-pressed="${w.id===RK.wh}"><b>${esc(w.name)}</b><small>${plural(n,'skid')}${RK.q?` · ${h} found`:''}</small></button>`;}).join('')}
+    <button type="button" class="wh-tab add" data-wh="whadd"${whList().length>=WH_MAX?' disabled':''}>＋ Add warehouse</button></div>
+    <div class="wh-tabx"><button class="lnk" type="button" data-wh="whren">Rename ${esc(whName())}</button>${RK.wh!=='main'?`<button class="lnk x" type="button" data-wh="whdel">Delete this warehouse</button>`:''}</div>`;}
 async function openWh(){rkLoad();pageShown('warehouse');if(!whDlg.open)whDlg.showModal();renderWh();if(RK.cfg.sheet)rkSheetSync();}
 
 /* the side panel: a skid, a rack's layout, or the Google Sheet */
@@ -5468,11 +5507,11 @@ const whSide=$('#whSide'),whFocus=sel=>setTimeout(()=>{if(!whSide.contains(docum
 function sideOpen(kind,code,where,body,foot){RK.side=kind;whSide.hidden=false;whSide.innerHTML=`<div class="wh-sh"><div><div class="wh-code">${code}</div><div class="wh-where">${where}</div></div><button class="btn sm" type="button" data-wh="close">Close</button></div><div class="wh-sb" id="whSb">${body}</div><div class="wh-mv" id="whMv" hidden></div>${foot?`<div class="wh-sf">${foot}</div>`:''}`;}
 function closeSide(){RK.side='';RK.edit=null;RK.lay=null;RK.mv=null;whSide.hidden=true;whSide.innerHTML='';}
 const blankRow=()=>({item:'',style:'',size:'',colour:'',boxes:'',per:'',qty:'',unit:'pcs'}),b0=v=>v===0||v==null?'':v,autoQty=it=>it.boxes!==''&&it.per!==''&&it.boxes!=null&&it.per!=null&&!isNaN(+it.boxes)&&!isNaN(+it.per);
-function openSkid(loc){const{rack,pos}=splitLoc(loc),cur=RK.skids[loc],t=skTotal(cur);
+function openSkid(loc){if(whOf(loc).wid!==RK.wh){setWh(whOf(loc).wid);renderWh();}const{rack,pos}=splitLoc(loc),cur=RK.skids[loc],t=skTotal(cur);
   RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i)})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
   if(!RK.edit.items.length)RK.edit.items.push(blankRow());
   const who=cur?.upd?`Updated ${esc(ago(cur.upd))}${cur.by&&teamOn()?' by '+esc(memberName(cur.by)):''}`:'';
-  sideOpen('skid',esc(loc),`${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
+  sideOpen('skid',esc(codeOf(loc)),`${whMulti()?esc(whName())+' · ':''}${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
   drawRows();whFocus('#whSb input');}
 function drawRows(){const e=RK.edit;
   $('#whSb').innerHTML=e.items.map((it,ix)=>`<div class="wh-row" data-ix="${ix}">
@@ -5503,30 +5542,34 @@ function shortSum(loc){const items=itemsAt(loc),names=[...new Set(items.map(i=>i
 function openMove(mode,ix){const e=RK.edit;if(!e)return;let title,extra='';
   if(mode==='line'){const it=rkLine(e.items[ix]);if(!lineHas(it))return;title=`Move “${esc(itemLine(it)||'this line')}”`;const b=it.boxes;
     if(b>1)extra=it.per>0||!(it.qty>0)?`<div class="wh-f"><label for="whMvN">Boxes to move (of ${b})</label><input class="in" id="whMvN" type="number" min="1" max="${b}" value="${b}" inputmode="numeric"></div>`:`<p class="wh-hint">This moves all ${b} boxes. To move only some, fill in Per box first.</p>`;}
-  else title=`Move everything on ${esc(e.loc)}`;
-  RK.mv={mode,ix};const locs=visLocs().filter(l=>l!==e.loc),first=locs.find(l=>!RK.skids[l])||'',P=$('#whMv');
-  P.innerHTML=`<div class="wh-mvh">${title}</div><div class="wh-f"><label for="whMvTo">Move to</label><select class="in" id="whMvTo">${locs.map(l=>`<option value="${l}"${l===first?' selected':''}>${l}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`).join('')}</select></div>${extra}<p class="wh-hint" id="whMvInfo"></p>
+  else title=`Move everything on ${esc(codeOf(e.loc))}`;
+  RK.mv={mode,ix};const first=visLocs().find(l=>l!==e.loc&&!RK.skids[l])||'',P=$('#whMv');
+  const opt=l=>`<option value="${l}"${l===first?' selected':''}>${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`;
+  // this warehouse first, then the others
+  const groups=[RK.wh,...whList().map(w=>w.id).filter(w=>w!==RK.wh)].map(wid=>inWh(wid,()=>{const L=visLocs().filter(l=>l!==e.loc);return L.length?(whMulti()?`<optgroup label="${esc(whName(wid))}">${L.map(opt).join('')}</optgroup>`:L.map(opt).join('')):'';})).join('');
+  P.innerHTML=`<div class="wh-mvh">${title}</div><div class="wh-f"><label for="whMvTo">Move to</label><select class="in" id="whMvTo">${groups}</select></div>${extra}<p class="wh-hint" id="whMvInfo"></p>
     <div class="wh-mvb"><button class="btn sm" type="button" data-wh="mvcancel">Cancel</button><button class="btn sm primary" type="button" data-wh="mvgo">Move</button></div>`;
   P.hidden=false;mvInfo();$('#whMvTo').focus();}
-function mvInfo(){const to=$('#whMvTo')?.value;if(to)$('#whMvInfo').textContent=RK.skids[to]?`${to} already has stock. This is added to it, not replaced.`:`${to} is empty.`;}
+const whereOf=k=>(whOf(k).wid!==RK.wh?whName(whOf(k).wid)+' ':'')+codeOf(k);
+function mvInfo(){const to=$('#whMvTo')?.value;if(to)$('#whMvInfo').textContent=RK.skids[to]?`${whereOf(to)} already has stock. This is added to it, not replaced.`:`${whereOf(to)} is empty.`;}
 function doMove(){const e=RK.edit,mv=RK.mv;if(!e||!mv)return;const to=$('#whMvTo').value;if(!to||to===e.loc)return;
   const d0=RK.skids[to],dst=d0?JSON.parse(JSON.stringify(d0)):{items:[],note:'',total:null};let src;
   if(mv.mode==='skid'){const s=cleanSkid(skidBody(e));if(!s){closeSide();return;}dst.items=dst.items.concat(s.items);const a=skTotal(dst),b=skTotal(s);let note=[dst.note,s.note].filter(Boolean).join(' / ');
-    if(b){if(!d0)dst.total=b;else if(a&&a.unit===b.unit)dst.total={count:a.count+b.count,unit:a.unit};else note=[note,`FROM ${e.loc}: SKID TOTAL ${fmtTot(b).toUpperCase()}`].filter(Boolean).join(' / ');}
+    if(b){if(!d0)dst.total=b;else if(a&&a.unit===b.unit)dst.total={count:a.count+b.count,unit:a.unit};else note=[note,`FROM ${whereOf(e.loc)}: SKID TOTAL ${fmtTot(b).toUpperCase()}`].filter(Boolean).join(' / ');}
     dst.note=note;src=null;}
   else{const line=rkLine(e.items[mv.ix]),b=line.boxes,nEl=$('#whMvN'),n=nEl?Math.max(1,Math.min(b,Math.round(+nEl.value)||b)):b,moved={...line};let rest=null;
     if(b&&n<b){moved.boxes=n;rest={...line,boxes:b-n};if(line.per){moved.qty=n*line.per;rest.qty=(b-n)*line.per;}}
     dst.items.push(moved);const items=e.items.slice();if(rest)items[mv.ix]=rest;else items.splice(mv.ix,1);src={...skidBody(e),items};}
-  const from=e.loc;closeSide();setSkid(to,dst);setSkid(from,src);rkSave();renderWh();toast(`Moved from ${from} to ${to}`);}
+  const from=e.loc,msg=`Moved from ${codeOf(from)} to ${whereOf(to)}`;closeSide();setSkid(to,dst);setSkid(from,src);rkSave();renderWh();toast(msg);}
 /* a rack's layout */
 function openLayout(r,isNew){const L=isNew?layoutOf(rackName(rkCount()-1)):layoutOf(r);RK.lay={rack:r,levels:L.levels.slice(),floor:L.floor,name:isNew?'':rackNm(r),isNew:!!isNew};
   sideOpen('layout',isNew?`New rack ${esc(r)}`:`Rack ${esc(r)}`,isNew?'Name it and pick its shape':'Name and layout','',`<span class="wh-tot" id="whTot"></span><button class="btn sm primary" type="button" data-wh="savelay">${isNew?'Add rack':'Save'}</button>`);drawLayout();if(isNew)whFocus('#whRackName');}
 function drawLayout(){const y=RK.lay,r=y.rack,L={levels:y.levels,floor:y.floor},lp=levelPositions(L),nl=y.levels.length;
   const ln=i=>nl===1?'Shelf':i===0?'Bottom level':i===nl-1?'Top level':`Level ${i+1}`,mini=(a,i,v,lab)=>`<span class="wh-mini"><button type="button" data-whl="${a}-" data-i="${i}" aria-label="Fewer ${lab}">−</button><output>${v}</output><button type="button" data-whl="${a}+" data-i="${i}" aria-label="More ${lab}">+</button></span>`;
-  const fl=[];for(let i=1;i<=y.floor;i++)fl.push(locId(r,'F'+i));const nw=new Set(rackLocs(r,L)),lost=Object.keys(RK.skids).filter(l=>splitLoc(l).rack===r&&!nw.has(l));
-  $('#whSb').innerHTML=`<div class="wh-f"><label for="whRackName">Rack name (optional)</label><input class="in" id="whRackName" maxlength="40" autocomplete="off" value="${esc(y.name)}" placeholder="e.g. Front wall, Cold room, Aisle 3"></div><p class="wh-hint">Spots keep the short code ${esc(r)} (${esc(locId(r,'1'))}, ${esc(locId(r,'2'))}…); the name shows on the map and in the sheet.</p>
+  const fl=[];for(let i=1;i<=y.floor;i++)fl.push(locId(r,'F'+i));const nw=new Set(rackLocs(r,L)),lost=Object.keys(RK.skids).filter(l=>whOf(l).wid===RK.wh&&splitLoc(l).rack===r&&!nw.has(l));
+  $('#whSb').innerHTML=`<div class="wh-f"><label for="whRackName">Rack name (optional)</label><input class="in" id="whRackName" maxlength="40" autocomplete="off" value="${esc(y.name)}" placeholder="e.g. Front wall, Cold room, Aisle 3"></div><p class="wh-hint">Spots keep the short code ${esc(r)} (${esc(code(r,'1'))}, ${esc(code(r,'2'))}…); the name shows on the map and in the sheet.</p>
     <div class="wh-sect">Quick pick</div><div class="wh-pre">${RK_PRESETS.map((p,i)=>`<button type="button" data-whl="preset" data-i="${i}" aria-pressed="${sameLay(p.lay,L)}"><b>${p.name}</b><span>${p.desc}</span></button>`).join('')}</div>
-    <div class="wh-sect">Levels, top to bottom · skids per level</div><div class="wh-lvls">${y.levels.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<div class="wh-lvl"><span class="nm">${ln(i)}<small>${lp[i].map(p=>locId(r,p)).join(' ')}</small></span>${mini('lv',i,c,'skids on '+ln(i))}${nl>1?`<button class="lnk x" type="button" data-whl="lvrm" data-i="${i}">Remove</button>`:''}</div>`).join('')}</div>
+    <div class="wh-sect">Levels, top to bottom · skids per level</div><div class="wh-lvls">${y.levels.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<div class="wh-lvl"><span class="nm">${ln(i)}<small>${lp[i].map(p=>code(r,p)).join(' ')}</small></span>${mini('lv',i,c,'skids on '+ln(i))}${nl>1?`<button class="lnk x" type="button" data-whl="lvrm" data-i="${i}">Remove</button>`:''}</div>`).join('')}</div>
     ${nl<8?'<button class="btn sm" type="button" data-whl="lvadd">＋ Add a level on top</button>':''}
     <div class="wh-sect">Floor in front</div><div class="wh-lvl"><span class="nm">Floor spots<small>${fl.join(' ')||'None'}</small></span>${mini('fl',0,y.floor,'floor spots')}</div>
     ${lost.length?`<p class="wh-hint warn">${lost.join(', ')} ${lost.length>1?'have':'has'} stock and won't be on this layout. ${lost.length>1?'They':'It'} will be kept under “Not on the map” so you can move ${lost.length>1?'them':'it'}. Nothing is deleted.</p>`:''}
@@ -5535,37 +5578,46 @@ function drawLayout(){const y=RK.lay,r=y.rack,L={levels:y.levels,floor:y.floor},
 function layClick(b){const y=RK.lay,i=+b.dataset.i,a=b.dataset.whl;
   if(a==='preset'){const p=RK_PRESETS[i].lay;y.levels=p.levels.slice();y.floor=p.floor;}if(a==='lv-')y.levels[i]=Math.max(1,y.levels[i]-1);if(a==='lv+')y.levels[i]=Math.min(4,y.levels[i]+1);
   if(a==='lvrm'&&y.levels.length>1)y.levels.splice(i,1);if(a==='lvadd'&&y.levels.length<8)y.levels.push(y.levels[y.levels.length-1]||1);if(a==='fl-')y.floor=Math.max(0,y.floor-1);if(a==='fl+')y.floor=Math.min(4,y.floor+1);drawLayout();}
-function saveLayout(){const y=RK.lay;if(!y)return;const L={levels:y.levels.slice(),floor:y.floor},nm=String($('#whRackName')?.value??y.name).trim().slice(0,40);if(sameLay(L,RK_STD))delete RK.cfg.layouts[y.rack];else RK.cfg.layouts[y.rack]=L;
-  RK.cfg.names={...RK.cfg.names};if(nm)RK.cfg.names[y.rack]=nm;else delete RK.cfg.names[y.rack];if(y.isNew)RK.cfg.rackCount=Math.max(rkCount(),rackIndex(y.rack));
+function saveLayout(){const y=RK.lay;if(!y)return;const w=W(),L={levels:y.levels.slice(),floor:y.floor},nm=String($('#whRackName')?.value??y.name).trim().slice(0,40);w.layouts={...w.layouts};if(sameLay(L,RK_STD))delete w.layouts[y.rack];else w.layouts[y.rack]=L;
+  w.names={...w.names};if(nm)w.names[y.rack]=nm;else delete w.names[y.rack];if(y.isNew)w.rackCount=Math.max(rkCount(),rackIndex(y.rack));
   rkStamp(RK.cfg);closeSide();rkSave();renderWh();if(y.isNew){toast(`Added ${rackTitle(y.rack)}`);requestAnimationFrame(()=>$(`#whRacks [aria-label="Rack ${y.rack}"]`)?.scrollIntoView({block:'nearest'}));}}
 
 /* CSV: the same columns as the rack map's own export */
-const RK_HEAD=['Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
-const RK_RHEAD=['Rack','Levels (bottom to top, skids per level)','Floor spots','Name'];
-function rkRows(skids=RK.skids){const out=[],seen=new Set(),locs=visLocs().concat(Object.keys(skids).filter(l=>!visLocs().includes(l)).sort());
+const RK_HEAD=['Warehouse','Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
+const RK_RHEAD=['Warehouse','Rack','Levels (bottom to top, skids per level)','Floor spots','Name'];
+// every warehouse, in order: its racks' spots, then any of its skids not on the map
+function rkRows(skids=RK.skids){const out=[],seen=new Set();for(const w of whList())inWh(w.id,()=>{const vis=visLocs(),locs=vis.concat(Object.keys(skids).filter(l=>whOf(l).wid===w.id&&!vis.includes(l)).sort());
   for(const loc of locs){if(seen.has(loc))continue;seen.add(loc);const s=skids[loc];if(!s)continue;const{rack,pos}=splitLoc(loc),t=skTotal(s),items=s.items.length?s.items:[{}];
-    items.forEach(i=>out.push([loc,rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'']));}
+    items.forEach(i=>out.push([w.name,codeOf(loc),rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'']));}});
   return out;}
-const rkRackRows=()=>visRacks().map(r=>{const L=layoutOf(r);return[r,L.levels.join('-'),L.floor,rackNm(r)];});
+const rkRackRows=()=>whList().flatMap(w=>inWh(w.id,()=>visRacks().map(r=>{const L=layoutOf(r);return[w.name,r,L.levels.join('-'),L.floor,rackNm(r)];})));
 function csvText(rows){const q=v=>{v=String(v??'');return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};return rows.map(r=>r.map(q).join(',')).join('\n');}
-// rows (a header row first) → skids by location; unknown rows are counted, not guessed
-function rkParse(rows){const h=(rows[0]||[]).map(x=>String(x).trim().toLowerCase()),col=n=>h.indexOf(n.toLowerCase());
+// rows (a header row first) → skids by location; unknown rows are counted, not guessed. A Warehouse column picks the warehouse by name
+// (a new name makes a new warehouse); without one, rows go to `def`.
+function rkParse(rows,def='main'){const h=(rows[0]||[]).map(x=>String(x).trim().toLowerCase()),col=n=>h.indexOf(n.toLowerCase());
   const c={};for(const n of RK_HEAD)c[n]=col(n);if(c.Location<0&&(c.Rack<0||c.Position<0))return null;
   const skids={},v=(r,n)=>c[n]>=0?String(r[c[n]]??'').trim():'';let bad=0;
-  for(const r of rows.slice(1)){if(!r.some(x=>String(x).trim()))continue;let loc=rkUp(v(r,'Location'));if(!loc&&v(r,'Rack'))loc=locId(rkUp(v(r,'Rack')),rkUp(v(r,'Position')));
-    if(!locOk(loc)){bad++;continue;}const s=skids[loc]||(skids[loc]={items:[],note:'',total:null});
+  for(const r of rows.slice(1)){if(!r.some(x=>String(x).trim()))continue;let lc=rkUp(v(r,'Location'));if(!lc&&v(r,'Rack'))lc=code(rkUp(v(r,'Rack')),rkUp(v(r,'Position')));
+    const wn=v(r,'Warehouse'),wid=wn?whEnsure(wn):def,loc=wid?kOf(wid,lc):'';
+    if(!wid||!locOk(loc)){bad++;continue;}const s=skids[loc]||(skids[loc]={items:[],note:'',total:null});
     const it=rkLine({item:v(r,'Item'),style:v(r,'Style'),size:v(r,'Size'),colour:v(r,'Colour'),boxes:v(r,'Boxes'),per:v(r,'Per box'),qty:/^unknown$/i.test(v(r,'Total'))?'':v(r,'Total'),unit:/^(dz|dozen)$/i.test(v(r,'Unit'))?'dz':'pcs'});
     if(lineHas(it))s.items.push(it);const tc=rkNum(v(r,'Skid total'));if(tc)s.total={count:tc,unit:/^(dz|dozen)$/i.test(v(r,'Skid total unit'))?'dz':/^pcs$/i.test(v(r,'Skid total unit'))?'pcs':'boxes'};if(v(r,'Skid notes'))s.note=rkUp(v(r,'Skid notes'));}
   for(const k of Object.keys(skids))if(!cleanSkid(skids[k]))delete skids[k];return{skids,bad};}
-function rkParseRacks(rows){const out={layouts:{},names:{},count:0};for(const r of rows.slice(1)){const k=rkUp(r[0]);if(!/^[A-Z]{1,3}$/.test(k))continue;const lv=String(r[1]??'').split(/[-,\s]+/).filter(Boolean).map(Number),L={levels:lv,floor:Math.round(+r[2]||0)};
-  out.count=Math.max(out.count,rackIndex(k));if(rkLayOk(L)&&!sameLay(L,RK_STD))out.layouts[k]=L;const nm=String(r[3]??'').trim().slice(0,40);if(nm)out.names[k]=nm;}return out.count?out:null;}
+// the Racks tab → each warehouse's racks; an older tab without a Warehouse column is the main warehouse
+function rkParseRacks(rows){const hw=/^warehouse$/i.test(String(rows[0]?.[0]??'').trim()),out={};
+  for(const r0 of rows.slice(1)){const wid=hw?whEnsure(r0[0]):'main';if(!wid)continue;const r=hw?r0.slice(1):r0,k=rkUp(r[0]);if(!/^[A-Z]{1,3}$/.test(k))continue;const o=out[wid]||(out[wid]={layouts:{},names:{},count:0});
+    const lv=String(r[1]??'').split(/[-,\s]+/).filter(Boolean).map(Number),L={levels:lv,floor:Math.round(+r[2]||0)};
+    o.count=Math.max(o.count,rackIndex(k));if(rkLayOk(L)&&!sameLay(L,RK_STD))o.layouts[k]=L;const nm=String(r[3]??'').trim().slice(0,40);if(nm)o.names[k]=nm;}
+  return Object.keys(out).length?out:null;}
 async function whImport(f){let rows;try{rows=parseCSV(await f.text());}catch(_){toast('That file couldn\'t be read.');return;}
-  const p=rkParse(rows);if(!p){toast('That file needs a Location column (or Rack and Position), like the rack map\'s Export CSV.',6000);return;}
-  const n=Object.keys(p.skids).length,has=Object.keys(RK.skids).length;if(!n){toast('No skids found in that file.');return;}
-  const r=has?await ask({title:`Import ${plural(n,'skid')}?`,body:`Replace everything: the map becomes exactly this file (spots not in it are emptied).\nUpdate these spots only: the ${n} spot${n>1?'s':''} in the file are replaced, everything else stays.${p.bad?`\n\n${p.bad} row${p.bad>1?'s':''} without a valid location will be skipped.`:''}`,ok:'Update these spots only',alt:'Replace everything',cancel:'Cancel'}):'ok';if(!r)return;
-  if(r==='alt')for(const loc of Object.keys(RK.skids))if(!p.skids[loc])setSkid(loc,null);
+  // rows without a Warehouse go to the warehouse you're looking at; a new warehouse name in the file is only made once you say Import
+  const cfg0=JSON.stringify(RK.cfg),p=rkParse(rows,RK.wh),undo=()=>{RK.cfg=cleanRkCfg(JSON.parse(cfg0));};if(!p){undo();toast('That file needs a Location column (or Rack and Position), like the rack map\'s Export CSV.',6000);return;}
+  const n=Object.keys(p.skids).length,ws=[...new Set(Object.keys(p.skids).map(l=>whOf(l).wid))],has=Object.keys(RK.skids).some(k=>ws.includes(whOf(k).wid));if(!n){undo();toast('No skids found in that file.');return;}
+  const where=ws.length>1||whMulti()?ws.map(w=>whName(w)).join(', '):'the map',isNew=ws.filter(w=>!JSON.parse(cfg0).whs?.some(x=>x.id===w)&&w!=='main');
+  const r=has||isNew.length?await ask({title:`Import ${plural(n,'skid')}?`,body:`${isNew.length?`New warehouse${isNew.length>1?'s':''}: ${isNew.map(w=>whName(w)).join(', ')}.\n\n`:''}Replace everything: ${where} become${ws.length>1?'':'s'} exactly this file (spots not in it are emptied).\nUpdate these spots only: the ${n} spot${n>1?'s':''} in the file are replaced, everything else stays.${p.bad?`\n\n${p.bad} row${p.bad>1?'s':''} without a valid location will be skipped.`:''}`,ok:'Update these spots only',alt:has?'Replace everything':'',cancel:'Cancel'}):'ok';if(!r){undo();renderWh();return;}
+  if(r==='alt')for(const loc of Object.keys(RK.skids))if(ws.includes(whOf(loc).wid)&&!p.skids[loc])setSkid(loc,null);
   for(const[loc,s]of Object.entries(p.skids))setSkid(loc,s);
-  const top=Math.max(...Object.keys(p.skids).map(l=>rackIndex(splitLoc(l).rack)));if(top>rkCount()&&top<=RK_MAX){RK.cfg.rackCount=top;rkStamp(RK.cfg);}
+  for(const w of ws){const top=Math.max(...Object.keys(p.skids).filter(l=>whOf(l).wid===w).map(l=>rackIndex(splitLoc(l).rack)));if(top>W(w).rackCount&&top<=RK_MAX){W(w).rackCount=top;rkStamp(RK.cfg);}}
   rkSave();renderWh();toast(`Imported ${plural(n,'skid')}${p.bad?` · ${p.bad} row${p.bad>1?'s':''} skipped`:''}`);}
 function whExport(){save(`rack-inventory-${dayStr(Date.now())}.csv`,new Blob([csvText([RK_HEAD,...rkRows()])],{type:'text/csv'}));}
 
@@ -5576,6 +5628,9 @@ const GS='https://sheets.googleapis.com/v4/spreadsheets',RK_TABS=['Rack map','Ra
 const rkSnapKey=()=>'ss-racksheet:'+rkKey();
 const skSig=s=>{const c=cleanSkid(s);return c?JSON.stringify([c.items.map(i=>[i.item,i.style,i.size,i.colour,i.boxes,i.per,i.qty,i.unit]),c.note,c.total]):'';};
 const cfgSig=(count,lay,nm={})=>JSON.stringify([count,Object.keys(lay).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,lay[k].levels.join('-'),lay[k].floor]),Object.keys(nm).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,nm[k]])]);
+// every warehouse's racks, as one fingerprint (the sheet's Racks tab, or the dashboard's)
+const cfgSigAll=m=>JSON.stringify(Object.keys(m).sort().map(w=>[w,cfgSig(m[w].count,m[w].layouts,m[w].names)]));
+const cfgNow=()=>Object.fromEntries(whList().map(w=>[w.id,{count:W(w.id).rackCount,layouts:W(w.id).layouts||{},names:W(w.id).names||{}}]));
 async function gsCall(tok,path,o={}){let r;try{r=await fetch(GS+path,{method:o.method||'GET',headers:{Authorization:'Bearer '+tok,...(o.body?{'Content-Type':'application/json'}:{})},...(o.body?{body:JSON.stringify(o.body)}:{})});}
   catch(_){throw new Error('Couldn\'t reach Google Sheets. Check your connection.');}
   const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error?.message||'Google Sheets error '+r.status),{status:r.status});return j;}
@@ -5586,22 +5641,23 @@ async function rkSheetSync(){const sh=RK.cfg.sheet;if(!sh)return;if(RK.sheetBusy
       const meta=await gsCall(tok,`/${id}?fields=properties.title,sheets.properties.title`),have=(meta.sheets||[]).map(s=>s.properties?.title);
       const miss=RK_TABS.filter(t=>!have.includes(t));if(miss.length)await gsCall(tok,`/${id}:batchUpdate`,{method:'POST',body:{requests:miss.map(title=>({addSheet:{properties:{title}}}))}});
       if(meta.properties?.title&&meta.properties.title!==sh.name){sh.name=meta.properties.title;}
-      const g=await gsCall(tok,`/${id}/values:batchGet?${RK_TABS.map(t=>'ranges='+encodeURIComponent(`'${t}'!A1:N5000`)).join('&')}`),vr=g.valueRanges||[],mapRows=vr[0]?.values||[],rackRows=vr[1]?.values||[];
-      let snap=lsJ(rkSnapKey());if(!snap||snap.id!==id)snap={id,skids:{},cfg:null};
+      const g=await gsCall(tok,`/${id}/values:batchGet?${RK_TABS.map(t=>'ranges='+encodeURIComponent(`'${t}'!A1:O5000`)).join('&')}`),vr=g.valueRanges||[],mapRows=vr[0]?.values||[],rackRows=vr[1]?.values||[];
+      let snap=lsJ(rkSnapKey());if(!snap||snap.id!==id)snap={id,skids:{},cfg:null};const cfg0=JSON.stringify(RK.cfg),cfgBefore=cfgSigAll(cfgNow());// before the sheet can add a warehouse
       // 1. what was changed in the sheet comes in
       // an emptied tab (no header row) is written again from the dashboard rather than emptying the map
       const P=mapRows.length?rkParse(mapRows):null,inS=P?.skids||{};let ch=false;
       if(P)for(const loc of new Set([...Object.keys(inS),...Object.keys(snap.skids)])){const sS=skSig(inS[loc]),prev=snap.skids[loc]||'';if(sS===prev)continue;
         if(skSig(RK.skids[loc])!==prev)continue;setSkid(loc,inS[loc]||null);ch=true;}
-      const R=rkParseRacks(rackRows);if(R){const sC=cfgSig(R.count,R.layouts,R.names);if(sC!==snap.cfg&&cfgSig(rkCount(),RK.cfg.layouts,RK.cfg.names)===snap.cfg){RK.cfg.rackCount=Math.min(RK_MAX,R.count);RK.cfg.layouts=R.layouts;RK.cfg.names=R.names;rkStamp(RK.cfg);ch=true;}}
+      const R=rkParseRacks(rackRows);if(R){const sC=cfgSigAll(R);if(sC!==snap.cfg&&cfgBefore===snap.cfg){for(const[w,v]of Object.entries(R)){const x=W(w);x.rackCount=Math.min(RK_MAX,v.count);x.layouts=v.layouts;x.names=v.names;}rkStamp(RK.cfg);ch=true;}}
+      if(JSON.stringify(cleanRkCfg(RK.cfg).whs)!==JSON.stringify(cleanRkCfg(JSON.parse(cfg0)).whs))ch=true;
       if(ch){rkSave(true);renderWh();}
       // 2. the sheet is rewritten from the dashboard when it differs
-      const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=rows=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(14).fill('')).slice(0,14)).filter(r=>r.some(Boolean)));
+      const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=(rows,w=15)=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(w).fill('')).slice(0,w)).filter(r=>r.some(Boolean)));
       const pad=(rows,old,w)=>rows.concat(Array.from({length:Math.max(0,old-rows.length)},()=>Array(w).fill(''))).map(r=>r.concat(Array(w).fill('')).slice(0,w));
-      const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:N${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,14)});
-      if(norm(wantR)!==norm(rackRows))data.push({range:`'Racks'!A1:D${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,4)});
+      const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:O${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,15)});
+      if(norm(wantR,5)!==norm(rackRows,5))data.push({range:`'Racks'!A1:E${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,5)});
       if(data.length)await gsCall(tok,`/${id}/values:batchUpdate`,{method:'POST',body:{valueInputOption:'RAW',data}});
-      lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSig(rkCount(),RK.cfg.layouts,RK.cfg.names)}));
+      lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSigAll(cfgNow())}));
       RK.sheetAt=Date.now();RK.sheetErr='';RK.sheetNeed='';}
     catch(e){RK.sheetErr=e.message;RK.sheetNeed=e.code==='signin'?'signin':e.status===403||e.status===404?'access':'';}
     finally{RK.sheetBusy=null;renderChip();if(RK.side==='sheet')openSheetPanel();if(RK.sheetAgain){RK.sheetAgain=false;rkSheetSync();}}})();return RK.sheetBusy;}
@@ -5648,6 +5704,7 @@ let whEmptyArm=0;
 whDlg.addEventListener('click',async e=>{const t=e.target;
   const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
   const sl=t.closest('[data-loc]');if(sl){openSkid(sl.dataset.loc);return;}
+  const wg=t.closest('[data-whgo]');if(wg){setWh(wg.dataset.whgo);renderWh();return;}
   const ly=t.closest('[data-whlay]');if(ly){openLayout(ly.dataset.whlay);return;}
   const lb=t.closest('[data-whl]');if(lb&&RK.lay){layClick(lb);return;}
   const rb=t.closest('[data-whrow]');if(rb&&RK.edit){const E=RK.edit,ix=+rb.closest('.wh-row').dataset.ix,a=rb.dataset.whrow;
@@ -5658,6 +5715,15 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
   if(a==='newrack'){if(rkCount()<RK_MAX)openLayout(rackName(rkCount()),true);return;}
   if(a==='minus'){setRacks(rkCount()-1);return;}
   if(a==='import'){$('#whFile').click();return;}if(a==='export'){whExport();return;}
+  if(a==='whadd'){const r=await ask({title:'Add a warehouse',body:'It starts with 4 standard racks. You can rename it, add racks and change their layout any time.',ok:'Add warehouse',input:{value:'',placeholder:'e.g. Toronto, Overflow, Unit 12',label:'Warehouse name'}});if(r!=='ok')return;
+    const nm=ask.value.slice(0,40);if(!nm){toast('Give the warehouse a name');return;}if(whList().some(w=>w.name.toLowerCase()===nm.toLowerCase())){toast(`There's already a warehouse called ${nm}`);return;}
+    const id=whEnsure(nm);if(!id){toast(`Up to ${WH_MAX} warehouses`);return;}rkSave();setWh(id);renderWh();toast(`Added ${nm}`);return;}
+  if(a==='whren'){const cur=whName(),r=await ask({title:`Rename ${cur}`,ok:'Rename',input:{value:cur,label:'Warehouse name'}});if(r!=='ok')return;const nm=ask.value.slice(0,40);if(!nm||nm===cur)return;
+    if(whList().some(w=>w.id!==RK.wh&&w.name.toLowerCase()===nm.toLowerCase())){toast(`There's already a warehouse called ${nm}`);return;}
+    if(RK.wh==='main')RK.cfg.mainName=nm;else W().name=nm;rkStamp(RK.cfg);rkSave();renderWh();toast(`Renamed to ${nm}`);return;}
+  if(a==='whdel'&&RK.wh!=='main'){const cur=whName(),ks=Object.keys(RK.skids).filter(k=>whOf(k).wid===RK.wh);
+    if(await ask({title:`Delete ${cur}?`,body:ks.length?`Its ${plural(ks.length,'skid')} and everything on them will be removed too. Move anything you want to keep to another warehouse first.`:'It has no skids.',ok:'Delete warehouse',danger:true})!=='ok')return;
+    const wid=RK.wh;for(const k of ks)setSkid(k,null);RK.cfg.whs=RK.cfg.whs.filter(w=>w.id!==wid);rkStamp(RK.cfg);setWh('main');rkSave();renderWh();toast(`Deleted ${cur}`);return;}
   if(a==='sheet'){openSheetPanel();return;}if(a==='close'||a==='mvcancel'&&!RK.mv){closeSide();return;}
   if(a==='mvcancel'){RK.mv=null;$('#whMv').hidden=true;return;}if(a==='mvgo'){doMove();return;}
   if(a==='addrow'&&RK.edit){RK.edit.items.push(blankRow());drawRows();$$('#whSb .wh-row').at(-1)?.querySelector('input')?.focus();return;}
