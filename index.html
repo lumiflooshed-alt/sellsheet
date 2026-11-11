@@ -239,6 +239,11 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-sug{display:grid;border:1px solid var(--accent);border-radius:6px;overflow:hidden;background:var(--panel);margin-top:2px}.wh-sug[hidden]{display:none}
 .wh-sug button{all:unset;box-sizing:border-box;padding:8px 10px;font-size:13.5px;text-transform:uppercase;cursor:pointer;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.wh-sug button:last-child{border-bottom:0}.wh-sug button:hover,.wh-sug button:focus-visible{background:var(--accent-soft)}
 .wh-rt{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}.wh-rt button{border:0;background:none;color:var(--accent-fg);font:600 12.5px var(--ui);cursor:pointer;padding:2px 0}.wh-rt button.x{color:var(--muted)}.wh-rt button.x:hover{color:var(--bad)}
+.wh-bk{grid-column:1/-1;display:grid;gap:6px;margin-left:10px;padding:2px 0 2px 14px;border-left:2px solid var(--line2)}.wh-bkh{font:600 10.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wh-bkh small{font:500 12px var(--ui);letter-spacing:0;text-transform:none;margin-left:6px}
+.wh-bkr{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 84px 30px;gap:6px;align-items:center}.wh-bkr::before{content:'';position:absolute;left:-14px;top:50%;width:10px;border-top:2px solid var(--line2)}.wh-bkr .in{height:36px;font-size:14px;padding:0 8px;min-width:0}.wh-bkr input:not([type=number]){text-transform:uppercase}.wh-bkr input::placeholder{text-transform:none}
+.wh-bkr button,.wh-bk .lnk{border:0;background:none;cursor:pointer;font:600 12.5px var(--ui);color:var(--muted);padding:2px}.wh-bkr button:hover{color:var(--bad)}.wh-bk .lnk{color:var(--accent-fg);justify-self:start}
+.wh-bkm{display:grid;gap:6px}.wh-bkmr{display:grid;grid-template-columns:minmax(0,1fr) 84px auto;gap:8px;align-items:center;font-size:13.5px;text-transform:uppercase}.wh-bkmr .in{height:36px}.wh-bkmr small{color:var(--muted);text-transform:none}
+.wh-r .it .wh-kids{display:grid;gap:1px;margin:3px 0 0 4px;padding-left:10px;border-left:2px solid var(--line2);list-style:none}.wh-r .it .wh-kids li{color:var(--muted);font-size:12px;text-transform:uppercase;overflow-wrap:anywhere}.wh-r .it .wh-kids b{color:var(--ink);font-weight:700}
 .wh-hint{margin:0;font-size:13px;color:var(--muted);line-height:1.45}.wh-hint.warn{color:var(--bad)}.wh-hint a{color:var(--accent-fg)}
 .wh-mv{display:grid;gap:10px;padding:14px 16px;border-top:2px solid var(--beam);background:var(--raise)}.wh-mv[hidden]{display:none}.wh-mvh{font:800 15px var(--ui);text-transform:uppercase;overflow-wrap:anywhere}.wh-mvb{display:flex;gap:8px;justify-content:flex-end}
 .wh-sect{font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
@@ -5436,10 +5441,23 @@ function skAmt(loc){const items=itemsAt(loc),t=skTotal(RK.skids[loc]);if(t)retur
 function lineAmt(i){const b=+i.boxes||0,p=+i.per||0,q=+i.qty||0,u=unitOf(i);if(b&&p)return`${b} × ${p} = <b>${q}</b> ${u}`;
   const parts=[];if(b)parts.push(`<b>${plural(b,'box')}</b>`);parts.push(q?`<b>${q}</b> ${u}`:'<i>count unknown</i>');return parts.join(' · ');}
 const itemLine=i=>[i.item,i.style,i.size,i.colour].filter(Boolean).join(' · ');
-const itemHit=(i,q)=>[i.item,i.style,i.size,i.colour].join(' ').toLowerCase().includes(q);
+/* box groups: an item line (the parent) can have child box groups saying how many of its boxes are which size and colour, without a new variant.
+   A blank size or colour on a box group means the line's own (when it has one), otherwise mixed. */
+const bkDims=i=>({s:!!(i.size||i.bk?.some(b=>b.size)),c:!!(i.colour||i.bk?.some(b=>b.colour))});
+const bkName=(i,b,d=i.dims||bkDims(i))=>[d.s?(b.size||i.size||'mixed sizes'):'',d.c?(b.colour||i.colour||'mixed colours'):''].filter(Boolean).join(' · ')||'mixed sizes and colours';
+// the sheet / CSV form: "L / NAVY: 3; MIXED / NAVY: 2"
+const bkSheet=i=>i.bk?.length?i.bk.map(b=>`${b.size||i.size||'MIXED'} / ${b.colour||i.colour||'MIXED'}: ${b.boxes}`).join('; '):'';
+const bkParse=v=>String(v||'').split(';').map(x=>{const m=x.trim().match(/^(.*?):\s*(\d+)$/);if(!m)return null;const[sz,co='']=m[1].split(/\s+\/\s+/);return{size:sz.trim(),colour:co.trim(),boxes:m[2]};}).filter(Boolean);
+// the part of a line a search matches: all of it, only some of its box groups, or nothing
+function lineHit(i,q){if([i.item,i.style,i.size,i.colour].join(' ').toLowerCase().includes(q))return i;if(!i.bk?.length)return null;
+  const sub=i.bk.filter(b=>[i.item,i.style,b.size||i.size,b.colour||i.colour].join(' ').toLowerCase().includes(q));if(!sub.length)return null;if(sub.length===i.bk.length)return i;
+  const bx=sub.reduce((t,b)=>t+(+b.boxes||0),0);return{...i,bk:sub,dims:bkDims(i),boxes:bx,qty:+i.per>0?bx*i.per:0};}
+const itemHit=(i,q)=>!!lineHit(i,q);
 /* the store: the newest change of each spot wins; an emptied spot is remembered so it stays empty everywhere */
 const rkNum=v=>v===''||v==null?0:Math.max(0,Math.min(1e7,Math.round(+v)||0)),rkUp=v=>String(v??'').trim().toUpperCase();
-function rkLine(i){const boxes=rkNum(i.boxes),per=rkNum(i.per);return{item:rkUp(i.item).slice(0,120),style:rkUp(i.style).slice(0,80),size:rkUp(i.size).slice(0,40),colour:rkUp(i.colour).slice(0,60),boxes,per,qty:boxes&&per?boxes*per:rkNum(i.qty),unit:i.unit==='dz'?'dz':'pcs'};}
+function rkBk(i,size,colour){const mix=v=>v==='MIXED'||v==='*';return(Array.isArray(i.bk)?i.bk:[]).slice(0,30).map(b=>{let s=rkUp(b?.size).slice(0,40),c=rkUp(b?.colour).slice(0,60);if(s===size||mix(s))s='';if(c===colour||mix(c))c='';return{size:s,colour:c,boxes:rkNum(b?.boxes)};}).filter(b=>b.boxes);}
+function rkLine(i){const size=rkUp(i.size).slice(0,40),colour=rkUp(i.colour).slice(0,60),bk=rkBk(i,size,colour),boxes=bk.length?bk.reduce((t,b)=>t+b.boxes,0):rkNum(i.boxes),per=rkNum(i.per);
+  return{item:rkUp(i.item).slice(0,120),style:rkUp(i.style).slice(0,80),size,colour,boxes,per,qty:boxes&&per?boxes*per:rkNum(i.qty),unit:i.unit==='dz'?'dz':'pcs',...(bk.length?{bk}:{})};}
 const lineHas=i=>i.item||i.style||i.size||i.colour||i.qty||i.boxes;
 function cleanSkid(s){if(!s||typeof s!=='object')return null;const items=(Array.isArray(s.items)?s.items:[]).slice(0,60).map(rkLine).filter(lineHas),note=rkUp(s.note).slice(0,1000),tc=rkNum(s.total?.count);
   const total=tc?{count:tc,unit:RK_TUNIT[s.total.unit]?s.total.unit:'boxes'}:null;if(!items.length&&!note&&!total)return null;
@@ -5490,10 +5508,10 @@ function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=o
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
   const res=$('#whRes');if(RK.q){const H=whHits(),whs=new Set(H.map(h=>h.wid)),pcs=H.reduce((t,h)=>t+pcsOf(h.i),0),bx=H.reduce((t,h)=>t+(+h.i.boxes||0),0),Q=esc(RK.q.toUpperCase());
     res.innerHTML=`<h3>${H.length?`${H.length} match${H.length===1?'':'es'} for “${Q}”${whMulti()?` in ${plural(whs.size,'warehouse')}`:''} · ${bx?plural(bx,'box')+' · ':''}${pcs} pcs in all`:`Nothing matches “${Q}”${whMulti()?' in any warehouse':''}`}</h3>
-      ${H.length?`<div class="wh-rh" aria-hidden="true"><span>Item</span><span>Amount</span>${whMulti()?'<span>Warehouse</span>':''}<span>Rack</span><span>Spot</span></div>`:''}${H.map(h=>`<button type="button" class="wh-r${whMulti()?' multi':''}" data-loc="${h.loc}"><span class="it"><b>${esc(itemLine(h.i)||'Unnamed item')}</b></span><span class="am">${lineAmt(h.i)}</span>${whMulti()?`<span class="wn"><small>Warehouse</small>${esc(whName(h.wid))}</span>`:''}<span class="rk"><small>Rack</small>${esc(h.rack)}</span><span class="sp"><small>Spot</small><b class="code">${esc(codeOf(h.loc))}</b> ${esc(h.pos)}</span></button>`).join('')}`;res.hidden=false;}else res.hidden=true;}
+      ${H.length?`<div class="wh-rh" aria-hidden="true"><span>Item</span><span>Amount</span>${whMulti()?'<span>Warehouse</span>':''}<span>Rack</span><span>Spot</span></div>`:''}${H.map(h=>`<button type="button" class="wh-r${whMulti()?' multi':''}" data-loc="${h.loc}"><span class="it"><b>${esc(itemLine(h.i)||'Unnamed item')}</b>${h.i.bk?`<ul class="wh-kids">${h.i.bk.map(g=>`<li><b>${plural(+g.boxes||0,'box')}</b> ${esc(bkName(h.i,g))}</li>`).join('')}</ul>`:''}</span><span class="am">${lineAmt(h.i)}</span>${whMulti()?`<span class="wn"><small>Warehouse</small>${esc(whName(h.wid))}</span>`:''}<span class="rk"><small>Rack</small>${esc(h.rack)}</span><span class="sp"><small>Spot</small><b class="code">${esc(codeOf(h.loc))}</b> ${esc(h.pos)}</span></button>`).join('')}`;res.hidden=false;}else res.hidden=true;}
 // every item line that matches the search, in every warehouse: where it is and how much
 function whHits(){const out=[];for(const w of whList())inWh(w.id,()=>{for(const loc of visLocs().concat(orphLocs())){const{rack}=splitLoc(loc);
-  for(const i of itemsAt(loc))if(itemHit(i,RK.q))out.push({wid:w.id,loc,i,rack:rackTitle(rack),pos:posName(loc)});}});return out;}
+  for(const i0 of itemsAt(loc)){const i=lineHit(i0,RK.q);if(i)out.push({wid:w.id,loc,i,rack:rackTitle(rack),pos:posName(loc)});}}});return out;}
 const whHitN=wid=>RK.q?inWh(wid,()=>visLocs().concat(orphLocs()).reduce((t,l)=>t+itemsAt(l).filter(i=>itemHit(i,RK.q)).length,0)):0;
 function renderWhs(){const el=$('#whWhs');if(!el)return;
   el.innerHTML=`<div class="wh-tabs" role="group" aria-label="Warehouses">${whList().map(w=>{const n=Object.keys(RK.skids).filter(k=>whOf(k).wid===w.id).length,h=whHitN(w.id);
@@ -5508,7 +5526,7 @@ function sideOpen(kind,code,where,body,foot){RK.side=kind;whSide.hidden=false;wh
 function closeSide(){RK.side='';RK.edit=null;RK.lay=null;RK.mv=null;whSide.hidden=true;whSide.innerHTML='';}
 const blankRow=()=>({item:'',style:'',size:'',colour:'',boxes:'',per:'',qty:'',unit:'pcs'}),b0=v=>v===0||v==null?'':v,autoQty=it=>it.boxes!==''&&it.per!==''&&it.boxes!=null&&it.per!=null&&!isNaN(+it.boxes)&&!isNaN(+it.per);
 function openSkid(loc){if(whOf(loc).wid!==RK.wh){setWh(whOf(loc).wid);renderWh();}const{rack,pos}=splitLoc(loc),cur=RK.skids[loc],t=skTotal(cur);
-  RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i)})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
+  RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i),...(i.bk?{bk:i.bk.map(b=>({...b}))}:{})})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
   if(!RK.edit.items.length)RK.edit.items.push(blankRow());
   const who=cur?.upd?`Updated ${esc(ago(cur.upd))}${cur.by&&teamOn()?' by '+esc(memberName(cur.by)):''}`:'';
   sideOpen('skid',esc(codeOf(loc)),`${whMulti()?esc(whName())+' · ':''}${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
@@ -5516,18 +5534,25 @@ function openSkid(loc){if(whOf(loc).wid!==RK.wh){setWh(whOf(loc).wid);renderWh()
 function drawRows(){const e=RK.edit;
   $('#whSb').innerHTML=e.items.map((it,ix)=>`<div class="wh-row" data-ix="${ix}">
     <div class="wh-f wide"><label for="wit-${ix}">Item</label><input class="in" id="wit-${ix}" data-k="item" autocomplete="off" value="${esc(it.item)}" placeholder="e.g. Hoodie"><div class="wh-sug" hidden></div></div>
-    <div class="wh-f half"><label for="wbx-${ix}">Boxes</label><input class="in" id="wbx-${ix}" data-k="boxes" type="number" min="0" inputmode="numeric" value="${esc(it.boxes)}" placeholder="0"></div>
+    <div class="wh-f half"><label for="wbx-${ix}">Boxes</label><input class="in${it.bk?' auto':''}" id="wbx-${ix}" data-k="boxes" type="number" min="0" inputmode="numeric" value="${esc(it.boxes)}" placeholder="0" ${it.bk?'readonly title="Added up from the boxes by size / colour below"':''}></div>
     <div class="wh-f half"><label for="wpb-${ix}">Per box</label><input class="in" id="wpb-${ix}" data-k="per" type="number" min="0" inputmode="numeric" value="${esc(it.per)}" placeholder="optional"></div>
     <div class="wh-f half"><label for="wqt-${ix}">Total</label><div class="wh-qu"><input class="in${autoQty(it)?' auto':''}" id="wqt-${ix}" data-k="qty" type="number" min="0" inputmode="numeric" value="${esc(it.qty)}" placeholder="unknown" ${autoQty(it)?'readonly':''}><select class="in" data-k="unit" aria-label="Unit"><option value="pcs"${it.unit!=='dz'?' selected':''}>pcs</option><option value="dz"${it.unit==='dz'?' selected':''}>dozen</option></select></div></div>
     <div class="wh-f third"><label for="wst-${ix}">Style</label><input class="in" id="wst-${ix}" data-k="style" autocomplete="off" value="${esc(it.style)}" placeholder="e.g. Zip-up"><div class="wh-sug" hidden></div></div>
     <div class="wh-f third"><label for="wsz-${ix}">Size</label><input class="in" id="wsz-${ix}" data-k="size" autocomplete="off" value="${esc(it.size)}" placeholder="e.g. L"><div class="wh-sug" hidden></div></div>
     <div class="wh-f third"><label for="wco-${ix}">Colour</label><input class="in" id="wco-${ix}" data-k="colour" autocomplete="off" value="${esc(it.colour)}" placeholder="e.g. Navy"><div class="wh-sug" hidden></div></div>
-    <div class="wh-rt"><button type="button" data-whrow="mv">Move to another skid…</button><button type="button" data-whrow="dup">Copy as new variant</button><button type="button" class="x" data-whrow="rm">Remove</button></div></div>`).join('')
+    ${it.bk?bkHTML(it):''}
+    <div class="wh-rt">${it.bk?'':'<button type="button" data-whrow="bk">Split into box groups…</button>'}<button type="button" data-whrow="mv">Move to another skid…</button><button type="button" data-whrow="dup">Copy as new variant</button><button type="button" class="x" data-whrow="rm">Remove</button></div></div>`).join('')
   +`<button class="btn sm" type="button" data-wh="addrow">＋ Add item</button>
    <div class="wh-f"><label for="whTc">Skid total, for mixed skids</label><div class="wh-qu"><input class="in" id="whTc" type="number" min="0" inputmode="numeric" value="${esc(e.tc)}" placeholder="optional"><select class="in" id="whTu" aria-label="Skid total unit">${[['boxes','boxes'],['pcs','pcs'],['dz','dozen']].map(([v,n])=>`<option value="${v}"${e.tu===v?' selected':''}>${n}</option>`).join('')}</select></div></div>
    <div class="wh-f"><label for="whNote">Skid notes</label><textarea class="in" id="whNote" rows="2" placeholder="PO number, condition, received date…">${esc(e.note)}</textarea></div>
-   <p class="wh-hint">Same item in different sizes or colours? Fill one line, then “Copy as new variant” and change what's different. Names you've used before are suggested as you type. On a mixed skid, list every item, leave counts you don't know blank, and put the full count in Skid total.</p>`;
+   <p class="wh-hint">Same item in different sizes or colours? Use “Split into box groups” to list how many boxes of the item are which size and colour, under the item itself (leave size or colour blank for mixed), or “Copy as new variant” for a separate line. Names you've used before are suggested as you type. On a mixed skid, list every item, leave counts you don't know blank, and put the full count in Skid total.</p>`;
   updTot();}
+function bkHTML(it){return`<div class="wh-bk" role="group" aria-label="Box groups in this item"><div class="wh-bkh">Box groups in this item<small>blank = ${it.size?'the line\'s size':'mixed sizes'} / ${it.colour?'the line\'s colour':'mixed colours'}</small></div>
+    ${it.bk.map((b,j)=>`<div class="wh-bkr" data-bi="${j}"><input class="in" data-bk="size" autocomplete="off" value="${esc(b.size)}" placeholder="${esc(it.size||'Mixed sizes')}" aria-label="Size of these boxes"><input class="in" data-bk="colour" autocomplete="off" value="${esc(b.colour)}" placeholder="${esc(it.colour||'Mixed colours')}" aria-label="Colour of these boxes"><input class="in" data-bk="boxes" type="number" min="0" inputmode="numeric" value="${esc(b.boxes)}" placeholder="Boxes" aria-label="Number of boxes"><button type="button" data-whbk="rm" aria-label="Remove these boxes">✕</button></div>`).join('')}
+    <button type="button" class="lnk" data-whbk="add">＋ Add a box group</button></div>`;}
+// a line's box count follows its box groups; Total follows when Per box is filled
+function bkSync(row,it){if(it.bk){it.boxes=String(it.bk.reduce((t,b)=>t+(rkNum(b.boxes)),0));const bi=row.querySelector('[data-k="boxes"]');if(bi)bi.value=it.boxes;}
+  const qi=row.querySelector('[data-k="qty"]'),on=autoQty(it);if(on){it.qty=String(+it.boxes*+it.per);qi.value=it.qty;}qi.readOnly=on;qi.classList.toggle('auto',on);}
 function updTot(){const e=RK.edit,el=$('#whTot');if(!e||!el)return;const rows=e.items.filter(i=>i.item||i.qty||i.boxes),tc=+e.tc||0;
   if(tc){el.textContent=`${plural(rows.length,'line')} · skid total ${fmtTot({count:tc,unit:e.tu})}`;return;}
   const b=boxesOf(rows),unk=rows.filter(i=>!(+i.qty>0)).length;el.textContent=`${plural(rows.length,'line')}${b?` · ${plural(b,'box')}`:''} · ${qtyOf(rows)} pcs${unk?` · ${unk} unknown`:''}`;}
@@ -5541,7 +5566,8 @@ function showSug(inp){const box=inp.parentElement.querySelector('.wh-sug');if(!b
 function shortSum(loc){const items=itemsAt(loc),names=[...new Set(items.map(i=>i.item).filter(Boolean))];const n=names.length?names[0]+(names.length>1?` +${names.length-1} more`:''):(RK.skids[loc]?.note?'notes only':'mixed');const a=skAmt(loc);return a?`${n} (${a})`:n;}
 function openMove(mode,ix){const e=RK.edit;if(!e)return;let title,extra='';
   if(mode==='line'){const it=rkLine(e.items[ix]);if(!lineHas(it))return;title=`Move “${esc(itemLine(it)||'this line')}”`;const b=it.boxes;
-    if(b>1)extra=it.per>0||!(it.qty>0)?`<div class="wh-f"><label for="whMvN">Boxes to move (of ${b})</label><input class="in" id="whMvN" type="number" min="1" max="${b}" value="${b}" inputmode="numeric"></div>`:`<p class="wh-hint">This moves all ${b} boxes. To move only some, fill in Per box first.</p>`;}
+    if(it.bk&&b>1&&(it.per>0||!(it.qty>0)))extra=`<div class="wh-f"><label>Boxes to move</label><div class="wh-bkm">${it.bk.map((g,j)=>`<label class="wh-bkmr"><span>${esc(bkName(it,g))}</span><input class="in" type="number" min="0" max="${g.boxes}" value="${g.boxes}" inputmode="numeric" data-bkmv="${j}" aria-label="Boxes to move: ${esc(bkName(it,g))}"><small>of ${g.boxes}</small></label>`).join('')}</div></div>`;
+    else if(b>1)extra=it.per>0||!(it.qty>0)?`<div class="wh-f"><label for="whMvN">Boxes to move (of ${b})</label><input class="in" id="whMvN" type="number" min="1" max="${b}" value="${b}" inputmode="numeric"></div>`:`<p class="wh-hint">This moves all ${b} boxes. To move only some, fill in Per box first.</p>`;}
   else title=`Move everything on ${esc(codeOf(e.loc))}`;
   RK.mv={mode,ix};const first=visLocs().find(l=>l!==e.loc&&!RK.skids[l])||'',P=$('#whMv');
   const opt=l=>`<option value="${l}"${l===first?' selected':''}>${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}</option>`;
@@ -5558,7 +5584,11 @@ function doMove(){const e=RK.edit,mv=RK.mv;if(!e||!mv)return;const to=$('#whMvTo
     if(b){if(!d0)dst.total=b;else if(a&&a.unit===b.unit)dst.total={count:a.count+b.count,unit:a.unit};else note=[note,`FROM ${whereOf(e.loc)}: SKID TOTAL ${fmtTot(b).toUpperCase()}`].filter(Boolean).join(' / ');}
     dst.note=note;src=null;}
   else{const line=rkLine(e.items[mv.ix]),b=line.boxes,nEl=$('#whMvN'),n=nEl?Math.max(1,Math.min(b,Math.round(+nEl.value)||b)):b,moved={...line};let rest=null;
-    if(b&&n<b){moved.boxes=n;rest={...line,boxes:b-n};if(line.per){moved.qty=n*line.per;rest.qty=(b-n)*line.per;}}
+    const bm=$$('#whMv [data-bkmv]');
+    if(line.bk&&bm.length){const take=line.bk.map((g,j)=>Math.max(0,Math.min(g.boxes,Math.round(+bm[j]?.value)||0)));if(!take.some(Boolean)){toast('Pick how many boxes to move');return;}
+      const mb=line.bk.map((g,j)=>({...g,boxes:take[j]})).filter(g=>g.boxes),rb=line.bk.map((g,j)=>({...g,boxes:g.boxes-take[j]})).filter(g=>g.boxes);
+      if(rb.length){moved.bk=mb;rest={...line,bk:rb};if(!line.per)moved.qty=rest.qty=0;}}
+    else if(b&&n<b){moved.boxes=n;rest={...line,boxes:b-n};if(line.bk){moved.bk=[{size:'',colour:'',boxes:n}];delete rest.bk;}if(line.per){moved.qty=n*line.per;rest.qty=(b-n)*line.per;}}
     dst.items.push(moved);const items=e.items.slice();if(rest)items[mv.ix]=rest;else items.splice(mv.ix,1);src={...skidBody(e),items};}
   const from=e.loc,msg=`Moved from ${codeOf(from)} to ${whereOf(to)}`;closeSide();setSkid(to,dst);setSkid(from,src);rkSave();renderWh();toast(msg);}
 /* a rack's layout */
@@ -5583,12 +5613,12 @@ function saveLayout(){const y=RK.lay;if(!y)return;const w=W(),L={levels:y.levels
   rkStamp(RK.cfg);closeSide();rkSave();renderWh();if(y.isNew){toast(`Added ${rackTitle(y.rack)}`);requestAnimationFrame(()=>$(`#whRacks [aria-label="Rack ${y.rack}"]`)?.scrollIntoView({block:'nearest'}));}}
 
 /* CSV: the same columns as the rack map's own export */
-const RK_HEAD=['Warehouse','Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
+const RK_HEAD=['Warehouse','Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes','Box breakdown'];
 const RK_RHEAD=['Warehouse','Rack','Levels (bottom to top, skids per level)','Floor spots','Name'];
 // every warehouse, in order: its racks' spots, then any of its skids not on the map
 function rkRows(skids=RK.skids){const out=[],seen=new Set();for(const w of whList())inWh(w.id,()=>{const vis=visLocs(),locs=vis.concat(Object.keys(skids).filter(l=>whOf(l).wid===w.id&&!vis.includes(l)).sort());
   for(const loc of locs){if(seen.has(loc))continue;seen.add(loc);const s=skids[loc];if(!s)continue;const{rack,pos}=splitLoc(loc),t=skTotal(s),items=s.items.length?s.items:[{}];
-    items.forEach(i=>out.push([w.name,codeOf(loc),rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'']));}});
+    items.forEach(i=>out.push([w.name,codeOf(loc),rack,pos,i.item||'',i.style||'',i.size||'',i.colour||'',i.boxes||'',i.per||'',+i.qty>0?i.qty:(i.item?'unknown':''),i.item?(unitOf(i)==='dz'?'dozen':'pcs'):'',t?t.count:'',t?(t.unit==='dz'?'dozen':t.unit):'',s.note||'',bkSheet(i)]));}});
   return out;}
 const rkRackRows=()=>whList().flatMap(w=>inWh(w.id,()=>visRacks().map(r=>{const L=layoutOf(r);return[w.name,r,L.levels.join('-'),L.floor,rackNm(r)];})));
 function csvText(rows){const q=v=>{v=String(v??'');return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};return rows.map(r=>r.map(q).join(',')).join('\n');}
@@ -5600,7 +5630,7 @@ function rkParse(rows,def='main'){const h=(rows[0]||[]).map(x=>String(x).trim().
   for(const r of rows.slice(1)){if(!r.some(x=>String(x).trim()))continue;let lc=rkUp(v(r,'Location'));if(!lc&&v(r,'Rack'))lc=code(rkUp(v(r,'Rack')),rkUp(v(r,'Position')));
     const wn=v(r,'Warehouse'),wid=wn?whEnsure(wn):def,loc=wid?kOf(wid,lc):'';
     if(!wid||!locOk(loc)){bad++;continue;}const s=skids[loc]||(skids[loc]={items:[],note:'',total:null});
-    const it=rkLine({item:v(r,'Item'),style:v(r,'Style'),size:v(r,'Size'),colour:v(r,'Colour'),boxes:v(r,'Boxes'),per:v(r,'Per box'),qty:/^unknown$/i.test(v(r,'Total'))?'':v(r,'Total'),unit:/^(dz|dozen)$/i.test(v(r,'Unit'))?'dz':'pcs'});
+    const it=rkLine({item:v(r,'Item'),style:v(r,'Style'),size:v(r,'Size'),colour:v(r,'Colour'),boxes:v(r,'Boxes'),per:v(r,'Per box'),qty:/^unknown$/i.test(v(r,'Total'))?'':v(r,'Total'),unit:/^(dz|dozen)$/i.test(v(r,'Unit'))?'dz':'pcs',bk:bkParse(v(r,'Box breakdown'))});
     if(lineHas(it))s.items.push(it);const tc=rkNum(v(r,'Skid total'));if(tc)s.total={count:tc,unit:/^(dz|dozen)$/i.test(v(r,'Skid total unit'))?'dz':/^pcs$/i.test(v(r,'Skid total unit'))?'pcs':'boxes'};if(v(r,'Skid notes'))s.note=rkUp(v(r,'Skid notes'));}
   for(const k of Object.keys(skids))if(!cleanSkid(skids[k]))delete skids[k];return{skids,bad};}
 // the Racks tab → each warehouse's racks; an older tab without a Warehouse column is the main warehouse
@@ -5626,7 +5656,7 @@ function whExport(){save(`rack-inventory-${dayStr(Date.now())}.csv`,new Blob([cs
    the dashboard. If one spot was changed in both places in between, the dashboard's version is kept. */
 const GS='https://sheets.googleapis.com/v4/spreadsheets',RK_TABS=['Rack map','Racks'];
 const rkSnapKey=()=>'ss-racksheet:'+rkKey();
-const skSig=s=>{const c=cleanSkid(s);return c?JSON.stringify([c.items.map(i=>[i.item,i.style,i.size,i.colour,i.boxes,i.per,i.qty,i.unit]),c.note,c.total]):'';};
+const skSig=s=>{const c=cleanSkid(s);return c?JSON.stringify([c.items.map(i=>[i.item,i.style,i.size,i.colour,i.boxes,i.per,i.qty,i.unit,...(i.bk?[i.bk.map(b=>[b.size,b.colour,b.boxes])]:[])]),c.note,c.total]):'';};
 const cfgSig=(count,lay,nm={})=>JSON.stringify([count,Object.keys(lay).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,lay[k].levels.join('-'),lay[k].floor]),Object.keys(nm).sort().filter(k=>rackIndex(k)<=count).map(k=>[k,nm[k]])]);
 // every warehouse's racks, as one fingerprint (the sheet's Racks tab, or the dashboard's)
 const cfgSigAll=m=>JSON.stringify(Object.keys(m).sort().map(w=>[w,cfgSig(m[w].count,m[w].layouts,m[w].names)]));
@@ -5641,7 +5671,7 @@ async function rkSheetSync(){const sh=RK.cfg.sheet;if(!sh)return;if(RK.sheetBusy
       const meta=await gsCall(tok,`/${id}?fields=properties.title,sheets.properties.title`),have=(meta.sheets||[]).map(s=>s.properties?.title);
       const miss=RK_TABS.filter(t=>!have.includes(t));if(miss.length)await gsCall(tok,`/${id}:batchUpdate`,{method:'POST',body:{requests:miss.map(title=>({addSheet:{properties:{title}}}))}});
       if(meta.properties?.title&&meta.properties.title!==sh.name){sh.name=meta.properties.title;}
-      const g=await gsCall(tok,`/${id}/values:batchGet?${RK_TABS.map(t=>'ranges='+encodeURIComponent(`'${t}'!A1:O5000`)).join('&')}`),vr=g.valueRanges||[],mapRows=vr[0]?.values||[],rackRows=vr[1]?.values||[];
+      const g=await gsCall(tok,`/${id}/values:batchGet?${RK_TABS.map(t=>'ranges='+encodeURIComponent(`'${t}'!A1:P5000`)).join('&')}`),vr=g.valueRanges||[],mapRows=vr[0]?.values||[],rackRows=vr[1]?.values||[];
       let snap=lsJ(rkSnapKey());if(!snap||snap.id!==id)snap={id,skids:{},cfg:null};const cfg0=JSON.stringify(RK.cfg),cfgBefore=cfgSigAll(cfgNow());// before the sheet can add a warehouse
       // 1. what was changed in the sheet comes in
       // an emptied tab (no header row) is written again from the dashboard rather than emptying the map
@@ -5652,9 +5682,9 @@ async function rkSheetSync(){const sh=RK.cfg.sheet;if(!sh)return;if(RK.sheetBusy
       if(JSON.stringify(cleanRkCfg(RK.cfg).whs)!==JSON.stringify(cleanRkCfg(JSON.parse(cfg0)).whs))ch=true;
       if(ch){rkSave(true);renderWh();}
       // 2. the sheet is rewritten from the dashboard when it differs
-      const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=(rows,w=15)=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(w).fill('')).slice(0,w)).filter(r=>r.some(Boolean)));
+      const want=[RK_HEAD,...rkRows()],wantR=[RK_RHEAD,...rkRackRows()],norm=(rows,w=16)=>JSON.stringify(rows.map(r=>r.map(x=>String(x??'')).concat(Array(w).fill('')).slice(0,w)).filter(r=>r.some(Boolean)));
       const pad=(rows,old,w)=>rows.concat(Array.from({length:Math.max(0,old-rows.length)},()=>Array(w).fill(''))).map(r=>r.concat(Array(w).fill('')).slice(0,w));
-      const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:O${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,15)});
+      const data=[];if(norm(want)!==norm(mapRows))data.push({range:`'Rack map'!A1:P${Math.max(want.length,mapRows.length)}`,values:pad(want,mapRows.length,16)});
       if(norm(wantR,5)!==norm(rackRows,5))data.push({range:`'Racks'!A1:E${Math.max(wantR.length,rackRows.length)}`,values:pad(wantR,rackRows.length,5)});
       if(data.length)await gsCall(tok,`/${id}/values:batchUpdate`,{method:'POST',body:{valueInputOption:'RAW',data}});
       lsSet(rkSnapKey(),JSON.stringify({id,skids:Object.fromEntries(Object.entries(RK.skids).map(([l,s])=>[l,skSig(s)])),cfg:cfgSigAll(cfgNow())}));
@@ -5691,9 +5721,12 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   if(t.id==='whRackName'&&RK.lay){RK.lay.name=t.value;return;}
   const E=RK.edit;if(!E||RK.side!=='skid')return;
   if(t.id==='whNote'){E.note=t.value;return;}if(t.id==='whTc'){E.tc=t.value;updTot();return;}if(t.id==='whTu'){E.tu=t.value;updTot();return;}
-  const row=t.closest('.wh-row');if(!row)return;const it=E.items[+row.dataset.ix],k=t.dataset.k;if(!k)return;it[k]=t.value;
+  const row=t.closest('.wh-row');if(!row)return;const it=E.items[+row.dataset.ix];
+  if(t.dataset.bk&&it.bk){const b=it.bk[+t.closest('.wh-bkr').dataset.bi];if(b){b[t.dataset.bk]=t.value;if(t.dataset.bk==='boxes')bkSync(row,it);}updTot();return;}
+  const k=t.dataset.k;if(!k)return;it[k]=t.value;
   if(['item','style','size','colour'].includes(k))showSug(t);
-  if(k==='boxes'||k==='per'){const qi=row.querySelector('[data-k="qty"]'),on=autoQty(it);if(on){it.qty=String(+it.boxes*+it.per);qi.value=it.qty;}qi.readOnly=on;qi.classList.toggle('auto',on);}
+  if((k==='size'||k==='colour')&&it.bk)row.querySelectorAll(`[data-bk="${k}"]`).forEach(x=>x.placeholder=rkUp(t.value)||(k==='size'?'Mixed sizes':'Mixed colours'));
+  if(k==='boxes'||k==='per')bkSync(row,it);
   updTot();});
 whDlg.addEventListener('change',e=>{const t=e.target;if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
   if(t.id==='whTu'&&RK.edit){RK.edit.tu=t.value;updTot();return;}
@@ -5709,8 +5742,13 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
   const lb=t.closest('[data-whl]');if(lb&&RK.lay){layClick(lb);return;}
   const rb=t.closest('[data-whrow]');if(rb&&RK.edit){const E=RK.edit,ix=+rb.closest('.wh-row').dataset.ix,a=rb.dataset.whrow;
     if(a==='rm'){E.items.splice(ix,1);if(!E.items.length)E.items.push(blankRow());drawRows();}
-    if(a==='dup'){E.items.splice(ix+1,0,{...E.items[ix]});drawRows();const f=$(`#wsz-${ix+1}`);f?.focus();f?.select();}
+    if(a==='dup'){const o=E.items[ix];E.items.splice(ix+1,0,{...o,...(o.bk?{bk:o.bk.map(b=>({...b}))}:{})});drawRows();const f=$(`#wsz-${ix+1}`);f?.focus();f?.select();}
+    if(a==='bk'){const it=E.items[ix];it.bk=[{size:'',colour:'',boxes:it.boxes||''}];drawRows();$(`.wh-row[data-ix="${ix}"] [data-bk="size"]`)?.focus();}
     if(a==='mv')openMove('line',ix);return;}
+  const kb=t.closest('[data-whbk]');if(kb&&RK.edit){const row=kb.closest('.wh-row'),ix=+row.dataset.ix,it=RK.edit.items[ix];if(!it?.bk)return;
+    if(kb.dataset.whbk==='add'){const l=it.bk.at(-1)||{};it.bk.push({size:l.size||'',colour:l.colour||'',boxes:''});drawRows();const rs=$$(`.wh-row[data-ix="${ix}"] .wh-bkr`);rs.at(-1)?.querySelector(l.size?'[data-bk="colour"]':'[data-bk="size"]')?.focus();}
+    else{it.bk.splice(+kb.closest('.wh-bkr').dataset.bi,1);if(!it.bk.length)delete it.bk;else bkSync(row,it);drawRows();}
+    updTot();return;}
   const b=t.closest('[data-wh]');if(!b)return;const a=b.dataset.wh;
   if(a==='newrack'){if(rkCount()<RK_MAX)openLayout(rackName(rkCount()),true);return;}
   if(a==='minus'){setRacks(rkCount()-1);return;}
