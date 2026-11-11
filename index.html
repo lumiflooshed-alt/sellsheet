@@ -200,6 +200,8 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-search input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);outline:none;text-transform:uppercase}.wh-search input::placeholder{text-transform:none}.wh-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .wh-step{display:flex;align-items:center;border:1px solid var(--line2);border-radius:8px;background:var(--panel);overflow:hidden;height:38px}.wh-step span{padding:0 10px;font:600 12px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .wh-step input{width:3.4em;height:100%;text-align:center;border:0;border-inline:1px solid var(--line);background:none;color:var(--ink);font:600 15px var(--ui)}.wh-step button{border:0;background:none;color:var(--ink);font:600 18px var(--ui);width:36px;height:100%;cursor:pointer}.wh-step button:hover{background:var(--raise)}
+.wh-sync{display:inline-flex;align-items:center;gap:8px}.wh-sync small{font-size:12px;color:var(--muted);white-space:nowrap}.wh-sync small.late{color:var(--bad);font-weight:600}
+.wh-remind{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;border:1px solid #E0A030;background:color-mix(in srgb,#E0A030 12%,var(--panel));border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.45}.wh-remind[hidden]{display:none}.wh-remind.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,var(--panel))}.wh-remind p{margin:0;flex:1 1 260px}
 .wh-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1d7a46;margin-right:6px;vertical-align:1px}.wh-dot.busy{background:#E0A030}.wh-dot.bad{background:var(--bad)}.wh-bad{color:var(--bad)}
 .wh-main{overflow:auto;padding:16px;display:grid;gap:16px;align-content:start;min-height:0}
 .wh-whs{display:grid;gap:6px}.wh-tabs{display:flex;flex-wrap:wrap;gap:8px}
@@ -1266,7 +1268,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><div class="wh-remind" id="whRemind" hidden></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -2937,6 +2939,9 @@ function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),..
 function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
     if(!gm[kk]||(+v.upd||0)>(+gm[kk].upd||0))gm[kk]={name:String(v.name||k).slice(0,40),color:COLOR_HEX[v.color]?v.color:normHex(v.color),upd:+v.upd||0,...(v.del?{del:1}:{}),...(v.parent&&gKey(v.parent)!==kk?{parent:gKey(v.parent).slice(0,40)}:{})};}return gm;}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
+// when this device last synced with the account (kept across reloads, per account)
+const syncAtKey=()=>{const a=authGet();return a?`ss-synced:${a.prov}:${ck(a.email)}`:'';},syncedAt=()=>{const k=syncAtKey();return k?Math.max(lastSync,+lsGet(k)||0):0;};
+const markSynced=()=>{lastSync=Date.now();const k=syncAtKey();if(k)lsSet(k,String(lastSync));};
 const httpErr=async(what,r)=>{let j={};try{j=await r.json();}catch(_){}return Object.assign(new Error(j.error?.message||what+' '+r.status),{status:r.status,off:/has not been used|is disabled|accessNotConfigured|SERVICE_DISABLED/i.test(JSON.stringify(j))});};
 async function cloud(a,method,body){const H={Authorization:'Bearer '+a.token};
   if(a.prov==='google'){
@@ -2986,7 +2991,7 @@ async function syncSheets(a,ri){ri=ri&&typeof ri==='object'&&!Array.isArray(ri)?
 const busyEditing=()=>editingSheet||document.activeElement?.closest?.('#panel');
 function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=authGet();if(!acct)return Promise.resolve();
   syncing=(async()=>{renderSync();try{const tk=await silentTok(acct.prov);if(!tk){syncErr='';return;}const a={...acct,token:tk.token};
-      if(acct.prov==='google'&&SYNC.ver&&SYNC.fp===syncFp()){const mt=await cloud(a,'META');if(mt.id&&mt.version===SYNC.ver){lastSync=Date.now();syncErr='';return;}}
+      if(acct.prov==='google'&&SYNC.ver&&SYNC.fp===syncFp()){const mt=await cloud(a,'META');if(mt.id&&mt.version===SYNC.ver){markSynced();syncErr='';return;}}
       const key=cuKey(),lkey=lgKey(),remote=await cloud(a,'GET'),rd=remote.data&&typeof remote.data==='object'?remote.data:{};
       const lLocal=(()=>{try{return JSON.parse(lsGet(lkey)||'{}')||{};}catch(_){return{};}})(),lr=rd.log&&typeof rd.log==='object'?rd.log:{};
       const lm=mergeLog({entries:lLocal.entries||[],deleted:lLocal.deleted||[]},{entries:Array.isArray(lr.entries)?lr.entries:[],deleted:Array.isArray(lr.deleted)?lr.deleted:[]});lsSet(lkey,JSON.stringify(lm));
@@ -3014,9 +3019,9 @@ function syncNow(){if(syncing)return syncing.then(()=>syncNow());const acct=auth
       if(rkey===rkKey()){rkLoad();if(whDlg.open)renderWh();}
       if(lkey===lgKey()){lgLoad();if(logDlg.open)renderLog();else renderBadge();}
       if(key===cuKey()){const sel=CU.sel;cuLoad();if(custDlg.open)renderCP();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));if(mailDlg.open)renderCust();}
-      lastSync=Date.now();syncErr='';SYNC.fp=syncFp();if(homeDlg.open)renderHome();}
+      markSynced();syncErr='';SYNC.fp=syncFp();if(homeDlg.open)renderHome();}
     catch(e){console.error(e);syncErr=e.off?'off':e.status===401?'expired':e.status===403?'denied':'failed';if(e.status===401)tokSet(acct.prov,null);}
-    finally{syncing=null;renderSync();renderTopAcct();}})();return syncing;}
+    finally{syncing=null;renderSync();renderTopAcct();if(whDlg.open)renderWhSync();}})();return syncing;}
 function scheduleSync(){if(!authGet())return;clearTimeout(syncT);syncT=setTimeout(syncNow,1200);}
 // sheet edits sync a little later (a sheet with photos is a bigger upload)
 let shSyncT=0;const scheduleSheetSync=()=>{if(!authGet())return;clearTimeout(shSyncT);shSyncT=setTimeout(syncNow,12e3);};
@@ -5499,9 +5504,9 @@ function whSheetChip(){const sh=RK.cfg.sheet;if(!sh)return`<button class="btn sm
 function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=orphLocs(),used=vis.filter(l=>RK.skids[l]).length;
   if(!$('#whQ'))$('#whBar').innerHTML=`<label class="wh-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="whQ" type="search" placeholder="Find item, style, size or colour…" aria-label="Find in the warehouse" autocomplete="off"></label>
     <span class="wh-step" title="Number of racks"><span>Racks</span><button type="button" data-wh="minus" aria-label="Remove a rack">−</button><input id="whCount" type="number" min="1" max="${RK_MAX}" inputmode="numeric" aria-label="Number of racks"><button type="button" data-wh="newrack" aria-label="Add a rack">+</button></span>
-    <span class="spacer"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
+    <span class="spacer"></span><span id="whSync" class="wh-sync"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
   {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
-  if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();
+  if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();renderWhSync();
   renderWhs();
   $('#whSum').textContent=`${whMulti()?whName()+' · ':''}${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
   $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
@@ -5518,6 +5523,30 @@ function renderWhs(){const el=$('#whWhs');if(!el)return;
     return`<button type="button" class="wh-tab" data-whgo="${w.id}" aria-pressed="${w.id===RK.wh}"><b>${esc(w.name)}</b><small>${plural(n,'skid')}${RK.q?` · ${h} found`:''}</small></button>`;}).join('')}
     <button type="button" class="wh-tab add" data-wh="whadd"${whList().length>=WH_MAX?' disabled':''}>＋ Add warehouse</button></div>
     <div class="wh-tabx"><button class="lnk" type="button" data-wh="whren">Rename ${esc(whName())}</button>${RK.wh!=='main'?`<button class="lnk x" type="button" data-wh="whdel">Delete this warehouse</button>`:''}</div>`;}
+/* syncing the warehouse: your account (other devices), your company (when racks are shared) and the Google Sheet (when connected).
+   The reminder shows when the last sync is more than a day old, has failed, or you're not signed in. */
+const WH_STALE=864e5;
+const whChanged=since=>Object.values(RK.skids).filter(s=>+s.upd>since).length+RK.deleted.filter(d=>+d.at>since).length;
+function whSyncState(){const a=authGet(),at=syncedAt(),busy=!!(syncing||RK.syncBusy);
+  if(!a)return{busy,kind:'out'};if(syncErr)return{busy,at,kind:'err'};if(!at)return{busy,kind:'never'};return{busy,at,kind:Date.now()-at>WH_STALE?'late':'ok'};}
+function renderWhSync(){const el=$('#whSync'),rm=$('#whRemind');if(!el||!rm)return;const st=whSyncState(),team=teamShare('rack');
+  const lbl=st.busy?'Syncing…':st.kind==='out'?'Not synced: signed out':st.kind==='err'?'Last sync failed':st.kind==='never'?'Not synced on this device yet':'Synced '+agoMin(st.at);
+  el.innerHTML=`<small class="${st.kind==='ok'||st.busy?'':'late'}" title="${st.at?esc('Last synced '+new Date(st.at).toLocaleString()):''}">${esc(lbl)}</small><button class="btn sm" type="button" data-wh="sync" ${st.busy?'disabled':''}><span class="wh-dot${st.busy?' busy':st.kind==='ok'?'':' bad'}"></span>${st.busy?'Syncing…':'Sync'}</button>`;
+  if(st.kind==='ok'||st.busy){rm.hidden=true;return;}
+  const where=`your other devices${team?' and your team':''}`,n=st.at?whChanged(st.at):0,mine=n?` ${plural(n,'spot')} changed here since then ${n===1?'hasn’t':'haven’t'} been saved to your account yet.`:'';
+  const msg=st.kind==='out'?'<b>You’re not signed in.</b> The warehouse is only saved in this browser, so it won’t match your other devices or your team. Sign in to sync it.'
+    :st.kind==='err'?`<b>The last sync didn't go through${st.at?` (last good sync ${esc(agoMin(st.at))})`:''}.</b> Your changes are saved in this browser. Changes from ${where} may be missing.${mine}`
+    :st.kind==='never'?`<b>This device hasn't synced the warehouse yet.</b> Changes from ${where} may be missing.`
+    :`<b>Last synced ${esc(agoMin(st.at))}.</b> Changes from ${where} may be missing.${mine}`;
+  rm.className='wh-remind'+(st.kind==='err'||st.kind==='out'?' bad':'');rm.innerHTML=`<p>${msg}</p><button class="btn sm primary" type="button" data-wh="${st.kind==='out'?'signin-acct':'sync'}">${st.kind==='out'?'Sign in':'Sync now'}</button>`;rm.hidden=false;}
+async function whSync(){if(!authGet()){whSignIn();return;}if(RK.syncBusy)return;const t0=Date.now();RK.syncBusy=true;renderWhSync();renderChip();
+  try{await Promise.allSettled([syncNow(),teamShare('rack')?teamSync():null,RK.cfg.sheet?rkSheetSync():null]);}
+  finally{RK.syncBusy=false;}
+  rkLoad();renderWh();
+  const bad=[syncErr||lastSync<t0?'your account':'',teamShare('rack')&&TEAM.err?'your company':'',RK.cfg.sheet&&RK.sheetErr?'the Google Sheet':''].filter(Boolean);
+  toast(bad.length?`Couldn't sync with ${bad.join(' or ')}. ${!syncErr&&lastSync<t0?'Sign in again from the account button. ':''}Your changes are saved in this browser.`:'Warehouse synced',bad.length?6000:2500);}
+const whSignIn=()=>{const b=$('#whDlg .pg-acct');if(b)b.click();else $('#acctBtn')?.click();};
+setInterval(()=>{if(whDlg.open)renderWhSync();},60e3);
 async function openWh(){rkLoad();pageShown('warehouse');if(!whDlg.open)whDlg.showModal();renderWh();if(RK.cfg.sheet)rkSheetSync();}
 
 /* the side panel: a skid, a rack's layout, or the Google Sheet */
@@ -5750,6 +5779,7 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
     else{it.bk.splice(+kb.closest('.wh-bkr').dataset.bi,1);if(!it.bk.length)delete it.bk;else bkSync(row,it);drawRows();}
     updTot();return;}
   const b=t.closest('[data-wh]');if(!b)return;const a=b.dataset.wh;
+  if(a==='sync'){whSync();return;}if(a==='signin-acct'){whSignIn();return;}
   if(a==='newrack'){if(rkCount()<RK_MAX)openLayout(rackName(rkCount()),true);return;}
   if(a==='minus'){setRacks(rkCount()-1);return;}
   if(a==='import'){$('#whFile').click();return;}if(a==='export'){whExport();return;}
