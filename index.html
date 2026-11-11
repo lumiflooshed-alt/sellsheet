@@ -245,6 +245,24 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-pre{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.wh-pre button{border:1.5px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;display:grid;gap:2px}.wh-pre b{font-size:14.5px}.wh-pre span{font-size:12.5px;color:var(--muted)}.wh-pre [aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
 .wh-lvls{display:grid;gap:6px}.wh-lvl{display:flex;align-items:center;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:6px 6px 6px 12px}.wh-lvl .nm{flex:1;font-size:14px}.wh-lvl small{display:block;color:var(--muted);font-size:12px}
 .wh-mini{display:flex;align-items:center;border:1px solid var(--line2);border-radius:6px;overflow:hidden;background:var(--panel)}.wh-mini button{border:0;background:none;color:var(--ink);font:600 17px var(--ui);width:34px;height:34px;cursor:pointer}.wh-mini button:hover{background:var(--raise)}.wh-mini output{min-width:2em;text-align:center;font-weight:700}
+.wh-seg{display:flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;height:38px;background:var(--panel)}.wh-seg button{border:0;background:none;color:var(--ink);font:600 13px var(--ui);padding:0 14px;cursor:pointer}.wh-seg button+button{border-left:1px solid var(--line)}.wh-seg button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent-fg);box-shadow:inset 0 -2px 0 var(--accent)}
+.wh-plan{display:grid;gap:10px;min-width:0}.wh-plan[hidden]{display:none}.wh-pt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.wh-pt .spacer{flex:1}.wh-pt .wh-step{height:34px}
+.wh-pper{display:flex;align-items:center;gap:6px;font:600 12px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.wh-pper select.in{height:34px;width:auto;padding:0 6px;text-transform:none;letter-spacing:0}
+.wh-key{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}.wh-key i{width:12px;height:12px;border-radius:3px;display:inline-block;margin-left:6px}.wh-key .k-f{background:#d9a66b}.wh-key .k-e{border:1px dashed var(--muted)}.wh-key .k-h{background:var(--hit)}
+.wh-pc{overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:calc(100dvh - 300px);min-height:320px;touch-action:pan-x pan-y}
+.wh-pc svg{display:block;margin:auto}
+.p3 .fl{fill:var(--raise);stroke:var(--line2);stroke-width:.04}.p3 .gr,.p2 .gr{fill:none;stroke:var(--line);stroke-width:.02}
+.p3 g{--c:#999}.p3 g path{fill:var(--c);stroke:color-mix(in srgb,var(--c) 55%,#000);stroke-width:.02;stroke-linejoin:round}
+.p3 g .f1{fill:color-mix(in srgb,var(--c) 82%,#000)}.p3 g .f2{fill:color-mix(in srgb,var(--c) 66%,#000)}
+.p3 .up{--c:var(--up)}.p3 .bm{--c:var(--beam)}.p3 .sk.full{--c:#d9a66b}.p3 .sk.hit{--c:var(--hit)}
+.p3 .sk{cursor:pointer;outline:none}.p3 .sk.em path{fill:transparent;stroke:var(--muted);stroke-dasharray:.08 .06;stroke-width:.025}
+.p3 .sk:hover path,.p3 .sk:focus-visible path{stroke:var(--accent);stroke-width:.06}.p3 .sk.em:hover path{fill:var(--accent-soft)}
+.p3.searching .sk.full:not(.hit){opacity:.3}
+.p3 .lb text{font:800 .7px var(--ui);fill:var(--up);text-anchor:middle;paint-order:stroke;stroke:var(--panel);stroke-width:.12}.p3 .lb text.nm{font:600 .38px var(--ui);fill:var(--ink)}
+.p2 .fl{fill:var(--raise)}.p2 .dr{cursor:grab;outline:none}.p2 .dr.drag{cursor:grabbing}
+.p2 .rb{fill:var(--up);fill-opacity:.85;stroke:color-mix(in srgb,var(--up) 60%,#000);stroke-width:.05}.p2 .fs{fill:var(--beam);fill-opacity:.18;stroke:var(--beam);stroke-width:.04;stroke-dasharray:.12 .08}
+.p2 .ar{fill:#fff;opacity:.9}.p2 text{font:800 .55px var(--ui);fill:var(--ink);text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:var(--panel);stroke-width:.1;pointer-events:none}
+.p2 .dr.sel .rb,.p2 .dr:focus-visible .rb{stroke:var(--accent);stroke-width:.12}.p2 .dr.bad .rb{fill:var(--bad);stroke:var(--bad)}.p2 .dr.drag{opacity:.85}
 .wh-lvl .lnk.x{color:var(--muted)}.wh-lvl .lnk.x:hover{color:var(--bad)}
 .ld-st{font:700 11px var(--ui);border-radius:999px;padding:1px 7px;background:var(--raise);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .pl-empty{color:var(--muted);font-size:12.5px;text-align:center;padding:14px 6px;border:1px dashed var(--line2);border-radius:8px}
@@ -1261,7 +1279,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint" id="whHint"></p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div><div class="wh-plan" id="whPlan" hidden></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -5382,7 +5400,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 const whDlg=$('#whDlg');
 const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
 const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
-const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],wh:lsGet('ss-wh-cur')||'main',view:lsGet('ss-wh-view')==='3d'?'3d':'racks',fpRot:(+lsGet('ss-wh-rot')||0)%4,fpZoom:1,fpEdit:false,fpSel:'',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
 const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
 /* warehouses: each has its own name, racks, layouts and rack names. The first one ("main") keeps the plain spot codes (A1, B3…),
    so everything saved before warehouses existed stays where it was; the others put their id in front (w4k2q:A1). */
@@ -5446,7 +5464,11 @@ function cleanSkid(s){if(!s||typeof s!=='object')return null;const items=(Array.
   return{items,note,total,upd:+s.upd||0,...(EMAIL_RE.test(String(s.by||''))?{by:ck(s.by)}:{})};}
 function cleanWhRacks(c){c=c&&typeof c==='object'?c:{};const lay={};for(const[k,v]of Object.entries(c.layouts||{}))if(/^[A-Z]{1,3}$/.test(k)&&rkLayOk(v))lay[k]={levels:v.levels.slice(),floor:v.floor};
   const nm={};for(const[k,v]of Object.entries(c.names&&typeof c.names==='object'?c.names:{}))if(/^[A-Z]{1,3}$/.test(k)&&String(v??'').trim())nm[k]=String(v).trim().slice(0,40);
-  return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,names:nm};}
+  const plan=cleanPlan(c.plan);return{rackCount:Math.max(1,Math.min(RK_MAX,Math.round(+c.rackCount)||4)),layouts:lay,names:nm,...(plan?{plan}:{})};}
+// the 3D map's floor plan: where each rack stands (x across, y deep, in skid-sized squares) and which way it faces (r: 0-3)
+function cleanPlan(p){if(!p||typeof p!=='object')return null;const racks={};for(const[k,v]of Object.entries(p.racks&&typeof p.racks==='object'?p.racks:{}))
+  if(/^[A-Z]{1,3}$/.test(k)&&v&&[v.x,v.y,v.r].every(Number.isInteger)&&v.x>=0&&v.y>=0&&v.x<=500&&v.y<=500&&v.r>=0&&v.r<=3)racks[k]={x:v.x,y:v.y,r:v.r};
+  const per=Math.round(+p.per)||0;return{racks,...(per>=1&&per<=50?{per}:{})};}
 function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};
   const sh=c.sheet&&/^[\w-]{20,100}$/.test(c.sheet.id||'')?{id:c.sheet.id,name:String(c.sheet.name||'Rack map').slice(0,120)}:null;
   const seen=new Set(['main']),whs=(Array.isArray(c.whs)?c.whs:[]).filter(w=>w&&/^[a-z0-9]{2,12}$/.test(w.id||'')&&String(w.name||'').trim()&&!seen.has(w.id)&&seen.add(w.id)).slice(0,WH_MAX-1).map(w=>({id:w.id,name:String(w.name).trim().slice(0,40),...cleanWhRacks(w)}));
@@ -5480,13 +5502,17 @@ function whSheetChip(){const sh=RK.cfg.sheet;if(!sh)return`<button class="btn sm
   return`<button class="btn sm${RK.sheetErr?' wh-bad':''}" type="button" data-wh="sheet" title="${esc(RK.sheetErr||'Kept in step with '+sh.name)}"><span class="wh-dot${RK.sheetErr?' bad':RK.sheetBusy?' busy':''}"></span>${RK.sheetErr?'Sheet: needs attention':RK.sheetBusy?'Syncing sheet…':RK.sheetAt?'Sheet synced '+esc(agoMin(RK.sheetAt)):'Google Sheet'}</button>`;}
 function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=orphLocs(),used=vis.filter(l=>RK.skids[l]).length;
   if(!$('#whQ'))$('#whBar').innerHTML=`<label class="wh-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="whQ" type="search" placeholder="Find item, style, size or colour…" aria-label="Find in the warehouse" autocomplete="off"></label>
+    <span class="wh-seg" role="group" aria-label="View"><button type="button" data-wh="v-racks">Racks</button><button type="button" data-wh="v-3d">3D map</button></span>
     <span class="wh-step" title="Number of racks"><span>Racks</span><button type="button" data-wh="minus" aria-label="Remove a rack">−</button><input id="whCount" type="number" min="1" max="${RK_MAX}" inputmode="numeric" aria-label="Number of racks"><button type="button" data-wh="newrack" aria-label="Add a rack">+</button></span>
     <span class="spacer"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
   {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
   if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();
   renderWhs();
   $('#whSum').textContent=`${whMulti()?whName()+' · ':''}${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
-  $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
+  const v3=RK.view==='3d';$$('#whBar [data-wh^="v-"]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.wh===(v3?'v-3d':'v-racks')));
+  $('#whHint').textContent=v3?(RK.fpEdit?'Drag each rack to where it stands. Tap a rack, then Turn to change which way it faces (the arrow points to its front). Arrow keys move the picked rack.':'A rough model of the building. Tap any skid to see or change what\'s on it. Use Move racks to put racks where they really stand.'):'Tap any spot to record what\'s on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Edit on a rack to change its shape.';
+  $('#whRacks').hidden=v3;$('#whPlan').hidden=!v3;
+  if(v3)renderPlan();else{$('#whPlan').innerHTML='';$('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;}
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
   const res=$('#whRes');if(RK.q){const H=whHits(),whs=new Set(H.map(h=>h.wid)),pcs=H.reduce((t,h)=>t+pcsOf(h.i),0),bx=H.reduce((t,h)=>t+(+h.i.boxes||0),0),Q=esc(RK.q.toUpperCase());
     res.innerHTML=`<h3>${H.length?`${H.length} match${H.length===1?'':'es'} for “${Q}”${whMulti()?` in ${plural(whs.size,'warehouse')}`:''} · ${bx?plural(bx,'box')+' · ':''}${pcs} pcs in all`:`Nothing matches “${Q}”${whMulti()?' in any warehouse':''}`}</h3>
@@ -5581,6 +5607,106 @@ function layClick(b){const y=RK.lay,i=+b.dataset.i,a=b.dataset.whl;
 function saveLayout(){const y=RK.lay;if(!y)return;const w=W(),L={levels:y.levels.slice(),floor:y.floor},nm=String($('#whRackName')?.value??y.name).trim().slice(0,40);w.layouts={...w.layouts};if(sameLay(L,RK_STD))delete w.layouts[y.rack];else w.layouts[y.rack]=L;
   w.names={...w.names};if(nm)w.names[y.rack]=nm;else delete w.names[y.rack];if(y.isNew)w.rackCount=Math.max(rkCount(),rackIndex(y.rack));
   rkStamp(RK.cfg);closeSide();rkSave();renderWh();if(y.isNew){toast(`Added ${rackTitle(y.rack)}`);requestAnimationFrame(()=>$(`#whRacks [aria-label="Rack ${y.rack}"]`)?.scrollIntoView({block:'nearest'}));}}
+
+/* ---------- Warehouse: the 3D map ----------
+   A rough model of the building. Each rack stands on a grid of skid-sized squares and faces one of four ways
+   (r: 0 front faces down the plan, 1 left, 2 up, 3 right); floor spots sit in the square in front of it.
+   Racks that haven't been placed are laid out in rows, so the map works with no setup; Move racks drags them where they really are. */
+const FP_LH=1.15,FP_T=.08,FP_C=Math.cos(Math.PI/6),FP_S=.5;
+const fpSize=r=>{const L=layoutOf(r);return{w:Math.max(...L.levels,L.floor,1),d:L.floor?2:1};};
+const fpFoot=(r,p)=>{const s=fpSize(r);return p.r%2?{w:s.d,h:s.w}:{w:s.w,h:s.d};};
+// a point of a w×d footprint, turned r quarter-turns (the footprint's top-left stays at 0,0)
+const fpRot=(x,y,r,w,d)=>r===1?[d-y,x]:r===2?[w-x,d-y]:r===3?[y,w-x]:[x,y];
+const fpPer=()=>W().plan?.per||Math.min(6,Math.max(1,Math.ceil(Math.sqrt(rkCount()*2))));
+// rows of `per` racks side by side, every row facing the same way, a 2-square aisle between rows
+function fpAuto(per){const out={};let x=0,y=0,rowD=0;visRacks().forEach((r,i)=>{const s=fpSize(r);if(i&&i%per===0){x=0;y+=rowD+2;rowD=0;}out[r]={x,y,r:0};x+=s.w+1;rowD=Math.max(rowD,s.d);});return out;}
+// where every rack on the map stands: saved spots first, then the rest in the first free place
+function fpPlaced(){const saved=W().plan?.racks||{},vr=visRacks(),auto=fpAuto(fpPer()),out={},used=[];
+  const hit=(r,p)=>{const f=fpFoot(r,p);return used.some(b=>p.x<b.x+b.w&&p.x+f.w>b.x&&p.y<b.y+b.h&&p.y+f.h>b.y);};
+  const put=(r,p)=>{out[r]=p;const f=fpFoot(r,p);used.push({x:p.x,y:p.y,w:f.w,h:f.h});};
+  for(const r of vr)if(saved[r])put(r,{...saved[r]});
+  // a new rack goes in the first place with a square of space all round it
+  for(const r of vr)if(!out[r]){let p=auto[r];if(hit(r,p)){const s=fpSize(r);p=null;
+    for(let y=0;!p&&y<500;y++)for(let x=0;x<60;x++)if(!used.some(b=>x-1<b.x+b.w&&x+s.w+1>b.x&&y-1<b.y+b.h&&y+s.d+1>b.y)){p={x,y,r:0};break;}
+    p=p||{x:0,y:0,r:0};}put(r,p);}
+  return out;}
+const fpOverlaps=pl=>{const ks=Object.keys(pl),bad=new Set();ks.forEach((a,i)=>{const A=fpFoot(a,pl[a]);for(const b of ks.slice(i+1)){const B=fpFoot(b,pl[b]);
+  if(pl[a].x<pl[b].x+B.w&&pl[a].x+A.w>pl[b].x&&pl[a].y<pl[b].y+B.h&&pl[a].y+A.h>pl[b].y){bad.add(a);bad.add(b);}}});return bad;};
+function fpSave(pl){const w=W();w.plan={...(w.plan||{}),racks:Object.fromEntries(Object.entries(pl).map(([r,p])=>[r,{x:p.x,y:p.y,r:p.r}]))};rkStamp(RK.cfg);rkSave();}
+
+/* the model: every rack, level, beam and skid as a box */
+function fpBoxes(pl){const out=[],labels=[];
+  for(const r of visRacks()){const p=pl[r],L=layoutOf(r),s=fpSize(r),Wd=s.w,H=L.levels.length*FP_LH,lp=levelPositions(L);
+    const add=(x0,y0,z0,x1,y1,z1,cls,loc)=>{const a=fpRot(x0,y0,p.r,Wd,s.d),b=fpRot(x1,y1,p.r,Wd,s.d);
+      out.push({x0:Math.min(a[0],b[0])+p.x,x1:Math.max(a[0],b[0])+p.x,y0:Math.min(a[1],b[1])+p.y,y1:Math.max(a[1],b[1])+p.y,z0,z1,cls,loc});};
+    const slot=(x0,x1,y0,base,loc)=>{const full=!!RK.skids[loc],hit=full&&RK.q&&itemsAt(loc).some(i=>itemHit(i,RK.q));
+      add(x0+.12,y0+.1,base,x1-.12,y0+.9,base+(full?.8:.03),full?'sk full'+(hit?' hit':''):'sk em',loc);};
+    for(const ux of[0,Wd-FP_T])for(const uy of[0,1-FP_T])add(ux,uy,0,ux+FP_T,uy+FP_T,H,'up');
+    L.levels.forEach((c,i)=>{const z=i*FP_LH,sw=Wd/c;lp[i].forEach((pos,j)=>{const x0=j*sw,x1=(j+1)*sw;
+      if(i){add(x0,0,z,x1,FP_T,z+FP_T,'bm');add(x0,1-FP_T,z,x1,1,z+FP_T,'bm');}slot(x0,x1,0,i?z+FP_T:z,locId(r,pos));});});
+    for(let i=0;i<L.floor;i++){const fw=Wd/L.floor;slot(i*fw,(i+1)*fw,1,0,locId(r,'F'+(i+1)));}
+    const f=fpFoot(r,p);labels.push({x:p.x+f.w/2,y:p.y+f.h/2,z:H+.45,r});}
+  return{out,labels};}
+function fpSVG(){const pl=fpPlaced(),{out,labels}=fpBoxes(pl),k=RK.fpRot;if(!out.length)return'';
+  let gw=0,gd=0;for(const b of out){gw=Math.max(gw,b.x1);gd=Math.max(gd,b.y1);}gw+=1;gd+=1;
+  // turn the whole building to the chosen side
+  const T=(x,y)=>fpRot(x+1,y+1,k,gw+1,gd+1),bx=out.map(b=>{const a=T(b.x0,b.y0),c=T(b.x1,b.y1);return{...b,x0:Math.min(a[0],c[0]),x1:Math.max(a[0],c[0]),y0:Math.min(a[1],c[1]),y1:Math.max(a[1],c[1])};});
+  const P=(x,y,z)=>`${((x-y)*FP_C).toFixed(2)},${((x+y)*FP_S-z).toFixed(2)}`,poly=(c,pts)=>`<path class="${c}" d="M${pts.join('L')}Z"/>`;
+  const[FW,FD]=k%2?[gd+1,gw+1]:[gw+1,gd+1];
+  let floor=poly('fl',[P(0,0,0),P(FW,0,0),P(FW,FD,0),P(0,FD,0)]),grid='';
+  for(let x=1;x<FW;x++)grid+=`M${P(x,0,0)}L${P(x,FD,0)}`;for(let y=1;y<FD;y++)grid+=`M${P(0,y,0)}L${P(FW,y,0)}`;
+  bx.sort((a,b)=>(a.x0+a.x1+a.y0+a.y1)-(b.x0+b.x1+b.y0+b.y1)||a.z0-b.z0);
+  const shapes=bx.map(b=>{const{x0,x1,y0,y1,z0,z1}=b,faces=poly('f1',[P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)])+poly('f2',[P(x1,y0,z0),P(x1,y1,z0),P(x1,y1,z1),P(x1,y0,z1)])+poly('f0',[P(x0,y0,z1),P(x1,y0,z1),P(x1,y1,z1),P(x0,y1,z1)]);
+    if(!b.loc)return`<g class="${b.cls}">${faces}</g>`;const full=!!RK.skids[b.loc],lab=`${codeOf(b.loc)}: ${full?shortSum(b.loc):'empty'}`;
+    return`<g class="${b.cls}" data-loc="${b.loc}" tabindex="0" role="button" aria-label="${esc(lab)}"><title>${esc(lab)}</title>${faces}</g>`;}).join('');
+  const tags=labels.map(l=>{const[x,y]=T(l.x,l.y),[sx,sy]=P(x,y,l.z).split(',');return`<g class="lb"><text x="${sx}" y="${sy}">${esc(l.r)}</text>${rackNm(l.r)?`<text class="nm" x="${sx}" y="${(+sy+.55).toFixed(2)}">${esc(rackNm(l.r))}</text>`:''}</g>`;}).join('');
+  // fit the drawing
+  let mnx=1e9,mny=1e9,mxx=-1e9,mxy=-1e9;const fit=(x,y,z)=>{const sx=(x-y)*FP_C,sy=(x+y)*FP_S-z;mnx=Math.min(mnx,sx);mxx=Math.max(mxx,sx);mny=Math.min(mny,sy);mxy=Math.max(mxy,sy);};
+  fit(0,0,0);fit(FW,0,0);fit(0,FD,0);fit(FW,FD,0);for(const b of bx)fit(b.x0,b.y0,b.z1);for(const l of labels){const[x,y]=T(l.x,l.y);fit(x,y,l.z+.8);}
+  const vw=mxx-mnx+2,vh=mxy-mny+2,px=30*RK.fpZoom;
+  return`<svg class="p3${RK.q?' searching':''}" viewBox="${(mnx-1).toFixed(2)} ${(mny-1).toFixed(2)} ${vw.toFixed(2)} ${vh.toFixed(2)}" width="${Math.round(vw*px)}" height="${Math.round(vh*px)}" role="group" aria-label="3D map of ${esc(whName())}">${floor}<path class="gr" d="${grid}"/>${shapes}${tags}</svg>`;}
+
+/* Move racks: the plan from above, racks dragged on the grid */
+function fpDraftSVG(){const pl=fpPlaced(),bad=fpOverlaps(pl);let mx=0,my=0;for(const r in pl){const f=fpFoot(r,pl[r]);mx=Math.max(mx,pl[r].x+f.w);my=Math.max(my,pl[r].y+f.h);}
+  const cols=Math.max(mx+8,24),rows=Math.max(my+6,14),px=32*RK.fpZoom;let grid='';for(let x=1;x<cols;x++)grid+=`M${x},0V${rows}`;for(let y=1;y<rows;y++)grid+=`M0,${y}H${cols}`;
+  const racks=Object.entries(pl).map(([r,p])=>{const s=fpSize(r),f=fpFoot(r,p),R=(x0,y0,x1,y1)=>{const a=fpRot(x0,y0,p.r,s.w,s.d),b=fpRot(x1,y1,p.r,s.w,s.d);return`x="${Math.min(a[0],b[0])}" y="${Math.min(a[1],b[1])}" width="${Math.abs(a[0]-b[0])}" height="${Math.abs(a[1]-b[1])}"`;};
+    const ar=[[s.w/2-.28,.42],[s.w/2+.28,.42],[s.w/2,.82]].map(([x,y])=>fpRot(x,y,p.r,s.w,s.d).join(',')).join(' ');
+    return`<g class="dr${bad.has(r)?' bad':''}${RK.fpSel===r?' sel':''}" data-plr="${r}" transform="translate(${p.x} ${p.y})" tabindex="0" role="button" aria-label="Rack ${r}${bad.has(r)?', overlaps another rack':''}"><title>${esc(rackTitle(r))}</title>
+      ${s.d>1?`<rect class="fs" ${R(0,1,s.w,2)}/>`:''}<rect class="rb" ${R(0,0,s.w,1)}/><polygon class="ar" points="${ar}"/><text x="${f.w/2}" y="${f.h/2}">${esc(r)}</text></g>`;}).join('');
+  return{svg:`<svg class="p2" viewBox="0 0 ${cols} ${rows}" width="${cols*px}" height="${rows*px}" aria-label="Floor plan of ${esc(whName())}"><rect class="fl" width="${cols}" height="${rows}"/><path class="gr" d="${grid}"/>${racks}</svg>`,bad:bad.size};}
+function renderPlan(){const el=$('#whPlan'),ed=RK.fpEdit,sc=el.querySelector('.wh-pc'),keep=sc?[sc.scrollLeft,sc.scrollTop]:null;
+  const zoom=`<span class="wh-step"><button type="button" data-wh="pl-zout" aria-label="Zoom out">−</button><span>Zoom</span><button type="button" data-wh="pl-zin" aria-label="Zoom in">+</button></span>`;
+  if(ed){const d=fpDraftSVG(),n=Math.max(1,Math.min(20,fpPer()));
+    el.innerHTML=`<div class="wh-pt"><button class="btn sm" type="button" data-wh="pl-turn" ${RK.fpSel?'':'disabled'}>↻ Turn${RK.fpSel?' rack '+esc(RK.fpSel):''}</button>
+      <label class="wh-pper">Auto-arrange<select class="in" id="whPer" aria-label="Racks per row">${Array.from({length:20},(_,i)=>`<option value="${i+1}"${i+1===n?' selected':''}>${i+1} per row</option>`).join('')}</select></label>
+      ${zoom}<span class="spacer"></span>${d.bad?`<span class="wh-bad">${d.bad} racks overlap</span>`:''}<button class="btn sm primary" type="button" data-wh="pl-done">Done</button></div><div class="wh-pc">${d.svg}</div>`;}
+  else el.innerHTML=`<div class="wh-pt"><button class="btn sm" type="button" data-wh="pl-rl" aria-label="Turn the view left">⟲</button><button class="btn sm" type="button" data-wh="pl-rr" aria-label="Turn the view right">⟳</button>${zoom}
+      <span class="spacer"></span><span class="wh-key"><i class="k-f"></i>Has stock<i class="k-e"></i>Empty${RK.q?'<i class="k-h"></i>Matches':''}</span><button class="btn sm" type="button" data-wh="pl-edit">Move racks</button></div><div class="wh-pc">${fpSVG()}</div>`;
+  if(keep){const c=el.querySelector('.wh-pc');c.scrollLeft=keep[0];c.scrollTop=keep[1];}}
+async function fpAction(a){
+  if(a==='pl-rl'||a==='pl-rr'){RK.fpRot=(RK.fpRot+(a==='pl-rr'?1:3))%4;lsSet('ss-wh-rot',String(RK.fpRot));renderPlan();return;}
+  if(a==='pl-zin'||a==='pl-zout'){RK.fpZoom=Math.max(.4,Math.min(3,RK.fpZoom*(a==='pl-zin'?1.25:.8)));renderPlan();return;}
+  if(a==='pl-edit'){RK.fpEdit=true;RK.fpSel='';closeSide();renderWh();return;}
+  if(a==='pl-done'){RK.fpEdit=false;RK.fpSel='';renderWh();return;}
+  if(a==='pl-turn'&&RK.fpSel){const pl=fpPlaced(),p=pl[RK.fpSel];if(!p)return;p.r=(p.r+1)%4;fpSave(pl);renderPlan();}}
+async function fpArrange(n){const w=W();if(Object.keys(w.plan?.racks||{}).length&&await ask({title:`Arrange ${plural(rkCount(),'rack')} in rows of ${n}?`,body:'Racks you moved go back into neat rows. You can drag them again after.',ok:'Arrange'})!=='ok'){renderPlan();return;}
+  w.plan={per:n,racks:{}};RK.fpSel='';rkStamp(RK.cfg);rkSave();renderPlan();}
+// dragging a rack on the plan
+let fpDrag=null;const fpPt=(sv,e)=>new DOMPoint(e.clientX,e.clientY).matrixTransform(sv.getScreenCTM().inverse());
+whDlg.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-plr]');if(!g||e.button>0)return;e.preventDefault();const r=g.dataset.plr,pl=fpPlaced(),p=pl[r],pt=fpPt(g.ownerSVGElement,e);
+  fpDrag={r,g,pl,dx:pt.x-p.x,dy:pt.y-p.y,x0:p.x,y0:p.y,moved:false};g.setPointerCapture(e.pointerId);g.classList.add('drag');});
+whDlg.addEventListener('pointermove',e=>{const d=fpDrag;if(!d)return;const pt=fpPt(d.g.ownerSVGElement,e),p=d.pl[d.r],x=Math.max(0,Math.round(pt.x-d.dx)),y=Math.max(0,Math.round(pt.y-d.dy));
+  if(x===p.x&&y===p.y)return;p.x=x;p.y=y;d.moved=true;d.g.setAttribute('transform',`translate(${x} ${y})`);});
+const fpDrop=e=>{const d=fpDrag;if(!d)return;fpDrag=null;d.g.classList.remove('drag');
+  if(d.moved){RK.fpSel=d.r;fpSave(d.pl);}else RK.fpSel=RK.fpSel===d.r?'':d.r;renderPlan();$(`#whPlan [data-plr="${d.r}"]`)?.focus({preventScroll:true});};
+whDlg.addEventListener('pointerup',fpDrop);whDlg.addEventListener('pointercancel',fpDrop);
+whDlg.addEventListener('change',e=>{if(e.target.id==='whPer')fpArrange(+e.target.value);});
+whDlg.addEventListener('keydown',e=>{const t=e.target;
+  if((e.key==='Enter'||e.key===' ')&&t.matches?.('svg [data-loc]')){e.preventDefault();openSkid(t.dataset.loc);return;}
+  const g=t.closest?.('[data-plr]');if(!g)return;const r=g.dataset.plr,mv={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();RK.fpSel=r;renderPlan();}
+  else if(mv||e.key==='r'||e.key==='R'){e.preventDefault();const pl=fpPlaced(),p=pl[r];if(mv){p.x=Math.max(0,p.x+mv[0]);p.y=Math.max(0,p.y+mv[1]);}else p.r=(p.r+1)%4;RK.fpSel=r;fpSave(pl);renderPlan();}
+  else return;$(`#whPlan [data-plr="${r}"]`)?.focus({preventScroll:true});});
 
 /* CSV: the same columns as the rack map's own export */
 const RK_HEAD=['Warehouse','Location','Rack','Position','Item','Style','Size','Colour','Boxes','Per box','Total','Unit','Skid total','Skid total unit','Skid notes'];
@@ -5713,6 +5839,8 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
     if(a==='mv')openMove('line',ix);return;}
   const b=t.closest('[data-wh]');if(!b)return;const a=b.dataset.wh;
   if(a==='newrack'){if(rkCount()<RK_MAX)openLayout(rackName(rkCount()),true);return;}
+  if(a==='v-racks'||a==='v-3d'){RK.view=a==='v-3d'?'3d':'racks';lsSet('ss-wh-view',RK.view);RK.fpEdit=false;RK.fpSel='';renderWh();return;}
+  if(a.startsWith('pl-')){fpAction(a,b);return;}
   if(a==='minus'){setRacks(rkCount()-1);return;}
   if(a==='import'){$('#whFile').click();return;}if(a==='export'){whExport();return;}
   if(a==='whadd'){const r=await ask({title:'Add a warehouse',body:'It starts with 4 standard racks. You can rename it, add racks and change their layout any time.',ok:'Add warehouse',input:{value:'',placeholder:'e.g. Toronto, Overflow, Unit 12',label:'Warehouse name'}});if(r!=='ok')return;
