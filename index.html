@@ -241,7 +241,7 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-sug{display:grid;border:1px solid var(--accent);border-radius:6px;overflow:hidden;background:var(--panel);margin-top:2px}.wh-sug[hidden]{display:none}
 .wh-sug button{all:unset;box-sizing:border-box;padding:8px 10px;font-size:13.5px;text-transform:uppercase;cursor:pointer;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.wh-sug button:last-child{border-bottom:0}.wh-sug button:hover,.wh-sug button:focus-visible{background:var(--accent-soft)}
 .wh-rt{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}.wh-rt button{border:0;background:none;color:var(--accent-fg);font:600 12.5px var(--ui);cursor:pointer;padding:2px 0}.wh-rt button.x{color:var(--muted)}.wh-rt button.x:hover{color:var(--bad)}
-.wh-bk{grid-column:1/-1;display:grid;gap:6px;margin-left:10px;padding:2px 0 2px 14px;border-left:2px solid var(--line2)}.wh-bkh{font:600 10.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wh-bkh small{font:500 12px var(--ui);letter-spacing:0;text-transform:none;margin-left:6px}
+.wh-bk{grid-column:1/-1;display:grid;gap:6px;margin-left:10px;padding:2px 0 2px 14px;border-left:2px solid var(--line2)}.wh-bkh{font:600 10.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wh-bkn{font-size:12px;color:var(--muted);margin-top:-4px;overflow-wrap:anywhere}
 .wh-bkr{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 84px 30px;gap:6px;align-items:center}.wh-bkr::before{content:'';position:absolute;left:-14px;top:50%;width:10px;border-top:2px solid var(--line2)}.wh-bkr .in{height:36px;font-size:14px;padding:0 8px;min-width:0}.wh-bkr input:not([type=number]){text-transform:uppercase}.wh-bkr input::placeholder{text-transform:none}
 .wh-bkr button,.wh-bk .lnk{border:0;background:none;cursor:pointer;font:600 12.5px var(--ui);color:var(--muted);padding:2px}.wh-bkr button:hover{color:var(--bad)}.wh-bk .lnk{color:var(--accent-fg);justify-self:start}
 .wh-bkm{display:grid;gap:6px}.wh-bkmr{display:grid;grid-template-columns:minmax(0,1fr) 84px auto;gap:8px;align-items:center;font-size:13.5px;text-transform:uppercase}.wh-bkmr .in{height:36px}.wh-bkmr small{color:var(--muted);text-transform:none}
@@ -5497,20 +5497,22 @@ function lineAmt(i){const b=+i.boxes||0,p=+i.per||0,q=+i.qty||0,u=unitOf(i);if(b
   const parts=[];if(b)parts.push(`<b>${plural(b,'box')}</b>`);parts.push(q?`<b>${q}</b> ${u}`:'<i>count unknown</i>');return parts.join(' · ');}
 const itemLine=i=>[i.item,i.style,i.size,i.colour].filter(Boolean).join(' · ');
 /* box groups: an item line (the parent) can have child box groups saying how many of its boxes are which size and colour, without a new variant.
-   A blank size or colour on a box group means the line's own (when it has one), otherwise mixed. */
+   An item's size or colour can be a list ("S, M, L"): those are the choices its box groups pick from (or type something else).
+   A blank size or colour on a box group means the item's own when it has just one, otherwise mixed. */
+const optsOf=v=>[...new Set(String(v||'').split(',').map(x=>rkUp(x)).filter(Boolean))],oneOf=v=>{const o=optsOf(v);return o.length===1?o[0]:'';};
 const bkDims=i=>({s:!!(i.size||i.bk?.some(b=>b.size)),c:!!(i.colour||i.bk?.some(b=>b.colour))});
-const bkName=(i,b,d=i.dims||bkDims(i))=>[d.s?(b.size||i.size||'mixed sizes'):'',d.c?(b.colour||i.colour||'mixed colours'):''].filter(Boolean).join(' · ')||'mixed sizes and colours';
+const bkName=(i,b,d=i.dims||bkDims(i))=>[d.s?(b.size||oneOf(i.size)||'mixed sizes'):'',d.c?(b.colour||oneOf(i.colour)||'mixed colours'):''].filter(Boolean).join(' · ')||'mixed sizes and colours';
 // the sheet / CSV form: "L / NAVY: 3; MIXED / NAVY: 2"
-const bkSheet=i=>i.bk?.length?i.bk.map(b=>`${b.size||i.size||'MIXED'} / ${b.colour||i.colour||'MIXED'}: ${b.boxes}`).join('; '):'';
+const bkSheet=i=>i.bk?.length?i.bk.map(b=>`${b.size||oneOf(i.size)||'MIXED'} / ${b.colour||oneOf(i.colour)||'MIXED'}: ${b.boxes}`).join('; '):'';
 const bkParse=v=>String(v||'').split(';').map(x=>{const m=x.trim().match(/^(.*?):\s*(\d+)$/);if(!m)return null;const[sz,co='']=m[1].split(/\s+\/\s+/);return{size:sz.trim(),colour:co.trim(),boxes:m[2]};}).filter(Boolean);
 // the part of a line a search matches: all of it, only some of its box groups, or nothing
 function lineHit(i,q){if([i.item,i.style,i.size,i.colour].join(' ').toLowerCase().includes(q))return i;if(!i.bk?.length)return null;
-  const sub=i.bk.filter(b=>[i.item,i.style,b.size||i.size,b.colour||i.colour].join(' ').toLowerCase().includes(q));if(!sub.length)return null;if(sub.length===i.bk.length)return i;
+  const sub=i.bk.filter(b=>[i.item,i.style,b.size||oneOf(i.size)||'mixed sizes',b.colour||oneOf(i.colour)||'mixed colours'].join(' ').toLowerCase().includes(q));if(!sub.length)return null;if(sub.length===i.bk.length)return i;
   const bx=sub.reduce((t,b)=>t+(+b.boxes||0),0);return{...i,bk:sub,dims:bkDims(i),boxes:bx,qty:+i.per>0?bx*i.per:0};}
 const itemHit=(i,q)=>!!lineHit(i,q);
 /* the store: the newest change of each spot wins; an emptied spot is remembered so it stays empty everywhere */
 const rkNum=v=>v===''||v==null?0:Math.max(0,Math.min(1e7,Math.round(+v)||0)),rkUp=v=>String(v??'').trim().toUpperCase();
-function rkBk(i,size,colour){const mix=v=>v==='MIXED'||v==='*';return(Array.isArray(i.bk)?i.bk:[]).slice(0,30).map(b=>{let s=rkUp(b?.size).slice(0,40),c=rkUp(b?.colour).slice(0,60);if(s===size||mix(s))s='';if(c===colour||mix(c))c='';return{size:s,colour:c,boxes:rkNum(b?.boxes)};}).filter(b=>b.boxes);}
+function rkBk(i,size,colour){const mix=v=>v==='MIXED'||v==='*';return(Array.isArray(i.bk)?i.bk:[]).slice(0,30).map(b=>{let s=rkUp(b?.size).slice(0,40),c=rkUp(b?.colour).slice(0,60);if(s===oneOf(size)||mix(s))s='';if(c===oneOf(colour)||mix(c))c='';return{size:s,colour:c,boxes:rkNum(b?.boxes)};}).filter(b=>b.boxes);}
 function rkLine(i){const size=rkUp(i.size).slice(0,40),colour=rkUp(i.colour).slice(0,60),bk=rkBk(i,size,colour),boxes=bk.length?bk.reduce((t,b)=>t+b.boxes,0):rkNum(i.boxes),per=rkNum(i.per);
   return{item:rkUp(i.item).slice(0,120),style:rkUp(i.style).slice(0,80),size,colour,boxes,per,qty:boxes&&per?boxes*per:rkNum(i.qty),unit:i.unit==='dz'?'dz':'pcs',...(bk.length?{bk}:{})};}
 const lineHas=i=>i.item||i.style||i.size||i.colour||i.qty||i.boxes;
@@ -5617,18 +5619,25 @@ function drawRows(){const e=RK.edit;
     <div class="wh-f half"><label for="wpb-${ix}">Per box</label><input class="in" id="wpb-${ix}" data-k="per" type="number" min="0" inputmode="numeric" value="${esc(it.per)}" placeholder="optional"></div>
     <div class="wh-f half"><label for="wqt-${ix}">Total</label><div class="wh-qu"><input class="in${autoQty(it)?' auto':''}" id="wqt-${ix}" data-k="qty" type="number" min="0" inputmode="numeric" value="${esc(it.qty)}" placeholder="unknown" ${autoQty(it)?'readonly':''}><select class="in" data-k="unit" aria-label="Unit"><option value="pcs"${it.unit!=='dz'?' selected':''}>pcs</option><option value="dz"${it.unit==='dz'?' selected':''}>dozen</option></select></div></div>
     <div class="wh-f third"><label for="wst-${ix}">Style</label><input class="in" id="wst-${ix}" data-k="style" autocomplete="off" value="${esc(it.style)}" placeholder="e.g. Zip-up"><div class="wh-sug" hidden></div></div>
-    <div class="wh-f third"><label for="wsz-${ix}">Size</label><input class="in" id="wsz-${ix}" data-k="size" autocomplete="off" value="${esc(it.size)}" placeholder="e.g. L"><div class="wh-sug" hidden></div></div>
-    <div class="wh-f third"><label for="wco-${ix}">Colour</label><input class="in" id="wco-${ix}" data-k="colour" autocomplete="off" value="${esc(it.colour)}" placeholder="e.g. Navy"><div class="wh-sug" hidden></div></div>
+    <div class="wh-f third"><label for="wsz-${ix}">Size</label><input class="in" id="wsz-${ix}" data-k="size" autocomplete="off" value="${esc(it.size)}" placeholder="e.g. L, or S, M, L"><div class="wh-sug" hidden></div></div>
+    <div class="wh-f third"><label for="wco-${ix}">Colour</label><input class="in" id="wco-${ix}" data-k="colour" autocomplete="off" value="${esc(it.colour)}" placeholder="e.g. Navy, or Navy, Black"><div class="wh-sug" hidden></div></div>
     ${it.bk?bkHTML(it):''}
     <div class="wh-rt">${it.bk?'':'<button type="button" data-whrow="bk">Split into box groups…</button>'}<button type="button" data-whrow="mv">Move to another skid…</button><button type="button" data-whrow="dup">Copy as new variant</button><button type="button" class="x" data-whrow="rm">Remove</button></div></div>`).join('')
   +`<button class="btn sm" type="button" data-wh="addrow">＋ Add item</button>
    <div class="wh-f"><label for="whTc">Skid total, for mixed skids</label><div class="wh-qu"><input class="in" id="whTc" type="number" min="0" inputmode="numeric" value="${esc(e.tc)}" placeholder="optional"><select class="in" id="whTu" aria-label="Skid total unit">${[['boxes','boxes'],['pcs','pcs'],['dz','dozen']].map(([v,n])=>`<option value="${v}"${e.tu===v?' selected':''}>${n}</option>`).join('')}</select></div></div>
    <div class="wh-f"><label for="whNote">Skid notes</label><textarea class="in" id="whNote" rows="2" placeholder="PO number, condition, received date…">${esc(e.note)}</textarea></div>
-   <p class="wh-hint">Same item in different sizes or colours? Use “Split into box groups” to list how many boxes of the item are which size and colour, under the item itself (leave size or colour blank for mixed), or “Copy as new variant” for a separate line. Names you've used before are suggested as you type. On a mixed skid, list every item, leave counts you don't know blank, and put the full count in Skid total.</p>`;
+   <p class="wh-hint">Same item in different sizes or colours? Use “Split into box groups” to list how many boxes of the item are which size and colour, under the item itself (put a list like “S, M, L” in the item's Size or Colour and the groups pick from it; leave a group's size or colour blank for mixed), or “Copy as new variant” for a separate line. Names you've used before are suggested as you type. On a mixed skid, list every item, leave counts you don't know blank, and put the full count in Skid total.</p>`;
   updTot();}
-function bkHTML(it){return`<div class="wh-bk" role="group" aria-label="Box groups in this item"><div class="wh-bkh">Box groups in this item<small>blank = ${it.size?'the line\'s size':'mixed sizes'} / ${it.colour?'the line\'s colour':'mixed colours'}</small></div>
-    ${it.bk.map((b,j)=>`<div class="wh-bkr" data-bi="${j}"><input class="in" data-bk="size" autocomplete="off" value="${esc(b.size)}" placeholder="${esc(it.size||'Mixed sizes')}" aria-label="Size of these boxes"><input class="in" data-bk="colour" autocomplete="off" value="${esc(b.colour)}" placeholder="${esc(it.colour||'Mixed colours')}" aria-label="Colour of these boxes"><input class="in" data-bk="boxes" type="number" min="0" inputmode="numeric" value="${esc(b.boxes)}" placeholder="Boxes" aria-label="Number of boxes"><button type="button" data-whbk="rm" aria-label="Remove these boxes">✕</button></div>`).join('')}
+const bkPh=(v,k)=>oneOf(v)||(k==='size'?'Mixed sizes':'Mixed colours'),bkOpts=v=>optsOf(v).map(o=>`<option value="${esc(o)}"></option>`).join('');
+const bkNote=(v,k)=>{const o=optsOf(v),w=k==='size'?'sizes':'colours';return o.length>1?`pick from ${o.join(', ')} or type, blank = mixed ${w}`:o.length?`blank = ${o[0]}`:`blank = mixed ${w}`;};
+function bkHTML(it){const ix=E_IX(it);return`<div class="wh-bk" role="group" aria-label="Box groups in this item"><div class="wh-bkh">Box groups in this item</div><div class="wh-bkn" data-bkn>${esc(bkNote(it.size,'size'))} · ${esc(bkNote(it.colour,'colour'))}</div>
+    <datalist id="wbl-size-${ix}">${bkOpts(it.size)}</datalist><datalist id="wbl-colour-${ix}">${bkOpts(it.colour)}</datalist>
+    ${it.bk.map((b,j)=>`<div class="wh-bkr" data-bi="${j}"><input class="in" data-bk="size" list="wbl-size-${ix}" autocomplete="off" value="${esc(b.size)}" placeholder="${esc(bkPh(it.size,'size'))}" aria-label="Size of these boxes"><input class="in" data-bk="colour" list="wbl-colour-${ix}" autocomplete="off" value="${esc(b.colour)}" placeholder="${esc(bkPh(it.colour,'colour'))}" aria-label="Colour of these boxes"><input class="in" data-bk="boxes" type="number" min="0" inputmode="numeric" value="${esc(b.boxes)}" placeholder="Boxes" aria-label="Number of boxes"><button type="button" data-whbk="rm" aria-label="Remove these boxes">✕</button></div>`).join('')}
     <button type="button" class="lnk" data-whbk="add">＋ Add a box group</button></div>`;}
+const E_IX=it=>RK.edit?RK.edit.items.indexOf(it):0;
+// the item's size / colour changed: its box groups' choices and blanks follow
+function bkChoices(row,it,k){const ix=+row.dataset.ix,dl=row.querySelector(`#wbl-${k}-${ix}`);if(dl)dl.innerHTML=bkOpts(it[k]);
+  row.querySelectorAll(`[data-bk="${k}"]`).forEach(x=>x.placeholder=bkPh(it[k],k));const n=row.querySelector('[data-bkn]');if(n)n.textContent=`${bkNote(it.size,'size')} · ${bkNote(it.colour,'colour')}`;}
 // a line's box count follows its box groups; Total follows when Per box is filled
 function bkSync(row,it){if(it.bk){it.boxes=String(it.bk.reduce((t,b)=>t+(rkNum(b.boxes)),0));const bi=row.querySelector('[data-k="boxes"]');if(bi)bi.value=it.boxes;}
   const qi=row.querySelector('[data-k="qty"]'),on=autoQty(it);if(on){it.qty=String(+it.boxes*+it.per);qi.value=it.qty;}qi.readOnly=on;qi.classList.toggle('auto',on);}
@@ -5804,7 +5813,7 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   if(t.dataset.bk&&it.bk){const b=it.bk[+t.closest('.wh-bkr').dataset.bi];if(b){b[t.dataset.bk]=t.value;if(t.dataset.bk==='boxes')bkSync(row,it);}updTot();return;}
   const k=t.dataset.k;if(!k)return;it[k]=t.value;
   if(['item','style','size','colour'].includes(k))showSug(t);
-  if((k==='size'||k==='colour')&&it.bk)row.querySelectorAll(`[data-bk="${k}"]`).forEach(x=>x.placeholder=rkUp(t.value)||(k==='size'?'Mixed sizes':'Mixed colours'));
+  if((k==='size'||k==='colour')&&it.bk)bkChoices(row,it,k);
   if(k==='boxes'||k==='per')bkSync(row,it);
   updTot();});
 whDlg.addEventListener('change',e=>{const t=e.target;if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
