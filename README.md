@@ -19,5 +19,13 @@ The app has to be opened through a small local web server (double-clicking index
 
 An internet connection is still needed the first time for fonts and the PDF/Word tools.
 
+## Assistant (fills in the sell sheet for you)
+Open the **Assistant** tab on the sell sheet page, paste anything about the product (a supplier email, a packing list, your notes, or text from a PDF/Word file), and click **Fill the sheet**. It fills in the name, item code, price, sizes, packing, colours and details, and tidies the wording.
+
+- It is a small open-source language model (Qwen 2.5, run with WebLLM) that runs **inside the browser**. Nothing you paste is sent anywhere, and no server or API key is needed.
+- The first time, it downloads the model (about 2 GB, or about 1 GB for the Light option) and keeps it in that browser. After that it starts in seconds and works offline.
+- It needs a recent Chrome, Edge or Safari on a computer with a graphics chip (WebGPU). Phones and very old computers may not manage it.
+- Always check what it wrote: it can make mistakes. **Undo** appears right after it fills the sheet.
+
 ## Sheets are saved per browser
 Saved sheets live in that browser on that computer. Use the same browser each time.
