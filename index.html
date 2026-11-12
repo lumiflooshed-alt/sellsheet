@@ -1592,6 +1592,8 @@ const cUses=(c,j)=>!Array.isArray(c.use)||c.use[j]!==false;
 const anyUses=j=>S.mode!=='manual'||S.colours.some(c=>cUses(c,j));
 // a colour counted by its total pieces only (boxes and sizes not known): c.by==='pcs', c.pcs = the total
 const byPcs=c=>c?.by==='pcs';
+// the whole product counted as one total quantity, whatever the colour or size: S.count==='total', S.totalQty = the total
+const allTot=()=>S.count==='total';
 function cUseSet(c,j,on){if(!Array.isArray(c.use))c.use=S.sizes.map(()=>true);c.use[j]=on;if(!on)c.qty[j]=0;}
 // a size added to one colour: an existing size is switched on for it; a new name becomes a new size that only this colour has
 function addSizeTo(i,name){const c=S.colours[i];name=String(name||'').trim().slice(0,20);if(!c||!name)return false;
@@ -1610,7 +1612,8 @@ const hidNow=k=>k==='colours'?S.showColours===false:k.startsWith('r:')?!!S.rows.
 const hiddenList=()=>[...(S.showColours===false?[['colours','Colours table']]:[]),...Object.keys(S.hide||{}).filter(k=>HIDE_NAME[k]).map(k=>[k,HIDE_NAME[k]]),
   ...S.rows.filter(r=>r.hidden).map(r=>['r:'+r.id,(r.label||'Unnamed')+' row'])];
 // the colours table's columns, in order: the same for the sheet, Word and email
-function tableCols(c){const cols=[{k:'name',head:'Colour',w:S.showSizes?2300:4200,t:'TOTAL'}];
+function tableCols(c){if(allTot())return[{k:'name',head:'Colour',w:5500,t:'TOTAL'},...(isHid('col:total')?[]:[{k:'total',hk:'col:total',head:'Total pcs',w:2000,v:()=>'–',t:c.T.tot}])];
+  const cols=[{k:'name',head:'Colour',w:S.showSizes?2300:4200,t:'TOTAL'}];
   if(S.showSizes){if(!isHid('col:sizes'))S.sizes.forEach((sz,j)=>anyUses(j)&&cols.push({k:'size',hk:'col:sizes',j,head:sz,w:Math.max(500,Math.floor(5600/Math.max(1,S.sizes.length))),v:r=>r.po?'–':r.q[j]||'–',t:c.T.q[j]}));}
   else if(!isHid('col:perbox'))cols.push({k:'perbox',hk:'col:perbox',head:'Pcs per box',w:2100,v:r=>r.po?'–':S.perBox,t:''});
   if(!isHid('col:boxes'))cols.push({k:'boxes',hk:'col:boxes',head:'Boxes',w:1300,v:r=>r.po?'–':r.boxes,t:c.T.boxes});
@@ -1626,6 +1629,7 @@ function calc(){
   const n=S.sizes.length, rs=S.ratio.slice(0,n).reduce((a,b)=>a+(+b||0),0);
   const per=S.sizes.map((_,j)=>rs?S.perBox*(+S.ratio[j]||0)/rs:0);
   const uneven=S.mode==='ratio'&&per.some(x=>Math.abs(x-Math.round(x))>1e-6);
+  if(allTot()){const z=S.sizes.map(()=>0);return{per,uneven:false,rows:S.colours.map(c=>({name:c.name,q:z.slice(),boxes:0,tot:0,po:true})),T:{q:z,boxes:0,tot:+S.totalQty||0}};}
   const rows=S.colours.map(c=>{if(byPcs(c))return{name:c.name,q:S.sizes.map(()=>0),boxes:0,tot:+c.pcs||0,po:true};
     const q=S.mode==='ratio'?per.map(x=>Math.round(x*c.boxes)):S.sizes.map((_,j)=>cUses(c,j)?+c.qty[j]||0:0);
     const tot=S.mode==='ratio'?S.perBox*c.boxes:q.reduce((a,b)=>a+b,0);return{name:c.name,q,boxes:+c.boxes||0,tot};});
@@ -1662,7 +1666,7 @@ function sheetHTML(forExport){
   const cols=tableCols(c);
   const head=cols.map(col=>col.k==='name'?th('Colour'):th(col.k==='size'&&L?ed('size:'+col.j,col.head,'Size'):esc(col.head),col.hk,col.k==='size'?'the size columns':'the '+col.head+' column')).join('');
   // on the live sheet the numbers you type are editable right there; worked-out numbers stay plain (data-cell lets them update while typing)
-  const cellEd=(col,r,i)=>{if(!L)return null;const co=S.colours[i];
+  const cellEd=(col,r,i)=>{if(!L||allTot())return null;const co=S.colours[i];
     if(col.k==='boxes')return ed(`colour:${i}:boxes`,r.po?'':r.boxes,'–',0,1);
     if(col.k==='total'&&(r.po||S.mode==='ratio'||!co.qty.some(Boolean)))return ed(`colour:${i}:tot`,r.tot||'','–',0,1);
     if(r.po)return null;
@@ -1670,7 +1674,7 @@ function sheetHTML(forExport){
     if(col.k==='size'&&S.mode==='manual'&&cUses(co,col.j))return ed(`colour:${i}:qty:${col.j}`,r.q[col.j]||'','–',0,1);
     return null;};
   const body=c.rows.map((r,i)=>`<tr>${cols.map((col,ci)=>{if(col.k==='name')return`<td>${ed('colour:'+i+':name',r.name,COLOUR_EX[i%COLOUR_EX.length])}</td>`;const e=cellEd(col,r,i);return`<td style="${gT}"${L?` data-cell="${i}:${ci}"`:''}>${e??col.v(r)}</td>`;}).join('')}</tr>`).join('');
-  const tot=isHid('row:total')?'':`<tr class="tot">${cols.map((col,ci)=>col.k==='name'?`<td style="${gT}"${L?' class="hzp"':''}>TOTAL${L?hz('row:total','the TOTAL row'):''}</td>`:`<td style="${gT}"${L?` data-cell="t:${ci}"`:''}>${col.t}</td>`).join('')}</tr>`;
+  const tot=isHid('row:total')?'':`<tr class="tot">${cols.map((col,ci)=>col.k==='name'?`<td style="${gT}"${L?' class="hzp"':''}>TOTAL${L?hz('row:total','the TOTAL row'):''}</td>`:`<td style="${gT}"${L?` data-cell="t:${ci}"`:''}>${L&&allTot()&&col.k==='total'?ed('totalQty',col.t||'','0',0,1):col.t}</td>`).join('')}</tr>`;
   const rows=shownRows().map(r=>`<tr class="${r.auto==='price'?'price':''}"><td${L?' class="hzp"':''}>${ed('row:'+r.id+':label',r.label,'Label')}${L?hz('r:'+r.id,'the '+(r.label||'')+' row'):''}</td><td>${r.auto?ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0]).replace('contenteditable="true"',`contenteditable="false" data-goto="${r.auto}" title="Click to change"`):ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
   const rh=n=>B[n].h?`--rh:${B[n].h}px;`:'';
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
@@ -1753,6 +1757,7 @@ function setKey(k,v){
     case 'heading':S.headings[p[1]]=v;break;
     case 'price':S.price[p[1]]=v;break;
     case 'perBox':S.perBox=Math.max(1,parseInt(v)||1);break;
+    case 'totalQty':S.totalQty=Math.max(0,parseInt(String(v).replace(/[^\d]/g,''))||0);break;
     case 'row':{const r=S.rows.find(r=>r.id===p[1]);if(!r||(p[2]==='value'&&r.auto))return;r[p[2]]=v;break;}
     case 'colour':{const c=S.colours[+p[1]];if(!c)return;const n=Math.max(0,parseInt(String(v).replace(/[^\d]/g,''))||0);
       if(p[2]==='name')c.name=v;else if(p[2]==='boxes'){c.boxes=n;delete c.by;}else if(p[2]==='pcs')c.pcs=n;
@@ -1802,25 +1807,33 @@ function renderPanel0(){whereSet('editor',tab);
   }
   else if(tab==='colours'){
     const c=calc(), n=S.sizes.length, rat=S.mode==='ratio', chk=(k,l)=>`<label class="chk"><input type="checkbox" data-hidc="${k}" ${isHid(k)?'':'checked'}><span>${l}</span></label>`;
+    const tq=allTot();
     h=`<h2>Colours &amp; sizes</h2><p class="lead">Your sizes, how pieces are counted, and each colour. Totals are worked out for you.</p>
+    <div class="group"><h3>Quantity</h3>
+      <div class="seg" role="group" aria-label="How the quantity is given"><button type="button" data-count="split" aria-pressed="${!tq}">By colour &amp; size</button><button type="button" data-count="total" aria-pressed="${tq}">Total quantity only</button></div>
+      ${tq?`<label class="field" style="max-width:240px"><span>Total quantity (pcs)</span>${inp('totalQty',S.totalQty||'',{type:'number',mode:'numeric',ph:'e.g. 5000',id:'f-totqty',label:'Total quantity'})}</label>
+      <p class="hint" style="margin:0">One number for the whole product, whatever the colour or size. Colours below are optional: they're just listed by name.</p>`
+      :'<p class="hint" style="margin:0">Count each colour by boxes or sizes, or give a colour just its total quantity. Only know the total for the whole product? Choose <b>Total quantity only</b>.</p>'}</div>
     <div class="group"><h3>Table on the sheet</h3>
       <div class="seg" role="group" aria-label="Show the table on the sheet"><button type="button" data-ctshow="1" aria-pressed="${S.showColours!==false}">Show table</button><button type="button" data-ctshow="0" aria-pressed="${S.showColours===false}">Hide table</button></div>
-      ${S.showColours===false?'<p class="note">Hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so <b>Show table</b> brings it back as it was.</p>'
+      ${S.showColours===false?`<p class="note">Hidden on the sheet and in downloads. Your colours, sizes and formatting are kept, so <b>Show table</b> brings it back as it was.${tq?' The total quantity shows in the Total pieces row under Product details.':''}</p>`
+      :tq?`<p class="note">Lists your colours, with the total quantity in the TOTAL row. Hide the table to show just a Total pieces row under Product details.</p><div class="chks">${chk('h:colours','Heading')}${chk('col:total','Total pcs')}${chk('row:total','TOTAL row')}</div>`
       :`<span class="note" style="font-weight:600;color:var(--ink)">Columns</span><div class="opts" role="group" aria-label="Table columns">${[['sizes','One column per size',['Colour',...(isHid('col:sizes')?[]:S.sizes.map(x=>x||'?')),...(isHid('col:boxes')?[]:['Boxes']),...(isHid('col:total')?[]:['Total pcs'])]],['box','Pieces per box',['Colour',...(isHid('col:perbox')?[]:['Pcs per box']),...(isHid('col:boxes')?[]:['Boxes']),...(isHid('col:total')?[]:['Total pcs'])]]].map(([v,l,cols])=>
         `<button type="button" class="opt" data-ctcols="${v}" aria-pressed="${(v==='sizes')===!!S.showSizes}"><b>${l}</b><span class="cols">${cols.map(x=>`<i>${esc(x)}</i>`).join('')}</span></button>`).join('')}</div>
       <span class="note" style="font-weight:600;color:var(--ink)">Show on the sheet</span>
       <div class="chks">${chk('h:colours','Heading')}${S.showSizes?chk('col:sizes','Size columns'):chk('col:perbox','Pcs per box')}${chk('col:boxes','Boxes')}${chk('col:total','Total pcs')}${chk('row:total','TOTAL row')}</div>`}
     </div>
-    <div class="group"><h3>Sizes</h3>
+    ${tq?'':`<div class="group"><h3>Sizes</h3>
       <div class="seg" role="group" aria-label="How pieces are counted"><button type="button" data-mode="ratio" aria-pressed="${rat}">Ratio per box</button><button type="button" data-mode="manual" aria-pressed="${!rat}">Exact pieces</button></div>
       <p class="hint" style="margin:0">${rat?'Every box has the same mix of sizes. Enter the ratio (e.g. 1-2-2-1 is twice as many M and L as S and XL) and the pieces per box; each colour just needs its number of boxes.':'Type how many pieces of each size every colour has. Each colour can have its own sizes: add or remove them on the colour below. Boxes are optional, for the Boxes column.'}</p>
       <div class="szgrid">${S.sizes.map((sz,j)=>`<div class="szc">${inp(`size:${j}`,sz,{label:'Size name',ph:'Size'})}${rat?`<label class="rt"><small>ratio</small>${inp(`ratio:${j}`,S.ratio[j]??0,{num:1,type:'number',mode:'decimal',label:'Ratio for '+sz})}</label>`:''}<button class="tiny x" type="button" data-sdelj="${j}" aria-label="Remove size ${esc(sz)}" ${n<=1?'disabled':''}>${I.x}</button></div>`).join('')}
         <button class="add szadd" type="button" data-sadd="1">${I.plus}Size</button></div>
       ${rat?`<label class="field" style="max-width:220px"><span>Pieces per box</span>${inp('perBox',S.perBox,{type:'number',mode:'numeric'})}</label>
       <div class="sizes"><p class="note">Each box: ${S.sizes.map((sz,j)=>`${+c.per[j].toFixed(1)} ${esc(sz)}`).join(', ')}.</p>${c.uneven?`<p class="warn">${S.perBox} pieces don't split evenly at this ratio. Numbers are rounded.</p>`:''}</div>`:''}
-    </div>
-    <h3 style="margin:4px 0 0">Colours</h3>
-    <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${cntFld(co,i,rat)}</div>
+    </div>`}
+    <h3 style="margin:4px 0 0">Colours${tq?' <small class="note" style="font-weight:500">(optional)</small>':''}</h3>
+    <div class="list">${S.colours.map((co,i)=>tq?`<div class="item"><div class="grow">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}</div>
+      <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`:`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${cntFld(co,i,rat)}</div>
       ${byPcs(co)?`<small class="hint">${c.rows[i].tot} pcs total quantity. Boxes and sizes show as – on the sheet.</small>`:!rat?`<div class="cszs">${S.sizes.map((sz,j)=>cUses(co,j)?`<div class="csz"><span class="nm" title="${esc(sz)}">${esc(sz)||'?'}</span>${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:(sz||'Size')+' pieces'})}<button class="tiny x" type="button" data-cszdel="${i}:${j}" aria-label="Remove ${esc(sz)} from this colour" title="Remove from this colour">${I.x}</button></div>`:'').join('')}</div>
       <div class="csz-add"><input class="in" list="szl-${i}" data-csznew="${i}" placeholder="New size, e.g. 3XL" aria-label="Add a size to this colour" autocomplete="off"><datalist id="szl-${i}">${S.sizes.map((sz,j)=>cUses(co,j)||!sz?'':`<option value="${esc(sz)}">`).join('')}</datalist><button class="btn sm" type="button" data-cszgo="${i}">${I.plus}Add size</button></div>
       <small class="hint">${c.rows[i].tot} pcs</small>`:`<small class="hint">${c.rows[i].q.map((q,j)=>`${q} ${esc(S.sizes[j]||'?')}`).join(' · ')} · ${c.rows[i].tot} pcs</small>`}</div>
@@ -1833,6 +1846,7 @@ function renderPanel0(){whereSet('editor',tab);
         <label class="field"><span>Per</span><select class="in" data-k="price:unit" id="f-unit">${UNITS.map(u=>`<option value="${u}"${S.price.unit===u?' selected':''}>${u}</option>`).join('')}</select></label></div>`
       :r.auto==='sizes'?`<div class="sizes" style="--n:${n}"><div class="r">${S.sizes.map((s,j)=>inp(`size:${j}`,s,{num:1,label:'Size name',id:j?'':'f-size'})).join('')}<button class="tiny x" data-sdel="1" aria-label="Remove last size" ${n<=1?'disabled':''}>${I.x}</button></div></div>
         <button class="add" data-sadd="1" style="justify-self:start">${I.plus}Add size</button>`
+      :r.auto==='total'&&allTot()?`<label class="field" style="max-width:240px"><span>Total quantity (pcs)</span>${inp('totalQty',S.totalQty||'',{type:'number',mode:'numeric',ph:'e.g. 5000',label:'Total quantity'})}</label>${totalInTable()?'<small class="hint">Off on the sheet while the colours table shows the total; it switches on by itself when the table (or its total) is hidden.</small>':''}`
       :r.auto==='total'?`<p class="note" id="f-total"><b>${calc().T.tot} pcs</b>, worked out from the colours. ${totalInTable()?'Off on the sheet while the colours table shows the total; it switches on by itself when the table (or its total) is hidden.':'On the sheet because the colours table isn\'t showing the total.'}</p>`
       :`<label class="field"><span>Pieces per box</span>${inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'})}</label>`;
     h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove, reorder or hide them. Price, sizes and pieces per box are entered here once and used everywhere on the sheet.</p>
@@ -1893,6 +1907,8 @@ $('#panel').addEventListener('click',e=>{
   else if(d.pmove){const i=+d.pmove;[S.photos[i-1],S.photos[i]]=[S.photos[i],S.photos[i-1]];}
   else if(d.ctshow){S.showColours=d.ctshow==='1';if(!S.showColours&&selBlock==='colours')selBlock=null;}
   else if(d.ctcols){S.showSizes=d.ctcols==='sizes';}
+  else if(d.count){if(d.count==='total'){if(!allTot()){S.totalQty=S.totalQty||calc().T.tot||0;S.count='total';}}else delete S.count;
+    renderPanel();renderSheet();touch();if(allTot())$('#f-totqty')?.focus();return;}
   else if(d.cby){const[i,by]=d.cby.split(':'),co=S.colours[+i];if(!co)return;
     if(by==='pcs'){if(!byPcs(co)){co.pcs=calc().rows[+i].tot||0;co.by='pcs';}}else delete co.by;
     renderPanel();renderSheet();touch();$(`#panel [data-k="colour:${i}:${by}"]`)?.focus();return;}
@@ -1964,9 +1980,10 @@ function setSizesList(txt){const L=String(txt||'').split(',').map(x=>x.trim().sl
   while(S.sizes.length<L.length){S.sizes.push('');S.ratio.push(1);S.colours.forEach(c=>{c.qty.push(0);if(Array.isArray(c.use))c.use.push(true);});}
   L.forEach((x,j)=>S.sizes[j]=x);return true;}
 const qeRefresh=()=>{renderSheet();touch();renderPanelIf('details');renderPanelIf('colours');};
-function qeOpen(a,el){qeClose();if(a==='total'){gotoAuto('total');return;}
+function qeOpen(a,el){qeClose();if(a==='total'&&!allTot()){gotoAuto('total');return;}
   const m=document.createElement('div');m.id='qe';m.className='ctx qe';m.setAttribute('role','dialog');m.dataset.a=a;
   const body=a==='price'?`<div class="ttl">Price</div><div class="r"><input class="in" data-qk="price:amount" value="${esc(S.price.amount)}" placeholder="e.g. 12.50" inputmode="decimal" aria-label="Price (${esc(SET.currency)})"><select data-qk="price:unit" aria-label="Per">${UNITS.map(u=>`<option value="${u}"${S.price.unit===u?' selected':''}>per ${u}</option>`).join('')}</select></div>`
+    :a==='total'?`<div class="ttl">Total quantity</div><div class="r"><input class="in" data-qk="totalQty" type="number" min="0" inputmode="numeric" value="${esc(S.totalQty||'')}" aria-label="Total quantity"><span class="lbl">pcs</span></div>`
     :a==='sizes'?`<div class="ttl">Sizes</div><input class="in" data-qsizes="1" value="${esc(S.sizes.join(', '))}" placeholder="S, M, L, XL" aria-label="Sizes"><small class="hint">Separate with commas. Sizes added at the end start empty.</small>`
     :`<div class="ttl">Packing</div><div class="r"><input class="in" data-qk="perBox" type="number" min="1" inputmode="numeric" value="${esc(S.perBox)}" aria-label="Pieces per box"><span class="lbl">pcs per box</span></div>`;
   m.innerHTML=`${body}<div class="foot"><button class="btn sm ghost" type="button" data-qmore="1">More options</button><button class="btn sm primary" type="button" data-qdone="1">Done</button></div>`;
@@ -2454,11 +2471,11 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
       title=T(c.filter((_,j)=>j!==k&&j!==codeCell).join(' '))||before;
       if(!title&&i>0)title=T(rows[i-1].cells.join(' '));break;}}
   // colours & sizes table: a header with "Colour" and "Boxes"/"Total"
-  let ci=-1,head=[];for(let i=0;i<rows.length;i++){const h=rows[i].cells.map(x=>T(x).toUpperCase());if(h.length>=3&&/^COLOU?RS?$/.test(h[0])&&h.some(x=>/^(BOXES|TOTAL( PCS| PIECES)?|PCS PER BOX)$/.test(x))){ci=i;head=h;break;}}
-  let colours=[],sizes=[],layout='',perBoxCol=null,ce=ci;
+  let ci=-1,head=[];for(let i=0;i<rows.length;i++){const h=rows[i].cells.map(x=>T(x).toUpperCase());if((h.length>=3||/^TOTAL/.test(h[1]||''))&&/^COLOU?RS?$/.test(h[0])&&h.some(x=>/^(BOXES|TOTAL( PCS| PIECES)?|PCS PER BOX)$/.test(x))){ci=i;head=h;break;}}
+  let colours=[],sizes=[],layout='',perBoxCol=null,ce=ci,totAll=0;
   if(ci>=0){const bi=head.findIndex(x=>x==='BOXES'),pi=head.findIndex(x=>/PCS PER BOX|PIECES PER BOX/.test(x)),ti=head.findIndex(x=>/^TOTAL/.test(x));layout=pi>0?'box':'sizes';
     sizes=layout==='sizes'?rows[ci].cells.slice(1,bi>0?bi:head.length-1).map(T):[];
-    for(let i=ci+1;i<rows.length;i++){const c=rows[i].cells.map(T);if(/^TOTAL$/i.test(c[0])){ce=i;break;}const nums=c.slice(1).map(num);if(c.length<2||nums.some(isNaN)){ce=i-1;break;}
+    for(let i=ci+1;i<rows.length;i++){const c=rows[i].cells.map(T);if(/^TOTAL$/i.test(c[0])){ce=i;totAll=num(c[c.length-1])||0;break;}const nums=c.slice(1).map(num);if(c.length<2||nums.some(isNaN)){ce=i-1;break;}
       let co;if(layout==='box'){perBoxCol=perBoxCol??(nums[pi-1]||null);co={name:c[0]==='–'?'':c[0],boxes:nums[bi>0?bi-1:1]||0,qty:[]};}
       else co={name:c[0]==='–'?'':c[0],boxes:bi>0?nums[bi-1]||0:0,qty:sizes.map((_,j)=>nums[j]||0)};
       // a total with no boxes (and no sizes): the colour was entered as a total only
@@ -2482,8 +2499,12 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
       const ratio=per?per.qty.map(q=>q/per.boxes):null,same=ratio&&colours.every(c=>c.by||c.qty.every((q,j)=>Math.abs(q-ratio[j]*c.boxes)<1e-6));
       if(same&&ratio.every(r=>Number.isInteger(r))){t.mode='ratio';t.ratio=ratio;t.perBox=ratio.reduce((a,b)=>a+b,0)||t.perBox;}else{t.mode='manual';t.ratio=sizes.map(()=>1);}}}
   else t.showColours=false;
+  // only a grand total, nothing per colour or size: the whole product was given as one total quantity
+  const noSplit=!colours.some(c=>c.boxes||c.qty.some(Boolean)||c.by);
+  if(colours.length&&noSplit&&totAll){t.count='total';t.totalQty=totAll;t.colours.forEach(c=>{delete c.by;});}
   if(details.length){t.rows=details.map(([l,v])=>{const r={id:uid(),label:nice(l),value:v};
       if(/^price$/i.test(l)){const m=v.replace(/,/g,'').match(/([\d.]+)\s*(?:\/|per|an?)\s*(piece|pc|unit|box|dozen|pack|set|pair)/i);if(m){t.price={amount:m[1],unit:/^(pc|unit)/i.test(m[2])?'piece':m[2].toLowerCase()};r.auto='price';r.value='';}}
+      else if(/^total( pieces| pcs| quantity)?$/i.test(l)&&noSplit){const m=v.replace(/,/g,'').match(/^(\d+)\s*(?:pcs?|pieces?)?$/i);if(m){t.count='total';t.totalQty=+m[1];r.auto='total';r.value='';}}
       else if(/^packing$/i.test(l)){const m=v.match(/(\d+)\s*(?:pcs?|pieces?)\s*(?:per|\/|a)\s*box/i);if(m){t.perBox=+m[1];r.auto='packing';r.value='';}}
       else if(/^sizes?$/i.test(l)&&t.showSizes&&v.replace(/\s/g,'')===t.sizes.join(',')){r.auto='sizes';r.value='';}
       return r;});}
@@ -2500,7 +2521,7 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
   t.title=str(r.title,200);t.code=str(r.code,100);t.email=str(r.email,200);
   t.price={amount:str(r.price?.amount,40),unit:UNITS.includes(r.price?.unit)?r.price.unit:'piece'};
   const sz=arr(r.sizes).slice(0,20).map(x=>str(x,20));if(sz.length){t.sizes=sz;t.ratio=sz.map((_,j)=>num(arr(r.ratio)[j],1,0,9999));}
-  t.perBox=num(r.perBox,24,1,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;{const hd=obj(r.hide);t.hide=Object.fromEntries(Object.keys(HIDE_NAME).filter(k=>hd[k]).map(k=>[k,1]));}
+  t.perBox=num(r.perBox,24,1,99999);if(r.count==='total'){t.count='total';t.totalQty=num(r.totalQty,0,0,999999999);}t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;{const hd=obj(r.hide);t.hide=Object.fromEntries(Object.keys(HIDE_NAME).filter(k=>hd[k]).map(k=>[k,1]));}
   const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999)),...(Array.isArray(c?.use)?{use:t.sizes.map((_,j)=>c.use[j]!==false)}:{}),...(c?.by==='pcs'?{by:'pcs',pcs:num(c?.pcs,0,0,99999999)}:{})}));if(co.length)t.colours=co;
   const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto),...(x?.hidden===true?{hidden:true}:{})}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
   const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
@@ -4458,7 +4479,7 @@ function ivVal(x,k,cell){const s=x.sum||{},z=()=>ivSendStats(x),line=(t,cls='iv-
     case'sizes':return s.sizes?.length&&s.showSizes?line(esc(s.sizes.join(' · '))):'';
     case'swatch':return swDots(s.colours||[],cell?6:8);
     case'colnames':return s.colours?.length?line(esc(s.colours.map(c=>c.name).join(', '))):'';
-    case'colqty':return s.colours?.length?line(s.colours.map(c=>`${esc(c.name)} <b>${ivNF.format(c.tot||0)}</b>`).join(' · ')):'';
+    case'colqty':return s.colours?.length?line(s.colours.map(c=>c.po&&!c.tot?esc(c.name):`${esc(c.name)} <b>${ivNF.format(c.tot||0)}</b>`).join(' · ')):'';
     case'type':return x.type?line(esc(x.type)):'';
     case'cat':return x.cat?line(esc((x.cats||[x.cat]).filter(Boolean).join(' / '))):'';
     case'sent':{const a=z();return cell?(a.n?`${a.n}${a.rep?` <span class="iv-sync">· ${a.rep} ↩</span>`:''}`:'<span class="iv-sync">–</span>'):`<span class="iv-sent">${a.n?`Sent to <b>${a.n}</b> · ${a.rep?`<span class="rp">${a.rep} replied</span>`:'no replies yet'}`:'Not sent yet'}</span>`;}
@@ -4542,7 +4563,7 @@ function renderInvDetail(force){const d=$('#ivDetail');
         <button class="iv-chip" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!ivm(mk(x)).star}">${ivm(mk(x)).star?'★ Starred':'☆ Star'}</button></div>
       ${x.bad?`<p class="iv-bad">${esc(x.bad)}. You can still open it in Drive.</p>`:''}
       ${s?`<div class="ivd-kpis"><div><small>Total pieces</small><b>${ivNF.format(s.pcs||0)}</b></div><div><small>Boxes</small><b>${ivNF.format(s.boxes||0)}</b></div><div><small>Colours</small><b>${(s.colours||[]).length}</b></div></div>`:''}
-      ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.po?'–':c.q?.[j]||'–'}</td>`).join(''):''}<td>${c.po?'–':ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
+      ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.po?'–':c.q?.[j]||'–'}</td>`).join(''):''}<td>${c.po?'–':ivNF.format(c.boxes||0)}</td><td>${c.po&&!c.tot?'–':ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
         <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
       ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
       ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck))),never=CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m))));
