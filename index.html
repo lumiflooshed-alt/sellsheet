@@ -504,6 +504,10 @@ textarea.np-in{display:block;overflow:hidden}
 .in.num{font-family:var(--mono);font-size:15px;text-align:center;padding:0 6px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .group{border:1px solid var(--line);border-radius:var(--r);background:var(--raise);padding:14px;display:grid;gap:12px}
+.ai-txt{height:auto;min-height:190px;padding:10px 12px;resize:vertical;line-height:1.45;font:inherit;font-size:14px}
+.ai-st{display:grid;gap:6px;font-size:13.5px;color:var(--muted)}.ai-st[hidden]{display:none}.ai-st.bad{color:var(--bad)}
+.ai-bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.ai-bar i{display:block;height:100%;width:var(--p,0%);background:var(--accent);transition:width .3s}.ai-bar[hidden]{display:none}
+.ai-go{justify-self:start}
 .group h3{margin:0;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--raise);border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px}
 .seg button{height:38px;border:0;border-radius:8px;background:transparent;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;padding:0 12px;transition:background .15s,color .15s,box-shadow .15s}
@@ -1482,7 +1486,7 @@ const toast=(t,ms=2600,act)=>{const el=$('#toast');const host=topDialog()||docum
   clearTimeout(toast.t);clearTimeout(toast.h);
   if(el.showPopover){try{el.hidePopover();}catch(_){}try{el.showPopover();}catch(_){}}
   requestAnimationFrame(()=>el.classList.add('on'));toast.t=setTimeout(()=>{el.classList.remove('on');toast.h=setTimeout(()=>{if(!el.classList.contains('on')&&el.hidePopover)try{el.hidePopover();}catch(_){}},400);},ms);};
-const I={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',eyeoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10 10 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 4.1-5.1M9.9 5.2A9 9 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"/></svg>',paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>',
+const I={ai:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',eyeoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10 10 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 4.1-5.1M9.9 5.2A9 9 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"/></svg>',paste:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>',
   product:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>',
   photos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>',
   colours:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>',
@@ -1495,7 +1499,7 @@ const I={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
 const phCols=n=>n<=4?Math.max(1,n):Math.ceil(n/Math.ceil(n/4));   // photos per row
-const TABS=[['product','Product'],['photos','Photos'],['colours','Colours'],['details','Details'],['contact','Contact'],['style','Style']];
+const TABS=[['ai','Assistant'],['product','Product'],['photos','Photos'],['colours','Colours'],['details','Details'],['contact','Contact'],['style','Style']];
 const DEF_STYLE={font:'Arial',sz:{title:23,code:22,heading:11.5,thead:10,table:14,label:10.7,value:14,contactH:17,email:13.3},phH:233,lw:166,gap:20,blocks:{header:{w:100,h:0},photos:{w:100},colours:{w:100,h:0},details:{w:100,h:0},footer:{w:100,h:0}}};
 const BLOCK_NAMES={header:'Header',photos:'Photos',colours:'Colours table',details:'Details table',footer:'Footer'};
 const SZ_NAMES={title:'Product name',code:'Item code',heading:'Section headings',thead:'Table headers',table:'Table text',label:'Detail labels',value:'Detail values',contactH:'Footer heading',email:'Email'};
@@ -1765,6 +1769,132 @@ function setKey(k,v){
   }
 }
 
+/* ---------- Assistant: a small language model that runs inside this browser ----------
+   Nothing is sent to a server: the model is downloaded once (from Hugging Face, via the WebLLM library),
+   kept in the browser's storage, and runs on this computer's graphics chip (WebGPU). */
+const AI_LIB='https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.86/+esm';
+const AI_MODELS={std:{f16:'Qwen2.5-3B-Instruct-q4f16_1-MLC',f32:'Qwen2.5-3B-Instruct-q4f32_1-MLC',size:'about 2 GB',name:'Standard',hint:'Better results'},
+  lite:{f16:'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',f32:'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',size:'about 1 GB',name:'Light',hint:'For older computers'}};
+const AI_MAX=6000; // characters: the model reads about 4,000 tokens at once, with room left for its answer
+const AI={text:'',busy:false,msg:'',bad:false,pct:-1,lib:null,engine:null,engineId:'',gpu:null,size:lsGet('ss-ai-size')==='lite'?'lite':'std',replace:false};
+const AI_SCHEMA={type:'object',additionalProperties:false,required:['title','code','brand','sizes','ratio','perBox','colours','price','priceUnit','details','email'],properties:{
+  title:{type:'string'},code:{type:'string'},brand:{type:'string'},
+  sizes:{type:'array',items:{type:'string'}},ratio:{type:'array',items:{type:'number'}},perBox:{type:'integer'},
+  colours:{type:'array',items:{type:'object',additionalProperties:false,required:['name','boxes','qty'],properties:{name:{type:'string'},boxes:{type:'integer'},qty:{type:'array',items:{type:'integer'}}}}},
+  price:{type:'string'},priceUnit:{type:'string',enum:UNITS},
+  details:{type:'array',items:{type:'object',additionalProperties:false,required:['label','value'],properties:{label:{type:'string'},value:{type:'string'}}}},
+  email:{type:'string'}}};
+const AI_SYSTEM=`You fill in a wholesale sell sheet (one product) from the user's notes. Reply with JSON only, matching the schema.
+Rules:
+- Use only facts found in the notes. Never invent anything. If something isn't given, use "" for text, 0 for numbers and [] for lists.
+- title: the product name, short, in Title Case (e.g. "Mens Fleece Hoodie"). Don't put the item code in it.
+- code: the item, style or article number exactly as written.
+- brand: the brand or label, if given.
+- sizes: the size names in order from small to large (e.g. ["S","M","L","XL"]).
+- ratio: how many of each size go in one box or pack, in the same order as sizes (a ratio of 1-2-2-1 is [1,2,2,1]).
+- perBox: how many pieces are in one box, carton or pack.
+- colours: one entry per colour. name in Title Case ("navy blue" becomes "Navy Blue"). boxes = how many boxes or cartons of that colour. qty = pieces of each size in the same order as sizes, only if the notes give exact pieces per size, otherwise [].
+- price: only the number, without a currency sign (e.g. "12.50"). priceUnit: what the price is for: piece, box, dozen, pack, set or pair.
+- details: other useful selling facts as short rows, e.g. {"label":"Fabric","value":"80% cotton, 20% polyester"}, {"label":"Style features","value":"Soft fleece, front pocket, ribbed cuffs"}, {"label":"Location","value":"FOB: Los Angeles"}. Labels are 1 to 3 words in Title Case. Values are short; separate lists with commas. Don't repeat the price, sizes, packing, brand, colours or totals here.
+- email: a contact email address, only if one is written in the notes.
+Fix spelling and capital letters, and keep everything short and tidy, ready to print.`;
+const aiModelId=()=>AI_MODELS[AI.size][AI.gpu&&AI.gpu.f16?'f16':'f32'];
+function aiPanel(){const M=AI_MODELS[AI.size],n=AI.text.length;
+  return`<h2>Assistant</h2><p class="lead">Paste anything about the product: a supplier email, a packing list, your own notes. The assistant fills in the sheet and tidies the wording for you.</p>
+  <label class="field"><span>About the product</span><textarea class="in ai-txt" id="aiText" placeholder="e.g. Mens fleece hoodie, style FH-2210, brand Northpeak. Sizes S-XL packed 1-2-2-1, 12 pcs per carton. Black 10 ctns, navy 8 ctns, heather grey 6 ctns. $9.75/pc FOB Los Angeles. 80/20 cotton poly, kangaroo pocket, ribbed cuffs.">${esc(AI.text)}</textarea><small class="hint" id="aiCount">${aiCountText(n)}</small></label>
+  <button class="add" type="button" data-ai="file" style="justify-self:start">${I.plus}Add text from a file (PDF, Word or text)</button>
+  <div class="seg" role="group" aria-label="What the assistant may change"><button type="button" data-ai="mode:fill" aria-pressed="${!AI.replace}">Fill empty boxes only</button><button type="button" data-ai="mode:replace" aria-pressed="${AI.replace}">Replace what's there</button></div>
+  <button class="btn primary ai-go" type="button" data-ai="go" ${AI.busy?'disabled':''}>${I.ai}Fill the sheet</button>
+  <div class="ai-st${AI.bad?' bad':''}" id="aiSt" role="status" aria-live="polite" ${AI.msg?'':'hidden'}><div class="ai-bar" ${AI.pct<0?'hidden':''} style="--p:${Math.max(0,AI.pct)}%"><i></i></div><span>${esc(AI.msg)}</span></div>
+  <p class="note">Always check what it wrote before you send the sheet: it can make mistakes. <b>Undo</b> appears for a few seconds after it fills the sheet.</p>
+  <div class="group"><h3>About the assistant</h3>
+    <p class="hint" style="margin:0">It runs entirely on this computer: nothing you paste is sent anywhere. The first time, it downloads the assistant (${M.size}) and keeps it in this browser, so after that it starts in seconds and works offline. It needs a recent Chrome, Edge or Safari on a computer with a graphics chip.</p>
+    <div class="seg" role="group" aria-label="Assistant size">${Object.entries(AI_MODELS).map(([k,m])=>`<button type="button" data-ai="size:${k}" aria-pressed="${AI.size===k}" title="${m.hint}">${m.name} (${m.size})</button>`).join('')}</div></div>`;}
+function aiCountText(n){return n>AI_MAX?`${n.toLocaleString()} characters: too long. Keep it under ${AI_MAX.toLocaleString()} by removing anything that isn't about this product.`:n?`${n.toLocaleString()} / ${AI_MAX.toLocaleString()} characters`:'Tip: Ctrl+Enter fills the sheet.';}
+function aiSay(msg,pct=-1,bad=false){AI.msg=msg;AI.pct=pct;AI.bad=bad;const el=$('#aiSt');if(!el)return;el.hidden=!msg;el.classList.toggle('bad',bad);
+  const b=el.querySelector('.ai-bar');b.hidden=pct<0;b.style.setProperty('--p',Math.max(0,pct)+'%');el.querySelector('span').textContent=msg;}
+function aiBusy(on){AI.busy=on;const b=$('#panel [data-ai="go"]');if(b)b.disabled=on;}
+async function aiGpu(){if(AI.gpu)return AI.gpu;let g={ok:false};
+  try{const a=navigator.gpu&&await navigator.gpu.requestAdapter();if(a)g={ok:true,f16:a.features.has('shader-f16')};}catch(_){}return AI.gpu=g;}
+async function aiEngine(){const id=aiModelId();if(AI.engine&&AI.engineId===id)return AI.engine;
+  const wl=await(AI.lib||(AI.lib=import(AI_LIB).catch(e=>{AI.lib=null;throw Object.assign(e,{aiStep:'lib'});})));
+  if(AI.engine){try{await AI.engine.unload();}catch(_){}AI.engine=null;AI.engineId='';}
+  let have=false;try{have=await wl.hasModelInCache(id);}catch(_){}
+  aiSay(have?'Starting the assistant…':`Downloading the assistant (${AI_MODELS[AI.size].size}, only the first time)…`,0);
+  AI.engine=await wl.CreateMLCEngine(id,{initProgressCallback:r=>{const p=Math.round((r.progress||0)*100);aiSay(have||p>=100?`Starting the assistant… ${p}%`:`Downloading the assistant (${AI_MODELS[AI.size].size}, only the first time)… ${p}%`,p);}});
+  AI.engineId=id;return AI.engine;}
+async function aiRun(){if(AI.busy)return;const text=AI.text.trim();
+  if(!text){aiSay('Paste or type something about the product first.',-1,true);$('#aiText')?.focus();return;}
+  if(text.length>AI_MAX){aiSay(aiCountText(text.length),-1,true);return;}
+  const g=await aiGpu();
+  if(!g.ok){aiSay('This browser can\'t run the assistant (it needs WebGPU). Open the site in a recent Chrome, Edge or Safari on a computer.',-1,true);return;}
+  const target=S;aiBusy(true);
+  try{const eng=await aiEngine();aiSay('Reading your notes and filling in the sheet…');
+    const r=await eng.chat.completions.create({messages:[{role:'system',content:AI_SYSTEM},{role:'user',content:'Notes:\n"""\n'+text+'\n"""'}],
+      temperature:0,max_tokens:1500,response_format:{type:'json_object',schema:JSON.stringify(AI_SCHEMA)}});
+    const ch=r.choices&&r.choices[0];if(ch&&ch.finish_reason==='length')throw Object.assign(new Error('length'),{aiStep:'length'});
+    let o;try{o=JSON.parse(ch.message.content);}catch(_){throw Object.assign(new Error('json'),{aiStep:'json'});}
+    if(S!==target){aiSay('You switched to another sell sheet, so nothing was changed. Go back and try again.',-1,true);return;}
+    const did=aiApply(o);aiSay(did.length?'Filled in: '+did.join(', ')+'. Check it over.':AI.replace?'Nothing new found in your notes.':'Nothing new to fill in. To overwrite what\'s already on the sheet, choose Replace what\'s there.');}
+  catch(e){console.error(e);const s=e&&e.aiStep,m=String(e&&e.message||e);
+    aiSay(s==='lib'?'Couldn\'t load the assistant. Check your internet connection (it\'s only needed the first time) and try again.'
+      :s==='length'||s==='json'?'The assistant got muddled. Try again, or shorten the notes to just this product.'
+      :/memory|OOM|allocate|device (was )?lost/i.test(m)?'This computer ran out of graphics memory. Choose Light under About the assistant, close other tabs, and try again.'
+      :/quota|storage/i.test(m)?'There isn\'t enough free space in this browser to keep the assistant. Free up some disk space, or choose Light, and try again.'
+      :/fetch|network|Failed to load/i.test(m)?'The download was interrupted. Check your internet connection and try again: it carries on where it stopped.'
+      :'The assistant stopped with an error: '+m,-1,true);
+    if(!/^(lib|length|json)$/.test(s||'')){try{await AI.engine?.unload();}catch(_){}AI.engine=null;AI.engineId='';}}
+  finally{aiBusy(false);}}
+// Merge the assistant's answer into the sheet: only clean, expected values, and (unless Replace) only into empty places.
+function aiApply(o){o=o&&typeof o==='object'?o:{};const rep=AI.replace,did=[],T=v=>typeof v==='string'?v.replace(/\s+/g,' ').trim():'',blank=v=>!String(v??'').trim(),
+    N=(v,mx)=>{v=Math.round(+v);return isFinite(v)&&v>0?Math.min(mx,v):0;},A=v=>Array.isArray(v)?v:[];
+  const before=JSON.stringify({title:S.title,code:S.code,email:S.email,price:S.price,sizes:S.sizes,ratio:S.ratio,perBox:S.perBox,mode:S.mode,showSizes:S.showSizes,showColours:S.showColours,colours:S.colours,rows:S.rows});
+  const put=(cur,val,set,what)=>{if(val&&val!==cur&&(rep||blank(cur))){set(val);did.push(what);}};
+  put(S.title,T(o.title).slice(0,200),v=>S.title=v,'product name');
+  put(S.code,T(o.code).slice(0,100),v=>S.code=v,'item code');
+  const em=T(o.email);if(/^[^\s@<>]+@[^\s@<>]+\.[a-z]{2,}$/i.test(em))put(S.email,em.slice(0,200),v=>S.email=v,'email');
+  {const raw=T(o.price),num=raw.replace(/,/g,'').match(/\d+(?:\.\d+)?/),amt=num?num[0]:raw.slice(0,40),hadPrice=!blank(S.price.amount);
+    put(S.price.amount,amt,v=>{S.price.amount=v;if(UNITS.includes(o.priceUnit))S.price.unit=o.priceUnit;},'price');if(!amt&&!hadPrice&&UNITS.includes(o.priceUnit))S.price.unit=o.priceUnit;}
+  // sizes, packing and colours belong together, so they're filled as one
+  const sizes=[...new Set(A(o.sizes).map(x=>T(x).slice(0,20)).filter(Boolean))].slice(0,20);
+  const cols=A(o.colours).map(c=>({name:T(c&&c.name).slice(0,100),boxes:N(c&&c.boxes,99999),qty:A(c&&c.qty).map(q=>N(q,9999999))})).filter(c=>c.name).slice(0,100);
+  const noCols=S.colours.every(c=>blank(c.name));
+  if((sizes.length||cols.length)&&(rep||noCols)){
+    if(sizes.length&&sizes.join('|')!==S.sizes.join('|')){S.sizes=sizes;did.push('sizes');}
+    const n=S.sizes.length,ratio=A(o.ratio).map(x=>+x),okRatio=ratio.length===n&&ratio.every(x=>isFinite(x)&&x>=0)&&ratio.some(x=>x>0),
+      exact=cols.some(c=>c.qty.length===n&&c.qty.some(q=>q>0)),per=N(o.perBox,99999);
+    if(okRatio){S.mode='ratio';S.ratio=ratio.map(x=>Math.min(9999,x));S.perBox=per||Math.round(ratio.reduce((a,b)=>a+b,0))||S.perBox;did.push('size ratio');}
+    else{if(exact)S.mode='manual';if(S.ratio.length!==n)S.ratio=S.sizes.map((_,j)=>S.ratio[j]??1);if(per){S.perBox=per;did.push('pieces per box');}}
+    if(cols.length){S.colours=cols.map(c=>({name:c.name,boxes:c.boxes,qty:S.sizes.map((_,j)=>c.qty.length===n?c.qty[j]||0:0)}));S.showColours=true;did.push(`${cols.length} colour${cols.length>1?'s':''}`);}
+    else S.colours=S.colours.map(c=>({...c,qty:S.sizes.map((_,j)=>c.qty[j]||0),...(Array.isArray(c.use)?{use:S.sizes.map((_,j)=>c.use[j]!==false)}:{})}));}
+  // detail rows: matched by label, new ones added at the end
+  const seen=new Set(),dets=[...(T(o.brand)?[{label:'Brand',value:o.brand}]:[]),...A(o.details)].map(d=>({label:T(d&&d.label).slice(0,100),value:T(d&&d.value).slice(0,1000)}))
+    .filter(d=>{const k=d.label.toLowerCase();if(!d.label||!d.value||seen.has(k)||/^(price|sizes?|packing|total( pieces| pcs)?|colou?rs?|item code|style name|product( name)?)$/i.test(d.label))return false;seen.add(k);return true;});
+  let nd=0;for(const d of dets){const r=S.rows.find(r=>!r.auto&&T(r.label).toLowerCase()===d.label.toLowerCase());
+    if(r){if(d.value!==r.value&&(rep||blank(r.value))){r.value=d.value;nd++;}}else if(S.rows.length<60){S.rows.push({id:uid(),label:d.label,value:d.value});nd++;}}
+  if(nd)did.push(`${nd} detail${nd>1?'s':''}`);
+  if(!did.length)return did;
+  const sheet=S;renderPanel();renderSheet();touch();
+  toast('The assistant filled in the sheet.',8000,{label:'Undo',fn:()=>{if(S!==sheet)return;Object.assign(S,JSON.parse(before));renderPanel();renderSheet();touch();aiSay('Undone.');}});
+  return did;}
+async function aiFile(){const i=document.createElement('input');i.type='file';i.accept='.pdf,.docx,.txt,.csv,.tsv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/csv';
+  i.onchange=async()=>{const f=i.files[0];if(!f)return;aiSay('Reading '+f.name+'…');
+    try{const buf=await f.arrayBuffer(),head=new TextDecoder('latin1').decode(new Uint8Array(buf,0,Math.min(4,buf.byteLength))),flat=({rows})=>rows.map(r=>r.cells.map(c=>String(c||'').replace(/\s+/g,' ').trim()).filter(Boolean).join(' | ')).filter(Boolean).join('\n');
+      let t;if(head.startsWith('%PDF'))t=flat(await pdfRows(buf));
+      else if(head.startsWith('PK')){await loadScript('jszip');const z=await JSZip.loadAsync(buf);if(!z.file('word/document.xml'))throw fail('type');t=flat(await docxRows(z));}
+      else t=new TextDecoder().decode(buf);
+      t=t.trim();if(!t){aiSay('No text found in '+f.name+'.',-1,true);return;}
+      AI.text=(AI.text.trim()?AI.text.trim()+'\n\n':'')+t;const ta=$('#aiText');if(ta){ta.value=AI.text;$('#aiCount').textContent=aiCountText(AI.text.length);}
+      aiSay(AI.text.length>AI_MAX?aiCountText(AI.text.length):'Added the text from '+f.name+'. Remove anything that isn\'t about this product, then click Fill the sheet.',-1,AI.text.length>AI_MAX);}
+    catch(e){console.error(e);aiSay(e.message==='notext'?'That PDF is only a picture of the page, so there\'s no text to read.':e.message==='locked'?'That PDF is password-protected.':'Couldn\'t read '+f.name+'. Choose a PDF, Word (.docx) or text file.',-1,true);}};
+  i.click();}
+$('#panel').addEventListener('input',e=>{if(e.target.id!=='aiText')return;AI.text=e.target.value;$('#aiCount').textContent=aiCountText(AI.text.length);});
+$('#panel').addEventListener('keydown',e=>{if(e.target.id==='aiText'&&e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();aiRun();}});
+$('#panel').addEventListener('click',e=>{const b=e.target.closest('[data-ai]');if(!b)return;const [a,v]=b.dataset.ai.split(':');
+  if(a==='go')aiRun();else if(a==='file')aiFile();
+  else if(a==='mode'){AI.replace=v==='replace';renderPanelIf('ai');}
+  else if(a==='size'){if(AI.busy){toast('Wait until the assistant has finished.');return;}AI.size=v==='lite'?'lite':'std';lsSet('ss-ai-size',AI.size);aiSay('');renderPanelIf('ai');}});
+
 /* ---------- panels ---------- */
 function renderRail(){const r=$('#rail');if(!r.firstChild)r.innerHTML='<span class="ind"></span>'+TABS.map(([k,l],i)=>`<button class="tab" role="tab" data-tab="${k}" style="--i:${i}">${I[k]}<span>${l}</span></button>`).join('');
   r.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));moveInd();}
@@ -1870,6 +2000,7 @@ function renderPanel0(){whereSet('editor',tab);
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="button" data-resetstyle="1">Reset text and layout</button><button class="btn sm" type="button" data-clearfmt="1">Clear text formatting</button></div></div>
     <div class="group"><h3>App appearance</h3><div class="seg" role="group" aria-label="App appearance">${['system','light','dark'].map(m=>`<button type="button" data-appear="${m}" aria-pressed="${(lsGet('ss-appear')||'system')===m}">${m[0].toUpperCase()+m.slice(1)}</button>`).join('')}</div></div>`;
   }
+  else if(tab==='ai')h=aiPanel();
   P.innerHTML=`<div class="pane">${h}</div>`;
 }
 const STRUCT=/^(size|ratio|perBox|colour:\d+:boxes)/;
