@@ -511,6 +511,9 @@ textarea.np-in{display:block;overflow:hidden}
 .list{display:grid;gap:8px}
 .item.off .grow>input,.item.off .grow>.row2,.item.off .grow>.sizes,.item.off .grow>.field{opacity:.6}
 .sheet .ed[data-goto]{cursor:pointer}
+.byseg{display:flex;gap:2px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:2px;align-self:start}
+.byseg button{flex:1;border:0;background:transparent;border-radius:6px;font-size:12.5px;font-weight:600;color:var(--muted);padding:3px 6px;cursor:pointer;white-space:nowrap}
+.byseg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(19,24,38,.12)}
 .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;animation:fade .2s var(--ease)}
 .item .grow{display:grid;gap:8px;min-width:0}
 .item .acts{display:flex;flex-direction:column;gap:4px}
@@ -634,6 +637,13 @@ body.pw-drag{cursor:col-resize;user-select:none}body.pw-drag iframe{pointer-even
 .sheet.live .blk{cursor:default}
 .sheet.live .blk:hover{outline:1px dashed rgba(14,153,63,.45);outline-offset:5px}
 .sheet.live .blk.selected{outline:none}
+.sheet .ct-add{position:absolute;right:0;bottom:-13px;z-index:3;height:24px;padding:0 10px;border-radius:12px;border:1px solid #0E993F;background:#fff;color:#0E993F;font:700 12px var(--ui);cursor:pointer;opacity:0;transition:opacity .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.sheet.live .blk:hover .ct-add,.sheet.live .blk.selected .ct-add,.sheet .ct-add:focus-visible{opacity:1}
+.sheet .ct-add:hover{background:#0E993F;color:#fff}
+.sheet .ct th .ed{display:inline-block;min-width:1.2em}
+.sheet .ct td .ed[data-num]{display:inline-block;min-width:1.4em}
+.qe{width:300px}.qe .in{height:40px}.qe .hint{margin:0 4px}
+.qe .r .in{flex:1}
 .frame{position:absolute;inset:-6px;border:2px solid #0E993F;border-radius:4px;pointer-events:none;animation:fade .18s var(--ease);z-index:5}
 .flbl{position:absolute;left:-2px;top:-27px;background:#0E993F;color:#fff;font:600 12px/1 var(--ui);padding:6px 9px;border-radius:7px 7px 7px 0;white-space:nowrap}
 .bh{position:absolute;pointer-events:auto;background:#fff;border:2.5px solid #0E993F;box-shadow:0 2px 6px rgba(0,0,0,.25);touch-action:none;transition:transform .15s var(--spring)}
@@ -1580,6 +1590,8 @@ const shownRows=()=>S.rows.filter(r=>!r.hidden&&!(r.auto==='total'&&totalInTable
 // in Exact pieces, each colour has its own sizes (c.use lines up with S.sizes; no list means every size)
 const cUses=(c,j)=>!Array.isArray(c.use)||c.use[j]!==false;
 const anyUses=j=>S.mode!=='manual'||S.colours.some(c=>cUses(c,j));
+// a colour counted by its total pieces only (boxes and sizes not known): c.by==='pcs', c.pcs = the total
+const byPcs=c=>c?.by==='pcs';
 function cUseSet(c,j,on){if(!Array.isArray(c.use))c.use=S.sizes.map(()=>true);c.use[j]=on;if(!on)c.qty[j]=0;}
 // a size added to one colour: an existing size is switched on for it; a new name becomes a new size that only this colour has
 function addSizeTo(i,name){const c=S.colours[i];name=String(name||'').trim().slice(0,20);if(!c||!name)return false;
@@ -1599,9 +1611,9 @@ const hiddenList=()=>[...(S.showColours===false?[['colours','Colours table']]:[]
   ...S.rows.filter(r=>r.hidden).map(r=>['r:'+r.id,(r.label||'Unnamed')+' row'])];
 // the colours table's columns, in order: the same for the sheet, Word and email
 function tableCols(c){const cols=[{k:'name',head:'Colour',w:S.showSizes?2300:4200,t:'TOTAL'}];
-  if(S.showSizes){if(!isHid('col:sizes'))S.sizes.forEach((sz,j)=>anyUses(j)&&cols.push({k:'size',hk:'col:sizes',j,head:sz,w:Math.max(500,Math.floor(5600/Math.max(1,S.sizes.length))),v:r=>r.q[j]||'–',t:c.T.q[j]}));}
-  else if(!isHid('col:perbox'))cols.push({k:'perbox',hk:'col:perbox',head:'Pcs per box',w:2100,v:()=>S.perBox,t:''});
-  if(!isHid('col:boxes'))cols.push({k:'boxes',hk:'col:boxes',head:'Boxes',w:1300,v:r=>r.boxes,t:c.T.boxes});
+  if(S.showSizes){if(!isHid('col:sizes'))S.sizes.forEach((sz,j)=>anyUses(j)&&cols.push({k:'size',hk:'col:sizes',j,head:sz,w:Math.max(500,Math.floor(5600/Math.max(1,S.sizes.length))),v:r=>r.po?'–':r.q[j]||'–',t:c.T.q[j]}));}
+  else if(!isHid('col:perbox'))cols.push({k:'perbox',hk:'col:perbox',head:'Pcs per box',w:2100,v:r=>r.po?'–':S.perBox,t:''});
+  if(!isHid('col:boxes'))cols.push({k:'boxes',hk:'col:boxes',head:'Boxes',w:1300,v:r=>r.po?'–':r.boxes,t:c.T.boxes});
   if(!isHid('col:total'))cols.push({k:'total',hk:'col:total',head:'Total pcs',w:1300,v:r=>r.tot,t:c.T.tot});
   return cols;}
 // the small "hide" button that shows when you point at something on the sheet
@@ -1614,7 +1626,8 @@ function calc(){
   const n=S.sizes.length, rs=S.ratio.slice(0,n).reduce((a,b)=>a+(+b||0),0);
   const per=S.sizes.map((_,j)=>rs?S.perBox*(+S.ratio[j]||0)/rs:0);
   const uneven=S.mode==='ratio'&&per.some(x=>Math.abs(x-Math.round(x))>1e-6);
-  const rows=S.colours.map(c=>{const q=S.mode==='ratio'?per.map(x=>Math.round(x*c.boxes)):S.sizes.map((_,j)=>cUses(c,j)?+c.qty[j]||0:0);
+  const rows=S.colours.map(c=>{if(byPcs(c))return{name:c.name,q:S.sizes.map(()=>0),boxes:0,tot:+c.pcs||0,po:true};
+    const q=S.mode==='ratio'?per.map(x=>Math.round(x*c.boxes)):S.sizes.map((_,j)=>cUses(c,j)?+c.qty[j]||0:0);
     const tot=S.mode==='ratio'?S.perBox*c.boxes:q.reduce((a,b)=>a+b,0);return{name:c.name,q,boxes:+c.boxes||0,tot};});
   const T={q:S.sizes.map((_,j)=>rows.reduce((a,r)=>a+r.q[j],0)),boxes:rows.reduce((a,r)=>a+r.boxes,0),tot:rows.reduce((a,r)=>a+r.tot,0)};
   return{per,uneven,rows,T};
@@ -1624,11 +1637,11 @@ const mix=(a,b,t)=>'#'+hex(a).map((v,i)=>Math.round(v+(hex(b)[i]-v)*t).toString(
 function themeVars(){const p=S.theme.primary,a=S.theme.accent;return{p,a,tint:mix(a,'#ffffff',.9),line:mix(p,'#ffffff',.86),pale:mix(a,'#ffffff',.45)};}
 
 /* ---------- sheet render ---------- */
-const szKey=k=>k==='title'?'title':k==='code'?'code':k==='email'?'email':k==='heading:contact'?'contactH':k.startsWith('heading')?'heading':k.startsWith('colour')?'table':k.endsWith(':label')?'label':'value';
+const szKey=k=>/^size:/.test(k)?'thead':k==='perBox'?'table':k==='title'?'title':k==='code'?'code':k==='email'?'email':k==='heading:contact'?'contactH':k.startsWith('heading')?'heading':k.startsWith('colour')?'table':k.endsWith(':label')?'label':'value';
 const effFmt=(k,g)=>Object.assign({},(S.gfmt||{})[g||szKey(k)]||{},k?(S.fmt||{})[k]||{}:{});
 function fmtCss(f){let c='';if(f.color)c+=`color:${f.color};`;if(f.size)c+=`font-size:${f.size}px;`;if(f.bold!=null)c+=`font-weight:${f.bold?700:400};`;if(f.italic)c+='font-style:italic;';if(f.underline)c+='text-decoration:underline;';
   if(f.font)c+=`font-family:'${f.font.replace(/'/g,'')}',Arial,sans-serif;`;if(f.align)c+=`display:block;text-align:${f.align};`;return c;}
-const ed=(k,v,ph,up)=>`<span class="ed${up?' up':''}" contenteditable="true" spellcheck="false" data-edit="${k}" data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
+const ed=(k,v,ph,up,num)=>`<span class="ed${up?' up':''}" contenteditable="true" spellcheck="false" data-edit="${k}"${num?' data-num="1" inputmode="numeric"':''} data-sz="${szKey(k)}" data-ph="${esc(ph||'')}" style="${fmtCss(effFmt(k))}">${esc(v)}</span>`;
 function styleVars(){const st=S.style;return `--f:'${st.font.replace(/'/g,'')}';--phH:${st.phH}px;--lw:${st.lw}px;--gap:${st.gap}px;`+Object.entries(st.sz).map(([k,v])=>`--s-${k}:${v}px`).join(';');}
 // Photos are stored as base64 text (often 300 KB-1 MB each). The sheet is rebuilt on every keystroke, so each photo is turned into a short
 // blob: address once; putting megabytes of text through the HTML parser on every key made typing lag when a sheet had several photos.
@@ -1647,15 +1660,23 @@ function sheetHTML(forExport){
   else if(!forExport) photos=blk('photos',`<div class="phs"><div class="phadd" data-addphoto="1"><span>＋ Add product photos<small style="display:block;font-weight:500;font-size:13px;margin-top:4px;opacity:.8">As many as you like · backgrounds are removed automatically</small></span></div></div>`);
   const L=!forExport, th=(t,k,lbl)=>`<th style="${gH}"${k&&L?' class="hzp"':''}>${t}${k&&L?hz(k,lbl):''}</th>`, td=v=>`<td style="${gT}">${v}</td>`;
   const cols=tableCols(c);
-  const head=cols.map(col=>col.k==='name'?th('Colour'):th(esc(col.head),col.hk,col.k==='size'?'the size columns':'the '+col.head+' column')).join('');
-  const body=c.rows.map((r,i)=>`<tr>${cols.map(col=>col.k==='name'?`<td>${ed('colour:'+i+':name',r.name,COLOUR_EX[i%COLOUR_EX.length])}</td>`:td(col.v(r))).join('')}</tr>`).join('');
-  const tot=isHid('row:total')?'':`<tr class="tot">${cols.map(col=>col.k==='name'?`<td style="${gT}"${L?' class="hzp"':''}>TOTAL${L?hz('row:total','the TOTAL row'):''}</td>`:td(col.t)).join('')}</tr>`;
-  const rows=shownRows().map(r=>`<tr class="${r.auto==='price'?'price':''}"><td${L?' class="hzp"':''}>${ed('row:'+r.id+':label',r.label,'Label')}${L?hz('r:'+r.id,'the '+(r.label||'')+' row'):''}</td><td>${r.auto?ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0]).replace('contenteditable="true"',`contenteditable="false" data-goto="${r.auto}" title="Change this on the Details tab"`):ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
+  const head=cols.map(col=>col.k==='name'?th('Colour'):th(col.k==='size'&&L?ed('size:'+col.j,col.head,'Size'):esc(col.head),col.hk,col.k==='size'?'the size columns':'the '+col.head+' column')).join('');
+  // on the live sheet the numbers you type are editable right there; worked-out numbers stay plain (data-cell lets them update while typing)
+  const cellEd=(col,r,i)=>{if(!L)return null;const co=S.colours[i];
+    if(col.k==='boxes')return ed(`colour:${i}:boxes`,r.po?'':r.boxes,'–',0,1);
+    if(col.k==='total'&&(r.po||S.mode==='ratio'||!co.qty.some(Boolean)))return ed(`colour:${i}:tot`,r.tot||'','–',0,1);
+    if(r.po)return null;
+    if(col.k==='perbox')return ed('perBox',S.perBox,'',0,1);
+    if(col.k==='size'&&S.mode==='manual'&&cUses(co,col.j))return ed(`colour:${i}:qty:${col.j}`,r.q[col.j]||'','–',0,1);
+    return null;};
+  const body=c.rows.map((r,i)=>`<tr>${cols.map((col,ci)=>{if(col.k==='name')return`<td>${ed('colour:'+i+':name',r.name,COLOUR_EX[i%COLOUR_EX.length])}</td>`;const e=cellEd(col,r,i);return`<td style="${gT}"${L?` data-cell="${i}:${ci}"`:''}>${e??col.v(r)}</td>`;}).join('')}</tr>`).join('');
+  const tot=isHid('row:total')?'':`<tr class="tot">${cols.map((col,ci)=>col.k==='name'?`<td style="${gT}"${L?' class="hzp"':''}>TOTAL${L?hz('row:total','the TOTAL row'):''}</td>`:`<td style="${gT}"${L?` data-cell="t:${ci}"`:''}>${col.t}</td>`).join('')}</tr>`;
+  const rows=shownRows().map(r=>`<tr class="${r.auto==='price'?'price':''}"><td${L?' class="hzp"':''}>${ed('row:'+r.id+':label',r.label,'Label')}${L?hz('r:'+r.id,'the '+(r.label||'')+' row'):''}</td><td>${r.auto?ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0]).replace('contenteditable="true"',`contenteditable="false" data-goto="${r.auto}" title="Click to change"`):ed('row:'+r.id+':value',rowVal(r),rowHelp(r)[0])}</td></tr>`).join('');
   const rh=n=>B[n].h?`--rh:${B[n].h}px;`:'';
   return `<div class="sheet${forExport?'':' live'}" style="--p:${tv.p};--a:${tv.a};--tint:${tv.tint};--line:${tv.line};--pale:${tv.pale};${styleVars()}">
     ${isHid('title')&&isHid('code')?'':blk('header',`<div class="hd" style="${B.header.h?`min-height:${B.header.h}px`:''}">${isHid('title')?'<div class="t"></div>':`<div class="t${L?' hzp':''}">${ed('title',S.title,'PRODUCT NAME',1)}${L?hz('title','the product name'):''}</div>`}${isHid('code')?'':`<div class="c${L?' hzp':''}"><small>ITEM CODE</small><b>${ed('code',S.code,'CODE',1)}</b>${L?hz('code','the item code'):''}</div>`}</div>`)}
     ${photos}
-    ${showCt?blk('colours',`${isHid('h:colours')?'':`<div class="sh${L?' hzp':''}">${ed('heading:colours',S.headings.colours,'HEADING',1)}${L?hz('h:colours','the table heading'):''}</div>`}<table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>`,rh('colours')):''}
+    ${showCt?blk('colours',`${isHid('h:colours')?'':`<div class="sh${L?' hzp':''}">${ed('heading:colours',S.headings.colours,'HEADING',1)}${L?hz('h:colours','the table heading'):''}</div>`}<table class="ct"><thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table>${L?'<button type="button" class="ct-add" data-cadd-sheet="1" title="Add a colour row">＋ Colour</button>':''}`,rh('colours')):''}
     ${isHid('details')?'':blk('details',`${isHid('h:details')?'':`<div class="sh${L?' hzp':''}">${ed('heading:details',S.headings.details,'HEADING',1)}${L?hz('h:details','the details heading'):''}</div>`}<div class="dtw${L?' hzp':''}" style="position:relative"><table class="dt"><tbody>${rows}</tbody></table>${forExport?'':'<span class="rz rz-x" data-rz="lw" style="left:var(--lw)" title="Drag to resize the label column"></span>'}</div>`,rh('details'))}
     ${isHid('h:contact')&&isHid('email')?'':blk('footer',`<div class="ft" style="${B.footer.h?`min-height:${B.footer.h}px;display:grid;align-content:center`:''}">${isHid('h:contact')?'':`<div class="h${L?' hzp':''}">${ed('heading:contact',S.headings.contact,'CONTACT US',1)}${L?hz('h:contact','the footer heading'):''}</div>`}${isHid('email')?'':`<div class="e${L?' hzp':''}">${ed('email',S.email,'sales@yourcompany.com')}${L?hz('email','the footer email'):''}</div>`}</div>`)}
   </div>`;
@@ -1733,7 +1754,11 @@ function setKey(k,v){
     case 'price':S.price[p[1]]=v;break;
     case 'perBox':S.perBox=Math.max(1,parseInt(v)||1);break;
     case 'row':{const r=S.rows.find(r=>r.id===p[1]);if(!r||(p[2]==='value'&&r.auto))return;r[p[2]]=v;break;}
-    case 'colour':{const c=S.colours[+p[1]];if(!c)return;if(p[2]==='name')c.name=v;else if(p[2]==='boxes')c.boxes=Math.max(0,parseInt(v)||0);else c.qty[+p[3]]=Math.max(0,parseInt(v)||0);break;}
+    case 'colour':{const c=S.colours[+p[1]];if(!c)return;const n=Math.max(0,parseInt(String(v).replace(/[^\d]/g,''))||0);
+      if(p[2]==='name')c.name=v;else if(p[2]==='boxes'){c.boxes=n;delete c.by;}else if(p[2]==='pcs')c.pcs=n;
+      // the Total pcs cell on the sheet: a whole number of boxes stays counted in boxes, anything else becomes a total-only colour
+      else if(p[2]==='tot'){if(S.mode==='ratio'&&n&&S.perBox>0&&n%S.perBox===0){c.boxes=n/S.perBox;delete c.by;}else{c.by='pcs';c.pcs=n;}}
+      else{c.qty[+p[3]]=n;delete c.by;}break;}
     case 'size':S.sizes[+p[1]]=v;break;
     case 'ratio':S.ratio[+p[1]]=Math.max(0,parseFloat(v)||0);break;
     case 'theme':S.theme[p[1]]=v;break;
@@ -1750,6 +1775,8 @@ window.addEventListener('resize',moveInd);
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;renderRail();renderPanel();});
 const inp=(k,v,o={})=>`<input class="in${o.num?' num':''}" ${o.type?`type="${o.type}"`:''} ${o.mode?`inputmode="${o.mode}"`:''} data-k="${k}" value="${esc(v)}" placeholder="${esc(o.ph||'')}" ${o.id?`id="${o.id}"`:''} aria-label="${esc(o.label||'')}">`;
 const fld=(label,html,hint)=>`<label class="field"><span>${label}</span>${html}${hint?`<small class="hint">${hint}</small>`:''}</label>`;
+// a colour's amount: its number of boxes, or (when boxes aren't known) just the total pieces
+const cntFld=(co,i,rat)=>{const po=byPcs(co);return`<div class="field"><div class="byseg" role="group" aria-label="Count this colour by"><button type="button" data-cby="${i}:boxes" aria-pressed="${!po}">${rat?'Boxes':'Boxes (optional)'}</button><button type="button" data-cby="${i}:pcs" aria-pressed="${po}" title="Don't know the boxes? Enter just the total pieces">Total pcs</button></div>${po?inp(`colour:${i}:pcs`,co.pcs||'',{type:'number',mode:'numeric',num:1,ph:'e.g. 1200',label:'Total pieces'}):inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1,label:'Boxes'})}</div>`;};
 // one redraw at a time: replacing the panel blurs the box being typed in, and its change event would redraw again mid-way
 function renderPanel(){if(renderPanel.on){renderPanel.again=true;return;}renderPanel.on=true;try{renderPanel0();}finally{renderPanel.on=false;}if(renderPanel.again){renderPanel.again=false;renderPanel0();}}
 function renderPanel0(){whereSet('editor',tab);
@@ -1793,8 +1820,8 @@ function renderPanel0(){whereSet('editor',tab);
       <div class="sizes"><p class="note">Each box: ${S.sizes.map((sz,j)=>`${+c.per[j].toFixed(1)} ${esc(sz)}`).join(', ')}.</p>${c.uneven?`<p class="warn">${S.perBox} pieces don't split evenly at this ratio. Numbers are rounded.</p>`:''}</div>`:''}
     </div>
     <h3 style="margin:4px 0 0">Colours</h3>
-    <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${fld(rat?'Boxes':'Boxes (optional)',inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1}))}</div>
-      ${!rat?`<div class="cszs">${S.sizes.map((sz,j)=>cUses(co,j)?`<div class="csz"><span class="nm" title="${esc(sz)}">${esc(sz)||'?'}</span>${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:(sz||'Size')+' pieces'})}<button class="tiny x" type="button" data-cszdel="${i}:${j}" aria-label="Remove ${esc(sz)} from this colour" title="Remove from this colour">${I.x}</button></div>`:'').join('')}</div>
+    <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${cntFld(co,i,rat)}</div>
+      ${byPcs(co)?`<small class="hint">${c.rows[i].tot} pcs in all. Boxes and sizes show as – on the sheet.</small>`:!rat?`<div class="cszs">${S.sizes.map((sz,j)=>cUses(co,j)?`<div class="csz"><span class="nm" title="${esc(sz)}">${esc(sz)||'?'}</span>${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:(sz||'Size')+' pieces'})}<button class="tiny x" type="button" data-cszdel="${i}:${j}" aria-label="Remove ${esc(sz)} from this colour" title="Remove from this colour">${I.x}</button></div>`:'').join('')}</div>
       <div class="csz-add"><input class="in" list="szl-${i}" data-csznew="${i}" placeholder="New size, e.g. 3XL" aria-label="Add a size to this colour" autocomplete="off"><datalist id="szl-${i}">${S.sizes.map((sz,j)=>cUses(co,j)||!sz?'':`<option value="${esc(sz)}">`).join('')}</datalist><button class="btn sm" type="button" data-cszgo="${i}">${I.plus}Add size</button></div>
       <small class="hint">${c.rows[i].tot} pcs</small>`:`<small class="hint">${c.rows[i].q.map((q,j)=>`${q} ${esc(S.sizes[j]||'?')}`).join(' · ')} · ${c.rows[i].tot} pcs</small>`}</div>
       <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`).join('')}</div>
@@ -1848,6 +1875,7 @@ function renderPanel0(){whereSet('editor',tab);
 const STRUCT=/^(size|ratio|perBox|colour:\d+:boxes)/;
 $('#panel').addEventListener('input',e=>{const ly=e.target.dataset.lay;if(ly){S.style[ly]=+e.target.value;e.target.closest('.rng').querySelector('.top2 span:last-child').textContent=S.style[ly]+' px';renderSheet();touch();return;}
   const k=e.target.dataset.k;if(!k)return;setKey(k,e.target.value);renderSheet();touch();
+  {const m=k.match(/^colour:(\d+):pcs$/),h=m&&e.target.closest('.item')?.querySelector('.grow>.hint');if(h)h.textContent=`${calc().rows[+m[1]].tot} pcs in all. Boxes and sizes show as – on the sheet.`;}
   if(tab==='colours'&&/^(ratio|perBox|size)/.test(k)) softRefreshColours();});
 $('#panel').addEventListener('keydown',e=>{const t=e.target;if(e.key==='Enter'&&t.dataset.csznew!==undefined){e.preventDefault();const i=+t.dataset.csznew;if(addSizeTo(i,t.value)!==false){renderPanel();renderSheet();touch();$(`#panel [data-csznew="${i}"]`)?.focus();}}});
 $('#panel').addEventListener('change',e=>{const t=e.target;if(t.dataset.csznew!==undefined)return;if(t.dataset.hidc){setHid(t.dataset.hidc,!t.checked);renderPanel();renderSheet();touch();return;}
@@ -1865,6 +1893,9 @@ $('#panel').addEventListener('click',e=>{
   else if(d.pmove){const i=+d.pmove;[S.photos[i-1],S.photos[i]]=[S.photos[i],S.photos[i-1]];}
   else if(d.ctshow){S.showColours=d.ctshow==='1';if(!S.showColours&&selBlock==='colours')selBlock=null;}
   else if(d.ctcols){S.showSizes=d.ctcols==='sizes';}
+  else if(d.cby){const[i,by]=d.cby.split(':'),co=S.colours[+i];if(!co)return;
+    if(by==='pcs'){if(!byPcs(co)){co.pcs=calc().rows[+i].tot||0;co.by='pcs';}}else delete co.by;
+    renderPanel();renderSheet();touch();$(`#panel [data-k="colour:${i}:${by}"]`)?.focus();return;}
   else if(d.cadd){S.colours.push({name:'',boxes:1,qty:S.sizes.map(()=>0)});}
   else if(d.cdel){S.colours.splice(+d.cdel,1);}
   else if(d.cmove){const[i,dir]=d.cmove.split(':').map(Number);const j=i+dir;[S.colours[i],S.colours[j]]=[S.colours[j],S.colours[i]];}
@@ -1907,18 +1938,49 @@ $('#themeBtn').onclick=()=>{lsSet('ss-appear',isDark()?'light':'dark');applyAppe
 const paper=$('#paper');
 paper.addEventListener('focusin',e=>{if(e.target.dataset?.edit){editingSheet=true;showFbar(e.target);}});
 paper.addEventListener('input',e=>{const k=e.target.dataset?.edit;if(!k)return;const v=e.target.textContent;
-  setKey(k,v);touch();const f=$(`#panel [data-k="${CSS.escape(k)}"]`);if(f&&f!==document.activeElement)f.value=v;});
+  setKey(k,v);touch();const f=$(`#panel [data-k="${CSS.escape(k)}"]`);if(f&&f!==document.activeElement)f.value=v;if(/^(colour|perBox)/.test(k))liveNums();});
+// the colours table's other numbers, redone in place while a number on the sheet is typed (the sheet itself is redrawn when you leave the box)
+function liveNums(){const c=calc(),cols=tableCols(c),ae=document.activeElement;
+  $$('#paper [data-cell]').forEach(td=>{if(td.contains(ae))return;const[a,b]=td.dataset.cell.split(':'),col=cols[+b];if(!col)return;const r=a==='t'?null:c.rows[+a];if(a!=='t'&&!r)return;
+    const v=r?col.v(r):col.t,e=td.querySelector('.ed');if(e){const t=v==='–'&&e.dataset.ph==='–'?'':String(v);if(e.textContent!==t)e.textContent=t;}else td.textContent=v;});}
 paper.addEventListener('focusout',e=>{if(!e.target.dataset?.edit)return;editingSheet=false;$('#fbar').classList.add('hide');fbEl=null;renderSheet();if(['details','colours','product','contact'].includes(tab))renderPanel();});
-paper.addEventListener('keydown',e=>{if(e.target.dataset?.edit&&e.key==='Enter'){e.preventDefault();e.target.blur();}});
-paper.addEventListener('paste',e=>{if(!e.target.closest?.('[data-edit]'))return;e.preventDefault();const t=(e.clipboardData?.getData('text/plain')||'').replace(/\s+/g,' ');document.execCommand('insertText',false,t);});
+paper.addEventListener('keydown',e=>{if(!e.target.dataset?.edit)return;if(e.key==='Enter'){e.preventDefault();e.target.blur();return;}
+  // number cells take digits only
+  if(e.target.dataset.num&&e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!/\d/.test(e.key))e.preventDefault();});
+paper.addEventListener('paste',e=>{const el=e.target.closest?.('[data-edit]');if(!el)return;e.preventDefault();let t=(e.clipboardData?.getData('text/plain')||'').replace(/\s+/g,' ');if(el.dataset.num)t=t.replace(/[^\d]/g,'');document.execCommand('insertText',false,t);});
 paper.addEventListener('mousedown',e=>{if(e.button!==0||e.target.closest('.ed'))return;e.preventDefault();const ae=document.activeElement;if(ae&&ae.dataset&&ae.dataset.edit)ae.blur();});
 paper.addEventListener('click',e=>{e.stopPropagation();if(e.target.closest('.bh,.rz'))return;const hb=e.target.closest('[data-hide]');if(hb){hideToggle(hb.dataset.hide,true,true);return;}const a=e.target.closest('[data-addphoto]');if(a){pickPhoto();return;}
   const p=e.target.closest('[data-photo]');if(p){if(selBlock==='photos')openEditorFor(p.dataset.photo);else selectBlock('photos');return;}
-  const g=e.target.closest('[data-goto]');if(g){gotoAuto(g.dataset.goto);return;}
+  const g=e.target.closest('[data-goto]');if(g){qeOpen(g.dataset.goto,g);return;}
+  if(e.target.closest('[data-cadd-sheet]')){S.colours.push({name:'',boxes:1,qty:S.sizes.map(()=>0)});renderSheet();renderPanelIf('colours');touch();$(`#paper [data-edit="colour:${S.colours.length-1}:name"]`)?.focus();return;}
   if(e.target.closest('.ed'))return;const b=e.target.closest('.blk');selectBlock(b?b.dataset.block:null);});
 $('#canvas').addEventListener('click',e=>{if(!e.target.closest('.sheet,.fbar,.pill'))selectBlock(null);});
 function selectBlock(n){if(selBlock===n)return;selBlock=n;renderSheet();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#ctx').classList.contains('hide')){closeCtx();return;}if(!dlMenu.classList.contains('hide')){dlOpen(false);return;}if(!dlg.open&&selBlock&&!editingSheet)selectBlock(null);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#qe')){qeClose(true);return;}if(!$('#ctx').classList.contains('hide')){closeCtx();return;}if(!dlMenu.classList.contains('hide')){dlOpen(false);return;}if(!dlg.open&&selBlock&&!editingSheet)selectBlock(null);}});
+
+/* ---------- quick editor: price, sizes and packing, changed right on the sheet ---------- */
+function setSizesList(txt){const L=String(txt||'').split(',').map(x=>x.trim().slice(0,20)).filter(Boolean).slice(0,20);if(!L.length||L.join(',')===S.sizes.join(','))return false;
+  while(S.sizes.length>L.length){S.sizes.pop();S.ratio.pop();S.colours.forEach(c=>{c.qty.pop();if(Array.isArray(c.use))c.use.pop();});}
+  while(S.sizes.length<L.length){S.sizes.push('');S.ratio.push(1);S.colours.forEach(c=>{c.qty.push(0);if(Array.isArray(c.use))c.use.push(true);});}
+  L.forEach((x,j)=>S.sizes[j]=x);return true;}
+const qeRefresh=()=>{renderSheet();touch();renderPanelIf('details');renderPanelIf('colours');};
+function qeOpen(a,el){qeClose();if(a==='total'){gotoAuto('total');return;}
+  const m=document.createElement('div');m.id='qe';m.className='ctx qe';m.setAttribute('role','dialog');m.dataset.a=a;
+  const body=a==='price'?`<div class="ttl">Price</div><div class="r"><input class="in" data-qk="price:amount" value="${esc(S.price.amount)}" placeholder="e.g. 12.50" inputmode="decimal" aria-label="Price (${esc(SET.currency)})"><select data-qk="price:unit" aria-label="Per">${UNITS.map(u=>`<option value="${u}"${S.price.unit===u?' selected':''}>per ${u}</option>`).join('')}</select></div>`
+    :a==='sizes'?`<div class="ttl">Sizes</div><input class="in" data-qsizes="1" value="${esc(S.sizes.join(', '))}" placeholder="S, M, L, XL" aria-label="Sizes"><small class="hint">Separate with commas. Sizes added at the end start empty.</small>`
+    :`<div class="ttl">Packing</div><div class="r"><input class="in" data-qk="perBox" type="number" min="1" inputmode="numeric" value="${esc(S.perBox)}" aria-label="Pieces per box"><span class="lbl">pcs per box</span></div>`;
+  m.innerHTML=`${body}<div class="foot"><button class="btn sm ghost" type="button" data-qmore="1">More options</button><button class="btn sm primary" type="button" data-qdone="1">Done</button></div>`;
+  document.body.appendChild(m);
+  const r=el.getBoundingClientRect(),w=m.offsetWidth,h=m.offsetHeight;let x=Math.min(r.left,innerWidth-w-8),y=r.bottom+6;if(y+h>innerHeight-8)y=Math.max(8,r.top-h-6);
+  m.style.left=Math.max(8,x)+'px';m.style.top=y+'px';const f=m.querySelector('input');f?.focus();f?.select?.();
+  m.addEventListener('input',e=>{const k=e.target.dataset.qk;if(!k)return;setKey(k,e.target.value);qeRefresh();});
+  m.addEventListener('change',e=>{if(e.target.tagName==='SELECT'){setKey(e.target.dataset.qk,e.target.value);qeRefresh();}});
+  m.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();qeClose(true);}});
+  m.addEventListener('click',e=>{if(e.target.closest('[data-qdone]'))qeClose(true);else if(e.target.closest('[data-qmore]')){qeClose(true);gotoAuto(a);}});}
+// the sizes box is applied when you're done, so a half-typed list doesn't drop sizes
+function qeClose(){const m=$('#qe');if(!m)return;const sz=m.querySelector('[data-qsizes]');m.parentNode.removeChild(m);if(sz&&setSizesList(sz.value))qeRefresh();}
+document.addEventListener('pointerdown',e=>{if($('#qe')&&!e.target.closest('#qe'))qeClose();},true);
+$('#canvas').addEventListener('scroll',()=>{const m=$('#qe');if(m&&!m.contains(document.activeElement))qeClose();},{passive:true});
 
 /* ---------- drag section edges ---------- */
 const BH_LIM={header:[40,260],photos:[100,460],colours:[18,64],details:[18,64],footer:[36,220]};
@@ -2394,11 +2456,14 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
   // colours & sizes table: a header with "Colour" and "Boxes"/"Total"
   let ci=-1,head=[];for(let i=0;i<rows.length;i++){const h=rows[i].cells.map(x=>T(x).toUpperCase());if(h.length>=3&&/^COLOU?RS?$/.test(h[0])&&h.some(x=>/^(BOXES|TOTAL( PCS| PIECES)?|PCS PER BOX)$/.test(x))){ci=i;head=h;break;}}
   let colours=[],sizes=[],layout='',perBoxCol=null,ce=ci;
-  if(ci>=0){const bi=head.findIndex(x=>x==='BOXES'),pi=head.findIndex(x=>/PCS PER BOX|PIECES PER BOX/.test(x));layout=pi>0?'box':'sizes';
+  if(ci>=0){const bi=head.findIndex(x=>x==='BOXES'),pi=head.findIndex(x=>/PCS PER BOX|PIECES PER BOX/.test(x)),ti=head.findIndex(x=>/^TOTAL/.test(x));layout=pi>0?'box':'sizes';
     sizes=layout==='sizes'?rows[ci].cells.slice(1,bi>0?bi:head.length-1).map(T):[];
     for(let i=ci+1;i<rows.length;i++){const c=rows[i].cells.map(T);if(/^TOTAL$/i.test(c[0])){ce=i;break;}const nums=c.slice(1).map(num);if(c.length<2||nums.some(isNaN)){ce=i-1;break;}
-      if(layout==='box'){perBoxCol=perBoxCol??nums[pi-1];colours.push({name:c[0]==='–'?'':c[0],boxes:nums[bi>0?bi-1:1]||0,qty:[]});}
-      else colours.push({name:c[0]==='–'?'':c[0],boxes:bi>0?nums[bi-1]||0:0,qty:sizes.map((_,j)=>nums[j]||0)});ce=i;}}
+      let co;if(layout==='box'){perBoxCol=perBoxCol??(nums[pi-1]||null);co={name:c[0]==='–'?'':c[0],boxes:nums[bi>0?bi-1:1]||0,qty:[]};}
+      else co={name:c[0]==='–'?'':c[0],boxes:bi>0?nums[bi-1]||0:0,qty:sizes.map((_,j)=>nums[j]||0)};
+      // a total with no boxes (and no sizes): the colour was entered as a total only
+      const tt=ti>0?nums[ti-1]||0:0;if(tt&&!co.boxes&&!co.qty.some(Boolean)){co.by='pcs';co.pcs=tt;}
+      colours.push(co);ce=i;}}
   // product details: label | value rows (after the header and colours table)
   const details=[];let di=-1,start=Math.max(hi,ce)+1;
   for(let i=start;i<rows.length;i++){const c=rows[i].cells.map(T).filter(Boolean);if(c.length===2&&c[0].length<=40&&!EM.test(c[0])&&!/contact/i.test(c[0])){if(di<0)di=i;details.push([c[0],c[1]]);}
@@ -2412,9 +2477,9 @@ function parseSheet({rows,photos,theme},from){const T=v=>String(v||'').replace(/
   if(missing.length)throw fail('notsheet',missing);
   // build the sheet
   const t=blankSheet();t.title=cap(title);t.code=code;
-  if(colours.length){if(layout==='box'){t.showSizes=false;t.mode='ratio';t.colours=colours.map(c=>({name:c.name,boxes:c.boxes,qty:t.sizes.map(()=>0)}));if(perBoxCol>0)t.perBox=perBoxCol;}
-    else{t.sizes=sizes.length?sizes:t.sizes;t.showSizes=true;t.colours=colours;const per=colours.find(c=>c.boxes>0);
-      const ratio=per?per.qty.map(q=>q/per.boxes):null,same=ratio&&colours.every(c=>c.qty.every((q,j)=>Math.abs(q-ratio[j]*c.boxes)<1e-6));
+  if(colours.length){if(layout==='box'){t.showSizes=false;t.mode='ratio';t.colours=colours.map(c=>({name:c.name,boxes:c.boxes,qty:t.sizes.map(()=>0),...(c.by?{by:c.by,pcs:c.pcs}:{})}));if(perBoxCol>0)t.perBox=perBoxCol;}
+    else{t.sizes=sizes.length?sizes:t.sizes;t.showSizes=true;t.colours=colours;const per=colours.find(c=>c.boxes>0&&!c.by);
+      const ratio=per?per.qty.map(q=>q/per.boxes):null,same=ratio&&colours.every(c=>c.by||c.qty.every((q,j)=>Math.abs(q-ratio[j]*c.boxes)<1e-6));
       if(same&&ratio.every(r=>Number.isInteger(r))){t.mode='ratio';t.ratio=ratio;t.perBox=ratio.reduce((a,b)=>a+b,0)||t.perBox;}else{t.mode='manual';t.ratio=sizes.map(()=>1);}}}
   else t.showColours=false;
   if(details.length){t.rows=details.map(([l,v])=>{const r={id:uid(),label:nice(l),value:v};
@@ -2436,7 +2501,7 @@ function cleanSheet(r){const t=blankSheet(),str=(v,n=500)=>typeof v==='string'?v
   t.price={amount:str(r.price?.amount,40),unit:UNITS.includes(r.price?.unit)?r.price.unit:'piece'};
   const sz=arr(r.sizes).slice(0,20).map(x=>str(x,20));if(sz.length){t.sizes=sz;t.ratio=sz.map((_,j)=>num(arr(r.ratio)[j],1,0,9999));}
   t.perBox=num(r.perBox,24,1,99999);t.mode=r.mode==='manual'?'manual':'ratio';t.showSizes=r.showSizes!==false;t.showColours=r.showColours!==false;{const hd=obj(r.hide);t.hide=Object.fromEntries(Object.keys(HIDE_NAME).filter(k=>hd[k]).map(k=>[k,1]));}
-  const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999)),...(Array.isArray(c?.use)?{use:t.sizes.map((_,j)=>c.use[j]!==false)}:{})}));if(co.length)t.colours=co;
+  const co=arr(r.colours).slice(0,100).map(c=>({name:str(c?.name,100),boxes:num(c?.boxes,1,0,99999),qty:t.sizes.map((_,j)=>num(arr(c?.qty)[j],0,0,9999999)),...(Array.isArray(c?.use)?{use:t.sizes.map((_,j)=>c.use[j]!==false)}:{}),...(c?.by==='pcs'?{by:'pcs',pcs:num(c?.pcs,0,0,99999999)}:{})}));if(co.length)t.colours=co;
   const rw=arr(r.rows).slice(0,60).map(x=>({id:id(x?.id),label:str(x?.label,100),value:str(x?.value,1000),auto:autoOk(x?.auto),wasAuto:autoOk(x?.wasAuto),...(x?.hidden===true?{hidden:true}:{})}));if(rw.length||Array.isArray(r.rows))t.rows=rw;
   const h=obj(r.headings);for(const k of['colours','details','contact'])if(typeof h[k]==='string')t.headings[k]=str(h[k],200);
   t.theme={primary:hex(r.theme?.primary)||t.theme.primary,accent:hex(r.theme?.accent)||t.theme.accent};
@@ -4294,7 +4359,7 @@ async function pdfPage1(buf,w){try{await loadScript('pdfjs');const L=window.pdfj
 // the numbers on one sheet (calc() and priceText() work on the open sheet, so borrow S for a moment)
 function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
     return{title:sh.title||'',code:sh.code||'',price:priceText(),pcs:c.T.tot||0,boxes:c.T.boxes||0,sizes:sh.sizes.filter(Boolean),showSizes:sh.showSizes!==false,
-      colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot})),totQ:c.T.q,
+      colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot,...(r.po?{po:1}:{})})),totQ:c.T.q,
       details:shownRows().map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
   catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
 const ivFile=x=>({id:x.id,kind:INV_MIMES[x.mimeType],link:x.webViewLink,mod:x.modifiedTime,name:x.name,parent:x.parent});
@@ -4389,7 +4454,7 @@ function ivVal(x,k,cell){const s=x.sum||{},z=()=>ivSendStats(x),line=(t,cls='iv-
   switch(k){
     case'code':return s.code?(cell?`<span class="iv-code">${esc(s.code)}</span>`:`<span class="iv-code">${esc(s.code)}</span>`):'';
     case'price':return s.price?`<span class="iv-price">${esc(s.price)}</span>`:'';
-    case'qty':return s.pcs||s.boxes?(cell?`${ivNF.format(s.pcs||0)} pcs · ${ivNF.format(s.boxes||0)} box${s.boxes===1?'':'es'}`:`<span class="iv-meta"><span><b>${ivNF.format(s.pcs||0)}</b> pcs</span><span><b>${ivNF.format(s.boxes||0)}</b> box${s.boxes===1?'':'es'}</span></span>`):'';
+    case'qty':return s.pcs||s.boxes?(cell?`${ivNF.format(s.pcs||0)} pcs${s.boxes?` · ${ivNF.format(s.boxes)} box${s.boxes===1?'':'es'}`:''}`:`<span class="iv-meta"><span><b>${ivNF.format(s.pcs||0)}</b> pcs</span>${s.boxes?`<span><b>${ivNF.format(s.boxes)}</b> box${s.boxes===1?'':'es'}</span>`:''}</span>`):'';
     case'sizes':return s.sizes?.length&&s.showSizes?line(esc(s.sizes.join(' · '))):'';
     case'swatch':return swDots(s.colours||[],cell?6:8);
     case'colnames':return s.colours?.length?line(esc(s.colours.map(c=>c.name).join(', '))):'';
@@ -4477,7 +4542,7 @@ function renderInvDetail(force){const d=$('#ivDetail');
         <button class="iv-chip" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!ivm(mk(x)).star}">${ivm(mk(x)).star?'★ Starred':'☆ Star'}</button></div>
       ${x.bad?`<p class="iv-bad">${esc(x.bad)}. You can still open it in Drive.</p>`:''}
       ${s?`<div class="ivd-kpis"><div><small>Total pieces</small><b>${ivNF.format(s.pcs||0)}</b></div><div><small>Boxes</small><b>${ivNF.format(s.boxes||0)}</b></div><div><small>Colours</small><b>${(s.colours||[]).length}</b></div></div>`:''}
-      ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.q?.[j]||'–'}</td>`).join(''):''}<td>${ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
+      ${s?.colours?.length?`<div class="ivd-sec"><h4>Colours${sz?' & sizes':''}</h4><table class="ivd-t"><thead><tr><th>Colour</th>${sz?s.sizes.map(z=>`<th>${esc(z)}</th>`).join(''):''}<th>Boxes</th><th>Pieces</th></tr></thead><tbody>${s.colours.map(c=>{const w=swatch(c.name);return`<tr><td><i style="--c:${esc(w||'#ccc')}"></i>${esc(c.name)}</td>${sz?s.sizes.map((_,j)=>`<td>${c.po?'–':c.q?.[j]||'–'}</td>`).join(''):''}<td>${c.po?'–':ivNF.format(c.boxes||0)}</td><td>${ivNF.format(c.tot||0)}</td></tr>`;}).join('')}
         <tr class="tot"><td>Total</td>${sz?s.sizes.map((_,j)=>`<td>${ivNF.format(s.totQ?.[j]||0)}</td>`).join(''):''}<td>${ivNF.format(s.boxes||0)}</td><td>${ivNF.format(s.pcs||0)}</td></tr></tbody></table></div>`:''}
       ${s?.details?.length?`<div class="ivd-sec"><h4>Product details</h4><dl class="ivd-kv">${s.details.map(r=>`<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></div>`:''}
       ${(()=>{const z=ivSendStats(x),l=z.list.slice().sort((a,b)=>b.last-a.last);const had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck))),never=CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m))));
@@ -4597,7 +4662,7 @@ async function lnMake(){await loadScript('jspdf');const {jsPDF}=window.jspdf,doc
       if(sh('code'))line(s.code?'Item code: '+s.code:'',{c:[110,110,110]});
       if(sh('price'))line(s.price||'',{b:1,c:C});
       if(sh('colours'))line(s.colours?.length?`Colours: ${s.colours.map(c=>c.name).join(', ')}`:'');
-      if(sh('qty'))line(s.pcs?`${s.pcs.toLocaleString()} pcs · ${s.boxes} box${s.boxes===1?'':'es'}`:'');
+      if(sh('qty'))line(s.pcs?`${s.pcs.toLocaleString()} pcs${s.boxes?` · ${s.boxes} box${s.boxes===1?'':'es'}`:''}`:'');
       if(sh('sizes'))line(s.sizes?.length&&s.showSizes?`Sizes: ${s.sizes.join(' ')}`:'',{c:[110,110,110]});
       if(sh('type'))line([x.type,x.cat].filter(Boolean).join(' · '),{c:[110,110,110]});}}
   return doc.output('blob');}
