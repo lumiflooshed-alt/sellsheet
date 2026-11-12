@@ -511,8 +511,8 @@ textarea.np-in{display:block;overflow:hidden}
 .list{display:grid;gap:8px}
 .item.off .grow>input,.item.off .grow>.row2,.item.off .grow>.sizes,.item.off .grow>.field{opacity:.6}
 .sheet .ed[data-goto]{cursor:pointer}
-.byseg{display:flex;gap:2px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:2px;align-self:start}
-.byseg button{flex:1;border:0;background:transparent;border-radius:6px;font-size:12.5px;font-weight:600;color:var(--muted);padding:3px 6px;cursor:pointer;white-space:nowrap}
+.byseg{display:flex;gap:2px;min-width:0;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:2px;align-self:start}
+.byseg button{flex:1 1 auto;min-width:0;border:0;background:transparent;border-radius:6px;font-size:12.5px;font-weight:600;color:var(--muted);padding:3px 6px;cursor:pointer;line-height:1.2}
 .byseg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(19,24,38,.12)}
 .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;animation:fade .2s var(--ease)}
 .item .grow{display:grid;gap:8px;min-width:0}
@@ -1776,7 +1776,7 @@ $('#rail').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');i
 const inp=(k,v,o={})=>`<input class="in${o.num?' num':''}" ${o.type?`type="${o.type}"`:''} ${o.mode?`inputmode="${o.mode}"`:''} data-k="${k}" value="${esc(v)}" placeholder="${esc(o.ph||'')}" ${o.id?`id="${o.id}"`:''} aria-label="${esc(o.label||'')}">`;
 const fld=(label,html,hint)=>`<label class="field"><span>${label}</span>${html}${hint?`<small class="hint">${hint}</small>`:''}</label>`;
 // a colour's amount: its number of boxes, or (when boxes aren't known) just the total pieces
-const cntFld=(co,i,rat)=>{const po=byPcs(co);return`<div class="field"><div class="byseg" role="group" aria-label="Count this colour by"><button type="button" data-cby="${i}:boxes" aria-pressed="${!po}">${rat?'Boxes':'Boxes (optional)'}</button><button type="button" data-cby="${i}:pcs" aria-pressed="${po}" title="Don't know the boxes? Enter just the total pieces">Total pcs</button></div>${po?inp(`colour:${i}:pcs`,co.pcs||'',{type:'number',mode:'numeric',num:1,ph:'e.g. 1200',label:'Total pieces'}):inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1,label:'Boxes'})}</div>`;};
+const cntFld=(co,i,rat)=>{const po=byPcs(co);return`<div class="field"><div class="byseg" role="group" aria-label="Count this colour by"><button type="button" data-cby="${i}:boxes" aria-pressed="${!po}">Boxes</button><button type="button" data-cby="${i}:pcs" aria-pressed="${po}" title="Don't know the boxes? Enter just the total quantity">Total Quantity</button></div>${po?inp(`colour:${i}:pcs`,co.pcs||'',{type:'number',mode:'numeric',num:1,ph:'e.g. 1200',label:'Total quantity'}):inp(`colour:${i}:boxes`,co.boxes,{type:'number',mode:'numeric',num:1,label:'Boxes'})}</div>`;};
 // one redraw at a time: replacing the panel blurs the box being typed in, and its change event would redraw again mid-way
 function renderPanel(){if(renderPanel.on){renderPanel.again=true;return;}renderPanel.on=true;try{renderPanel0();}finally{renderPanel.on=false;}if(renderPanel.again){renderPanel.again=false;renderPanel0();}}
 function renderPanel0(){whereSet('editor',tab);
@@ -1821,7 +1821,7 @@ function renderPanel0(){whereSet('editor',tab);
     </div>
     <h3 style="margin:4px 0 0">Colours</h3>
     <div class="list">${S.colours.map((co,i)=>`<div class="item"><div class="grow"><div class="row2">${fld('Colour',inp(`colour:${i}:name`,co.name,{ph:COLOUR_EX[i%COLOUR_EX.length]}))}${cntFld(co,i,rat)}</div>
-      ${byPcs(co)?`<small class="hint">${c.rows[i].tot} pcs in all. Boxes and sizes show as – on the sheet.</small>`:!rat?`<div class="cszs">${S.sizes.map((sz,j)=>cUses(co,j)?`<div class="csz"><span class="nm" title="${esc(sz)}">${esc(sz)||'?'}</span>${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:(sz||'Size')+' pieces'})}<button class="tiny x" type="button" data-cszdel="${i}:${j}" aria-label="Remove ${esc(sz)} from this colour" title="Remove from this colour">${I.x}</button></div>`:'').join('')}</div>
+      ${byPcs(co)?`<small class="hint">${c.rows[i].tot} pcs total quantity. Boxes and sizes show as – on the sheet.</small>`:!rat?`<div class="cszs">${S.sizes.map((sz,j)=>cUses(co,j)?`<div class="csz"><span class="nm" title="${esc(sz)}">${esc(sz)||'?'}</span>${inp(`colour:${i}:qty:${j}`,co.qty[j]||0,{type:'number',mode:'numeric',num:1,label:(sz||'Size')+' pieces'})}<button class="tiny x" type="button" data-cszdel="${i}:${j}" aria-label="Remove ${esc(sz)} from this colour" title="Remove from this colour">${I.x}</button></div>`:'').join('')}</div>
       <div class="csz-add"><input class="in" list="szl-${i}" data-csznew="${i}" placeholder="New size, e.g. 3XL" aria-label="Add a size to this colour" autocomplete="off"><datalist id="szl-${i}">${S.sizes.map((sz,j)=>cUses(co,j)||!sz?'':`<option value="${esc(sz)}">`).join('')}</datalist><button class="btn sm" type="button" data-cszgo="${i}">${I.plus}Add size</button></div>
       <small class="hint">${c.rows[i].tot} pcs</small>`:`<small class="hint">${c.rows[i].q.map((q,j)=>`${q} ${esc(S.sizes[j]||'?')}`).join(' · ')} · ${c.rows[i].tot} pcs</small>`}</div>
       <div class="acts"><button class="tiny" data-cmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny x" data-cdel="${i}" aria-label="Remove colour">${I.x}</button></div></div>`).join('')}</div>
@@ -1875,7 +1875,7 @@ function renderPanel0(){whereSet('editor',tab);
 const STRUCT=/^(size|ratio|perBox|colour:\d+:boxes)/;
 $('#panel').addEventListener('input',e=>{const ly=e.target.dataset.lay;if(ly){S.style[ly]=+e.target.value;e.target.closest('.rng').querySelector('.top2 span:last-child').textContent=S.style[ly]+' px';renderSheet();touch();return;}
   const k=e.target.dataset.k;if(!k)return;setKey(k,e.target.value);renderSheet();touch();
-  {const m=k.match(/^colour:(\d+):pcs$/),h=m&&e.target.closest('.item')?.querySelector('.grow>.hint');if(h)h.textContent=`${calc().rows[+m[1]].tot} pcs in all. Boxes and sizes show as – on the sheet.`;}
+  {const m=k.match(/^colour:(\d+):pcs$/),h=m&&e.target.closest('.item')?.querySelector('.grow>.hint');if(h)h.textContent=`${calc().rows[+m[1]].tot} pcs total quantity. Boxes and sizes show as – on the sheet.`;}
   if(tab==='colours'&&/^(ratio|perBox|size)/.test(k)) softRefreshColours();});
 $('#panel').addEventListener('keydown',e=>{const t=e.target;if(e.key==='Enter'&&t.dataset.csznew!==undefined){e.preventDefault();const i=+t.dataset.csznew;if(addSizeTo(i,t.value)!==false){renderPanel();renderSheet();touch();$(`#panel [data-csznew="${i}"]`)?.focus();}}});
 $('#panel').addEventListener('change',e=>{const t=e.target;if(t.dataset.csznew!==undefined)return;if(t.dataset.hidc){setHid(t.dataset.hidc,!t.checked);renderPanel();renderSheet();touch();return;}
