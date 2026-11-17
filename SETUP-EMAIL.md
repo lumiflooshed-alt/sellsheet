@@ -47,33 +47,14 @@ Your site addresses (add every one you use):
    - Click **Create**.
 7. Copy the **Client ID**. It looks like `1234567890-abc123.apps.googleusercontent.com`.
 
-## 1b. Optional: a Google API key, to browse your Drive
+## 1b. Browsing your Drive (no API key needed)
 
-**Save to Drive** works without this. Files go to a **Sell Sheets** folder created for you, or to the top of **My Drive**.
-Add a free API key to use Google's own Drive picker. With it you can:
+**Browse Drive…** (when saving), **open from Google Drive**, and **Inventory → choose folder** use a Drive browser built into the site. It lists My Drive, Shared drives and Shared with me, and you can search.
 
-- choose any folder (including shared drives) when saving
-- **open** a sell sheet from Drive (PDF, Word or Google Docs)
-- **import customers** from Drive (Excel, CSV or Google Sheets)
-
-To add the key:
-
-1. In the same Google Cloud project, make sure **Google Picker API** is enabled (step 3 above).
-2. Open **APIs & Services → Credentials → Create credentials → API key**. Copy the key (it starts with `AIza`).
-3. Click the new key to edit it:
-   - **Application restrictions:** choose **Websites**. Add `https://lumiflooshed-alt.github.io/*`, and your Cloudflare address too, e.g. `https://YOUR-NAME.pages.dev/*`.
-   - **API restrictions:** choose **Restrict key** and tick only **Google Picker API**.
-   - Click **Save**.
-4. Paste the key into the site under **Sign in → Sign-in setup → Google API key**, or send it to Claude.
-
-The key only lets your site addresses open Google's picker. Your files are still protected by your sign-in.
-Saving to Drive asks for one more Google permission, "files you use with this app". With it, the site can only see
-files it saves and folders you pick, never the rest of your Drive.
-
-In the picker (**Save → Google Drive → Browse Drive…**) you see your folders and files:
-
-- **Pick a folder** to save into it.
-- **Pick an existing PDF, Word or JPG file** to replace it with the current sheet. Drive keeps the old one in its version history.
+- The first time, Google asks for permission to see your Drive. When saving, it asks to see and save in your folders.
+- Google's own picker isn't used any more. It ran inside an embedded Google page, which Firefox and other privacy-focused browsers block from seeing your Google sign-in, so it failed with "401".
+- A Google API key isn't needed. You can leave the field in Sign-in setup empty.
+- On the **Data Access** page in Google Cloud, the scopes `.../auth/drive.readonly` and `.../auth/drive` must be listed (step 5b above). They're the same ones Inventory uses.
 
 ## 2. Microsoft (Outlook.com, Hotmail and Microsoft 365)
 
@@ -267,6 +248,38 @@ The dashboard starts **read-only**. To edit from the dashboard, turn on **Settin
     - Your customers and the Sent list stay with the account you signed in to the site with.
     - Replies to that account are checked too.
 - Your choice is remembered. You can also change it in **Settings → Email → Send from**. To refresh the list after adding an address in Gmail, click **Refresh** there.
+- The **From** line in the preview shows the address you picked.
+
+## Landing in the inbox, not spam
+
+The site sends through your own Gmail or Outlook account, so each email looks the same to the receiver as one you typed yourself. To help it land in the inbox, sell sheet emails are set up like this:
+
+- **Plain text**, not a styled card. **More options → What's included** can still switch to Styled.
+- **The sell sheet goes as a PDF attachment** with a plain name, such as `Hi-vis-vest-sherpa-lining-sell-sheet.pdf`. It isn't shown as a picture inside the email.
+- **The key facts are written in the email.** `{details}` becomes a few lines from the sell sheet:
+  - sizes and colours
+  - price and MOQ
+  - lead time
+
+  To include an MOQ or lead time, add a line called "MOQ" or "Lead time" under **Product details** on the sell sheet. The email window says when one is missing.
+- **Each email is personal.** It uses the person's name, plus an optional **Why you're writing** line, such as "Following up on our call." That line goes under the greeting as `{reason}`.
+- **A natural subject**, such as "Hi-vis vest with sherpa lining – details for Acme Safety". If the customer has no company, the subject ends at "details".
+- **A real signature** with your name, company, phone and website. Set it under **More options → Your signature**.
+- **One email at a time.** When you send to several people, each gap is picked at random, anywhere from 30 to 90 seconds. Keep the window open while they send. **Stop sending** stops after the current one, and the people not yet emailed stay ticked.
+- **Emailed this week?** When you tick someone you've emailed in the past 7 days, their row shows the day and time and what you sent, e.g. "Emailed Tue, Nov 3 at 2:14 PM: “HIVIZ Vest – details for Acme”". The same list appears above the preview. Nothing shows for people you haven't ticked.
+- **No second email the same day by mistake.** Anyone who already got an email today (from you or a teammate) is marked "Emailed today at …" in the list. Before sending, the site asks: **Send anyway**, **Skip them** or **Don't send**. Pipeline cards show when each email went out, e.g. "Sent today, 2:14 PM".
+- **The name in their inbox** is the brand and product by default, e.g. "Hiker - HIVIZ Vest", or just the product when the sell sheet has no Brand. Change it under **More options → Sending → Name they see in their inbox**. Pick **Your own name** to go back to your name. Outlook always shows the name on your Microsoft account.
+- **Presets.** **Save as preset** stores the following under a name you choose, such as "Trade show follow-up":
+  - the subject and message
+  - the why-you're-writing line
+  - the inbox name
+  - the style
+
+  Pick a preset from the **Preset** list to use it again. Presets sync with your settings.
+
+If emails still go to spam, send one to a Gmail address you own. Open it and choose **⋮ → Show original**. **SPF**, **DKIM** and **DMARC** should all say PASS:
+
+- If one fails while you're sending from an address on your own domain, that domain's DNS records need to allow Google (or Microsoft) to send for it. Ask whoever manages the domain.
 
 ## Sync between devices
 
@@ -284,6 +297,101 @@ How it works:
 - **Conflicts:** when the same item was changed on two devices, the newest change wins.
 - **Deleting a sheet** on one device deletes it on the others.
 - **Saved sheets:** they sync with Google sign-in only. With Outlook, everything else syncs.
+
+## Company: working as a team
+
+Several people can share one company: customers and groups, leads, the Pipeline and Sent history, logged calls and notes, and (if you choose) to-dos and email templates. Everyone signs in with their own Google or Microsoft account and sends from their own mailbox.
+
+It runs on the same Cloudflare Worker as step 4, with a free Cloudflare database (D1) added. Set it up once, as the person who'll be the admin:
+
+1. **Do step 4 first**, so the Worker is deployed and the site knows its address.
+2. **Make the database:** in <https://dash.cloudflare.com> go to **Storage & Databases → D1 SQL Database → Create**. Name it `sellsheet-team` and click **Create**. You don't need to make any tables; the Worker makes them.
+3. **Connect it to the Worker:** open the `sellsheet-token` Worker → **Settings → Bindings → Add → D1 database**. Set **Variable name** to `TEAM_DB` (exactly) and pick `sellsheet-team`. Click **Deploy**.
+4. **Update the Worker's code:** if you deployed it before this feature, click **Edit code**, replace everything with the latest `worker/google-token.js`, and click **Deploy**.
+5. **Start the company:** on the site, open **Settings → Company**, type the company name and your name, and click **Create company**. You're its admin.
+6. **Invite people:** under **People**, type each coworker's sign-in email (the Google or Microsoft address they sign in to the site with) and click **Invite**. Then click **Copy invite link** and send them the link: it points their browser at your Worker.
+7. **Each coworker:** opens the link, signs in with the invited address, and clicks **Join** in **Settings → Company**.
+
+How it works:
+- **What's shared:** the admin ticks what everyone shares in **Settings → Company → What's shared**. Anything not ticked stays on each person's own account.
+- **Sync:** every 3 minutes while the site is open, when you come back to the tab, when you click **Sync now**, and just before you send an email.
+- **Owners:** each customer and lead has an owner. Whoever adds them is the owner. When you join, you become the owner of the customers and leads you already have.
+  - Owners show as a small name tag in the email list and on Pipeline cards.
+  - On a customer's page, or a lead in the Pipeline, anyone can click **Take over**. An admin can pick any owner from a list.
+- **No double emails:** before sending, the site warns you if someone you're emailing belongs to a teammate, or a teammate emailed or called them in the last 14 days. You can send anyway, skip those people, or not send.
+- **Conflicts:** when two people change the same customer or lead, the newest change wins.
+- **Admins** can rename the company, invite and remove people, make someone an admin, and choose what's shared. There's always at least one admin.
+- **Leaving:** **Settings → Company → Leave** stops sharing. Your own copy stays in your browser. When the last person leaves, the company's shared data is deleted from the database.
+
+Your data is kept in your Cloudflare account's database, never anywhere else. The Worker checks each person's sign-in with Google or Microsoft on every request, and only people in the company can read its data.
+
+## Warehouse (rack map)
+
+The **Warehouse** tab shows your racks from the front: levels top to bottom, floor spots in front.
+
+**Warehouses**
+- **Several warehouses:** **＋ Add warehouse** makes a new one with its own name, racks, rack names and layouts. It starts with 4 standard racks.
+- **Switching:** click a warehouse above the racks to show its racks. The page remembers which one you were on.
+- **Rename** works on any warehouse, including the first. Your racks from before warehouses existed are the first one, called "Main warehouse" until you rename it.
+- **Delete this warehouse** removes it along with its skids, after asking. The first warehouse can't be deleted.
+- **Spot codes stay short** (A1, B3…) in every warehouse. The warehouse name shows above the racks and in the skid panel.
+- **Moving between warehouses:** **Move skid…** lists this warehouse's spots first, then every other warehouse's.
+
+**The map**
+- **Spots** are numbered from the bottom level up, left to right. F1, F2… are the floor spots in front.
+- **Click a spot** to record what's on the skid: item, style, size, colour, boxes × per box (the total works itself out), dozens or pieces, a skid total for mixed skids, and notes.
+  - **Copy as new variant** repeats a line so you only change the size or colour.
+  - Names you've used before are suggested as you type.
+- **Move skid…** moves a whole skid, or some boxes of one line. Moving onto a spot that has stock adds to it.
+- **Empty skid** asks for a second tap.
+- **Naming racks:** every rack has a short letter code (A, B, C…) used in spot codes like A1, plus an optional name such as "Front wall" or "Cold room".
+  - **＋ Add a rack** (or **+** next to Racks) asks for the name and shape before adding it.
+  - **Edit** on a rack changes its name, levels, skids per level and floor spots (Standard or Skinny, or your own).
+  - Stock whose spot no longer exists is kept under **Not on the map**, never deleted.
+- **Racks −** removes the last rack; typing a number sets the count. These apply to the warehouse you're looking at.
+- **Search looks in every warehouse.** It lists each matching item with:
+  - its amount
+  - its warehouse
+  - its rack (letter and name)
+  - its spot and where that is on the rack
+
+  The top line shows the number of matches and the total boxes and pieces. Each warehouse button shows how many matches it has. Click a result to open that skid, switching warehouse if needed. Matching skids are also highlighted on the racks shown.
+
+**CSV files**
+- **Export CSV** downloads one row per item, for every warehouse. The columns are Warehouse, then the old rack map's columns: Location, Rack, Position, Item, Style, Size, Colour, Boxes, Per box, Total, Unit, Skid total, Skid total unit, Skid notes.
+- **Import CSV** reads the same columns.
+  - The **Warehouse** column picks the warehouse by name. A name you don't have yet makes a new warehouse; you're told which before anything changes.
+  - Rows without a Warehouse go to the warehouse you're looking at, so older CSV files still work.
+  - You choose:
+    - **Update these spots only:** the spots in the file are replaced and everything else stays.
+    - **Replace everything:** the warehouses in the file become exactly the file.
+- Racks are added if the file uses one that isn't on the map yet.
+- **Moving from the old rack map:** open it, click **Export CSV**, then use **Import CSV** here. The old map's rack layouts aren't in its CSV, so set any non-standard rack (and its name) with **Edit** once.
+
+**Google Sheet, both ways**
+- **Connect a sheet:** click **Google Sheet…**, then either **Create a new Google Sheet** or paste a sheet link and click **Use this sheet**.
+- **Two tabs:** the sheet gets a **Rack map** tab (the same columns as Export CSV, Warehouse first) and a **Racks** tab (each warehouse's racks: levels, bottom to top, e.g. `1-2-2`, floor spots and name). Rows in the Racks tab set the number of racks; names and layouts can be changed there too.
+- **Warehouses in the sheet:** typing a new warehouse name in either tab adds that warehouse. Renaming a warehouse is done on the dashboard; the sheet follows. A sheet made before warehouses existed gets the Warehouse column on its next sync, with everything in the first warehouse.
+- **Dashboard → sheet:** changes go to the sheet within a couple of seconds.
+- **Sheet → dashboard:** changes come in every 3 minutes while the Warehouse page is open, when you open it, and when you click **Sync now**.
+- **Same spot changed in both places** between syncs: the dashboard's version is kept.
+- **An emptied Rack map tab** is filled in again from the dashboard. Clearing the tab never empties the map. To empty a spot from the sheet, delete its rows.
+- **Your Google sign-in:** syncing uses it. A sheet someone else made must be shared with you (Share → Editor). The first time, click **Allow access to the sheet**.
+
+**Sharing**
+- In a company, the rack map is shared by default. It's under **Settings → Company → What's shared → Warehouse rack map**.
+- Everyone sees the same racks and skids. The skid panel says who changed it last.
+- The linked sheet is shared too. Share the sheet with your coworkers in Google Sheets so their dashboards can update it.
+- Without a company, the map syncs between your own devices when you're signed in.
+
+## On a phone
+
+Everything works the same on a phone; only the layout changes.
+- **Pages:** the page tabs become a dropdown at the top.
+- **Settings:** all sections show as buttons above the page.
+- **Sign-in:** on phones and tablets, signing in happens in the same tab. You go to Google or Microsoft, then straight back to the page you were on, already signed in. It also works inside apps that block pop-up windows, such as the Gmail or Instagram app's built-in browser.
+  - This uses the same redirect address as the stay-signed-in helper (step 4), so there's nothing new to set up.
+  - Without the helper, Google sign-in on a phone still uses Google's own sign-in window.
 
 ## Good to know
 
