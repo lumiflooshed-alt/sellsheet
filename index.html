@@ -4445,7 +4445,8 @@ async function pdfPage1(buf,w){try{await loadScript('pdfjs');const L=window.pdfj
   const c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:x,viewport:vp}).promise;pdf.destroy?.();return c.toDataURL('image/jpeg',.82);}catch(_){return'';}}
 // the numbers on one sheet (calc() and priceText() work on the open sheet, so borrow S for a moment)
 function sheetSummary(sh){const o=S;S=sh;try{const c=calc();
-    return{title:sh.title||'',code:sh.code||'',price:priceText(),pcs:c.T.tot||0,boxes:c.T.boxes||0,sizes:sh.sizes.filter(Boolean),showSizes:sh.showSizes!==false,
+    const pn=numText(String(sh.price?.amount??'').trim());
+    return{title:sh.title||'',code:sh.code||'',price:priceText(),pr:{n:isFinite(pn)?pn:null,u:sh.price?.unit||'piece'},perBox:+sh.perBox||0,pcs:c.T.tot||0,boxes:c.T.boxes||0,sizes:sh.sizes.filter(Boolean),showSizes:sh.showSizes!==false,
       colours:c.rows.filter(r=>r.name).map(r=>({name:r.name,q:r.q,boxes:r.boxes,tot:r.tot,...(r.po?{po:1}:{})})),totQ:c.T.q,
       details:shownRows().map(r=>({label:r.label,value:String(rowVal(r)||'').trim()})).filter(r=>r.label&&r.value&&r.label!=='Price').slice(0,12),theme:sh.theme?.primary||''};}
   catch(_){return{title:sh.title||'',code:sh.code||''};}finally{S=o;}}
@@ -5597,6 +5598,40 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 /* ---------- pages and addresses ----------
    Each page has its own address (#home, #inventory, #pipeline, #sent, #customers), so Back works, a refresh stays on the page,
    and a page can be opened in its own browser tab. The sell sheet editor is the site with no #. */
+/* ---------- invoice lines (no page state: works on a product summary only) ----------
+   QuickBooks invoice lines have a product, a description, a quantity and a rate. Colour and size aren't fields in
+   QuickBooks, so they go into the description: one line per colour (or one per product), e.g.
+     Fleece Hoodie (FH-210)
+     Colour: Black
+     Sizes: S 6 · M 12 · L 12 · XL 6
+     2 boxes × 36 pcs = 72 pcs
+   The quantity follows the sheet's price unit: pieces, boxes, or dozens. */
+const INV_LINE_DEF={per:'colour',title:true,sizes:true,boxes:true};
+// the price on a summary: {n: number or null, u: unit}; older summaries only have the text ("$12.50 per piece")
+function invPrice(sum){if(sum?.pr&&(sum.pr.n==null||isFinite(sum.pr.n)))return{n:sum.pr.n,u:sum.pr.u||'piece'};
+  const m=String(sum?.price||'').match(/(-?\d[\d,]*(?:\.\d+)?)\s*(?:per\s+(\w+))?/i);if(!m)return{n:null,u:'piece'};
+  const n=parseFloat(m[1].replace(/,/g,''));return{n:isFinite(n)?n:null,u:(m[2]||'piece').toLowerCase().replace(/s$/,'')};}
+// a colour at a new amount: by boxes when the sheet has boxes for it, otherwise by pieces; sizes scale with it
+// pick: {i: colour index, boxes?: n, pcs?: n}  ->  {name, q:[per size], boxes, pcs}
+function invScale(sum,pick){const r=sum?.colours?.[pick.i];if(!r)return null;const q0=Array.isArray(r.q)?r.q.map(x=>+x||0):[],qs=q0.reduce((a,b)=>a+b,0);
+  if(!r.po&&+r.boxes>0&&pick.boxes!=null){const b=Math.max(0,+pick.boxes||0),f=b/r.boxes,q=q0.map(x=>Math.round(x*f)),pcs=sum.perBox?sum.perBox*b:q.reduce((a,c)=>a+c,0);return{name:r.name,q,boxes:b,pcs};}
+  const pcs=Math.max(0,Math.round(+(pick.pcs??r.tot)||0)),f=r.tot?pcs/r.tot:0;
+  return{name:r.name,q:qs&&qs===r.tot?q0.map(x=>Math.round(x*f)):q0.map(()=>0),boxes:0,pcs};}
+const invSizesText=(sizes,q)=>(sizes||[]).map((s,j)=>q[j]?`${s} ${q[j]}`:'').filter(Boolean).join(' · ');
+const invAmtText=c=>c.boxes?`${c.boxes} box${c.boxes===1?'':'es'} × ${Math.round(c.pcs/c.boxes)} pcs = ${c.pcs} pcs`:`${c.pcs} pcs`;
+// quantity for the price unit: box -> boxes, dozen -> pieces / 12, anything else -> pieces
+function invQty(u,c){if(u==='box'&&c.boxes)return c.boxes;if(u==='dozen')return Math.round(c.pcs/12*100)/100;return c.pcs;}
+// a product + the chosen colours  ->  invoice lines [{desc, qty, rate, unit, warn}]
+function invLines(sum,picks,o){o={...INV_LINE_DEF,...(o||{})};const pr=invPrice(sum),cs=(picks||[]).map(p=>invScale(sum,p)).filter(c=>c&&c.pcs>0);if(!cs.length)return[];
+  const head=o.title?[(sum.title||'')+(sum.code?` (${sum.code})`:'')].filter(x=>x.trim()):[];
+  const warn=pr.u==='box'&&cs.some(c=>!c.boxes)?'The price is per box, but some colours have no boxes: their quantity is in pieces.':'';
+  const one=c=>[o.sizes&&invSizesText(sum.sizes,c.q)?`Sizes: ${invSizesText(sum.sizes,c.q)}`:'',o.boxes?invAmtText(c):''].filter(Boolean);
+  if(o.per==='product'){const pcs=cs.reduce((a,c)=>a+c.pcs,0),boxes=cs.every(c=>c.boxes)?cs.reduce((a,c)=>a+c.boxes,0):0;
+    const desc=[...head,...cs.map(c=>{const sz=o.sizes?invSizesText(sum.sizes,c.q):'',am=o.boxes?invAmtText(c):'';return`${c.name||'Colour'}: ${sz&&am?`${sz} (${am})`:sz||am}`.trim();})].join('\n');
+    return[{desc,qty:invQty(pr.u,{pcs,boxes}),rate:pr.n,unit:pr.u,warn}];}
+  return cs.map(c=>({desc:[...head,c.name?`Colour: ${c.name}`:'',...one(c)].filter(Boolean).join('\n'),qty:invQty(pr.u,c),rate:pr.n,unit:pr.u,warn}));}
+/* ---------- end of invoice lines ---------- */
+
 /* ---------- QuickBooks items: a Product/Service report exported from QuickBooks (Excel or CSV), uploaded or picked up from Gmail ----------
    Every column of the report is shown; which ones and in what order is up to you (synced). Items are matched to your sell sheets by SKU or name. */
 const qbDlg=$('#qbDlg'),QB={data:null,q:'',fcol:-1,fval:'',has:'',sort:-1,dir:1,open:-1,side:'',n:300,busy:'',sel:new Set(),pend:null,err:''};
