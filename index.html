@@ -1089,7 +1089,11 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   .pl-main .pl-board{height:auto;max-height:none;grid-auto-columns:86%;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;padding:12px;scroll-padding:12px}
   .pl-col{scroll-snap-align:start;max-height:65vh}
   /* panels (a skid, a person) cover the page, with their buttons pinned at the bottom */
-  .wh-side,.pl-person{position:fixed;inset:0;width:100%;z-index:45;border-left:0;box-shadow:none;animation:mUp .22s var(--ease)}
+  .wh-side,.pl-person,.qb-side{position:fixed;inset:0;width:100%;z-index:45;border-left:0;box-shadow:none;animation:mUp .22s var(--ease)}
+  .qb-side .qs-b{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  #qbDlg[open]>.lg-wrap>.qb-main{animation:none} /* the page-open animation leaves a transform that would keep the panel from covering the page */
+  .qb-bar{padding:10px 12px;gap:8px}.qb-bar #qbQ{flex:1 1 calc(100% - 130px);min-width:0;height:42px}.qb-bar.m-open .m-f:not(.btn){flex:1 1 calc(50% - 4px)}
+  .qb-bar .spacer{display:none}.qb-bar>.btn{flex:1 1 auto;height:40px}
   @keyframes mUp{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
   .wh-sh{padding:10px 12px}.wh-sb{padding:12px}
   .wh-sf{padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:8px;box-shadow:0 -6px 18px rgba(0,0,0,.06)}.wh-sf .wh-tot{flex:1 1 100%;order:-1}.wh-sf .btn{flex:1 1 auto;height:44px}
@@ -6417,17 +6421,18 @@ window.addEventListener('popstate',route);
 document.body.insertAdjacentHTML('beforeend',TABS_HTML);document.body.classList.add('has-tabs');
 /* phones: filters fold behind a "Filters" button showing how many are set; the search box stays out */
 const FOLDS=[['#logDlg .lg-filters',['#lgStatus','#lgColor','#lgSheet','#lgGroup','.lg-date','#lgClear'],()=>[$('#lgStatus')?.value,$('#lgColor')?.value,$('#lgSheet')?.value,$('#lgFrom')?.value,$('#lgTo')?.value].filter(Boolean).length,'#lgQ'],
-  ['#plBar',['#plDays','#plSheet','#plHot'],()=>[$('#plSheet')?.value,$('#plHot')?.getAttribute('aria-pressed')==='true'?1:'',$('#plDays')&&$('#plDays').value!=='90'?1:''].filter(Boolean).length,'#plQ']];
+  ['#plBar',['#plDays','#plSheet','#plHot'],()=>[$('#plSheet')?.value,$('#plHot')?.getAttribute('aria-pressed')==='true'?1:'',$('#plDays')&&$('#plDays').value!=='90'?1:''].filter(Boolean).length,'#plQ'],
+  ['#qbBar',['select[data-qbf]','#qbHas','[data-qb=cols]','[data-qb=export]'],()=>[...$$('#qbBar select[data-qbf]').map(x=>x.value),$('#qbHas')?.value].filter(Boolean).length,'#qbQ']];
 const FT_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>';
 const foldCount=(b,count)=>{const n=count();b.querySelector('b').textContent=n||'';b.setAttribute('aria-label',`Filters${n?`, ${n} on`:''}`);};
 function foldFilters(){for(const[box,parts,count,after]of FOLDS){const el=$(box);if(!el)continue;
   for(const q of parts)el.querySelectorAll(q).forEach(x=>x.classList.add('m-f'));
-  let b=el.querySelector('.m-ft');if(!b){const a=el.querySelector(after);if(!a)continue;el.classList.add('m-fold');a.insertAdjacentHTML('afterend',`<button class="m-ft" type="button" aria-expanded="false">${FT_IC}Filters<b></b></button>`);b=el.querySelector('.m-ft');
+  let b=el.querySelector('.m-ft');if(!b){const a=el.querySelector(after);if(!a)continue;el.classList.add('m-fold');a.insertAdjacentHTML('afterend',`<button class="m-ft" type="button" aria-expanded="${el.classList.contains('m-open')}">${FT_IC}Filters<b></b></button>`);b=el.querySelector('.m-ft');
     b.onclick=()=>{const on=el.classList.toggle('m-open');b.setAttribute('aria-expanded',String(on));};
     el.addEventListener('change',()=>setTimeout(()=>foldCount(b,count),0));el.addEventListener('click',()=>setTimeout(()=>foldCount(b,count),0));}
   foldCount(b,count);}}
 // the pipeline bar is drawn when the page opens, so fold again whenever it's drawn
-new MutationObserver(()=>foldFilters()).observe($('#plBar'),{childList:true});foldFilters();
+new MutationObserver(()=>foldFilters()).observe($('#plBar'),{childList:true});new MutationObserver(()=>foldFilters()).observe($('#qbBar'),{childList:true});foldFilters();
 // the tabs: plain links, so Ctrl/⌘-click or middle-click opens a page in a new browser tab
 document.addEventListener('click',e=>{const a=e.target.closest('.pg-nav a,.pg-tabs a,.sub-tabs a');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;e.preventDefault();const n=a.getAttribute('href').slice(1);
   if(n==='editor'){goEditor();return;}if(n!==pageNow())PAGES[n][2]();});
