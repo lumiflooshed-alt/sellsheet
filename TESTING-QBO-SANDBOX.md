@@ -189,6 +189,23 @@ Open **Edit** on an item in the dashboard, but don't send yet. In QuickBooks, ch
 ### B9. Customers
 On the dashboard's **Customers** page, click the **QuickBooks** button, then **Bring in customers from QuickBooks**. Confirm the sandbox customers that have an email address now appear in the list. Then add a new customer in the dashboard named `TEST Customer`, with the email `test-customer@example.com`. Open it, and in its **QuickBooks** section click **Add to QuickBooks**. Confirm it appears in QuickBooks under **Sales → Customers**. Then edit that customer in the dashboard, save, and confirm the change reaches QuickBooks.
 
+### B9b. Invoice with colours and sizes
+1. In **Inventory**, open a sell sheet that has at least two colours, and click **Create invoice**. If none has two colours, use any sell sheet and note that.
+2. Pick the customer `TEST Customer` from B9.
+3. Enter an amount for two colours:
+   - For a colour counted in boxes, enter fewer boxes than the sheet shows, and check that the preview's sizes scale down.
+4. If the product isn't matched to a QuickBooks product, pick the inventory item `TEST Inventory item` from B4.
+5. Check the preview:
+   - Each line's description shows `Colour: …`, `Sizes: …` and the boxes and pieces.
+   - Quantity × rate = amount.
+6. Switch to **One per product** and back, check the preview changes, then click **Review invoice → Create invoice in QuickBooks**.
+7. Expected:
+   - The done screen shows an invoice number.
+   - In QuickBooks (**Sales → Invoices**), the invoice's lines have the same descriptions, line by line.
+   - Tax is added (HST for a Canadian sandbox).
+8. Click **Download PDF**, and confirm the PDF opens and shows the descriptions.
+9. If QuickBooks refuses the invoice, record its exact message, especially anything about GST/HST or tax codes.
+
 ### B10. Disconnect and reconnect
 In **Settings → QuickBooks**, click **Disconnect**, and confirm the items page no longer shows live data. Then ask the person to click **Connect QuickBooks…** again and pick the sandbox company, since it needs their Intuit sign-in. Confirm the items load again.
 

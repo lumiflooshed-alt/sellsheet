@@ -209,6 +209,31 @@ The dashboard starts **read-only**. To edit from the dashboard, turn on **Settin
   - From then on, changes in QuickBooks come in by themselves.
 - **Add to QuickBooks:** works on one customer or on all ticked customers. Once a customer is linked, saving them here updates QuickBooks too.
 
+**Invoices** (with colours and sizes in the description)
+- **Where to start:**
+  - **Inventory:** open a product and click **Create invoice**.
+  - **Customers:** open a customer and click **New invoice** (in their QuickBooks section).
+  - **Inventory → QuickBooks items:** click **New invoice**.
+- **What you fill in:**
+  - Pick the customer, the invoice date and the sales tax: each product's own, or one for the whole invoice.
+  - Add products from your sell sheets. Each is matched to its QuickBooks product by SKU or name; if there's no match, you pick one.
+  - Enter how many boxes of each colour, or pieces for colours entered as a total. **All** fills in what's on the sheet.
+- **What QuickBooks gets:**
+  - QuickBooks has no colour or size fields, so each line's description says it, for example:
+    ```text
+    Fleece Hoodie (FH-210)
+    Colour: Black
+    Sizes: S 12 · M 24 · L 24 · XL 12
+    2 boxes × 36 pcs = 72 pcs
+    ```
+  - Choose **one line per colour** or **one line per product**, and whether to include the style name and code, the sizes, and the boxes and pieces.
+  - The quantity follows the sheet's price: pieces, boxes or dozens.
+- **Sending:**
+  - **Review invoice** shows every line before anything is sent.
+  - A customer who isn't in QuickBooks yet is added first.
+  - Afterwards you get the invoice number, **Download PDF** and **Open in QuickBooks**.
+  - The invoice is saved in QuickBooks, not emailed: send it from QuickBooks, or attach the PDF to your own email.
+
 **Two-way updates and conflicts**
 - **Changes made in QuickBooks** show here within a few minutes: every 3 minutes while the page is open, otherwise every 15.
 - **Changes you save here** go to QuickBooks straight away.
@@ -227,7 +252,11 @@ The dashboard starts **read-only**. To edit from the dashboard, turn on **Settin
    - If the dashboard says QuickBooks refused the adjustment, tell me. That part depends on what Intuit allows on your plan.
 6. **Categories:** add one, move items into it in bulk, and rename it.
 7. **Customers:** bring them in, add a new one to QuickBooks, then edit a linked one.
-8. **Disconnect and connect again.**
+8. **Invoice:**
+   - Create one from a product with two colours.
+   - Check in QuickBooks (**Sales → Invoices**) that each line's description shows the colour, sizes and boxes.
+   - Check that the quantity, rate and tax are right, and that the PDF downloads.
+9. **Disconnect and connect again.**
 
 ### 5f. Going live with your real company
 1. In the Intuit app, open **Keys & credentials → Production**.
