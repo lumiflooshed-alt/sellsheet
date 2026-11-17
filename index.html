@@ -339,6 +339,7 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .qi-prev{width:100%;border-collapse:collapse;font-size:13.5px}.qi-prev th,.qi-prev td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}.qi-prev th{font:600 12px var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .qi-prev td.n,.qi-prev th.n{text-align:right;white-space:nowrap}.qi-prev .d{white-space:pre-wrap;min-width:220px}.qi-prev tfoot td{font-weight:700;border-bottom:0}
 .qi-warn{color:var(--warn);font-size:13px;margin:4px 0 0}.qi-opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px}.qi-opts label{display:flex;gap:6px;align-items:center}
+.qi-done h3{margin:0 0 6px;font:700 20px var(--ui)}.qi-done a.btn{text-decoration:none;color:var(--ink);display:inline-flex;align-items:center}.qi-done p{margin:0 0 10px;line-height:1.5}.qi-done .qi-row{margin-top:6px}
 .qi-foot{display:flex;gap:10px;align-items:center;justify-content:end;padding:12px 20px;border-top:1px solid var(--line)}.qi-foot .qi-tot{margin-right:auto;font:700 16px var(--ui)}
 .qs-kv{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);gap:0;margin:0}.qs-kv dt,.qs-kv dd{margin:0;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}.qs-kv dt{color:var(--muted);padding-right:10px}.qs-kv dd{word-break:break-word}.qs-kv dd.hid{color:var(--faint)}
 .qb-cols{display:grid;gap:4px}.qb-cols .ivf-row{display:flex;align-items:center;gap:6px}
@@ -5648,11 +5649,18 @@ function invLines(sum,picks,o){o={...INV_LINE_DEF,...(o||{})};const pr=invPrice(
     const desc=[...head,...cs.map(c=>{const sz=o.sizes?invSizesText(sum.sizes,c.q):'',am=o.boxes?invAmtText(c):'';return`${c.name||'Colour'}: ${sz&&am?`${sz} (${am})`:sz||am}`.trim();})].join('\n');
     return[{desc,qty:invQty(pr.u,{pcs,boxes}),rate:pr.n,unit:pr.u,warn}];}
   return cs.map(c=>({desc:[...head,c.name?`Colour: ${c.name}`:'',...one(c)].filter(Boolean).join('\n'),qty:invQty(pr.u,c),rate:pr.n,unit:pr.u,warn}));}
+// the invoice record for QuickBooks. o: {cust (QuickBooks customer id), date, memo, email, tax (one code for all, or ''), country,
+//   lines: [{item, desc, qty, rate, taxCode}]}. Amount must be exactly qty × rate (to the cent), or QuickBooks refuses the line.
+function invBody(o){const r2=n=>Math.round(n*100)/100,us=/^(us|usa|united states)$/i.test(String(o.country||'').trim());
+  return{CustomerRef:{value:String(o.cust)},...(o.date?{TxnDate:o.date}:{}),...(o.email?{BillEmail:{Address:o.email}}:{}),...(o.memo?{CustomerMemo:{value:String(o.memo).slice(0,1000)}}:{}),
+    ...(o.country&&!us?{GlobalTaxCalculation:'TaxExcluded'}:{}),
+    Line:o.lines.map(l=>{const tc=o.tax||l.taxCode;return{DetailType:'SalesItemLineDetail',Amount:r2(l.qty*l.rate),Description:String(l.desc||'').slice(0,4000),
+      SalesItemLineDetail:{ItemRef:{value:String(l.item)},Qty:l.qty,UnitPrice:l.rate,...(tc?{TaxCodeRef:{value:String(tc)}}:{})}};})};}
 /* ---------- end of invoice lines ---------- */
 
 /* ---------- New invoice (QuickBooks): pick a customer and products, set the amounts per colour, preview the lines ----------
    The lines come from invLines(): colour, sizes and boxes go into each line's description. */
-const qiDlg=$('#qiDlg'),QI={cust:'',prods:[],date:'',memo:'',tax:'',add:''};
+const qiDlg=$('#qiDlg'),QI={cust:'',prods:[],date:'',memo:'',tax:'',add:'',view:'edit',busy:false,err:'',done:null};
 const qiMoney=n=>n==null||!isFinite(n)?'':SET.currency+(+n).toFixed(2);
 const qiOpts=()=>({...INV_LINE_DEF,...(SET.qbo.inv||{})});
 const qiProducts=()=>IV.items.filter(x=>x.sum&&(x.sum.colours||[]).length).sort((a,b)=>COLL.compare(invTitle(a),invTitle(b)));
@@ -5661,7 +5669,7 @@ const qiItems=()=>QL.items.filter(x=>x.Type!=='Category'&&x.Active!==false).sort
 function qiMatch(x){const d=qbCur();if(!d?.live)return'';const i=qbForItem(x);return i>=0?String(d.ids[i]||''):'';}
 function qiAddProd(key){const x=IV.items.find(y=>y.key===key);if(!x||QI.prods.some(p=>p.key===key))return;QI.prods.push({key,item:qiMatch(x),picks:{}});}
 function openInvoice(o={}){if(!qbOn()){toast('Connect QuickBooks first (Settings → QuickBooks).');return;}
-  if(!qiDlg.open){Object.assign(QI,{cust:'',prods:[],date:new Date().toISOString().slice(0,10),memo:'',tax:'',add:''});qiDlg.showModal();}
+  if(!qiDlg.open||QI.view==='done'){Object.assign(QI,{cust:'',prods:[],date:new Date().toISOString().slice(0,10),memo:'',tax:'',add:'',view:'edit',busy:false,err:'',done:null});if(!qiDlg.open)qiDlg.showModal();}
   if(o.cust)QI.cust=ck(o.cust);if(o.prod)qiAddProd(o.prod);
   if(!QL.items.length&&!QL.busy)qbLoad(false).then(()=>{if(qiDlg.open)renderQi();});renderQi();}
 // every line of the invoice, in order: [{p (product), x (inventory item), it (QuickBooks item), desc, qty, rate, unit, warn}]
@@ -5670,7 +5678,37 @@ function qiLines(){const o=qiOpts(),out=[];for(const p of QI.prods){const x=IV.i
     const it=QL.items.find(y=>y.Id===p.item)||null;
     for(const l of invLines(x.sum,picks,o))out.push({...l,p,x,it,rate:l.rate??(it&&isFinite(+it.UnitPrice)?+it.UnitPrice:null)});}
   return out;}
-function renderQi(){if(!qiDlg.open)return;const c=qbCur(),env=QBC.c?.env;$('#qiEnv').textContent=env==='sandbox'?'Sandbox (test company)':QBC.c?.company||'';
+const qiCustOf=()=>CU.list.find(x=>ck(x.email)===QI.cust)||null;
+// what stops the invoice from being sent, in plain words
+function qiProblems(L){const out=[];if(!qiCustOf())out.push('Pick a customer.');if(!L.length)out.push('Add a product and enter how many of each colour.');
+  const noIt=[...new Set(L.filter(l=>!l.it).map(l=>invTitle(l.x)))],noRate=[...new Set(L.filter(l=>l.rate==null).map(l=>invTitle(l.x)))];
+  if(noIt.length)out.push(`Pick the QuickBooks product for: ${noIt.join(', ')}.`);if(noRate.length)out.push(`No price for: ${noRate.join(', ')}. Add one on the sell sheet or the QuickBooks product.`);
+  return out;}
+const qiLink=id=>`https://app.${QBC.c?.env==='sandbox'?'sandbox.':''}qbo.intuit.com/app/invoice?txnId=${encodeURIComponent(id)}`;
+async function qiSend(){if(QI.busy)return;const L=qiLines();if(qiProblems(L).length)return;QI.busy=true;QI.err='';renderQi();
+  try{const c=qiCustOf();if(!c.qb&&!await qbCustPush(c,true))throw new Error(`${c.name||c.email} couldn't be added to QuickBooks, so the invoice wasn't created.`);
+    const body=invBody({cust:c.qb,date:QI.date,memo:QI.memo.trim(),email:c.email,tax:QI.tax,country:QBC.c?.country||'',
+      lines:L.map(l=>({item:l.it.Id,desc:l.desc,qty:l.qty,rate:l.rate,taxCode:l.it.SalesTaxCodeRef?.value||''}))});
+    const inv=(await qbApi('POST','invoice',{},body)).Invoice,who=c.name||c.company||c.email;
+    QI.done={id:inv.Id,num:inv.DocNumber||inv.Id,total:+inv.TotalAmt,sub:L.reduce((a,l)=>a+l.qty*l.rate,0),who,lines:L.length};QI.view='done';
+    const msg=`Invoice ${QI.done.num} created for ${who} (${qiMoney(QI.done.total)})`;qbLog(msg);toast(msg);}
+  catch(e){QI.err=e.qcode==='6000'||/tax/i.test(e.message)?e.message+' (Check the Sales tax choice: QuickBooks needs a tax code on every line in Canada.)':qbFail(e);}
+  finally{QI.busy=false;renderQi();}}
+async function qiPdf(){const D=QI.done;if(!D)return;try{toast('Getting the PDF from QuickBooks…',15000);const d=await qbApi('GET',`invoice/${D.id}/pdf`);
+    const bin=atob(String(d.pdf||'').replace(/-/g,'+').replace(/_/g,'/')),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+    const url=URL.createObjectURL(new Blob([u8],{type:'application/pdf'})),a=document.createElement('a');a.href=url;a.download=`Invoice ${D.num}.pdf`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60e3);toast('PDF downloaded');}
+  catch(e){toast(e.message||'Couldn\'t get the PDF.',7000);}}
+function renderQiDone(){const D=QI.done;
+  $('#qiBody').innerHTML=`<div class="qi-done"><h3>Invoice ${esc(D.num)} is in QuickBooks</h3><p>For <b>${esc(D.who)}</b> · ${D.lines} line${D.lines==1?'':'s'} · ${esc(qiMoney(D.sub))} before tax, <b>${esc(qiMoney(D.total))}</b> total.</p>
+    <p class="note">It's saved in QuickBooks but not emailed. Send it from QuickBooks, or download the PDF and attach it to your own email.</p>
+    <div class="qi-row"><button class="btn sm primary" type="button" id="qiPdf">Download PDF</button><a class="btn sm ghost" href="${esc(qiLink(D.id))}" target="_blank" rel="noopener">Open in QuickBooks</a><button class="btn sm ghost" type="button" id="qiNew">New invoice</button></div></div>`;
+  $('#qiFoot').innerHTML=`<span class="qi-tot"></span><button class="btn sm ghost" type="button" id="qiCancel">Close</button>`;}
+function renderQiReview(L){const c=qiCustOf(),tot=L.reduce((a,l)=>a+l.qty*l.rate,0),tx=QI.tax?QL.tax.find(t=>t.Id===QI.tax)?.Name||QI.tax:'each product\'s own';
+  $('#qiBody').innerHTML=`<div class="qb-rev"><div><span>Customer</span><span><b>${esc(c.name||c.company||c.email)}</b>${c.qb?'':' <span class="note">(added to QuickBooks first)</span>'}</span></div><div><span>Invoice date</span><span><b>${esc(QI.date||'today')}</b></span></div><div><span>Sales tax</span><span><b>${esc(tx)}</b></span></div>${QI.memo.trim()?`<div><span>Message</span><span><b>${esc(QI.memo.trim())}</b></span></div>`:''}</div>
+    <table class="qi-prev"><thead><tr><th>Product/service</th><th>Description</th><th class="n">Qty</th><th class="n">Rate</th><th class="n">Amount</th></tr></thead><tbody>${L.map(l=>`<tr><td>${esc(l.it.Name)}</td><td class="d">${esc(l.desc)}</td><td class="n">${l.qty}</td><td class="n">${esc(qiMoney(l.rate))}</td><td class="n">${esc(qiMoney(l.qty*l.rate))}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="4">Subtotal (QuickBooks adds the tax)</td><td class="n">${esc(qiMoney(tot))}</td></tr></tfoot></table>
+    ${!SET.qbo.write?'<p class="qi-warn">Changes to QuickBooks are off. Turn on <b>Allow changes to QuickBooks</b> in Settings → QuickBooks to create invoices.</p>':''}${QI.err?`<p class="qb-err">${esc(QI.err)}</p>`:''}`;
+  $('#qiFoot').innerHTML=`<span class="qi-tot">${esc(qiMoney(tot))} + tax</span><button class="btn sm ghost" type="button" id="qiBack" ${QI.busy?'disabled':''}>Back</button><button class="btn sm primary" type="button" id="qiSend" ${QI.busy||!SET.qbo.write?'disabled':''}>${QI.busy?'Creating…':'Create invoice in QuickBooks'}</button>`;}
+function renderQi(){if(!qiDlg.open)return;if(QI.view==='done'&&QI.done){renderQiDone();return;}if(QI.view==='review'){const L=qiLines();if(!qiProblems(L).length){renderQiReview(L);return;}QI.view='edit';}const c=qbCur(),env=QBC.c?.env;$('#qiEnv').textContent=env==='sandbox'?'Sandbox (test company)':QBC.c?.company||'';
   const o=qiOpts(),items=qiItems(),its=(v)=>`<option value="">Pick a QuickBooks product…</option>${items.map(i=>`<option value="${esc(i.Id)}"${i.Id===v?' selected':''}>${esc(i.FullyQualifiedName||i.Name)}${i.Sku?` (${esc(i.Sku)})`:''}</option>`).join('')}`;
   const custs=CU.list.filter(x=>x.email).slice().sort((a,b)=>COLL.compare(a.name||a.company||a.email,b.name||b.company||b.email));
   const used=new Set(QI.prods.map(p=>p.key)),avail=qiProducts().filter(x=>!used.has(x.key));
@@ -5692,7 +5730,8 @@ function renderQi(){if(!qiDlg.open)return;const c=qbCur(),env=QBC.c?.env;$('#qiE
       <b>Description:</b><label><input type="checkbox" data-qiopt="title"${o.title?' checked':''}> Style name and code</label><label><input type="checkbox" data-qiopt="sizes"${o.sizes?' checked':''}> Sizes</label><label><input type="checkbox" data-qiopt="boxes"${o.boxes?' checked':''}> Boxes and pieces</label></div>
     ${L.length?`<table class="qi-prev"><thead><tr><th>Product/service</th><th>Description</th><th class="n">Qty</th><th class="n">Rate</th><th class="n">Amount</th></tr></thead><tbody>${L.map(l=>`<tr><td>${l.it?esc(l.it.Name):'<span class="qi-warn">Not picked</span>'}</td><td class="d">${esc(l.desc)}</td><td class="n">${l.qty}${l.unit!=='piece'?` ${esc(l.unit)}${l.qty==1?'':'s'}`:''}</td><td class="n">${l.rate!=null?esc(qiMoney(l.rate)):'<span class="qi-warn">No price</span>'}</td><td class="n">${l.rate!=null?esc(qiMoney(l.qty*l.rate)):''}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="4">Subtotal (before tax)</td><td class="n">${esc(qiMoney(tot))}</td></tr></tfoot></table>${warns.map(w=>`<p class="qi-warn">${esc(w)}</p>`).join('')}`:''}
     <label class="field"><span>Message on invoice</span><textarea class="in" id="qiMemo" rows="2" maxlength="1000">${esc(QI.memo)}</textarea></label>`;
-  $('#qiFoot').innerHTML=`<span class="qi-tot">${L.length?`${L.length} line${L.length==1?'':'s'} · ${esc(qiMoney(tot))}`:''}</span><button class="btn sm ghost" type="button" id="qiCancel">Close</button>`;}
+  const pb=qiProblems(L);
+  $('#qiFoot').innerHTML=`<span class="qi-tot">${L.length?`${L.length} line${L.length==1?'':'s'} · ${esc(qiMoney(tot))}`:''}</span>${pb.length&&(QI.cust||L.length)?`<span class="qi-warn" style="margin:0">${esc(pb[0])}</span>`:''}<button class="btn sm ghost" type="button" id="qiCancel">Close</button><button class="btn sm primary" type="button" id="qiReview" ${pb.length?'disabled':''}>Review invoice</button>`;}
 qiDlg.addEventListener('input',e=>{const t=e.target;
   if(t.dataset.qip){const[pi,i]=t.dataset.qip.split(':').map(Number),p=QI.prods[pi];if(!p)return;if(t.value==='')delete p.picks[i];else p.picks[i]=Math.max(0,+t.value||0);
     const pos=t.selectionStart;renderQi();const n=qiDlg.querySelector(`[data-qip="${pi}:${i}"]`);if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(_){}}return;}
@@ -5704,7 +5743,12 @@ qiDlg.addEventListener('change',e=>{const t=e.target;
   else if(t.dataset.qiopt){SET.qbo.inv={...qiOpts(),[t.dataset.qiopt]:t.checked};setSave();}
   else return;renderQi();});
 qiDlg.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
-  if(t.id==='qiClose'||t.id==='qiCancel'){qiDlg.close();return;}
+  if(t.id==='qiClose'||t.id==='qiCancel'){if(QI.busy)return;qiDlg.close();return;}
+  if(t.id==='qiReview'){QI.view='review';QI.err='';renderQi();$('#qiBody').scrollTop=0;return;}
+  if(t.id==='qiBack'){QI.view='edit';QI.err='';renderQi();return;}
+  if(t.id==='qiSend'){qiSend();return;}
+  if(t.id==='qiPdf'){qiPdf();return;}
+  if(t.id==='qiNew'){QI.view='done';openInvoice();return;}
   if(t.dataset.qidel!=null){QI.prods.splice(+t.dataset.qidel,1);renderQi();return;}
   if(t.dataset.qiall){const[pi,i]=t.dataset.qiall.split(':').map(Number),p=QI.prods[pi],x=p&&IV.items.find(y=>y.key===p.key),r=x?.sum.colours[i];if(!r)return;p.picks[i]=!r.po&&+r.boxes>0?+r.boxes:+r.tot||0;renderQi();return;}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-qinv]');if(!b)return;e.preventDefault();openInvoice({prod:b.dataset.qinvProd||'',cust:b.dataset.qinvCust||''});});
