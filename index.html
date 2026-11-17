@@ -3034,6 +3034,8 @@ function goSignIn(url,o){try{sessionStorage.setItem(SIGNIN_KEY,JSON.stringify({.
 async function finishSignIn(){const sp=new URLSearchParams(location.search),st=sp.get('state');if(!st||!(sp.get('code')||sp.get('error'))||window.opener)return;
   let P=null;try{P=JSON.parse(sessionStorage.getItem(SIGNIN_KEY)||'null');}catch(_){}if(!P||P.state!==st||Date.now()-P.at>15*60e3)return;
   try{sessionStorage.removeItem(SIGNIN_KEY);}catch(_){}history.replaceState(null,'',location.pathname+(P.back||''));
+  if(P.kind==='qbo'){if(sp.get('error')){toast(sp.get('error')==='access_denied'?'QuickBooks access wasn\'t allowed.':'QuickBooks sign-in failed: '+(sp.get('error_description')||sp.get('error')),8000);return;}
+    try{await qbFinishConnect(sp.get('code'),sp.get('realmId'));}catch(e){toast((e.message||'Couldn\'t connect to QuickBooks.')+(e.code==='bad_redirect'?'':` If it keeps failing, check that ${redirectUri()} is under Redirect URIs in your Intuit app (SETUP-EMAIL.md).`),9000);}return;}
   if(sp.get('error')){toast(sp.get('error')==='access_denied'?'Sign-in was cancelled, or Google said "access denied". If the app is in Testing, add this address under Audience → Test users (see SETUP-EMAIL.md).':'Sign-in failed: '+(sp.get('error_description')||sp.get('error')),8000);return;}
   try{const t=P.kind==='ms'?await msFinish(sp.get('code'),P.verifier,P.hint):await gCodeFinish(sp.get('code'),P.verifier,P.key,P.hint,P.scope);
     if(P.site){authSet({prov:P.site.p,email:t.email});afterLogin(P.site.before);}else{renderTopAcct();if(setDlg.open)renderSettings();}
@@ -5765,14 +5767,18 @@ const qbItem=id=>QL.items.find(x=>x.Id===id);
 // connect / disconnect (QuickBooks' own sign-in window)
 async function qbConnect(){if(!gHelper()){toast('QuickBooks connects through your helper Worker. Set it up first (Sign in → Sign-in setup), then add the QuickBooks settings to it (SETUP-EMAIL.md).',8000);openSetup();return;}
   let cfg;try{cfg=await helperCall('qbo/config',{});}catch(e){toast(e.code==='qbo_not_configured'?'The helper isn\'t set up for QuickBooks yet: add INTUIT_CLIENT_ID, INTUIT_CLIENT_SECRET and the QBO_KV binding (SETUP-EMAIL.md).':e.message,9000);return;}
-  const w=window.open('about:blank','ss-login','width=560,height=720');if(!w){toast('Your browser blocked the QuickBooks window. Allow pop-ups for this site and try again.');return;}
-  try{const st=b64url(crypto.getRandomValues(new Uint8Array(16)));
-    w.location.href=cfg.auth+'?'+new URLSearchParams({client_id:cfg.clientId,response_type:'code',scope:'com.intuit.quickbooks.accounting',redirect_uri:redirectUri(),state:st});
+  // phones and tablets (or a blocked window): off to Intuit in this tab and back, like Google sign-in; finishSignIn completes it
+  const w=byRedirect()?null:window.open('about:blank','ss-login','width=560,height=720');
+  try{const st=b64url(crypto.getRandomValues(new Uint8Array(16))),url=cfg.auth+'?'+new URLSearchParams({client_id:cfg.clientId,response_type:'code',scope:'com.intuit.quickbooks.accounting',redirect_uri:redirectUri(),state:st});
+    if(!w)return await goSignIn(url,{kind:'qbo',state:st});
+    w.location.href=url;
     let sp;try{sp=await popupParams(w,st);}catch(e){if(/cancelled/.test(e.message))e.message+=` If QuickBooks showed a redirect error, add ${redirectUri()} under Redirect URIs in your Intuit app (SETUP-EMAIL.md).`;throw e;}
-    const r=await helperCall('qbo/connect',{code:sp.get('code'),realmId:sp.get('realmId'),redirect_uri:redirectUri()});
-    QBC.c={conn:r.conn,key:r.key,realm:r.realm,env:r.env,company:r.company,country:r.country,at:Date.now()};lsSet('ss-qbc',JSON.stringify(QBC.c));QL.items=[];QL.at=0;QL.err='';scheduleSync();
-    qbLog(`Connected to ${r.company||'QuickBooks'} (${r.env})`);toast(`Connected to ${r.company||'QuickBooks'}${r.env==='sandbox'?' (sandbox)':''}`);await qbLoad(true);}
-  catch(e){try{w.close();}catch(_){}toast(e.message||'Couldn\'t connect to QuickBooks.',8000);}}
+    await qbFinishConnect(sp.get('code'),sp.get('realmId'));}
+  catch(e){try{w&&w.close();}catch(_){}toast(e.message||'Couldn\'t connect to QuickBooks.',8000);}}
+// swaps Intuit's one-time code for a connection (kept by the helper Worker) and loads the items
+async function qbFinishConnect(code,realmId){const r=await helperCall('qbo/connect',{code,realmId,redirect_uri:redirectUri()});
+  QBC.c={conn:r.conn,key:r.key,realm:r.realm,env:r.env,company:r.company,country:r.country,at:Date.now()};lsSet('ss-qbc',JSON.stringify(QBC.c));QL.items=[];QL.at=0;QL.err='';scheduleSync();
+  qbLog(`Connected to ${r.company||'QuickBooks'} (${r.env})`);toast(`Connected to ${r.company||'QuickBooks'}${r.env==='sandbox'?' (sandbox)':''}`);if(setDlg.open)renderSettings();await qbLoad(true);}
 async function qbDisconnect(){if(QBC.c)try{await helperCall('qbo/disconnect',{conn:QBC.c.conn,key:QBC.c.key});}catch(_){}
   qbLog('Disconnected from QuickBooks');lsSet('ss-qbc',JSON.stringify({at:Date.now(),off:1}));QBC.c=null;QL.items=[];QL.at=0;qbKv('put','ql',null);QB.sel.clear();QB.side='';scheduleSync();qbRefreshView();toast('Disconnected from QuickBooks');}
 function qbSettingsHTML(){const c=QBC.c,row=(t,sub,ctl)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${ctl}</div>`,b=(v,t,cls='btn sm')=>`<button class="${cls}" type="button" data-sact="${v}">${t}</button>`,log=(lsJ('ss-qbo-log')||[]).slice(0,12);
