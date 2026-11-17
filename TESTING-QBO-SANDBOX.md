@@ -9,7 +9,8 @@ It is written for two readers:
 The setup:
 
 ```
-your browser ──► http://localhost:8000/  (this branch's index.html, served from your computer)
+your browser ──► the test site: https://claude-qbo-items.sellsheet.pages.dev/ (Cloudflare's preview of this branch)
+                 or http://localhost:8000/ (this branch served from your computer)
                      │
                      ▼
         https://sellsheet-qbo-test.<you>.workers.dev  (a SEPARATE test Worker, this branch's worker/google-token.js)
@@ -18,13 +19,21 @@ your browser ──► http://localhost:8000/  (this branch's index.html, served
         Intuit sandbox company  (fake company, sample data)
 ```
 
-> **Never paste this branch's `worker/google-token.js` into the live Worker.** It is older than `main`'s Worker and would remove the Company-sharing endpoints (`/team/*`) that coworkers use. Always use the separate test Worker.
+> **Test with the separate test Worker, not the live one.** This branch's `worker/google-token.js` now has everything `main`'s Worker has (Company sharing and Google stay-signed-in) plus QuickBooks. But update the live Worker only after the PR is merged, and copy the code from `main` at that point, so nothing merged in the meantime is lost.
 
 ---
 
 ## Part A: Setup (the person does this)
 
-### A1. Run this branch's site locally
+### A1. Open this branch's site
+
+**Easiest: the branch preview.** Cloudflare builds this branch automatically, so there's nothing to run:
+```text
+https://claude-qbo-items.sellsheet.pages.dev/
+```
+It's a separate copy with its own data in the browser; the live site isn't touched. It updates a minute or two after each push to the branch.
+
+**Or run it on your computer:**
 
 ```bash
 git clone https://github.com/lumiflooshed-alt/sellsheet.git sellsheet-qbo-test
@@ -39,6 +48,8 @@ python3 -m http.server 8000
 ```
 
 Leave it running, and open `http://localhost:8000/`. Use `localhost`, not `127.0.0.1`, because Intuit only accepts the exact redirect address. This copy keeps its own data in the browser, separate from the live site.
+
+The steps below call whichever one you use **the test site**. You can set up both.
 
 ### A2. Create the Intuit app (developer.intuit.com)
 
@@ -57,7 +68,11 @@ Leave it running, and open `http://localhost:8000/`. Use `localhost`, not `127.0
    | Where your app is hosted | Country **Canada**. Leave the IP address **empty**: Cloudflare Workers have no fixed outbound IP. |
 
 4. Open **Keys and credentials** and use the **Development** tab (sandbox), not Production. Copy the **Client ID** and **Client Secret**. They belong to the *app*, not to the sandbox company. The sandbox company's own number (Realm/Company ID) is picked up automatically when you connect, so you don't copy it anywhere.
-5. Under **Redirect URIs** (Development), add exactly this, with the slash at the end, and save:
+5. Under **Redirect URIs** (Development), add the test site's address exactly, with the slash at the end, and save. For the branch preview:
+   ```text
+   https://claude-qbo-items.sellsheet.pages.dev/
+   ```
+   For your computer:
    ```text
    http://localhost:8000/
    ```
@@ -92,7 +107,7 @@ Canadian sandbox companies may start with inventory tracking off. While it's off
 
    | Type | Variable name | Value |
    |---|---|---|
-   | Text | `ALLOWED_ORIGINS` | `http://localhost:8000` (no slash at the end) |
+   | Text | `ALLOWED_ORIGINS` | `https://claude-qbo-items.sellsheet.pages.dev,http://localhost:8000` (comma between them, no slash at the end; keep only the one you use if you like) |
    | Text | `INTUIT_CLIENT_ID` | Client ID (Development tab) |
    | **Secret** | `INTUIT_CLIENT_SECRET` | Client Secret (Development tab) |
    | Text | `INTUIT_ENV` | `sandbox` |
@@ -103,37 +118,33 @@ Canadian sandbox companies may start with inventory tracking off. While it's off
    ```
    `"configured":false` is expected: it's about the Google settings, which the test Worker doesn't need.
 
-### A5. Point the local site at the test Worker
+### A5. Point the test site at the test Worker
 
-**Known bug in this PR:** **Sign in → Sign-in setup → Save** refuses a helper Worker that has no Google settings ("The helper is running but not set up yet…"), even though QuickBooks works without them. Until that's fixed, save the address from the browser console instead:
-
-1. On `http://localhost:8000/`, open the console: **F12 → Console**. If Chrome blocks pasting, type `allow pasting` and press Enter first.
-2. Run this, using your own Worker address:
-   ```js
-   localStorage.setItem('ss-email-setup', JSON.stringify({googleHelper: 'https://sellsheet-qbo-test.lumiflooshed.workers.dev'}))
-   ```
-3. Reload the page. Don't click **Save** in Sign-in setup afterwards, and **don't use "Sign in with Google" on localhost**, because the test Worker has no Google settings.
+1. On the test site, click **Sign in → Sign-in setup**.
+2. Paste the test Worker's address (`https://sellsheet-qbo-test.<you>.workers.dev`) into **Stay-signed-in helper**, and click **Save**.
+3. It says it was saved for QuickBooks only. That's expected: the test Worker has no Google settings, so Google sign-in on the test site keeps working the normal way (signed in for about an hour).
 
 ### A6. Connect
 
 1. Go to **Settings (gear icon) → QuickBooks → Connect QuickBooks…**.
-2. In Intuit's window, sign in and pick the **sandbox company**.
+2. In Intuit's window, sign in and pick the **sandbox company**. On a phone or tablet there's no separate window: the page goes to Intuit's sign-in and comes back by itself.
 3. Go to **Inventory → QuickBooks items**. It should show **● Live from QuickBooks · Sandbox**.
+4. Optional, on your phone (branch preview only): open the test site, do step A5 there too, then **Connect** again. It should come back to Settings showing the sandbox company. On the QuickBooks items page, the filters sit behind a **Filters** button, and tapping an item opens it full-screen.
 
 ### A7. Hand over to Claude Code (optional)
 
-1. Leave `python3 -m http.server 8000` running in its own terminal tab. In Konsole, open a new tab with **Ctrl+Shift+T**. Go to the project folder (`cd ~/sellsheet-qbo-test`), and get the latest guide with `git pull`.
+1. If you're using your computer's copy, leave `python3 -m http.server 8000` running in its own terminal tab. In Konsole, open a new tab with **Ctrl+Shift+T**. Go to the project folder (`cd ~/sellsheet-qbo-test`), and get the latest version with `git pull`.
 2. Install the **Claude in Chrome** extension in Google Chrome, signed in to the same Claude account. Use Google Chrome rather than Chromium if the connection fails.
-3. In that Chrome, sign in to developer.intuit.com and open the sandbox company **yourself**. Claude shouldn't type passwords. Then open `http://localhost:8000/`.
-4. Run `claude` in the project folder, type `/chrome` to check the browser connection, then say:
-   > Read TESTING-QBO-SANDBOX.md and carry out Part B.
+3. In that Chrome, sign in to developer.intuit.com and open the sandbox company **yourself**. Claude shouldn't type passwords. Then open the test site.
+4. Run `claude` in the project folder, type `/chrome` to check the browser connection, then say which test site you're using:
+   > Read TESTING-QBO-SANDBOX.md and carry out Part B on https://claude-qbo-items.sellsheet.pages.dev/
 
 ---
 
 ## Part B: Test run (for Claude Code, in the browser)
 
 ### Rules
-- Work **only** at `http://localhost:8000/` and in the **sandbox** company at `app.sandbox.qbo.intuit.com`. Never open or change the live site (`sellsheet.pages.dev`, `lumiflooshed-alt.github.io`), the live Cloudflare Worker, or a real QuickBooks company. If the dashboard shows **Production** instead of **Sandbox** anywhere, stop and tell the person.
+- Work **only** on the test site the person named (`https://claude-qbo-items.sellsheet.pages.dev/` or `http://localhost:8000/`) and in the **sandbox** company at `app.sandbox.qbo.intuit.com`. Never open or change the live site (`https://sellsheet.pages.dev/` without the `claude-qbo-items.` in front, or `lumiflooshed-alt.github.io`), the live Cloudflare Worker, or a real QuickBooks company. If the dashboard shows **Production** instead of **Sandbox** anywhere, stop and tell the person.
 - Don't type passwords or secrets. If a sign-in is needed, stop and ask the person to do it.
 - Don't change Cloudflare or Intuit settings. If the setup in Part A looks incomplete, report what's missing and stop.
 - Don't edit the repository's code. This is a test run only.
@@ -141,12 +152,12 @@ Canadian sandbox companies may start with inventory tracking off. While it's off
 - For each test, record **PASS / FAIL / BLOCKED**, what you did, what you saw, and a screenshot. On failure, also record the exact error text from the page and any errors in the browser console.
 
 ### B0. Preflight
-1. Open the test Worker's address. Its address is saved in the local site's `localStorage['ss-email-setup'].googleHelper`. Confirm `"quickbooks":true`.
-2. On `http://localhost:8000/#settings`, open **QuickBooks**. Confirm it shows the sandbox company and **Sandbox**. If it isn't connected, ask the person to do step A6.
+1. Open the test Worker's address. It's saved in the test site's `localStorage['ss-email-setup'].googleHelper`. Confirm `"quickbooks":true`.
+2. On the test site, go to `#settings` and open **QuickBooks**. Confirm it shows the sandbox company and **Sandbox**. If it isn't connected, ask the person to do step A6.
 3. Turn on **Allow changes to QuickBooks**.
 
 ### B1. Items match
-Open **Inventory → QuickBooks items** (`http://localhost:8000/#qbo-items`). Compare the item names, prices, cost and quantity on hand with QuickBooks **Sales → Products and services** in the sandbox. Check at least five items, including any inventory items.
+Open **Inventory → QuickBooks items** (the test site's `#qbo-items`). Compare the item names, prices, cost and quantity on hand with QuickBooks **Sales → Products and services** in the sandbox. Check at least five items, including any inventory items.
 
 ### B2. Edit in the dashboard → QuickBooks
 Pick an inventory item. Click its row, then **Edit**. Change the **Sales price** and **SKU**, click **Review changes**, check that the review shows only those two fields as old → new, then click **Send to QuickBooks**. Reload that item in QuickBooks, and confirm both changes and that nothing else changed (description, accounts, tax).
@@ -190,8 +201,8 @@ Write a summary table (test, result, notes), then the details of each FAIL or BL
 
 | What you see | Fix |
 |---|---|
-| `origin_not_allowed` | `ALLOWED_ORIGINS` must be exactly `http://localhost:8000`, with no slash at the end. |
-| Intuit: invalid redirect URI | The Development Redirect URI must be exactly `http://localhost:8000/`, and you must open the site at `localhost`, not `127.0.0.1`. |
+| `origin_not_allowed` | `ALLOWED_ORIGINS` must include the test site exactly, e.g. `https://claude-qbo-items.sellsheet.pages.dev` or `http://localhost:8000`, with no slash at the end. |
+| Intuit: invalid redirect URI | The Development Redirect URIs must include the test site exactly, with the slash at the end (`https://claude-qbo-items.sellsheet.pages.dev/` or `http://localhost:8000/`). For your computer, open the site at `localhost`, not `127.0.0.1`. |
 | `qbo_not_configured` | The `QBO_KV` binding or an `INTUIT_*` variable is missing. Add it and redeploy. |
 | `invalid_client` | The Client ID or Secret is wrong, or from the Production tab. Use the Development keys. |
 | "QuickBooks connects through your helper Worker…" | The helper address isn't saved. Redo step A5. |
