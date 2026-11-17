@@ -3004,18 +3004,20 @@ async function msRefresh(){const o=toksAll().microsoft;if(!o?.rt||!EMAIL_SETUP.m
    The helper keeps the Client secret; this browser keeps only a sealed copy of the lasting sign-in, and swaps it for a fresh hour-long token when needed. */
 const GMAIL_SEND='https://www.googleapis.com/auth/gmail.send';
 const gHelper=()=>String(EMAIL_SETUP.googleHelper||'').replace(/\/+$/,'');
+// a helper Worker with only the QuickBooks settings (no Google ones) is used for QuickBooks and Company, not for Google sign-in
+const HELPER_NOG='ss-helper-nogoogle',gHelperG=()=>{const h=gHelper();return h&&lsGet(HELPER_NOG)!==h?h:'';};
 async function helperCall(path,body,base=gHelper()){let r;try{r=await fetch(base+'/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
   catch(_){throw Object.assign(new Error('Couldn\'t reach the stay-signed-in helper. Check your connection, and its address under Sign in → Sign-in setup.'),{net:1});}
   const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.detail||j.error||('The stay-signed-in helper replied '+r.status)),{code:j.error,status:r.status});return j;}
 // '' when the helper answers and is set up, else what's wrong
 async function helperCheck(base){try{const r=await fetch(base,{method:'GET'});const j=await r.json().catch(()=>null);if(!j||j.app!=='sellsheet-google-token')return'That address didn\'t answer like the helper. Check it\'s the Worker\'s address from Cloudflare.';
-    if(!j.configured)return'The helper is running but not set up yet: add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SEAL_KEY and ALLOWED_ORIGINS in Cloudflare (see SETUP-EMAIL.md).';return'';}
+    if(!j.configured&&!j.quickbooks)return'The helper is running but not set up yet: add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SEAL_KEY and ALLOWED_ORIGINS (stay signed in), or the QuickBooks settings, in Cloudflare (see SETUP-EMAIL.md).';return j.configured?'':'qbo-only';}
   catch(_){return'Couldn\'t reach that address. Check it, and that the Worker is deployed.';}}
 const gKeys=()=>Object.keys(toksAll()).filter(k=>k==='google'||k.startsWith('gx:'));
 // can this Google account get a token without showing anything? (a current token, or a lasting sign-in)
-const gCan=k=>!!(tokGet(k)||(gHelper()&&toksAll()[k]?.rt));
+const gCan=k=>!!(tokGet(k)||(gHelperG()&&toksAll()[k]?.rt));
 const gRefP={};
-function gRefresh(k){const o=toksAll()[k];if(!o?.rt||!gHelper())return Promise.resolve(null);
+function gRefresh(k){const o=toksAll()[k];if(!o?.rt||!gHelperG())return Promise.resolve(null);
   return gRefP[k]||(gRefP[k]=(async()=>{try{const j=await helperCall('refresh',{rt:o.rt});const t={...toksAll()[k],token:j.access_token,exp:Date.now()+(+j.expires_in||3600)*1000,scope:j.scope||o.scope};tokSet(k,t);return t;}
     catch(e){if(e.code==='invalid_grant')tokSet(k,{...toksAll()[k],token:'',exp:0,rt:''});return null;}finally{delete gRefP[k];}})());}
 // a working token without showing anything, or null
@@ -3062,7 +3064,7 @@ const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'
 // key: 'google' (the site's account), 'gx:<email>' (a sending account), or 'extra' (add a sending account)
 function googleLogin(choose,hint,extra,key='google'){
   const scope='openid email profile '+GMAIL_SEND+' '+GMAIL_READ+' https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file'+(extra&&extra.length?' '+extra.join(' '):'');
-  if(gHelper())return gCodeLogin(choose,hint,scope,key);
+  if(gHelperG())return gCodeLogin(choose,hint,scope,key);
   return new Promise((res,rej)=>{if(!window.google?.accounts?.oauth2){loadScript('gis').catch(()=>{});rej(new Error('Google sign-in is still loading. Please click again.'));return;}
   const c=google.accounts.oauth2.initTokenClient({client_id:EMAIL_SETUP.google,scope,prompt:choose?'select_account':'',...(!choose&&hint?{login_hint:hint}:{}),
     callback:async r=>{if(r.error){rej(new Error(r.error==='access_denied'?'Google said "access denied". If the app is in Testing, add this Google address under Audience → Test users (see SETUP-EMAIL.md).':(r.error_description||r.error)));return;}
@@ -3097,7 +3099,7 @@ function afterLogin(prevKey){const a=authGet();if(!a)return;
       const gr=lsJ('ss-racks');if(gr){const k=rkKey();lsSet(k,JSON.stringify(mergeRacks(lsJ(k),gr)));}}catch(_){}lsSet(flag,'1');}
   crmLoad();lgLoad();renderBadge();CU.sel.clear();cuLoad();if(mailDlg.open)renderCust();renderTopAcct();syncNow();teamStart();}
 function signOut(){const all=toksAll(),g=all.google;if(g?.token&&window.google?.accounts?.oauth2)try{google.accounts.oauth2.revoke(g.token,()=>{});}catch(_){}
-  if(gHelper())for(const k of gKeys())if(all[k]?.rt)helperCall('revoke',{rt:all[k].rt}).catch(()=>{});
+  if(gHelperG())for(const k of gKeys())if(all[k]?.rt)helperCall('revoke',{rt:all[k].rt}).catch(()=>{});
   authSet(null);lsDel('ss-toks');TEAM.info=null;TEAM.err='';CU.sel.clear();cuLoad();lgLoad();renderBadge();if(logDlg.open)renderLog();if(mailDlg.open){renderCust();renderAcct();}renderTopAcct();toast('Signed out. Customers saved in this browser are shown.');}
 function renderAcct(){$$('#mlProv button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.prov===MAIL.prov));const p=MAIL.prov,t=authGet()?.prov===p?authGet():null,el=$('#mlAcct');
   const other=authGet();if(!t&&other){el.innerHTML=`<span>Signed in with ${PROV_NAME[other.prov]} (${esc(other.email||'')}). Sending from ${PROV_NAME[p]} needs a ${p==='google'?'Google':'Microsoft'} sign-in, which switches accounts.</span>`+(EMAIL_SETUP[p]?`<button class="btn sm" type="button" id="mlSignIn">Sign in with ${p==='google'?'Google':'Microsoft'}</button>`:'');return;}
@@ -3252,11 +3254,14 @@ function openSetup(){$('#suOrigin').textContent=location.origin;$('#suRedirect')
 setupDlg.addEventListener('click',async e=>{const c=e.target.closest('[data-copy]');if(!c)return;try{await navigator.clipboard.writeText($('#'+c.dataset.copy).textContent);toast('Copied');}catch(_){toast('Select the text and copy it');}});
 $('#suSave').onclick=async()=>{const v={google:$('#suGoogle').value.trim().replace(/\s+/g,''),googleApiKey:$('#suKey').value.trim().replace(/\s+/g,''),googleHelper:$('#suHelper').value.trim().replace(/\s+/g,'').replace(/\/+$/,''),microsoft:$('#suMs').value.trim().replace(/\s+/g,'')};
   for(const k of['google','googleApiKey','googleHelper','microsoft'])if(!EMAIL_CODE[k]&&v[k]&&!ID_RE[k].test(v[k])){const s=$('#suStatus');s.textContent=k==='googleHelper'?'The helper\'s address should start with https:// (copy it from Cloudflare).':k==='googleApiKey'?'That doesn\'t look like a Google API key. It starts with AIza.':k==='google'?'That doesn\'t look like a Google Client ID. It ends in .apps.googleusercontent.com.':'That doesn\'t look like a Microsoft Application ID (it looks like 11111111-2222-3333-4444-555555555555).';s.style.color='var(--bad)';return;}
-  if(v.googleHelper&&!EMAIL_CODE.googleHelper&&v.googleHelper!==EMAIL_SETUP.googleHelper){const s=$('#suStatus');s.style.color='';s.textContent='Checking the helper…';
-    const why=await helperCheck(v.googleHelper);if(why){s.textContent=why;s.style.color='var(--bad)';return;}}
+  let qbOnly=false;const hNorm=String(v.googleHelper||'').replace(/\/+$/,'');
+  if(v.googleHelper&&!EMAIL_CODE.googleHelper&&(v.googleHelper!==EMAIL_SETUP.googleHelper||lsGet(HELPER_NOG)===hNorm)){const s=$('#suStatus');s.style.color='';s.textContent='Checking the helper…';
+    const why=await helperCheck(v.googleHelper);if(why&&why!=='qbo-only'){s.textContent=why;s.style.color='var(--bad)';return;}
+    qbOnly=why==='qbo-only';if(qbOnly)lsSet(HELPER_NOG,hNorm);else lsDel(HELPER_NOG);}
+  if(!hNorm)lsDel(HELPER_NOG);
   const keep={};for(const k of['google','googleApiKey','googleHelper','microsoft'])if(!EMAIL_CODE[k]){keep[k]=v[k];EMAIL_SETUP[k]=v[k];}lsSet('ss-email-setup',JSON.stringify(keep));
   setupDlg.close();renderTopAcct();if(mailDlg.open){renderAcct();renderSync();}if(EMAIL_SETUP.google)loadScript('gis').catch(()=>{});
-  toast(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Sign-in is set up in this browser. Click "Sign in" to try it.':'Sign-in setup cleared');};
+  if(qbOnly)toast('Saved. This helper has the QuickBooks settings only, so it\'s used for QuickBooks; Google still signs you out after about an hour.',9000);else toast(EMAIL_SETUP.google||EMAIL_SETUP.microsoft?'Sign-in is set up in this browser. Click "Sign in" to try it.':'Sign-in setup cleared');};
 $('#suClose').onclick=$('#suCancel').onclick=()=>setupDlg.close();
 
 /* ---------- sent log: who got which sell sheet, when, and how they responded ----------
@@ -3705,7 +3710,7 @@ function senders(){const a=authGet(),out=[];if(!a||a.prov!=='google')return out;
 function curFrom(){const L=senders();if(!L.length)return null;const[k,e]=String(MAIL.from||'').split('|');
   return L.find(x=>x.key===k&&ck(x.email)===ck(e))||L.find(x=>x.key==='google'&&x.def)||L.find(x=>x.key==='google'&&x.primary)||L[0];}
 const fromHdr=f=>{const n=hdr(f.name||'').trim(),e=hdr(f.email);return n?(/^[\x20-\x7e]*$/.test(n)?'"'+n.replace(/["\\]/g,'')+'"':encWord(n))+' <'+e+'>':e;};
-function removeSender(k){const o=toksAll()[k];if(!o)return;if(o.rt&&gHelper())helperCall('revoke',{rt:o.rt}).catch(()=>{});const m=toksAll();delete m[k];lsSet('ss-toks',JSON.stringify(m));
+function removeSender(k){const o=toksAll()[k];if(!o)return;if(o.rt&&gHelperG())helperCall('revoke',{rt:o.rt}).catch(()=>{});const m=toksAll();delete m[k];lsSet('ss-toks',JSON.stringify(m));
   if(String(MAIL.from||'').startsWith(k+'|')){MAIL.from='';saveMail();}}
 async function gmailGet(tok,path){const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,{headers:{Authorization:'Bearer '+tok.token}});
   if(!r.ok){const j=await r.json().catch(()=>({})),msg=j.error?.message||'',e=new Error(msg||'Gmail error '+r.status);e.status=r.status;
@@ -5044,11 +5049,11 @@ const TAB_NAMES={home:'Home',editor:'Sell sheet',inventory:'Inventory',pipeline:
 const PIPE_NAMES=()=>Object.fromEntries(PL_COLS.map(c=>[c[0],c[1]]));
 function stSendCard(){const a=authGet(),row=(t,sub,ctl)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${ctl}</div>`,b=(v,t,x='',cls='btn sm')=>`<button class="${cls}" type="button" data-sact="${v}"${x}>${t}</button>`;
   if(!a||a.prov!=='google')return`<div class="st-card"><h4>Send from</h4>${row('Gmail address','Sign in with Google to choose which address your sell sheets come from','')}</div>`;
-  const L=senders(),f=curFrom(),accts=[...new Set(L.map(x=>x.acct))],t=toksAll().google,lasting=!!(gHelper()&&t?.rt);
+  const L=senders(),f=curFrom(),accts=[...new Set(L.map(x=>x.acct))],t=toksAll().google,lasting=!!(gHelperG()&&t?.rt);
   return`<div class="st-card"><h4>Send from</h4>${row('Address customers see','Your Gmail address, any "Send mail as" addresses set up in Gmail, and other Gmail accounts you add',`<select class="in" id="stFrom" aria-label="Send from address" style="max-width:320px">${accts.map(ac=>`<optgroup label="${esc(ac)}">${L.filter(x=>x.acct===ac).map(x=>`<option value="${esc(x.key+'|'+x.email)}"${f&&x.key===f.key&&ck(x.email)===ck(f.email)?' selected':''}>${esc(x.name?x.name+' <'+x.email+'>':x.email)}</option>`).join('')}</optgroup>`).join('')}<option value="+">＋ Add another Gmail account…</option></select>`)}
     ${gKeys().filter(k=>k!=='google'&&toksAll()[k]?.email&&ck(toksAll()[k].email)!==ck(a.email)).map(k=>row(esc(toksAll()[k].email),'Added for sending only. Customers and the Sent list stay with '+esc(a.email),b('rmFrom','Remove',` data-k="${esc(k)}"`,'btn sm ghost'))).join('')}
     ${row('Addresses from Gmail','To add one, open Gmail → Settings → Accounts → "Send mail as", then refresh here',`<span style="display:flex;gap:8px;flex-wrap:wrap">${b('saRefresh','Refresh')}${b('addFrom','Add Gmail account','','btn sm ghost')}</span>`)}
-    ${row('Stay signed in',lasting?'On: this device stays signed in to Google until you sign out':gHelper()?'The helper is set up. Sign in once more on this device to stay signed in':'Off: Google signs you out after about an hour. Set up the free helper to stay signed in (SETUP-EMAIL.md)',lasting?'<span class="iv-sync">On</span>':gHelper()?b('relogin','Sign in','','btn sm primary'):b('helper','Set up…'))}</div>`;}
+    ${row('Stay signed in',lasting?'On: this device stays signed in to Google until you sign out':gHelperG()?'The helper is set up. Sign in once more on this device to stay signed in':gHelper()?'Off: your helper has the QuickBooks settings only. Add the Google ones to it to stay signed in (SETUP-EMAIL.md)':'Off: Google signs you out after about an hour. Set up the free helper to stay signed in (SETUP-EMAIL.md)',lasting?'<span class="iv-sync">On</span>':gHelperG()?b('relogin','Sign in','','btn sm primary'):b('helper','Set up…'))}</div>`;}
 function renderSettings(){if(!setDlg.open)return;whereSet('settings',ST.sec);
   $('#stNav').innerHTML=ST_SECS.map(([k,n,ic])=>`<button type="button" data-ssec="${k}" aria-current="${ST.sec===k}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('');
   const row=(t,sub,ctl,wide)=>`<div class="st-row"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${wide?`<div class="st-wide">${ctl}</div>`:ctl}</div>`;
