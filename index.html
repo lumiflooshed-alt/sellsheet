@@ -246,6 +246,25 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-bkr button,.wh-bk .lnk{border:0;background:none;cursor:pointer;font:600 12.5px var(--ui);color:var(--muted);padding:2px}.wh-bkr button:hover{color:var(--bad)}.wh-bk .lnk{color:var(--accent-fg);justify-self:start}
 .wh-bkm{display:grid;gap:6px}.wh-bkmr{display:grid;grid-template-columns:minmax(0,1fr) 84px auto;gap:8px;align-items:center;font-size:13.5px;text-transform:uppercase}.wh-bkmr .in{height:36px}.wh-bkmr small{color:var(--muted);text-transform:none}
 .wh-r .it .wh-kids{display:grid;gap:1px;margin:3px 0 0 4px;padding-left:10px;border-left:2px solid var(--line2);list-style:none}.wh-r .it .wh-kids li{color:var(--muted);font-size:12px;text-transform:uppercase;overflow-wrap:anywhere}.wh-r .it .wh-kids b{color:var(--ink);font-weight:700}
+.wh-view{justify-self:start}.wh-view button{min-width:120px}
+.wh-io{display:none}.wh-main[data-view=io]>.wh-io{display:grid;gap:16px}
+.wh-main[data-view=io]>:not(.wh-whs):not(.wh-view):not(.wh-io):not(.wh-remind){display:none!important}
+.io-form{display:grid;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.io-dir{justify-self:start}.io-dir button{min-width:110px}.io-dir button[data-iodir=in][aria-pressed=true]{color:var(--good)}.io-dir button[data-iodir=out][aria-pressed=true]{color:var(--bad)}
+.io-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px;align-items:end}.io-g .io-w{grid-column:span 2}
+.io-u{align-self:center;padding:0 10px;color:var(--muted);font-size:14px}.io-go{display:flex;justify-content:flex-end}
+.io-log{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:clip}
+.io-log h3{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
+.io-log>.wh-hint{padding:10px 14px}
+.io-rh,.io-r{display:grid;grid-template-columns:7.5em 3.4em 4.5em minmax(0,1.6fr) 7em minmax(0,1.6fr);gap:10px;padding:9px 14px;align-items:center}
+.io-rh{font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-block:6px}
+.io-r{border-bottom:1px solid var(--line);font-size:14px}.io-r:last-of-type{border-bottom:0}.io-r .d{color:var(--muted);font-size:13px}.io-r .it{font-weight:600;overflow-wrap:anywhere}
+.io-r .nt{color:var(--muted);overflow-wrap:anywhere}.io-r .nt small{display:block;font-size:11.5px}.io-sp{font-weight:700;justify-self:start}
+.io-b{justify-self:start;font:700 11px var(--ui);letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:6px}
+.io-b.io-in,.io-r .am.io-in{color:var(--good)}.io-b.io-in{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.io-b.io-out,.io-r .am.io-out{color:var(--bad)}.io-b.io-out{background:color-mix(in srgb,var(--bad) 14%,transparent)}.io-r .am{font-weight:700}
+@media (max-width:700px){.io-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.io-g .io-w{grid-column:1/-1}.io-dir,.wh-view{justify-self:stretch;display:flex}.io-dir button,.wh-view button{flex:1;min-width:0}.io-go .btn{flex:1;height:44px}
+  .io-rh{display:none}.io-r{grid-template-columns:auto auto minmax(0,1fr) auto;gap:4px 10px}.io-r .it{grid-column:1/-1;order:5}.io-r .nt{grid-column:1/-1;order:6}.io-r .am{justify-self:end}}
 .wh-hint{margin:0;font-size:13px;color:var(--muted);line-height:1.45}.wh-hint.warn{color:var(--bad)}.wh-hint a{color:var(--accent-fg)}
 .wh-mv{display:grid;gap:10px;padding:14px 16px;border-top:2px solid var(--beam);background:var(--raise)}.wh-mv[hidden]{display:none}.wh-mvh{font:800 15px var(--ui);text-transform:uppercase;overflow-wrap:anywhere}.wh-mvb{display:flex;gap:8px;justify-content:flex-end}
 .wh-sect{font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
@@ -1328,7 +1347,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main"><div class="wh-whs" id="whWhs"></div><div class="wh-remind" id="whRemind" hidden></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main" id="whMain"><div class="wh-whs" id="whWhs"></div><div class="wh-remind" id="whRemind" hidden></div><div class="seg wh-view" id="whView" role="group" aria-label="View"><button type="button" data-whview="map">Rack map</button><button type="button" data-whview="io">In &amp; Out</button></div><div class="wh-io" id="whIO"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -3340,7 +3359,7 @@ function teamGather(T,sh,first){const out=[],me=meEmail(),now=Date.now(),add=(ki
     for(const[k,kind]of[['leads','lead'],['acts','act'],['todos','todo']])if(sh[kind]){for(const x of CRM[k])if(fresh(x.upd))add(kind,x.id,x,x.upd);for(const d of CRM.deleted)if(d.k===k&&fresh(d.at))add(kind,d.id,null,0,d.at);}}
   if(sh.log){lgLoad();for(const e of LG.list)if(fresh(e.upd||e.at))add('log',e.id,e,e.upd||e.at);for(const d of LG.deleted)if(fresh(d.at))add('log',d.id,null,0,+d.at||now);}
   if(sh.tpl)for(const w of WORD_SYNC){const u=+lsGet(w[1]+'-upd')||0;if(u&&fresh(u)&&lsGet(w[1]))add('tpl',w[1],{text:lsGet(w[1])},u);}
-  if(sh.rack){rkLoad();for(const[loc,x]of Object.entries(RK.skids))if(fresh(x.upd))add('skid',loc,x,x.upd);for(const d of RK.deleted)if(fresh(d.at))add('skid',d.loc,null,0,d.at);if(RK.cfg.upd&&fresh(RK.cfg.upd))add('rackcfg','cfg',RK.cfg,RK.cfg.upd);}
+  if(sh.rack){rkLoad();for(const[loc,x]of Object.entries(RK.skids))if(fresh(x.upd))add('skid',loc,x,x.upd);for(const d of RK.deleted)if(fresh(d.at))add('skid',d.loc,null,0,d.at);if(RK.cfg.upd&&fresh(RK.cfg.upd))add('rackcfg','cfg',RK.cfg,RK.cfg.upd);for(const x of RK.adj)if(fresh(x.upd))add('rkadj',x.id,x,x.upd);}
   return out;}
 // what came from the company, merged the same way as between your own devices (the newest change of each item wins)
 function teamApply(items){if(!items.length)return false;const of=k=>items.filter(x=>x.kind===k),live=k=>of(k).filter(x=>!x.del&&x.data&&typeof x.data==='object');
@@ -3350,8 +3369,8 @@ function teamApply(items){if(!items.length)return false;const of=k=>items.filter
   if(of('lead').length||of('act').length||of('todo').length){const d=[];for(const[kind,k]of[['lead','leads'],['act','acts'],['todo','todos']])for(const x of of(kind))if(x.del)d.push({id:x.id,at:x.del,k});
     const m=mergeCRM(lsJ(crmKey()),{leads:live('lead').map(x=>x.data),acts:live('act').map(x=>x.data),todos:live('todo').map(x=>x.data),deleted:d});lsSet(crmKey(),JSON.stringify(m));crmLoad();}
   if(of('log').length){const raw=lsJ(lgKey())||{},m=mergeLog({entries:raw.entries||[],deleted:raw.deleted||[]},{entries:live('log').map(x=>x.data),deleted:of('log').filter(x=>x.del).map(x=>({id:x.id,at:x.del}))});lsSet(lgKey(),JSON.stringify(m));lgLoad();}
-  if(of('skid').length||of('rackcfg').length){const cf=live('rackcfg').find(x=>x.id==='cfg');
-    lsSet(rkKey(),JSON.stringify(mergeRacks(lsJ(rkKey()),{skids:Object.fromEntries(live('skid').map(x=>[x.id,{...x.data,upd:x.upd}])),deleted:of('skid').filter(x=>x.del).map(x=>({loc:x.id,at:x.del})),cfg:cf?{...cf.data,upd:cf.upd}:null})));rkLoad();rkSheetSoon();}
+  if(of('skid').length||of('rackcfg').length||of('rkadj').length){const cf=live('rackcfg').find(x=>x.id==='cfg');
+    lsSet(rkKey(),JSON.stringify(mergeRacks(lsJ(rkKey()),{skids:Object.fromEntries(live('skid').map(x=>[x.id,{...x.data,upd:x.upd}])),deleted:of('skid').filter(x=>x.del).map(x=>({loc:x.id,at:x.del})),cfg:cf?{...cf.data,upd:cf.upd}:null,adj:live('rkadj').map(x=>({...x.data,upd:x.upd}))})));rkLoad();rkSheetSoon();}
   const okT=new Set(WORD_SYNC.map(w=>w[1]));for(const x of live('tpl'))if(okT.has(x.id)&&typeof x.data.text==='string'&&x.upd>(+lsGet(x.id+'-upd')||0)){lsSet(x.id,x.data.text);lsSet(x.id+'-upd',String(x.upd));}
   return true;}
 function teamRedraw(){renderBadge();if(custDlg.open)renderCP();if(plDlg.open){renderPipe();if(PL.person&&!$('#plPerson').contains(document.activeElement))renderPerson();}if(homeDlg.open)renderHome();if(logDlg.open)renderLog();if(mailDlg.open)renderCust();if(whDlg.open)renderWh();if(setDlg.open&&ST.sec==='team')renderSettings();}
@@ -5528,7 +5547,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 const whDlg=$('#whDlg');
 const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
 const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
-const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],adj:[],view:lsGet('ss-wh-view')==='io'?'io':'map',io:null,wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
 const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
 /* warehouses: each has its own name, racks, layouts and rack names. The first one ("main") keeps the plain spot codes (A1, B3…),
    so everything saved before warehouses existed stays where it was; the others put their id in front (w4k2q:A1). */
@@ -5615,17 +5634,82 @@ function cleanRkCfg(c){c=c&&typeof c==='object'?c:{};
 function mergeRacks(a,b){a=a&&typeof a==='object'?a:{};b=b&&typeof b==='object'?b:{};const del=new Map(),m=new Map();
   for(const d of[...(a.deleted||[]),...(b.deleted||[])])if(d&&locOk(d.loc)&&(!del.has(d.loc)||del.get(d.loc)<+d.at))del.set(d.loc,+d.at||0);
   for(const src of[a.skids,b.skids])for(const[loc,s]of Object.entries(src&&typeof src==='object'?src:{})){if(!locOk(loc))continue;const c=cleanSkid(s);if(!c)continue;const o=m.get(loc);if(!o||c.upd>o.upd)m.set(loc,c);}
-  const ca=cleanRkCfg(a.cfg),cb=cleanRkCfg(b.cfg),cut=Date.now()-365*864e5;
-  return{cfg:cb.upd>ca.upd?cb:ca,skids:Object.fromEntries([...m].filter(([loc,s])=>!((del.get(loc)||0)>=s.upd))),deleted:[...del].filter(([loc,at])=>at>cut&&!(m.get(loc)?.upd>at)).map(([loc,at])=>({loc,at}))};}
-function rkLoad(){const d=mergeRacks(lsJ(rkKey()),null);RK.cfg=d.cfg;RK.skids=d.skids;RK.deleted=d.deleted;if(!whList().some(w=>w.id===RK.wh))RK.wh='main';}
+  const ca=cleanRkCfg(a.cfg),cb=cleanRkCfg(b.cfg),cut=Date.now()-365*864e5,aj=new Map();
+  for(const x of[...(Array.isArray(a.adj)?a.adj:[]),...(Array.isArray(b.adj)?b.adj:[])]){const c=cleanAdj(x);if(c&&(!aj.has(c.id)||c.upd>aj.get(c.id).upd))aj.set(c.id,c);}
+  return{adj:[...aj.values()].sort((x,y)=>y.upd-x.upd).slice(0,ADJ_MAX),cfg:cb.upd>ca.upd?cb:ca,skids:Object.fromEntries([...m].filter(([loc,s])=>!((del.get(loc)||0)>=s.upd))),deleted:[...del].filter(([loc,at])=>at>cut&&!(m.get(loc)?.upd>at)).map(([loc,at])=>({loc,at}))};}
+function rkLoad(){const d=mergeRacks(lsJ(rkKey()),null);RK.cfg=d.cfg;RK.skids=d.skids;RK.deleted=d.deleted;RK.adj=d.adj;if(!whList().some(w=>w.id===RK.wh))RK.wh='main';}
 let rkTeamT=0;
-function rkSave(fromSheet){lsSet(rkKey(),JSON.stringify({cfg:RK.cfg,skids:RK.skids,deleted:RK.deleted}));scheduleSync();if(!fromSheet)rkSheetSoon();
+function rkSave(fromSheet){lsSet(rkKey(),JSON.stringify({cfg:RK.cfg,skids:RK.skids,deleted:RK.deleted,adj:RK.adj}));scheduleSync();if(!fromSheet)rkSheetSoon();
   if(teamShare('rack')){clearTimeout(rkTeamT);rkTeamT=setTimeout(()=>teamSync(),2500);}}
 const rkStamp=x=>{x.upd=Math.max(Date.now(),(+x.upd||0)+1);return x;};
 function setSkid(loc,body){const old=RK.skids[loc];if(body){const c=cleanSkid({...body,upd:0});if(c){RK.skids[loc]={...c,upd:Math.max(Date.now(),(+old?.upd||0)+1),...(meEmail()?{by:meEmail()}:{})};RK.deleted=RK.deleted.filter(d=>d.loc!==loc);return;}}
   if(!old)return;delete RK.skids[loc];RK.deleted=RK.deleted.filter(d=>d.loc!==loc);RK.deleted.push({loc,at:Math.max(Date.now(),(+old.upd||0)+1)});}
 function writeSkid(loc,body){setSkid(loc,body);rkSave();renderWh();}
 function setRacks(n){n=Math.max(1,Math.min(RK_MAX,Math.round(n)||1));if(n===rkCount()){renderWh();return;}W().rackCount=n;rkStamp(RK.cfg);rkSave();renderWh();}
+/* ---------- In & Out: stock adjustments ----------
+   A dated log of what came in and went out of each spot. Saving one changes the skid's stock (the item line, a box group
+   of it, or the skid total) and keeps a line in the log. Kept with the racks: synced to your devices and shared with your company. */
+const ADJ_MAX=3000,ADJ_U={boxes:'boxes',pcs:'pcs',dz:'dz'};
+const dayISO=(d=new Date())=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function cleanAdj(x){if(!x||typeof x!=='object'||!/^[a-z0-9]{4,16}$/.test(x.id||'')||!locOk(x.loc))return null;const n=rkNum(x.n);if(!n)return null;
+  return{id:x.id,at:/^\d{4}-\d{2}-\d{2}$/.test(x.at||'')?x.at:dayISO(new Date(+x.upd||Date.now())),loc:x.loc,dir:x.dir==='out'?'out':'in',n,u:ADJ_U[x.u]?x.u:'boxes',
+    what:String(x.what||'').slice(0,200),note:String(x.note||'').trim().slice(0,500),upd:+x.upd||1,...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
+const fmtDay=d=>{const[y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});};
+const adjAmt=(n,u)=>u==='boxes'?plural(n,'box'):`${n} ${u}`;
+// what can be adjusted on a spot: each line (or each of its box groups), the skid total, and on the way in a new item
+function ioTargets(loc,dir){const s=RK.skids[loc],out=[];(s?.items||[]).forEach((i,ix)=>{
+    if(i.bk?.length)i.bk.forEach((g,j)=>out.push({k:ix+'.'+j,label:`${itemLine({...i,size:'',colour:''})||'Unnamed item'} · ${bkName(i,g)}`,now:plural(+g.boxes||0,'box'),units:['boxes']}));
+    else out.push({k:String(ix),label:itemLine(i)||'Unnamed item',now:lineAmt(i).replace(/<[^>]+>/g,''),units:+i.per>0?['boxes']:['boxes',unitOf(i)]});});
+  const t=skTotal(s);if(t)out.push({k:'total',label:'Skid total (mixed skid)',now:fmtTot(t),units:[t.unit]});
+  if(dir==='in')out.push({k:'new',label:'＋ New item…',now:'',units:['boxes','pcs','dz']});return out;}
+const ioLocs=dir=>{const all=visLocs().concat(orphLocs());return dir==='out'?all.filter(l=>RK.skids[l]):all;};
+function ioState(){const io=RK.io||(RK.io={dir:'in',date:dayISO(),loc:'',tgt:'',n:'',u:'boxes',note:'',name:''});
+  const L=ioLocs(io.dir);if(!L.includes(io.loc))io.loc=(io.dir==='in'?L.find(l=>RK.skids[l]):'')||L[0]||'';
+  const T=io.loc?ioTargets(io.loc,io.dir):[];let t=T.find(x=>x.k===io.tgt);if(!t){t=T[0];io.tgt=t?.k||'';}
+  if(t&&!t.units.includes(io.u))io.u=t.units[0];return{io,L,T,t};}
+// change the skid; returns an error message, or '' when done
+function applyAdj(loc,tgt,dir,n,u,name){const s=RK.skids[loc]?JSON.parse(JSON.stringify(RK.skids[loc])):{items:[],note:'',total:null},sg=dir==='in'?1:-1,short=(have,w)=>`Only ${w==='boxes'?plural(have,'box'):have+' '+w} there. Take out ${have} or less.`;
+  if(tgt==='new'){if(dir!=='in')return'Pick an item';if(!rkUp(name))return'Give the new item a name';s.items.push(u==='boxes'?{item:name,boxes:n}:{item:name,qty:n,unit:u==='dz'?'dz':'pcs'});}
+  else if(tgt==='total'){const t=skTotal(s);if(!t)return'Pick an item';if(dir==='out'&&n>t.count)return short(t.count,t.unit);s.total={count:t.count+sg*n,unit:t.unit};}
+  else{const[ix,j]=tgt.split('.'),i=s.items[+ix];if(!i)return'Pick an item';const per=+i.per||0;
+    if(j!=null){const g=i.bk?.[+j];if(!g)return'Pick an item';if(dir==='out'&&n>+g.boxes)return short(+g.boxes,'boxes');g.boxes=(+g.boxes||0)+sg*n;i.bk=i.bk.filter(b=>+b.boxes>0);
+      i.boxes=i.bk.reduce((t,b)=>t+(+b.boxes),0);if(!i.bk.length)delete i.bk;if(per)i.qty=i.boxes*per;}
+    else if(u==='boxes'){const b0=+i.boxes||0;if(dir==='out'&&n>b0)return short(b0,'boxes');const b1=b0+sg*n;
+      // no per-box count: the total follows the boxes when it can be worked out
+      if(!per&&+i.qty>0&&b0>0)i.qty=Math.round(+i.qty*b1/b0);i.boxes=b1;if(per)i.qty=b1*per;}
+    else{const q0=+i.qty||0;if(dir==='out'&&n>q0)return short(q0,unitOf(i));i.qty=q0+sg*n;}
+    if(!(+i.boxes>0)&&!(+i.qty>0))s.items.splice(+ix,1);}
+  if(s.total&&!(+s.total.count>0))s.total=null;
+  setSkid(loc,s.items.length||s.note||s.total?s:null);return'';}
+function saveAdj(){const{io,t}=ioState();const n=rkNum(io.n);
+  if(!io.loc){toast('Pick a spot');return;}if(!t){toast('Nothing on that spot to take out');return;}if(!n){toast('Enter an amount');$('#ioN')?.focus();return;}
+  const what=t.k==='new'?rkUp(io.name):t.label,err=applyAdj(io.loc,t.k,io.dir,n,io.u,io.name);if(err){toast(err,4000);return;}
+  RK.adj.unshift({id:uid(),at:io.date||dayISO(),loc:io.loc,dir:io.dir,n,u:io.u,what,note:io.note.trim().slice(0,500),upd:Date.now(),...(meEmail()?{by:meEmail()}:{})});
+  if(RK.adj.length>ADJ_MAX)RK.adj.length=ADJ_MAX;rkSave();
+  toast(`${io.dir==='in'?'In':'Out'}: ${adjAmt(n,io.u)} ${what} · ${codeOf(io.loc)}`);
+  Object.assign(io,{n:'',note:'',name:'',tgt:t.k==='new'?'':io.tgt});renderWh();setTimeout(()=>$('#ioN')?.focus(),30);}
+function ioOpen(loc){RK.view='io';lsSet('ss-wh-view','io');const io=ioState().io;if(loc){io.loc=loc;io.dir=RK.skids[loc]?io.dir:'in';io.tgt='';}closeSide();renderWh();}
+function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.innerHTML='';return;}const{io,L,T,t}=ioState();
+  const uName={boxes:'boxes',pcs:'pcs',dz:'dozen'},spot=l=>`${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}`;
+  const form=`<form class="io-form" id="ioForm" autocomplete="off">
+    <div class="seg io-dir" role="group" aria-label="In or out"><button type="button" data-iodir="in" aria-pressed="${io.dir==='in'}">＋ In</button><button type="button" data-iodir="out" aria-pressed="${io.dir==='out'}">− Out</button></div>
+    <div class="io-g">
+      <div class="wh-f"><label for="ioDate">Date</label><input class="in" id="ioDate" type="date" value="${esc(io.date)}"></div>
+      <div class="wh-f"><label for="ioLoc">Spot</label><select class="in" id="ioLoc">${L.length?L.map(l=>`<option value="${l}"${l===io.loc?' selected':''}>${spot(l)}</option>`).join(''):'<option value="">No skids with stock</option>'}</select></div>
+      <div class="wh-f io-w"><label for="ioTgt">Item</label><select class="in" id="ioTgt"${T.length?'':' disabled'}>${T.length?T.map(x=>`<option value="${esc(x.k)}"${x.k===io.tgt?' selected':''}>${esc(x.label)}${x.now?' — now '+esc(x.now):''}</option>`).join(''):'<option>Nothing on this spot</option>'}</select></div>
+      ${t?.k==='new'?`<div class="wh-f io-w"><label for="ioName">New item</label><input class="in" id="ioName" value="${esc(io.name)}" placeholder="e.g. Hoodie, Navy, L"></div>`:''}
+      <div class="wh-f"><label for="ioN">${io.dir==='in'?'Add':'Remove'}</label><div class="wh-qu"><input class="in" id="ioN" type="number" min="1" inputmode="numeric" value="${esc(io.n)}" placeholder="0">${t&&t.units.length>1?`<select class="in" id="ioU" aria-label="Unit">${t.units.map(v=>`<option value="${v}"${v===io.u?' selected':''}>${uName[v]}</option>`).join('')}</select>`:`<span class="io-u">${uName[io.u]||'boxes'}</span>`}</div></div>
+      <div class="wh-f io-w"><label for="ioNote">Note</label><input class="in" id="ioNote" value="${esc(io.note)}" placeholder="e.g. PO 1042 received, shipped to Lee's, damaged…" maxlength="500"></div>
+    </div>
+    <div class="io-go"><button class="btn primary" type="submit"${t&&L.length?'':' disabled'}>${io.dir==='in'?'Save In':'Save Out'}</button></div></form>`;
+  const q=RK.q,rows=RK.adj.filter(a=>whOf(a.loc).wid===RK.wh&&(!q||[a.what,a.note,codeOf(a.loc),a.at].join(' ').toLowerCase().includes(q)))
+    .sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=rows.slice(0,300);
+  const tin=rows.filter(a=>a.dir==='in').length;
+  const list=`<section class="io-log"><h3>${rows.length?`${plural(rows.length,'adjustment')} · ${tin} in · ${rows.length-tin} out${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`No adjustments match “${esc(q.toUpperCase())}”`:'No adjustments yet'}</h3>
+    ${show.length?`<div class="io-rh" aria-hidden="true"><span>Date</span><span></span><span>Spot</span><span>Item</span><span>Amount</span><span>Note</span></div>`:''}
+    ${show.map(a=>`<div class="io-r"><span class="d">${esc(fmtDay(a.at))}</span><span class="io-b io-${a.dir}">${a.dir==='in'?'In':'Out'}</span><button type="button" class="lnk io-sp" data-ioskid="${esc(a.loc)}">${esc(codeOf(a.loc))}</button><span class="it">${esc(a.what||'—')}</span><span class="am io-${a.dir}">${a.dir==='in'?'+':'−'}${esc(adjAmt(a.n,a.u))}</span><span class="nt">${esc(a.note)}${a.by&&teamOn()?`<small>${esc(memberName(a.by))}</small>`:''}</span></div>`).join('')}
+    ${rows.length>show.length?`<p class="wh-hint">Showing the newest ${show.length}. Search to find older ones.</p>`:''}</section>`;
+  const keep=document.activeElement?.id;el.innerHTML=form+list;if(keep&&keep.startsWith('io')&&keep!=='ioForm')$('#'+keep)?.focus();}
 
 /* drawing */
 function slotHTML(loc){const s=RK.skids[loc],items=itemsAt(loc),full=!!s,hit=RK.q&&items.some(i=>itemHit(i,RK.q));let sum;
@@ -5645,7 +5729,7 @@ function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=o
     <span class="spacer"></span><span id="whSync" class="wh-sync"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
   {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
   if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();renderWhSync();
-  renderWhs();
+  renderWhs();$('#whMain').dataset.view=RK.view;$$('#whView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.whview===RK.view)));renderIO();
   $('#whSum').textContent=`${whMulti()?whName()+' · ':''}${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
   $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
@@ -5696,7 +5780,7 @@ function openSkid(loc){if(whOf(loc).wid!==RK.wh){setWh(whOf(loc).wid);renderWh()
   RK.edit={loc,rack,pos,items:(cur?.items||[]).map(i=>({...i,boxes:b0(i.boxes),per:b0(i.per),qty:b0(i.qty),unit:unitOf(i),...(i.bk?{bk:i.bk.map(b=>({...b}))}:{})})),note:cur?.note||'',tc:t?String(t.count):'',tu:t?t.unit:'boxes'};
   if(!RK.edit.items.length)RK.edit.items.push(blankRow());
   const who=cur?.upd?`Updated ${esc(ago(cur.upd))}${cur.by&&teamOn()?' by '+esc(memberName(cur.by)):''}`:'';
-  sideOpen('skid',esc(codeOf(loc)),`${whMulti()?esc(whName())+' · ':''}${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
+  sideOpen('skid',esc(codeOf(loc)),`${whMulti()?esc(whName())+' · ':''}${esc(rackTitle(rack))} · ${esc(posName(loc))}${who?' · '+who:''}`,'',`<span class="wh-tot" id="whTot"></span><button class="btn sm" type="button" data-wh="io" title="Record stock coming in or going out of this spot">In / Out…</button><button class="btn sm" type="button" data-wh="move" ${cur?'':'disabled'}>Move skid…</button><button class="btn sm ghost danger" type="button" data-wh="empty" ${cur?'':'disabled'}>Empty skid</button><button class="btn sm primary" type="button" data-wh="save">Save</button>`);
   drawRows();whFocus('#whSb input');}
 function drawRows(){const e=RK.edit;
   $('#whSb').innerHTML=e.items.map((it,ix)=>`<div class="wh-row" data-ix="${ix}">
@@ -5891,6 +5975,7 @@ async function linkSheet(){const id=sheetIdFrom($('#whSheetUrl').value);if(!id){
 
 /* events */
 whDlg.addEventListener('input',e=>{const t=e.target;
+  if(t.closest('#ioForm')&&RK.io){const k={ioDate:'date',ioN:'n',ioNote:'note',ioName:'name'}[t.id];if(k){RK.io[k]=t.value;return;}}
   if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
   if(t.id==='whRackName'&&RK.lay){RK.lay.name=t.value;return;}
   const E=RK.edit;if(!E||RK.side!=='skid')return;
@@ -5902,7 +5987,9 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   if((k==='size'||k==='colour')&&it.bk)bkChoices(row,it,k);
   if(k==='boxes'||k==='per')bkSync(row,it);
   updTot();});
-whDlg.addEventListener('change',e=>{const t=e.target;if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
+whDlg.addEventListener('submit',e=>{if(e.target.id==='ioForm'){e.preventDefault();saveAdj();}});
+whDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.closest('#ioForm')&&RK.io){if(t.id==='ioLoc'){RK.io.loc=t.value;RK.io.tgt='';renderIO();return;}if(t.id==='ioTgt'){RK.io.tgt=t.value;renderIO();if(t.value==='new')$('#ioName')?.focus();return;}if(t.id==='ioU'){RK.io.u=t.value;return;}if(t.id==='ioDate'){RK.io.date=t.value;return;}}if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
   if(t.id==='whTu'&&RK.edit){RK.edit.tu=t.value;updTot();return;}
   if(t.dataset.k==='unit'&&RK.edit){const row=t.closest('.wh-row');RK.edit.items[+row.dataset.ix].unit=t.value;updTot();}});
 whDlg.addEventListener('pointerdown',e=>{if(e.target.closest('.wh-sug button'))e.preventDefault();});
@@ -5910,6 +5997,9 @@ whDlg.addEventListener('focusout',e=>{if(e.target.matches('.wh-row input'))setTi
 let whEmptyArm=0;
 whDlg.addEventListener('click',async e=>{const t=e.target;
   const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
+  const vw=t.closest('[data-whview]');if(vw){RK.view=vw.dataset.whview==='io'?'io':'map';lsSet('ss-wh-view',RK.view);closeSide();renderWh();return;}
+  const dr=t.closest('[data-iodir]');if(dr&&RK.io){RK.io.dir=dr.dataset.iodir;RK.io.tgt='';renderIO();return;}
+  const os=t.closest('[data-ioskid]');if(os){openSkid(os.dataset.ioskid);return;}
   const sl=t.closest('[data-loc]');if(sl){openSkid(sl.dataset.loc);return;}
   const wg=t.closest('[data-whgo]');if(wg){setWh(wg.dataset.whgo);renderWh();return;}
   const ly=t.closest('[data-whlay]');if(ly){openLayout(ly.dataset.whlay);return;}
@@ -5943,6 +6033,7 @@ whDlg.addEventListener('click',async e=>{const t=e.target;
   if(a==='save'&&RK.edit){writeSkid(RK.edit.loc,skidBody(RK.edit));closeSide();return;}
   if(a==='empty'&&RK.edit){if(Date.now()-whEmptyArm<3000){whEmptyArm=0;const l=RK.edit.loc;closeSide();writeSkid(l,null);toast(`${l} is empty`);return;}whEmptyArm=Date.now();b.textContent='Tap again to empty';setTimeout(()=>{if(b.isConnected)b.textContent='Empty skid';},3000);return;}
   if(a==='move'&&RK.edit){openMove('skid');return;}
+  if(a==='io'&&RK.edit){ioOpen(RK.edit.loc);return;}
   if(a==='savelay'){saveLayout();return;}
   if(a==='newsheet'){b.disabled=true;await newSheet();return;}if(a==='linksheet'){b.disabled=true;await linkSheet();b.disabled=false;return;}
   if(a==='sheetsync'){rkSheetSync();openSheetPanel();return;}
