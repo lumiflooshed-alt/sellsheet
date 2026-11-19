@@ -267,6 +267,10 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .rc-r .io-b.io-in,.rc-r .am.io-in{color:var(--good)}.rc-r .am.io-out{color:var(--bad)}.rc-r .am.io-move{color:var(--accent-fg)}
 @media (max-width:700px){.rc-bar .wh-f{flex:1 1 calc(50% - 6px);min-width:0}.rc-dir{flex:1 1 100%;display:flex}.rc-dir button{flex:1}.rc-acts{flex:1 1 100%;margin:0}.rc-acts .btn{flex:1}
   .rc-rh{display:none}.rc-r,.rc-r.multi{grid-template-columns:auto auto minmax(0,1fr) auto;gap:3px 10px}.rc-r .pt,.rc-r .it{grid-column:1/-1}.rc-r .am{grid-row:1;grid-column:4}.rc-r .cr,.rc-r .po,.rc-r .wn{grid-column:1/-1}.rc-r .cr:empty,.rc-r .po:empty{display:none}}
+.io-form.editing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.io-edit{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:9px;background:var(--accent-soft)}
+.io-edit>div{display:grid;gap:2px;flex:1 1 320px}.io-edit b{font-size:14.5px}.io-edit span{font-size:13px;color:var(--muted)}.io-edit .bad{color:var(--bad);font-weight:600}
+.io-dir button:disabled{opacity:.4;cursor:not-allowed}.io-ro{margin:0}
 .io-form .wh-f textarea{text-transform:none}.io-nm{text-transform:uppercase}
 .io-form{display:grid;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
 .io-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}.io-doc{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -5702,7 +5706,7 @@ function cleanAdj(x){if(!x||typeof x!=='object'||!/^[a-z0-9]{4,16}$/.test(x.id||
   const lines=(Array.isArray(x.lines)?x.lines:[x]).slice(0,ADJ_LINES).map(l=>cleanAdjLine(l,dir)).filter(Boolean);if(!lines.length)return null;
   return{id:x.id,no:adjStr(x.no,40),at:/^\d{4}-\d{2}-\d{2}$/.test(x.at||'')?x.at:dayISO(new Date(+x.upd||Date.now())),dir,
     party:adjStr(x.party,120),carrier:adjStr(x.carrier,80),track:adjStr(x.track,80),ref:adjStr(x.ref,80),weight:adjStr(x.weight,40),note:adjStr(x.note,1000),
-    lines,upd:+x.upd||1,...(dir!=='move'&&EMAIL_RE.test(String(x.cust||''))?{cust:ck(x.cust)}:{}),...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
+    lines,upd:+x.upd||1,...(rkNum(x.rev)?{rev:rkNum(x.rev),edAt:+x.edAt||0,...(EMAIL_RE.test(String(x.edBy||''))?{edBy:ck(x.edBy)}:{})}:{}),...(dir!=='move'&&EMAIL_RE.test(String(x.cust||''))?{cust:ck(x.cust)}:{}),...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
 const fmtDay=d=>{const[y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});};
 const adjAmt=(n,u)=>u==='boxes'?plural(n,'box'):`${n} ${u}`;
 const adjWid=a=>whOf(a.lines[0].loc).wid;
@@ -5732,7 +5736,7 @@ const ioBlankLine=()=>({q:'',key:'',from:'',to:'',n:'',u:'boxes'});
 function ioNew(dir='out'){const at=dayISO();return{dir,date:at,no:adjNo(dir,at),noSet:false,party:'',carrier:'',track:'',ref:'',weight:'',note:'',lines:[ioBlankLine()]};}
 // fills in each line's spots and unit once its item is picked
 function ioState(){const io=RK.io||(RK.io=ioNew());const P=ioProducts(),all=ioAllLocs(),empty=all.find(l=>!RK.skids[l])||'';
-  const rows=io.lines.map(ln=>{const isNew=io.dir==='in'&&ln.key==='new',p=isNew?null:P.get(ln.key)||null;if(!p&&!isNew&&ln.key){ln.key='';}
+  const rows=io.lines.map(ln=>{if(io.dir==='in'&&ln.key&&ln.key!=='new'&&!P.has(ln.key)){ln.q=ln.key;ln.key='new';}const isNew=io.dir==='in'&&ln.key==='new',p=isNew?null:P.get(ln.key)||null;if(!p&&!isNew&&ln.key){ln.key='';}
     const occ=p?.occ||[];let o=null,units=['boxes'];
     if(io.dir!=='in'){if(!occ.some(x=>x.loc===ln.from))ln.from=occ[0]?.loc||'';o=occ.find(x=>x.loc===ln.from)||null;if(o)units=unitsOf(o.i,o.g);}
     if(io.dir!=='out'){const ok=all.includes(ln.to)&&!(io.dir==='move'&&ln.to===ln.from);
@@ -5753,28 +5757,60 @@ function adjOne(s,touched,tgt,dir,n,u){const sg=dir==='in'?1:-1,short=(have,w)=>
 // a product arriving on a skid that doesn't have it yet: a new line like the one it came from
 function newLineLike(o,n,u){const{i,g}=o,b=u==='boxes';
   return{item:i.item,style:i.style,size:g?(g.size||oneOf(i.size)):i.size,colour:g?(g.colour||oneOf(i.colour)):i.colour,per:b?+i.per||0:0,unit:u==='boxes'?unitOf(i):u==='dz'?'dz':'pcs',...(b?{boxes:n}:{qty:n})};}
+// a product's line anywhere in the warehouse, to copy when stock goes back to a spot that no longer has it
+function prodAny(key){for(const sk of Object.values(RK.skids))for(const i of sk.items||[]){if(i.bk?.length){const g=i.bk.find(g=>prodName(i,g)===key);if(g)return{i,g};}else if(prodName(i)===key)return{i};}return null;}
+/* every change is made on working copies of the skids: first undoing `undo` (the saved version of a record being edited), then the
+   new lines. Returns {err} or {work}; nothing is saved here */
+function adjWork(dir,lines,undo){const work=new Map(),W=loc=>{if(!work.has(loc)){const o=RK.skids[loc];work.set(loc,{s:o?JSON.parse(JSON.stringify(o)):{items:[],note:'',total:null},touched:new Set()});}return work.get(loc);};
+  const take=(loc,key,n,u)=>{const w=W(loc),t=findTgt(w.s,key);return t?adjOne(w.s,w.touched,t,'out',n,u):'that item isn’t on this spot any more';};
+  const put=(loc,key,n,u,src,name)=>{const w=W(loc),plain=nm=>u==='boxes'?{item:nm,boxes:n}:{item:nm,qty:n,unit:u==='dz'?'dz':'pcs'};
+    if(key==='new'){w.s.items.push(plain(name));return'';}const t=findTgt(w.s,key);if(t)return adjOne(w.s,w.touched,t,'in',n,u);
+    w.s.items.push(src?newLineLike(src,n,u):plain(key));return'';};
+  if(undo)for(const[k,l]of undo.lines.entries()){const fail=(loc,e)=>({err:`The saved version can’t be undone: its line ${k+1} (${codeOf(loc)}), ${e}. The stock has changed since it was saved.`});let e;
+    if(undo.dir==='out'){if(e=put(l.loc,l.what,l.n,l.u,prodAny(l.what)))return fail(l.loc,e);}
+    else if(undo.dir==='in'){if(e=take(l.loc,l.what,l.n,l.u))return fail(l.loc,e);}
+    else{if(e=take(l.to,l.what,l.n,l.u))return fail(l.to,e);if(e=put(l.loc,l.what,l.n,l.u,prodAny(l.what)))return fail(l.loc,e);}}
+  for(const[k,l]of lines.entries()){const fail=(loc,e)=>({err:`Line ${k+1} (${codeOf(loc)}): ${e}.`});let e;
+    if(dir!=='in'&&(e=take(l.from,l.key,l.n,l.u)))return fail(l.from,e);
+    if(dir!=='out'&&(e=put(l.to,l.key,l.n,l.u,l.src,l.name)))return fail(l.to,e);}
+  return{err:'',work};}
+// a working skid after the changes: box groups and touched lines that reached zero go, an emptied skid is null
+function adjTidy(s,touched){for(const i of s.items)if(i.bk){i.bk=i.bk.filter(b=>+b.boxes>0);if(!i.bk.length)delete i.bk;}
+  s.items=s.items.filter((i,ix)=>!touched.has(ix)||+i.boxes>0||+i.qty>0);if(s.total&&!(+s.total.count>0))s.total=null;return s.items.length||s.note||s.total?s:null;}
 // every line is checked against the stock first; the skids only change when all of them fit
-function applyAdjLines(dir,lines){const work=new Map(),W=loc=>{if(!work.has(loc)){const o=RK.skids[loc];work.set(loc,{s:o?JSON.parse(JSON.stringify(o)):{items:[],note:'',total:null},touched:new Set()});}return work.get(loc);};
-  for(const[k,l]of lines.entries()){const fail=(loc,e)=>`Line ${k+1} (${codeOf(loc)}): ${e}.`;
-    if(dir!=='in'){const w=W(l.from),t=findTgt(w.s,l.key);if(!t)return fail(l.from,'that item isn’t on this spot any more');const e=adjOne(w.s,w.touched,t,'out',l.n,l.u);if(e)return fail(l.from,e);}
-    if(dir!=='out'){const w=W(l.to);
-      if(l.key==='new'){w.s.items.push(l.u==='boxes'?{item:l.name,boxes:l.n}:{item:l.name,qty:l.n,unit:l.u==='dz'?'dz':'pcs'});continue;}
-      const t=findTgt(w.s,l.key);if(t){const e=adjOne(w.s,w.touched,t,'in',l.n,l.u);if(e)return fail(l.to,e);}else w.s.items.push(newLineLike(l.src,l.n,l.u));}}
-  for(const[loc,{s,touched}]of work){for(const i of s.items)if(i.bk){i.bk=i.bk.filter(b=>+b.boxes>0);if(!i.bk.length)delete i.bk;}
-    s.items=s.items.filter((i,ix)=>!touched.has(ix)||+i.boxes>0||+i.qty>0);if(s.total&&!(+s.total.count>0))s.total=null;
-    setSkid(loc,s.items.length||s.note||s.total?s:null);}
-  return'';}
-function saveAdj(){const{io,rows}=ioState(),lines=[],dir=io.dir;
+function applyAdjLines(dir,lines,undo){const{err,work}=adjWork(dir,lines,undo);if(err)return err;for(const[loc,{s,touched}]of work)setSkid(loc,adjTidy(s,touched));return'';}
+/* editing a saved record: the form shows the stock as it was before that record (the saved version undone, on copies only),
+   so its items and amounts can be picked again */
+const ioEditRec=()=>{const id=RK.io?.edit;return id?RK.adj.find(x=>x.id===id)||null:null;};
+function ioVirt(){const io=RK.io,a=ioEditRec();if(!a){if(io)io.editErr='';return null;}const{err,work}=adjWork(null,[],a);io.editErr=err||'';if(err)return null;
+  const sk={...RK.skids};for(const[loc,{s,touched}]of work){const t=adjTidy(s,touched);if(t)sk[loc]=t;else delete sk[loc];}return sk;}
+function ioV(fn){const v=ioVirt();if(!v)return fn();const real=RK.skids;RK.skids=v;try{return fn();}finally{RK.skids=real;}}
+async function ioEdit(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;const cur=RK.io;
+  if(cur&&cur.edit!==id&&cur.lines.some(l=>l.key||l.q||rkNum(l.n))&&await ask({title:'Leave the unsaved form?',body:`The In & Out form has ${cur.edit?'changes to another record':'a record you haven’t saved'}. Editing ${a.no||'this record'} replaces it.`,ok:`Edit ${a.no||'this record'}`})!=='ok')return;
+  if(adjWid(a)!==RK.wh)setWh(adjWid(a));
+  RK.io={dir:a.dir,date:a.at,no:a.no,noSet:true,party:a.party,carrier:a.carrier,track:a.track,ref:a.ref,weight:a.weight,note:a.note,edit:a.id,editErr:'',
+    lines:a.lines.map(l=>({q:'',key:l.what,from:a.dir==='in'?'':l.loc,to:a.dir==='in'?l.loc:(l.to||''),n:String(l.n),u:l.u}))};
+  RK.view='io';lsSet('ss-wh-view','io');closeSide();renderWh();setTimeout(()=>$('#ioForm')?.scrollIntoView({block:'start',behavior:'smooth'}),30);}
+const adjLinesSig=ls=>JSON.stringify(ls.map(l=>[l.loc,l.to||'',l.what,l.n,l.u]));
+// a record whose stock can't be undone any more: its details (customer, carrier, numbers, notes) can still be corrected
+function adjSaveDetails(io,old){const no=adjStr(io.no,40)||old.no;if(RK.adj.some(a=>a.id!==old.id&&a.no.toLowerCase()===no.toLowerCase())){toast(`There's already a ${no}. Change the number.`,4000);$('#ioNo')?.focus();return;}
+  const rec=cleanAdj({...old,no,at:io.date||old.at,...(old.dir==='move'?{}:{party:io.party,cust:(cuLoad(),custByName(io.party)?.email)||'',carrier:io.carrier,track:io.track,weight:io.weight}),ref:io.ref,note:io.note,
+    upd:Date.now(),rev:(old.rev||0)+1,edAt:Date.now(),...(meEmail()?{edBy:meEmail()}:{})});
+  RK.adj[RK.adj.findIndex(x=>x.id===old.id)]=rec;rkSave();toast(`Updated ${no}. The items and stock weren't changed.`,4000,{label:'View',fn:()=>openBol(rec.id)});RK.io=ioNew(old.dir);renderWh();}
+function saveAdj(){const{io,rows}=ioV(ioState),lines=[],dir=io.dir,old=ioEditRec();if(io.edit&&!old){toast('That record is gone (deleted on another device?)',5000);RK.io=ioNew(dir);renderWh();return;}if(old&&io.editErr){adjSaveDetails(io,old);return;}
   for(const[k,r]of rows.entries()){const{ln,p,o,isNew,ready}=r,n=rkNum(ln.n),bad=m=>{toast(`Line ${k+1}: ${m}`,4000);return true;};if(!ln.q&&!ln.key&&!n)continue;
     if(!ready&&bad(dir==='in'?'pick an item from the list, or New item':'pick an item from the list'))return void $(`.io-ln[data-li="${k}"] [data-iol="q"]`)?.focus();
     if(dir!=='in'&&!o&&bad('pick the spot it’s taken from'))return;if(dir!=='out'&&!ln.to&&bad('pick the spot it goes to'))return;
     if(!n&&bad('enter an amount'))return void $(`.io-ln[data-li="${k}"] [data-iol="n"]`)?.focus();
     lines.push({key:isNew?'new':ln.key,name:isNew?ln.q:'',src:o||(p?.occ.find(x=>x.loc===ln.to)||p?.occ[0]),from:ln.from,to:ln.to,n,u:ln.u,what:isNew?rkUp(ln.q):ln.key});}
   if(!lines.length){toast('Search for an item to add');$('[data-iol="q"]')?.focus();return;}
-  const no=adjStr(io.no,40)||adjNo(dir,io.date);if(RK.adj.some(a=>a.no.toLowerCase()===no.toLowerCase())){toast(`There's already a ${no}. Change the number.`,4000);$('#ioNo')?.focus();return;}
-  const err=applyAdjLines(dir,lines);if(err){toast(err,5000);return;}
+  const no=adjStr(io.no,40)||adjNo(dir,io.date);if(RK.adj.some(a=>a.id!==io.edit&&a.no.toLowerCase()===no.toLowerCase())){toast(`There's already a ${no}. Change the number.`,4000);$('#ioNo')?.focus();return;}
+  const same=old&&adjLinesSig(old.lines)===adjLinesSig(lines.map(l=>({loc:dir==='in'?l.to:l.from,to:dir==='move'?l.to:'',what:l.what,n:l.n,u:l.u})));
+  const err=same?'':applyAdjLines(dir,lines,old);if(err){toast(err,5000);return;}
   const rec=cleanAdj({id:uid(),no,at:io.date||dayISO(),dir,...(dir==='move'?{}:{party:io.party,cust:(cuLoad(),custByName(io.party)?.email)||'',carrier:io.carrier,track:io.track,weight:io.weight}),ref:io.ref,note:io.note,
-    lines:lines.map(l=>({loc:dir==='in'?l.to:l.from,...(dir==='move'?{to:l.to}:{}),what:l.what,n:l.n,u:l.u})),upd:Date.now(),...(meEmail()?{by:meEmail()}:{})});
+    lines:lines.map(l=>({loc:dir==='in'?l.to:l.from,...(dir==='move'?{to:l.to}:{}),what:l.what,n:l.n,u:l.u})),upd:Date.now(),
+    ...(old?{id:old.id,...(old.by?{by:old.by}:{}),rev:(old.rev||0)+1,edAt:Date.now(),...(meEmail()?{edBy:meEmail()}:{})}:meEmail()?{by:meEmail()}:{})});
+  if(old){const ix=RK.adj.findIndex(x=>x.id===old.id);RK.adj[ix]=rec;rkSave();toast(`Updated ${no}. The stock now matches the new version.`,4000,{label:'View',fn:()=>openBol(rec.id)});RK.io=ioNew(dir);renderWh();return;}
   RK.adj.unshift(rec);if(RK.adj.length>ADJ_MAX)RK.adj.length=ADJ_MAX;rkSave();
   toast(`Saved ${no}: ${adjTot(rec.lines)} ${dir==='move'?'moved':dir}`,4000,{label:'View',fn:()=>openBol(rec.id)});
   RK.io=ioNew(dir);renderWh();}
@@ -5790,12 +5826,14 @@ function ioLists(){cuLoad();const party=new Set(),car=new Set();for(const c of C
 const spotOpt=l=>`${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}`;
 const ioSum=rows=>{const ls=rows.filter(r=>rkNum(r.ln.n)&&r.ready).map(r=>({n:rkNum(r.ln.n),u:r.ln.u}));return ls.length?`${plural(ls.length,'line')} · ${adjTot(ls)}`:'';};
 // the search suggestions under a line's item box
-function ioSugHTML(k){const io=RK.io,ln=io?.lines[k];if(!ln)return'';const P=ioProducts(),hits=ioFind(P,ln.q,io.dir);
+function ioSugHTML(k){return ioV(()=>ioSugHTML0(k));}
+function ioSugHTML0(k){const io=RK.io,ln=io?.lines[k];if(!ln)return'';const P=ioProducts(),hits=ioFind(P,ln.q,io.dir);
   const opts=hits.map(p=>`<button type="button" data-iopick="${esc(p.key)}"><b>${esc(p.key)}</b><small>${p.occ.slice(0,4).map(o=>`${esc(codeOf(o.loc))} · ${esc(o.now)}`).join('  ·  ')}${p.occ.length>4?`  · +${p.occ.length-4} more`:''}</small></button>`);
   if(io.dir==='in'&&rkUp(ln.q))opts.push(`<button type="button" data-iopick="new"><b>＋ New item: ${esc(rkUp(ln.q))}</b><small>Not in this warehouse yet</small></button>`);
   return opts.join('')||`<p class="io-none">${ln.q?'No item in this warehouse matches':'Nothing in this warehouse yet'}${io.dir==='in'?'':'. Switch to In to receive new stock.'}</p>`;}
 function ioShowSug(inp){const ln=inp.closest('.io-ln'),box=ln?.querySelector('.io-sug');if(!box)return;box.innerHTML=ioSugHTML(+ln.dataset.li);box.hidden=false;}
-function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.innerHTML='';return;}const{io,all,rows}=ioState(),dir=io.dir,mv=dir==='move';
+function renderIO(){return ioV(renderIO0);}
+function renderIO0(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.innerHTML='';return;}const{io,all,rows}=ioState(),dir=io.dir,mv=dir==='move',ed=ioEditRec();
   const f=(id,k,label,ph,extra='')=>`<div class="wh-f${extra.includes('io-w')?' io-w':''}"><label for="${id}">${label}</label><input class="in" id="${id}" data-ioh="${k}" value="${esc(io[k])}" placeholder="${ph}" ${extra.replace('io-w','')}></div>`;
   const toOpt=(l,r)=>`<option value="${l}"${l===r.ln.to?' selected':''}>${r.occ.some(o=>o.loc===l)?'★ ':''}${spotOpt(l)}</option>`;
   const lineHTML=(r,k)=>{const{ln,p,occ,units,isNew}=r,picked=isNew||p;
@@ -5806,8 +5844,9 @@ function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.inne
       ${dir!=='out'?`<div class="wh-f"><label for="ioD${k}">To spot</label><select class="in" id="ioD${k}" data-iol="to">${all.filter(l=>!(mv&&l===ln.from)).map(l=>toOpt(l,r)).join('')}</select></div>`:''}
       <div class="wh-f"><label for="ioN${k}">${mv?'Move':dir==='out'?'Ship':'Receive'}</label><div class="wh-qu"><input class="in" id="ioN${k}" data-iol="n" type="number" min="1" inputmode="numeric" value="${esc(ln.n)}" placeholder="0">${units.length>1?`<select class="in" data-iol="u" aria-label="Unit">${units.map(v=>`<option value="${v}"${v===ln.u?' selected':''}>${U_NAME[v]}</option>`).join('')}</select>`:`<span class="io-u">${U_NAME[ln.u]||'boxes'}</span>`}</div></div>
       <button type="button" class="io-x" data-iorm="${k}" aria-label="Remove line ${k+1}"${io.lines.length>1?'':' hidden'}>✕</button></div>`;};
-  const form=`<form class="io-form" id="ioForm" autocomplete="off">${ioLists()}
-    <div class="io-top"><div class="seg io-dir" role="group" aria-label="Out, in or move"><button type="button" data-iodir="out" aria-pressed="${dir==='out'}">− Out<span class="io-pp"> (ship)</span></button><button type="button" data-iodir="in" aria-pressed="${dir==='in'}">＋ In<span class="io-pp"> (receive)</span></button><button type="button" data-iodir="move" aria-pressed="${mv}">⇄ Move</button></div>
+  const form=`<form class="io-form${ed?' editing':''}" id="ioForm" autocomplete="off">${ioLists()}
+    ${ed?`<div class="io-edit"><div><b>Editing ${esc(ed.no||ADJ_DOC[dir])}</b>${io.editErr?'':'<span>The amounts shown are the stock before this record. Saving undoes the saved version and applies this one, so the racks stay right.</span>'}${io.editErr?`<span class="bad">${esc(io.editErr)}</span><span>You can still correct the details above the items: customer, carrier, numbers, date and notes.</span>`:''}</div><button class="btn sm" type="button" data-iocancel>Cancel editing</button></div>`:''}
+    <div class="io-top"><div class="seg io-dir" role="group" aria-label="Out, in or move"><button type="button" data-iodir="out" aria-pressed="${dir==='out'}"${ed&&dir!=='out'?' disabled':''}>− Out<span class="io-pp"> (ship)</span></button><button type="button" data-iodir="in" aria-pressed="${dir==='in'}"${ed&&dir!=='in'?' disabled':''}>＋ In<span class="io-pp"> (receive)</span></button><button type="button" data-iodir="move" aria-pressed="${mv}"${ed&&!mv?' disabled':''}>⇄ Move</button></div>
       <span class="io-doc">${ADJ_DOC[dir]}</span></div>
     <div class="io-g">
       <div class="wh-f"><label for="ioDate">Date</label><input class="in" id="ioDate" data-ioh="date" type="date" value="${esc(io.date)}"></div>
@@ -5819,10 +5858,11 @@ function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.inne
       ${f('ioRef','ref','PO / order no.','Optional','maxlength="80"')}
       ${f('ioWeight','weight','Total weight','e.g. 840 lb','maxlength="40"')}`}
     </div>
-    <div class="io-lines"><div class="io-lh">${mv?'Items moved':dir==='out'?'Items shipped':'Items received'}</div>${rows.map(lineHTML).join('')}
-      <button type="button" class="btn sm" data-ioadd${io.lines.length>=ADJ_LINES?' disabled':''}>＋ Add line</button></div>
+    <div class="io-lines"><div class="io-lh">${mv?'Items moved':dir==='out'?'Items shipped':'Items received'}${ed&&io.editErr?' · can’t be changed':''}</div>
+      ${ed&&io.editErr?`<table class="io-tbl io-ro"><tbody>${ed.lines.map((l,k)=>`<tr><td>${k+1}</td><td>${esc(l.what)}</td><td>${esc(lnWhere(l))}</td><td>${ADJ_SIGN[dir]}${esc(adjAmt(l.n,l.u))}</td></tr>`).join('')}</tbody></table>`
+        :`${rows.map(lineHTML).join('')}<button type="button" class="btn sm" data-ioadd${io.lines.length>=ADJ_LINES?' disabled':''}>＋ Add line</button>`}</div>
     <div class="wh-f"><label for="ioNote">Notes${mv?'':' / special instructions'}</label><textarea class="in" id="ioNote" data-ioh="note" rows="2" maxlength="1000" placeholder="${mv?'Optional':'e.g. Fragile, call before delivery, 2 boxes damaged…'}">${esc(io.note)}</textarea></div>
-    <div class="io-go"><span class="io-sum">${ioSum(rows)}</span><button class="btn primary" type="submit"${all.length?'':' disabled'}>${dir==='out'?'Save BOL':dir==='in'?'Save receiving':'Save move'}</button></div></form>`;
+    <div class="io-go"><span class="io-sum">${ioSum(rows)}</span>${ed?'<button class="btn" type="button" data-iocancel>Cancel</button>':''}<button class="btn primary" type="submit"${all.length||ed?'':' disabled'}>${ed?'Save changes':dir==='out'?'Save BOL':dir==='in'?'Save receiving':'Save move'}</button></div></form>`;
   const q=RK.q,hay=a=>[a.no,a.party,a.carrier,a.track,a.ref,a.note,a.at,...a.lines.flatMap(l=>[l.what,codeOf(l.loc),l.to?codeOf(l.to):''])].join(' ').toLowerCase();
   const recs=RK.adj.filter(a=>adjWid(a)===RK.wh&&(!q||hay(a).includes(q))).sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=recs.slice(0,8),cnt=d=>recs.filter(a=>a.dir===d).length;
   const list=`<section class="io-log"><h3>${recs.length?`Latest · ${plural(recs.length,'record')} · ${cnt('out')} out · ${cnt('in')} in · ${cnt('move')} moved${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`Nothing matches “${esc(q.toUpperCase())}”`:'No shipments yet'}</h3>
@@ -5839,9 +5879,9 @@ function openBol(id){cuLoad();const a=RK.adj.find(x=>x.id===id);if(!a)return;if(
     <table class="io-tbl"><thead><tr><th>#</th><th>Item</th><th>${mv?'From → to':'Spot'}</th><th>Amount</th></tr></thead><tbody>${a.lines.map((l,k)=>`<tr><td>${k+1}</td><td>${esc(l.what||'—')}</td><td>${spot(l.loc)}${l.to?` → ${spot(l.to)}`:''}</td><td class="io-${a.dir}">${ADJ_SIGN[a.dir]}${esc(adjAmt(l.n,l.u))}</td></tr>`).join('')}</tbody>
     <tfoot><tr><td></td><td colspan="2">Total</td><td>${esc(adjTot(a.lines))}</td></tr></tfoot></table>
     ${a.note?`<div class="io-kv io-nt"><span>Notes</span><b>${esc(a.note)}</b></div>`:''}
-    <p class="wh-hint">Saved ${esc(ago(a.upd))}${a.by&&teamOn()?' by '+esc(memberName(a.by)):''}. The stock on these spots changed when it was saved. To correct it, save ${mv?'a move back':`an opposite ${out?'In':'Out'} record`}.</p>`;
+    <p class="wh-hint">${a.rev?`Edited ${a.rev===1?'once':a.rev+' times'}, last ${esc(ago(a.edAt||a.upd))}${a.edBy&&teamOn()?' by '+esc(memberName(a.edBy)):''}. `:`Saved ${esc(ago(a.upd))}${a.by&&teamOn()?' by '+esc(memberName(a.by)):''}. `}The stock on these spots changed when it was saved. To correct it, use Edit: saving puts the stock right.</p>`;
   sideOpen('bol',esc(a.no||ADJ_DOC[a.dir]),`${mv?'Rack move · transfer record':out?'Outbound · bill of lading':'Inbound · receiving record'}${whMulti()?' · '+esc(wh):''}`,body,
-    `<button class="btn sm primary" type="button" data-iopr="${a.id}">Print ${out?'BOL':'record'}</button>`);}
+    `<button class="btn sm" type="button" data-ioedit="${a.id}">Edit</button><button class="btn sm primary" type="button" data-iopr="${a.id}">Print ${out?'BOL':'record'}</button>`);}
 // the printable page: parties, carrier box, the lines, totals, notes and signature lines
 function bolDoc(a){cuLoad();const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)),mc=SET.mc||{},e=v=>esc(v||'');
   const us=`<b>${e(ourName()||wh)}</b>${ourName()?`<br>${e(wh)}`:''}${mc.phone?`<br>${e(mc.phone)}`:''}${mc.email?`<br>${e(mc.email)}`:''}`,cl=custLines(custOf(a)),them=a.party?`<b>${e(a.party)}</b>${cl.map(x=>`<br>${e(x)}`).join('')}`:'<span class="blank"></span>';
@@ -5867,7 +5907,7 @@ function bolDoc(a){cuLoad();const out=a.dir==='out',mv=a.dir==='move',wh=whName(
       <tfoot><tr><td></td><td class="n">${e(adjTot(a.lines))}</td><td colspan="${mv?3:2}">Total · ${plural(a.lines.length,'line')}</td></tr></tfoot></table>
     <p class="lbl">Notes${mv?'':' / special instructions'}</p><div class="notes">${e(a.note)}</div>
     <div class="sigs">${mv?sig('Moved by')+sig('Checked by'):sig('Shipper')+sig('Carrier / driver')+sig('Consignee')}</div>
-    <div class="ft">${mv?'':'Received in apparent good order, except as noted. '}Printed ${e(new Date().toLocaleString())}.</div></body></html>`;}
+    <div class="ft">${mv?'':'Received in apparent good order, except as noted. '}${a.rev?`Revision ${a.rev+1}, edited ${e(new Date(a.edAt||a.upd).toLocaleString())}. `:''}Printed ${e(new Date().toLocaleString())}.</div></body></html>`;}
 /* customers on a BOL: the Ship to / Received from name is matched to a customer by company or name; one that isn't there yet can be added */
 function custByName(v){v=String(v||'').trim().toLowerCase();if(!v)return null;return CU.list.find(c=>String(c.company||'').trim().toLowerCase()===v||String(c.name||'').trim().toLowerCase()===v)||null;}
 // the customer on a record: the one it was saved with, or (older records) the one with that name. Call cuLoad() first
@@ -6197,7 +6237,7 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   if(t.dataset.rcf==='q'){recF().q=t.value;clearTimeout(RK.rcT);RK.rcT=setTimeout(()=>{const b=$('#rcBody');if(b)b.innerHTML=recBodyHTML();},120);return;}
   if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh){io[t.dataset.ioh]=t.value;if(t.dataset.ioh==='party')ioPartyNote();if(t.dataset.ioh==='no')io.noSet=!!t.value.trim();if(t.dataset.ioh==='date'&&!io.noSet){io.no=adjNo(io.dir,io.date);const n=$('#ioNo');if(n)n.value=io.no;}return;}
     const ln=io.lines[+t.closest('.io-ln')?.dataset.li];if(ln&&t.dataset.iol==='q'){ln.q=t.value;if(ln.key){ln.key='';t.classList.remove('picked');}ioShowSug(t);}
-    if(ln&&(t.dataset.iol==='n'||t.dataset.iol==='q')){if(t.dataset.iol==='n')ln.n=t.value;const sm=$('.io-sum');if(sm)sm.textContent=ioSum(ioState().rows);return;}}
+    if(ln&&(t.dataset.iol==='n'||t.dataset.iol==='q')){if(t.dataset.iol==='n')ln.n=t.value;const sm=$('.io-sum');if(sm)sm.textContent=ioV(()=>ioSum(ioState().rows));return;}}
   if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
   if(t.id==='whRackName'&&RK.lay){RK.lay.name=t.value;return;}
   const E=RK.edit;if(!E||RK.side!=='skid')return;
@@ -6219,7 +6259,7 @@ whDlg.addEventListener('change',e=>{const t=e.target;
 whDlg.addEventListener('pointerdown',e=>{if(e.target.closest('.wh-sug button,.io-sug button'))e.preventDefault();});
 // picking an item on a line: then the spot it's taken from when it's on more than one, otherwise the amount
 function ioPick(k,key){const io=RK.io,ln=io?.lines[k];if(!ln)return;if(key==='new'){ln.key='new';ln.q=rkUp(ln.q);}else{ln.key=key;ln.q='';ln.from='';ln.to='';}renderIO();
-  const many=key!=='new'&&io.dir!=='in'&&(ioProducts().get(key)?.occ.length||0)>1;$(many?`#ioF${k}`:`#ioN${k}`)?.focus();}
+  const many=key!=='new'&&io.dir!=='in'&&(ioV(ioProducts).get(key)?.occ.length||0)>1;$(many?`#ioF${k}`:`#ioN${k}`)?.focus();}
 whDlg.addEventListener('focusin',e=>{const t=e.target;if(t.matches?.('[data-iol="q"]')){if(t.classList.contains('picked'))t.select();ioShowSug(t);}});
 whDlg.addEventListener('focusout',e=>{const t=e.target;if(t.matches?.('[data-iol="q"]'))setTimeout(()=>{const b=t.closest('.io-ln')?.querySelector('.io-sug');if(b&&!b.contains(document.activeElement)&&document.activeElement!==t)b.hidden=true;},150);});
 whDlg.addEventListener('keydown',e=>{const t=e.target;if(!t.matches?.('[data-iol="q"]'))return;const b=t.closest('.io-ln')?.querySelector('.io-sug');
@@ -6234,9 +6274,11 @@ let whEmptyArm=0;
 whDlg.addEventListener('click',async e=>{const t=e.target;
   const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
   const vw=t.closest('[data-whview]');if(vw){RK.view=['io','rec'].includes(vw.dataset.whview)?vw.dataset.whview:'map';lsSet('ss-wh-view',RK.view);closeSide();renderWh();return;}
-  const dr=t.closest('[data-iodir]');if(dr&&RK.io){RK.io.dir=ADJ_DIR.includes(dr.dataset.iodir)?dr.dataset.iodir:'out';renderIO();return;}
+  const dr=t.closest('[data-iodir]');if(dr&&RK.io){if(RK.io.edit)return;RK.io.dir=ADJ_DIR.includes(dr.dataset.iodir)?dr.dataset.iodir:'out';renderIO();return;}
   if(t.closest('[data-ioadd]')&&RK.io){const io=RK.io;if(io.lines.length<ADJ_LINES){io.lines.push(ioBlankLine());renderIO();$(`.io-ln[data-li="${io.lines.length-1}"] [data-iol="q"]`)?.focus();}return;}
   if(t.closest('[data-ionewcust]')){ioNewCust();return;}
+  const ie=t.closest('[data-ioedit]');if(ie){ioEdit(ie.dataset.ioedit);return;}
+  if(t.closest('[data-iocancel]')&&RK.io){RK.io=ioNew(RK.io.dir);renderIO();return;}
   const rd=t.closest('[data-rcdir]');if(rd){recF().dir=rd.dataset.rcdir;renderRec();return;}
   if(t.closest('[data-rcclear]')){Object.assign(recF(),{q:'',dir:'',who:'',from:'',to:''});renderRec();return;}
   if(t.closest('[data-rcexport]')){recExport();return;}
