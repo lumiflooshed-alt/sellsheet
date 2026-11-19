@@ -249,22 +249,36 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-view{justify-self:start}.wh-view button{min-width:120px}
 .wh-io{display:none}.wh-main[data-view=io]>.wh-io{display:grid;gap:16px}
 .wh-main[data-view=io]>:not(.wh-whs):not(.wh-view):not(.wh-io):not(.wh-remind){display:none!important}
+.io-form .wh-f textarea{text-transform:none}.io-nm{text-transform:uppercase}
 .io-form{display:grid;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
-.io-dir{justify-self:start}.io-dir button{min-width:110px}.io-dir button[data-iodir=in][aria-pressed=true]{color:var(--good)}.io-dir button[data-iodir=out][aria-pressed=true]{color:var(--bad)}
+.io-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}.io-doc{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.io-dir button{min-width:130px}.io-dir button[data-iodir=in][aria-pressed=true]{color:var(--good)}.io-dir button[data-iodir=out][aria-pressed=true]{color:var(--bad)}
 .io-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px;align-items:end}.io-g .io-w{grid-column:span 2}
-.io-u{align-self:center;padding:0 10px;color:var(--muted);font-size:14px}.io-go{display:flex;justify-content:flex-end}
+.io-lines{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px}.io-lines>.btn{justify-self:start}
+.io-lh{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.io-ln{display:grid;grid-template-columns:1.6em minmax(0,1.2fr) minmax(0,2fr) minmax(0,1fr) 2em;gap:10px;align-items:end;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--fill)}
+.io-k{align-self:center;font:700 13px var(--ui);color:var(--muted);text-align:center}.io-ln .io-w{display:grid;gap:6px}.io-nm{margin-top:0}
+.io-x{height:38px;border:0;background:none;color:var(--muted);font-size:15px;cursor:pointer;border-radius:8px}.io-x:hover{color:var(--bad);background:var(--panel)}
+.io-u{align-self:center;padding:0 10px;color:var(--muted);font-size:14px}
+.io-go{display:flex;align-items:center;justify-content:flex-end;gap:12px}.io-sum{color:var(--muted);font-size:13.5px}
 .io-log{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:clip}
 .io-log h3{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
 .io-log>.wh-hint{padding:10px 14px}
-.io-rh,.io-r{display:grid;grid-template-columns:7.5em 3.4em 4.5em minmax(0,1.6fr) 7em minmax(0,1.6fr);gap:10px;padding:9px 14px;align-items:center}
+.io-rh,.io-r{display:grid;grid-template-columns:7.5em 3.4em 9.5em minmax(0,1.3fr) minmax(0,1.6fr) 9em;gap:10px;padding:9px 14px;align-items:center}
 .io-rh{font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-block:6px}
-.io-r{border-bottom:1px solid var(--line);font-size:14px}.io-r:last-of-type{border-bottom:0}.io-r .d{color:var(--muted);font-size:13px}.io-r .it{font-weight:600;overflow-wrap:anywhere}
-.io-r .nt{color:var(--muted);overflow-wrap:anywhere}.io-r .nt small{display:block;font-size:11.5px}.io-sp{font-weight:700;justify-self:start}
+.io-r{width:100%;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;font-size:14px;text-align:left;cursor:pointer}.io-r:last-of-type{border-bottom:0}.io-r:hover{background:var(--fill)}
+.io-r .d{color:var(--muted);font-size:13px}.io-r .no{font-weight:700;font-variant-numeric:tabular-nums}.io-r .it,.io-r .pt{overflow-wrap:anywhere}.io-r .it{font-weight:600}
+.io-r small{color:var(--muted);font-weight:400;font-size:12px}.io-r .pt small{display:block}.io-r .am{font-weight:700;text-align:right}
 .io-b{justify-self:start;font:700 11px var(--ui);letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:6px}
-.io-b.io-in,.io-r .am.io-in{color:var(--good)}.io-b.io-in{background:color-mix(in srgb,var(--good) 14%,transparent)}
-.io-b.io-out,.io-r .am.io-out{color:var(--bad)}.io-b.io-out{background:color-mix(in srgb,var(--bad) 14%,transparent)}.io-r .am{font-weight:700}
-@media (max-width:700px){.io-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.io-g .io-w{grid-column:1/-1}.io-dir,.wh-view{justify-self:stretch;display:flex}.io-dir button,.wh-view button{flex:1;min-width:0}.io-go .btn{flex:1;height:44px}
-  .io-rh{display:none}.io-r{grid-template-columns:auto auto minmax(0,1fr) auto;gap:4px 10px}.io-r .it{grid-column:1/-1;order:5}.io-r .nt{grid-column:1/-1;order:6}.io-r .am{justify-self:end}}
+.io-b.io-in,.io-r .am.io-in,.io-tbl .io-in{color:var(--good)}.io-b.io-in{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.io-b.io-out,.io-r .am.io-out,.io-tbl .io-out{color:var(--bad)}.io-b.io-out{background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.io-kv{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.io-kv span{color:var(--muted)}.io-kv b{font-weight:600;overflow-wrap:anywhere;white-space:pre-wrap}
+.io-tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.io-tbl th{font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+.io-tbl th,.io-tbl td{padding:7px 6px;border-bottom:1px solid var(--line)}.io-tbl td:last-child,.io-tbl th:last-child{text-align:right;white-space:nowrap}.io-tbl tfoot td{font-weight:700;border-bottom:0}
+@media (max-width:700px){.io-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.io-g .io-w{grid-column:1/-1}.io-dir,.wh-view{justify-self:stretch;display:flex;flex:1 1 100%}.io-dir button,.wh-view button{flex:1;min-width:0}
+  .io-go{flex-wrap:wrap}.io-go .btn{flex:1 1 100%;height:44px}
+  .io-ln{grid-template-columns:1.4em minmax(0,1fr) 2em;gap:8px}.io-ln>.wh-f{grid-column:2}.io-ln .io-k{grid-column:1;grid-row:1/4}.io-x{grid-column:3;grid-row:1}
+  .io-rh{display:none}.io-r{grid-template-columns:auto auto minmax(0,1fr) auto;gap:4px 10px}.io-r .pt,.io-r .it{grid-column:1/-1}.io-r .am{grid-row:1;grid-column:4}}
 .wh-hint{margin:0;font-size:13px;color:var(--muted);line-height:1.45}.wh-hint.warn{color:var(--bad)}.wh-hint a{color:var(--accent-fg)}
 .wh-mv{display:grid;gap:10px;padding:14px 16px;border-top:2px solid var(--beam);background:var(--raise)}.wh-mv[hidden]{display:none}.wh-mvh{font:800 15px var(--ui);text-transform:uppercase;overflow-wrap:anywhere}.wh-mvb{display:flex;gap:8px;justify-content:flex-end}
 .wh-sect{font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
@@ -5646,16 +5660,29 @@ function setSkid(loc,body){const old=RK.skids[loc];if(body){const c=cleanSkid({.
   if(!old)return;delete RK.skids[loc];RK.deleted=RK.deleted.filter(d=>d.loc!==loc);RK.deleted.push({loc,at:Math.max(Date.now(),(+old.upd||0)+1)});}
 function writeSkid(loc,body){setSkid(loc,body);rkSave();renderWh();}
 function setRacks(n){n=Math.max(1,Math.min(RK_MAX,Math.round(n)||1));if(n===rkCount()){renderWh();return;}W().rackCount=n;rkStamp(RK.cfg);rkSave();renderWh();}
-/* ---------- In & Out: stock adjustments ----------
-   A dated log of what came in and went out of each spot. Saving one changes the skid's stock (the item line, a box group
-   of it, or the skid total) and keeps a line in the log. Kept with the racks: synced to your devices and shared with your company. */
-const ADJ_MAX=3000,ADJ_U={boxes:'boxes',pcs:'pcs',dz:'dz'};
+/* ---------- In & Out: bills of lading ----------
+   Each shipment in or out is one record, like a bill of lading: a number, date, who it came from or goes to, carrier,
+   PRO / tracking, PO, weight, notes, and one or more lines (spot, item, amount). Saving changes the stock on those skids
+   (all lines or none) and keeps the record, which can be opened and printed as a BOL with signature lines.
+   Kept with the racks: synced to your devices and shared with your company. */
+const ADJ_MAX=3000,ADJ_U={boxes:'boxes',pcs:'pcs',dz:'dz'},ADJ_LINES=40,U_NAME={boxes:'boxes',pcs:'pcs',dz:'dozen'};
 const dayISO=(d=new Date())=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-function cleanAdj(x){if(!x||typeof x!=='object'||!/^[a-z0-9]{4,16}$/.test(x.id||'')||!locOk(x.loc))return null;const n=rkNum(x.n);if(!n)return null;
-  return{id:x.id,at:/^\d{4}-\d{2}-\d{2}$/.test(x.at||'')?x.at:dayISO(new Date(+x.upd||Date.now())),loc:x.loc,dir:x.dir==='out'?'out':'in',n,u:ADJ_U[x.u]?x.u:'boxes',
-    what:String(x.what||'').slice(0,200),note:String(x.note||'').trim().slice(0,500),upd:+x.upd||1,...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
+const adjStr=(v,n)=>String(v??'').trim().slice(0,n);
+function cleanAdjLine(l){if(!l||!locOk(l.loc))return null;const n=rkNum(l.n);return n?{loc:l.loc,what:adjStr(l.what,200),n,u:ADJ_U[l.u]?l.u:'boxes'}:null;}
+// older records were one line each ({loc, what, n, u}); they become a record with one line
+function cleanAdj(x){if(!x||typeof x!=='object'||!/^[a-z0-9]{4,16}$/.test(x.id||''))return null;
+  const lines=(Array.isArray(x.lines)?x.lines:[x]).slice(0,ADJ_LINES).map(cleanAdjLine).filter(Boolean);if(!lines.length)return null;
+  return{id:x.id,no:adjStr(x.no,40),at:/^\d{4}-\d{2}-\d{2}$/.test(x.at||'')?x.at:dayISO(new Date(+x.upd||Date.now())),dir:x.dir==='out'?'out':'in',
+    party:adjStr(x.party,120),carrier:adjStr(x.carrier,80),track:adjStr(x.track,80),ref:adjStr(x.ref,80),weight:adjStr(x.weight,40),note:adjStr(x.note,1000),
+    lines,upd:+x.upd||1,...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
 const fmtDay=d=>{const[y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});};
 const adjAmt=(n,u)=>u==='boxes'?plural(n,'box'):`${n} ${u}`;
+const adjWid=a=>whOf(a.lines[0].loc).wid;
+// totals of a record's lines, by unit: "8 boxes · 24 pcs"
+const adjTot=lines=>{const t={};for(const l of lines)t[l.u]=(t[l.u]||0)+l.n;return['boxes','pcs','dz'].filter(u=>t[u]).map(u=>adjAmt(t[u],u)).join(' · ');};
+// the next number for a date: BOL-261119-01 going out, RCV-261119-01 coming in
+function adjNo(dir,at){const p=`${dir==='out'?'BOL':'RCV'}-${String(at||dayISO()).slice(2).replace(/-/g,'')}-`;let n=0;
+  for(const a of RK.adj)if(a.no.startsWith(p))n=Math.max(n,+a.no.slice(p.length)||0);return p+String(n+1).padStart(2,'0');}
 // what can be adjusted on a spot: each line (or each of its box groups), the skid total, and on the way in a new item
 function ioTargets(loc,dir){const s=RK.skids[loc],out=[];(s?.items||[]).forEach((i,ix)=>{
     if(i.bk?.length)i.bk.forEach((g,j)=>out.push({k:ix+'.'+j,label:`${itemLine({...i,size:'',colour:''})||'Unnamed item'} · ${bkName(i,g)}`,now:plural(+g.boxes||0,'box'),units:['boxes']}));
@@ -5663,53 +5690,122 @@ function ioTargets(loc,dir){const s=RK.skids[loc],out=[];(s?.items||[]).forEach(
   const t=skTotal(s);if(t)out.push({k:'total',label:'Skid total (mixed skid)',now:fmtTot(t),units:[t.unit]});
   if(dir==='in')out.push({k:'new',label:'＋ New item…',now:'',units:['boxes','pcs','dz']});return out;}
 const ioLocs=dir=>{const all=visLocs().concat(orphLocs());return dir==='out'?all.filter(l=>RK.skids[l]):all;};
-function ioState(){const io=RK.io||(RK.io={dir:'in',date:dayISO(),loc:'',tgt:'',n:'',u:'boxes',note:'',name:''});
-  const L=ioLocs(io.dir);if(!L.includes(io.loc))io.loc=(io.dir==='in'?L.find(l=>RK.skids[l]):'')||L[0]||'';
-  const T=io.loc?ioTargets(io.loc,io.dir):[];let t=T.find(x=>x.k===io.tgt);if(!t){t=T[0];io.tgt=t?.k||'';}
-  if(t&&!t.units.includes(io.u))io.u=t.units[0];return{io,L,T,t};}
-// change the skid; returns an error message, or '' when done
-function applyAdj(loc,tgt,dir,n,u,name){const s=RK.skids[loc]?JSON.parse(JSON.stringify(RK.skids[loc])):{items:[],note:'',total:null},sg=dir==='in'?1:-1,short=(have,w)=>`Only ${w==='boxes'?plural(have,'box'):have+' '+w} there. Take out ${have} or less.`;
-  if(tgt==='new'){if(dir!=='in')return'Pick an item';if(!rkUp(name))return'Give the new item a name';s.items.push(u==='boxes'?{item:name,boxes:n}:{item:name,qty:n,unit:u==='dz'?'dz':'pcs'});}
-  else if(tgt==='total'){const t=skTotal(s);if(!t)return'Pick an item';if(dir==='out'&&n>t.count)return short(t.count,t.unit);s.total={count:t.count+sg*n,unit:t.unit};}
-  else{const[ix,j]=tgt.split('.'),i=s.items[+ix];if(!i)return'Pick an item';const per=+i.per||0;
-    if(j!=null){const g=i.bk?.[+j];if(!g)return'Pick an item';if(dir==='out'&&n>+g.boxes)return short(+g.boxes,'boxes');g.boxes=(+g.boxes||0)+sg*n;i.bk=i.bk.filter(b=>+b.boxes>0);
-      i.boxes=i.bk.reduce((t,b)=>t+(+b.boxes),0);if(!i.bk.length)delete i.bk;if(per)i.qty=i.boxes*per;}
-    else if(u==='boxes'){const b0=+i.boxes||0;if(dir==='out'&&n>b0)return short(b0,'boxes');const b1=b0+sg*n;
-      // no per-box count: the total follows the boxes when it can be worked out
-      if(!per&&+i.qty>0&&b0>0)i.qty=Math.round(+i.qty*b1/b0);i.boxes=b1;if(per)i.qty=b1*per;}
-    else{const q0=+i.qty||0;if(dir==='out'&&n>q0)return short(q0,unitOf(i));i.qty=q0+sg*n;}
-    if(!(+i.boxes>0)&&!(+i.qty>0))s.items.splice(+ix,1);}
-  if(s.total&&!(+s.total.count>0))s.total=null;
-  setSkid(loc,s.items.length||s.note||s.total?s:null);return'';}
-function saveAdj(){const{io,t}=ioState();const n=rkNum(io.n);
-  if(!io.loc){toast('Pick a spot');return;}if(!t){toast('Nothing on that spot to take out');return;}if(!n){toast('Enter an amount');$('#ioN')?.focus();return;}
-  const what=t.k==='new'?rkUp(io.name):t.label,err=applyAdj(io.loc,t.k,io.dir,n,io.u,io.name);if(err){toast(err,4000);return;}
-  RK.adj.unshift({id:uid(),at:io.date||dayISO(),loc:io.loc,dir:io.dir,n,u:io.u,what,note:io.note.trim().slice(0,500),upd:Date.now(),...(meEmail()?{by:meEmail()}:{})});
-  if(RK.adj.length>ADJ_MAX)RK.adj.length=ADJ_MAX;rkSave();
-  toast(`${io.dir==='in'?'In':'Out'}: ${adjAmt(n,io.u)} ${what} · ${codeOf(io.loc)}`);
-  Object.assign(io,{n:'',note:'',name:'',tgt:t.k==='new'?'':io.tgt});renderWh();setTimeout(()=>$('#ioN')?.focus(),30);}
-function ioOpen(loc){RK.view='io';lsSet('ss-wh-view','io');const io=ioState().io;if(loc){io.loc=loc;io.dir=RK.skids[loc]?io.dir:'in';io.tgt='';}closeSide();renderWh();}
-function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.innerHTML='';return;}const{io,L,T,t}=ioState();
-  const uName={boxes:'boxes',pcs:'pcs',dz:'dozen'},spot=l=>`${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}`;
-  const form=`<form class="io-form" id="ioForm" autocomplete="off">
-    <div class="seg io-dir" role="group" aria-label="In or out"><button type="button" data-iodir="in" aria-pressed="${io.dir==='in'}">＋ In</button><button type="button" data-iodir="out" aria-pressed="${io.dir==='out'}">− Out</button></div>
+const ioBlankLine=()=>({loc:'',tgt:'',n:'',u:'boxes',name:''});
+function ioNew(dir='out'){const at=dayISO();return{dir,date:at,no:adjNo(dir,at),noSet:false,party:'',carrier:'',track:'',ref:'',weight:'',note:'',lines:[ioBlankLine()]};}
+// fills in each line's spot, item and unit when they're missing or no longer there
+function ioState(){const io=RK.io||(RK.io=ioNew());const L=ioLocs(io.dir);
+  const rows=io.lines.map(ln=>{if(!L.includes(ln.loc))ln.loc=(io.dir==='in'?L.find(l=>RK.skids[l]):'')||L[0]||'';
+    const T=ln.loc?ioTargets(ln.loc,io.dir):[];let t=T.find(x=>x.k===ln.tgt);if(!t){t=T[0];ln.tgt=t?.k||'';}if(t&&!t.units.includes(ln.u))ln.u=t.units[0];return{ln,T,t};});
+  if(!io.noSet)io.no=adjNo(io.dir,io.date);return{io,L,rows};}
+// one line's change, made on a working copy of the skid; returns an error message, or ''
+function adjOne(s,touched,tgt,dir,n,u,name){const sg=dir==='in'?1:-1,short=(have,w)=>`only ${w==='boxes'?plural(have,'box'):have+' '+w} there`;
+  if(tgt==='new'){if(dir!=='in')return'pick an item';if(!rkUp(name))return'give the new item a name';s.items.push(u==='boxes'?{item:name,boxes:n}:{item:name,qty:n,unit:u==='dz'?'dz':'pcs'});return'';}
+  if(tgt==='total'){const t=skTotal(s);if(!t)return'pick an item';if(dir==='out'&&n>t.count)return short(t.count,t.unit);s.total={count:t.count+sg*n,unit:t.unit};return'';}
+  const[ix,j]=String(tgt).split('.'),i=s.items[+ix];if(!i)return'pick an item';const per=+i.per||0;touched.add(+ix);
+  if(j!=null){const g=i.bk?.[+j];if(!g)return'pick an item';if(dir==='out'&&n>+g.boxes)return short(+g.boxes,'boxes');g.boxes=(+g.boxes||0)+sg*n;
+    i.boxes=i.bk.reduce((t,b)=>t+(+b.boxes||0),0);if(per)i.qty=i.boxes*per;return'';}
+  if(u==='boxes'){const b0=+i.boxes||0;if(dir==='out'&&n>b0)return short(b0,'boxes');const b1=b0+sg*n;
+    // no per-box count: the total follows the boxes when it can be worked out
+    if(!per&&+i.qty>0&&b0>0)i.qty=Math.round(+i.qty*b1/b0);i.boxes=b1;if(per)i.qty=b1*per;return'';}
+  const q0=+i.qty||0;if(dir==='out'&&n>q0)return short(q0,unitOf(i));i.qty=q0+sg*n;return'';}
+// every line is checked against the stock first; the skids only change when all of them fit
+function applyAdjLines(dir,lines){const work=new Map();
+  for(const[k,l]of lines.entries()){if(!work.has(l.loc)){const o=RK.skids[l.loc];work.set(l.loc,{s:o?JSON.parse(JSON.stringify(o)):{items:[],note:'',total:null},touched:new Set()});}
+    const w=work.get(l.loc),err=adjOne(w.s,w.touched,l.tgt,dir,l.n,l.u,l.name);if(err)return`Line ${k+1} (${codeOf(l.loc)}): ${err}.`;}
+  for(const[loc,{s,touched}]of work){for(const i of s.items)if(i.bk){i.bk=i.bk.filter(b=>+b.boxes>0);if(!i.bk.length)delete i.bk;}
+    s.items=s.items.filter((i,ix)=>!touched.has(ix)||+i.boxes>0||+i.qty>0);if(s.total&&!(+s.total.count>0))s.total=null;
+    setSkid(loc,s.items.length||s.note||s.total?s:null);}
+  return'';}
+function saveAdj(){const{io,rows}=ioState(),lines=[];
+  for(const[k,{ln,t}]of rows.entries()){const n=rkNum(ln.n);if(!ln.loc&&!n)continue;
+    if(!ln.loc||!t){toast(`Line ${k+1}: pick a spot with stock`);return;}if(!n){toast(`Line ${k+1}: enter an amount`);$(`.io-ln[data-li="${k}"] [data-iol="n"]`)?.focus();return;}
+    lines.push({loc:ln.loc,tgt:t.k,n,u:ln.u,name:ln.name,what:t.k==='new'?rkUp(ln.name):t.label});}
+  if(!lines.length){toast('Enter an amount');$('[data-iol="n"]')?.focus();return;}
+  const no=adjStr(io.no,40)||adjNo(io.dir,io.date);if(RK.adj.some(a=>a.no.toLowerCase()===no.toLowerCase())){toast(`There's already a ${no}. Change the number.`,4000);$('#ioNo')?.focus();return;}
+  const err=applyAdjLines(io.dir,lines);if(err){toast(err,5000);return;}
+  const rec=cleanAdj({id:uid(),no,at:io.date||dayISO(),dir:io.dir,party:io.party,carrier:io.carrier,track:io.track,ref:io.ref,weight:io.weight,note:io.note,
+    lines:lines.map(({loc,what,n,u})=>({loc,what,n,u})),upd:Date.now(),...(meEmail()?{by:meEmail()}:{})});
+  RK.adj.unshift(rec);if(RK.adj.length>ADJ_MAX)RK.adj.length=ADJ_MAX;rkSave();
+  toast(`Saved ${no}: ${adjTot(rec.lines)} ${io.dir==='in'?'in':'out'}`,4000,{label:'View',fn:()=>openBol(rec.id)});
+  RK.io=ioNew(io.dir);renderWh();}
+function ioOpen(loc){RK.view='io';lsSet('ss-wh-view','io');const{io}=ioState();
+  if(loc){if(!RK.skids[loc])io.dir='in';const ln=io.lines.find(l=>!rkNum(l.n))||(io.lines.push(ioBlankLine()),io.lines.at(-1));ln.loc=loc;ln.tgt='';}closeSide();renderWh();}
+// names to suggest: customers, then whoever and whichever carriers were used before
+function ioLists(){cuLoad();const party=new Set(),car=new Set();for(const c of CU.list){const v=String(c.company||c.name||'').trim();if(v)party.add(v);}
+  for(const a of RK.adj){if(a.party)party.add(a.party);if(a.carrier)car.add(a.carrier);}
+  const o=s=>[...s].slice(0,300).map(v=>`<option value="${esc(v)}"></option>`).join('');return`<datalist id="ioParties">${o(party)}</datalist><datalist id="ioCarriers">${o(car)}</datalist>`;}
+const spotOpt=l=>`${codeOf(l)}${rackNm(splitLoc(l).rack)?' ('+esc(rackNm(splitLoc(l).rack))+')':''} — ${RK.skids[l]?esc(shortSum(l)):'empty'}`;
+const ioSum=rows=>{const ls=rows.filter(r=>rkNum(r.ln.n)&&r.t).map(r=>({n:rkNum(r.ln.n),u:r.ln.u}));return ls.length?`${plural(ls.length,'line')} · ${adjTot(ls)}`:'';};
+function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.innerHTML='';return;}const{io,L,rows}=ioState(),out=io.dir==='out';
+  const f=(id,k,label,ph,extra='')=>`<div class="wh-f${extra.includes('io-w')?' io-w':''}"><label for="${id}">${label}</label><input class="in" id="${id}" data-ioh="${k}" value="${esc(io[k])}" placeholder="${ph}" ${extra.replace('io-w','')}></div>`;
+  const lineHTML=({ln,T,t},k)=>`<div class="io-ln" data-li="${k}"><span class="io-k">${k+1}</span>
+      <div class="wh-f"><label for="ioL${k}">${out?'From spot':'To spot'}</label><select class="in" id="ioL${k}" data-iol="loc">${L.length?L.map(l=>`<option value="${l}"${l===ln.loc?' selected':''}>${spotOpt(l)}</option>`).join(''):'<option value="">No skids with stock</option>'}</select></div>
+      <div class="wh-f io-w"><label for="ioT${k}">Item</label><select class="in" id="ioT${k}" data-iol="tgt"${T.length?'':' disabled'}>${T.length?T.map(x=>`<option value="${esc(x.k)}"${x.k===ln.tgt?' selected':''}>${esc(x.label)}${x.now?' — now '+esc(x.now):''}</option>`).join(''):'<option>Nothing on this spot</option>'}</select>
+        ${t?.k==='new'?`<input class="in io-nm" id="ioM${k}" data-iol="name" value="${esc(ln.name)}" placeholder="New item, e.g. Hoodie Navy L" aria-label="New item name">`:''}</div>
+      <div class="wh-f"><label for="ioN${k}">${out?'Ship':'Receive'}</label><div class="wh-qu"><input class="in" id="ioN${k}" data-iol="n" type="number" min="1" inputmode="numeric" value="${esc(ln.n)}" placeholder="0">${t&&t.units.length>1?`<select class="in" data-iol="u" aria-label="Unit">${t.units.map(v=>`<option value="${v}"${v===ln.u?' selected':''}>${U_NAME[v]}</option>`).join('')}</select>`:`<span class="io-u">${U_NAME[ln.u]||'boxes'}</span>`}</div></div>
+      <button type="button" class="io-x" data-iorm="${k}" aria-label="Remove line ${k+1}"${io.lines.length>1?'':' hidden'}>✕</button></div>`;
+  const form=`<form class="io-form" id="ioForm" autocomplete="off">${ioLists()}
+    <div class="io-top"><div class="seg io-dir" role="group" aria-label="In or out"><button type="button" data-iodir="out" aria-pressed="${out}">− Out (ship)</button><button type="button" data-iodir="in" aria-pressed="${!out}">＋ In (receive)</button></div>
+      <span class="io-doc">${out?'Bill of lading':'Receiving record'}</span></div>
     <div class="io-g">
-      <div class="wh-f"><label for="ioDate">Date</label><input class="in" id="ioDate" type="date" value="${esc(io.date)}"></div>
-      <div class="wh-f"><label for="ioLoc">Spot</label><select class="in" id="ioLoc">${L.length?L.map(l=>`<option value="${l}"${l===io.loc?' selected':''}>${spot(l)}</option>`).join(''):'<option value="">No skids with stock</option>'}</select></div>
-      <div class="wh-f io-w"><label for="ioTgt">Item</label><select class="in" id="ioTgt"${T.length?'':' disabled'}>${T.length?T.map(x=>`<option value="${esc(x.k)}"${x.k===io.tgt?' selected':''}>${esc(x.label)}${x.now?' — now '+esc(x.now):''}</option>`).join(''):'<option>Nothing on this spot</option>'}</select></div>
-      ${t?.k==='new'?`<div class="wh-f io-w"><label for="ioName">New item</label><input class="in" id="ioName" value="${esc(io.name)}" placeholder="e.g. Hoodie, Navy, L"></div>`:''}
-      <div class="wh-f"><label for="ioN">${io.dir==='in'?'Add':'Remove'}</label><div class="wh-qu"><input class="in" id="ioN" type="number" min="1" inputmode="numeric" value="${esc(io.n)}" placeholder="0">${t&&t.units.length>1?`<select class="in" id="ioU" aria-label="Unit">${t.units.map(v=>`<option value="${v}"${v===io.u?' selected':''}>${uName[v]}</option>`).join('')}</select>`:`<span class="io-u">${uName[io.u]||'boxes'}</span>`}</div></div>
-      <div class="wh-f io-w"><label for="ioNote">Note</label><input class="in" id="ioNote" value="${esc(io.note)}" placeholder="e.g. PO 1042 received, shipped to Lee's, damaged…" maxlength="500"></div>
+      <div class="wh-f"><label for="ioDate">Date</label><input class="in" id="ioDate" data-ioh="date" type="date" value="${esc(io.date)}"></div>
+      ${f('ioNo','no',out?'BOL number':'Receiving number','Auto','maxlength="40"')}
+      ${f('ioParty','party',out?'Ship to (consignee)':'Received from (shipper)',out?'Customer or company':'Supplier or company','io-w list="ioParties" maxlength="120"')}
+      ${f('ioCarrier','carrier','Carrier','e.g. UPS Freight, own truck, pickup','list="ioCarriers" maxlength="80"')}
+      ${f('ioTrack','track','PRO / tracking no.','Optional','maxlength="80"')}
+      ${f('ioRef','ref','PO / order no.','Optional','maxlength="80"')}
+      ${f('ioWeight','weight','Total weight','e.g. 840 lb','maxlength="40"')}
     </div>
-    <div class="io-go"><button class="btn primary" type="submit"${t&&L.length?'':' disabled'}>${io.dir==='in'?'Save In':'Save Out'}</button></div></form>`;
-  const q=RK.q,rows=RK.adj.filter(a=>whOf(a.loc).wid===RK.wh&&(!q||[a.what,a.note,codeOf(a.loc),a.at].join(' ').toLowerCase().includes(q)))
-    .sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=rows.slice(0,300);
-  const tin=rows.filter(a=>a.dir==='in').length;
-  const list=`<section class="io-log"><h3>${rows.length?`${plural(rows.length,'adjustment')} · ${tin} in · ${rows.length-tin} out${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`No adjustments match “${esc(q.toUpperCase())}”`:'No adjustments yet'}</h3>
-    ${show.length?`<div class="io-rh" aria-hidden="true"><span>Date</span><span></span><span>Spot</span><span>Item</span><span>Amount</span><span>Note</span></div>`:''}
-    ${show.map(a=>`<div class="io-r"><span class="d">${esc(fmtDay(a.at))}</span><span class="io-b io-${a.dir}">${a.dir==='in'?'In':'Out'}</span><button type="button" class="lnk io-sp" data-ioskid="${esc(a.loc)}">${esc(codeOf(a.loc))}</button><span class="it">${esc(a.what||'—')}</span><span class="am io-${a.dir}">${a.dir==='in'?'+':'−'}${esc(adjAmt(a.n,a.u))}</span><span class="nt">${esc(a.note)}${a.by&&teamOn()?`<small>${esc(memberName(a.by))}</small>`:''}</span></div>`).join('')}
-    ${rows.length>show.length?`<p class="wh-hint">Showing the newest ${show.length}. Search to find older ones.</p>`:''}</section>`;
+    <div class="io-lines"><div class="io-lh">${out?'Items shipped':'Items received'}</div>${rows.map(lineHTML).join('')}
+      <button type="button" class="btn sm" data-ioadd${io.lines.length>=ADJ_LINES?' disabled':''}>＋ Add line</button></div>
+    <div class="wh-f"><label for="ioNote">Notes / special instructions</label><textarea class="in" id="ioNote" data-ioh="note" rows="2" maxlength="1000" placeholder="e.g. Fragile, call before delivery, 2 boxes damaged…">${esc(io.note)}</textarea></div>
+    <div class="io-go"><span class="io-sum">${ioSum(rows)}</span><button class="btn primary" type="submit"${L.length?'':' disabled'}>${out?'Save BOL':'Save receiving'}</button></div></form>`;
+  const q=RK.q,hay=a=>[a.no,a.party,a.carrier,a.track,a.ref,a.note,a.at,...a.lines.flatMap(l=>[l.what,codeOf(l.loc)])].join(' ').toLowerCase();
+  const recs=RK.adj.filter(a=>adjWid(a)===RK.wh&&(!q||hay(a).includes(q))).sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=recs.slice(0,300),tin=recs.filter(a=>a.dir==='in').length;
+  const list=`<section class="io-log"><h3>${recs.length?`${plural(recs.length,'record')} · ${tin} in · ${recs.length-tin} out${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`Nothing matches “${esc(q.toUpperCase())}”`:'No shipments yet'}</h3>
+    ${show.length?`<div class="io-rh" aria-hidden="true"><span>Date</span><span></span><span>Number</span><span>From / to</span><span>Items</span><span>Amount</span></div>`:''}
+    ${show.map(a=>`<button type="button" class="io-r" data-iobol="${a.id}"><span class="d">${esc(fmtDay(a.at))}</span><span class="io-b io-${a.dir}">${a.dir==='in'?'In':'Out'}</span><span class="no">${esc(a.no||'—')}</span><span class="pt">${esc(a.party||'—')}${a.carrier?`<small>${esc(a.carrier)}</small>`:''}</span><span class="it">${esc(a.lines[0].what||'—')}${a.lines.length>1?` <small>+${a.lines.length-1} more</small>`:''}</span><span class="am io-${a.dir}">${a.dir==='in'?'+':'−'}${esc(adjTot(a.lines))}</span></button>`).join('')}
+    ${recs.length>show.length?`<p class="wh-hint">Showing the newest ${show.length}. Search to find older ones.</p>`:''}</section>`;
   const keep=document.activeElement?.id;el.innerHTML=form+list;if(keep&&keep.startsWith('io')&&keep!=='ioForm')$('#'+keep)?.focus();}
+/* a saved record: shown in the side panel, printed as a BOL */
+const ourName=()=>String(SET.mc?.company||SET.mc?.name||'').trim();
+function openBol(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;if(adjWid(a)!==RK.wh){setWh(adjWid(a));renderWh();}const out=a.dir==='out',wh=whName(adjWid(a));
+  const kv=(k,v)=>v?`<div class="io-kv"><span>${k}</span><b>${esc(v)}</b></div>`:'';
+  const body=`${kv('Date',fmtDay(a.at))}${kv(out?'Ship from':'Shipper',out?[ourName(),wh].filter(Boolean).join(' · '):a.party)}${kv(out?'Ship to':'Received at',out?a.party:[ourName(),wh].filter(Boolean).join(' · '))}
+    ${kv('Carrier',a.carrier)}${kv('PRO / tracking',a.track)}${kv('PO / order',a.ref)}${kv('Weight',a.weight)}
+    <table class="io-tbl"><thead><tr><th>#</th><th>Item</th><th>Spot</th><th>Amount</th></tr></thead><tbody>${a.lines.map((l,k)=>`<tr><td>${k+1}</td><td>${esc(l.what||'—')}</td><td><button type="button" class="lnk" data-ioskid="${esc(l.loc)}">${esc(codeOf(l.loc))}</button></td><td class="io-${a.dir}">${a.dir==='in'?'+':'−'}${esc(adjAmt(l.n,l.u))}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td></td><td colspan="2">Total</td><td>${esc(adjTot(a.lines))}</td></tr></tfoot></table>
+    ${a.note?`<div class="io-kv io-nt"><span>Notes</span><b>${esc(a.note)}</b></div>`:''}
+    <p class="wh-hint">Saved ${esc(ago(a.upd))}${a.by&&teamOn()?' by '+esc(memberName(a.by)):''}. The stock on these spots changed when it was saved. To correct it, save an opposite ${out?'In':'Out'} record.</p>`;
+  sideOpen('bol',esc(a.no||(out?'Bill of lading':'Receiving record')),`${out?'Outbound · bill of lading':'Inbound · receiving record'}${whMulti()?' · '+esc(wh):''}`,body,
+    `<button class="btn sm primary" type="button" data-iopr="${a.id}">Print ${out?'BOL':'record'}</button>`);}
+// the printable page: parties, carrier box, the lines, totals, notes and signature lines
+function bolDoc(a){const out=a.dir==='out',wh=whName(adjWid(a)),mc=SET.mc||{},e=v=>esc(v||'');
+  const us=`<b>${e(ourName()||wh)}</b>${ourName()?`<br>${e(wh)}`:''}${mc.phone?`<br>${e(mc.phone)}`:''}${mc.email?`<br>${e(mc.email)}`:''}`,them=a.party?`<b>${e(a.party)}</b>`:'<span class="blank"></span>';
+  const sig=w=>`<div class="sig"><div class="ln"></div><div>${w} signature</div><div class="ln"></div><div>Printed name · Date</div></div>`;
+  return`<!doctype html><html><head><meta charset="utf-8"><title>${e(a.no||'Bill of lading')}</title><style>
+    @page{size:letter;margin:14mm}*{box-sizing:border-box}body{font:12px/1.4 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#111;margin:0}
+    h1{font-size:22px;margin:0;letter-spacing:.04em;text-transform:uppercase}.hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:12px}
+    .hd .no{text-align:right}.hd .no b{font-size:16px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .box{border:1px solid #111;padding:8px 10px;min-height:64px}.box h2{font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;color:#444}
+    .ship{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #111;margin-bottom:10px}.ship div{padding:6px 10px;border-right:1px solid #111}.ship div:last-child{border-right:0}
+    .ship span{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#444}table{width:100%;border-collapse:collapse;margin-bottom:10px}
+    th,td{border:1px solid #111;padding:6px 8px;text-align:left;vertical-align:top}th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:#eee}
+    td.n{text-align:right;white-space:nowrap}tfoot td{font-weight:700}.blank{display:block;height:28px}.notes{border:1px solid #111;padding:8px 10px;min-height:48px;margin-bottom:18px;white-space:pre-wrap}
+    .sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}.sig .ln{border-bottom:1px solid #111;height:34px}.sig div:not(.ln){font-size:10px;color:#444;margin-top:3px}
+    .ft{margin-top:22px;font-size:10px;color:#666}</style></head><body>
+    <div class="hd"><div><h1>${out?'Bill of lading':'Receiving record'}</h1><div>${out?'Outbound shipment':'Inbound shipment'} · ${e(wh)}</div></div><div class="no">No. <b>${e(a.no||'—')}</b><br>Date: <b>${e(fmtDay(a.at))}</b></div></div>
+    <div class="grid"><div class="box"><h2>Ship from (shipper)</h2>${out?us:them}</div><div class="box"><h2>Ship to (consignee)</h2>${out?them:us}</div></div>
+    <div class="ship"><div><span>Carrier</span>${e(a.carrier)||'&nbsp;'}</div><div><span>PRO / tracking</span>${e(a.track)||'&nbsp;'}</div><div><span>PO / order no.</span>${e(a.ref)||'&nbsp;'}</div><div><span>Total weight</span>${e(a.weight)||'&nbsp;'}</div></div>
+    <table><thead><tr><th style="width:5%">#</th><th style="width:16%">Quantity</th><th>Description</th><th style="width:14%">${out?'From spot':'To spot'}</th></tr></thead>
+      <tbody>${a.lines.map((l,k)=>`<tr><td>${k+1}</td><td class="n">${e(adjAmt(l.n,l.u))}</td><td>${e(l.what)}</td><td>${e(codeOf(l.loc))}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td></td><td class="n">${e(adjTot(a.lines))}</td><td colspan="2">Total · ${plural(a.lines.length,'line')}</td></tr></tfoot></table>
+    <div class="box" style="min-height:0;border:0;padding:0"><h2>Notes / special instructions</h2></div><div class="notes">${e(a.note)}</div>
+    <div class="sigs">${sig('Shipper')}${sig('Carrier / driver')}${sig('Consignee')}</div>
+    <div class="ft">Received in apparent good order, except as noted. Printed ${e(new Date().toLocaleString())}.</div></body></html>`;}
+function printBol(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;const fr=document.createElement('iframe');fr.setAttribute('aria-hidden','true');fr.style.cssText='position:fixed;width:0;height:0;border:0;right:0;bottom:0';
+  document.body.appendChild(fr);const d=fr.contentDocument;d.open();d.write(bolDoc(a));d.close();
+  setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print();}catch(_){toast('Could not open the print window',4000);}setTimeout(()=>fr.remove(),60e3);},250);}
 
 /* drawing */
 function slotHTML(loc){const s=RK.skids[loc],items=itemsAt(loc),full=!!s,hit=RK.q&&items.some(i=>itemHit(i,RK.q));let sum;
@@ -5975,7 +6071,8 @@ async function linkSheet(){const id=sheetIdFrom($('#whSheetUrl').value);if(!id){
 
 /* events */
 whDlg.addEventListener('input',e=>{const t=e.target;
-  if(t.closest('#ioForm')&&RK.io){const k={ioDate:'date',ioN:'n',ioNote:'note',ioName:'name'}[t.id];if(k){RK.io[k]=t.value;return;}}
+  if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh){io[t.dataset.ioh]=t.value;if(t.dataset.ioh==='no')io.noSet=!!t.value.trim();if(t.dataset.ioh==='date'&&!io.noSet){io.no=adjNo(io.dir,io.date);const n=$('#ioNo');if(n)n.value=io.no;}return;}
+    const ln=io.lines[+t.closest('.io-ln')?.dataset.li];if(ln&&(t.dataset.iol==='n'||t.dataset.iol==='name')){ln[t.dataset.iol]=t.value;const sm=$('.io-sum');if(sm)sm.textContent=ioSum(ioState().rows);return;}}
   if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
   if(t.id==='whRackName'&&RK.lay){RK.lay.name=t.value;return;}
   const E=RK.edit;if(!E||RK.side!=='skid')return;
@@ -5989,7 +6086,8 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   updTot();});
 whDlg.addEventListener('submit',e=>{if(e.target.id==='ioForm'){e.preventDefault();saveAdj();}});
 whDlg.addEventListener('change',e=>{const t=e.target;
-  if(t.closest('#ioForm')&&RK.io){if(t.id==='ioLoc'){RK.io.loc=t.value;RK.io.tgt='';renderIO();return;}if(t.id==='ioTgt'){RK.io.tgt=t.value;renderIO();if(t.value==='new')$('#ioName')?.focus();return;}if(t.id==='ioU'){RK.io.u=t.value;return;}if(t.id==='ioDate'){RK.io.date=t.value;return;}}if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
+  if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh==='date'){io.date=t.value;if(!io.noSet)io.no=adjNo(io.dir,io.date);renderIO();return;}
+    const k=+t.closest('.io-ln')?.dataset.li,ln=io.lines[k],w=t.dataset.iol;if(ln&&w){if(w==='loc'){ln.loc=t.value;ln.tgt='';renderIO();return;}if(w==='tgt'){ln.tgt=t.value;renderIO();if(t.value==='new')$('#ioM'+k)?.focus();return;}if(w==='u'){ln.u=t.value;renderIO();return;}}}if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
   if(t.id==='whTu'&&RK.edit){RK.edit.tu=t.value;updTot();return;}
   if(t.dataset.k==='unit'&&RK.edit){const row=t.closest('.wh-row');RK.edit.items[+row.dataset.ix].unit=t.value;updTot();}});
 whDlg.addEventListener('pointerdown',e=>{if(e.target.closest('.wh-sug button'))e.preventDefault();});
@@ -5998,7 +6096,11 @@ let whEmptyArm=0;
 whDlg.addEventListener('click',async e=>{const t=e.target;
   const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
   const vw=t.closest('[data-whview]');if(vw){RK.view=vw.dataset.whview==='io'?'io':'map';lsSet('ss-wh-view',RK.view);closeSide();renderWh();return;}
-  const dr=t.closest('[data-iodir]');if(dr&&RK.io){RK.io.dir=dr.dataset.iodir;RK.io.tgt='';renderIO();return;}
+  const dr=t.closest('[data-iodir]');if(dr&&RK.io){if(RK.io.dir!==dr.dataset.iodir){RK.io.dir=dr.dataset.iodir;RK.io.lines.forEach(l=>l.tgt='');}renderIO();return;}
+  if(t.closest('[data-ioadd]')&&RK.io){const io=RK.io,last=io.lines.at(-1);if(io.lines.length<ADJ_LINES){io.lines.push({...ioBlankLine(),loc:last?.loc||''});renderIO();$(`.io-ln[data-li="${io.lines.length-1}"] [data-iol="tgt"]`)?.focus();}return;}
+  const rm=t.closest('[data-iorm]');if(rm&&RK.io){RK.io.lines.splice(+rm.dataset.iorm,1);if(!RK.io.lines.length)RK.io.lines.push(ioBlankLine());renderIO();return;}
+  const ob=t.closest('[data-iobol]');if(ob){openBol(ob.dataset.iobol);return;}
+  const pr=t.closest('[data-iopr]');if(pr){printBol(pr.dataset.iopr);return;}
   const os=t.closest('[data-ioskid]');if(os){openSkid(os.dataset.ioskid);return;}
   const sl=t.closest('[data-loc]');if(sl){openSkid(sl.dataset.loc);return;}
   const wg=t.closest('[data-whgo]');if(wg){setWh(wg.dataset.whgo);renderWh();return;}
