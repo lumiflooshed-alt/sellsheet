@@ -248,12 +248,30 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .wh-r .it .wh-kids{display:grid;gap:1px;margin:3px 0 0 4px;padding-left:10px;border-left:2px solid var(--line2);list-style:none}.wh-r .it .wh-kids li{color:var(--muted);font-size:12px;text-transform:uppercase;overflow-wrap:anywhere}.wh-r .it .wh-kids b{color:var(--ink);font-weight:700}
 .wh-view{justify-self:start}.wh-view button{min-width:120px}
 .wh-io{display:none}.wh-main[data-view=io]>.wh-io{display:grid;gap:16px}
-.wh-main[data-view=io]>:not(.wh-whs):not(.wh-view):not(.wh-io):not(.wh-remind){display:none!important}
+.wh-rec{display:none}.wh-main[data-view=rec]>.wh-rec{display:grid;gap:12px}
+.wh-main:is([data-view=io],[data-view=rec])>:not(.wh-whs):not(.wh-view):not(.wh-io):not(.wh-rec):not(.wh-remind){display:none!important}
+.io-pn:empty{display:none}.io-pn{margin-top:4px;font-size:12.5px}.io-pc.ok{color:var(--good);font-weight:600}button.io-pc{font-weight:600;font-size:12.5px}
+.io-all{padding:10px 14px;border-top:1px solid var(--line);display:flex;justify-content:flex-end}
+.rc-bar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:end;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.rc-q{flex:1 1 260px}.rc-q input{height:38px}.rc-bar .wh-f{flex:0 1 auto;min-width:130px}.rc-bar .wh-f .in{height:38px}.rc-dir button{height:32px;font-size:13.5px}.rc-acts{display:flex;gap:8px;margin-left:auto}
+.rc-sum{font-size:13.5px;color:var(--muted)}.rc-sum b{color:var(--ink)}.rc-none{margin:0;padding:24px;text-align:center;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.rc-list{display:grid;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:clip}.rc-list:has(.rc-g){background:none;border:0;overflow:visible}
+.rc-g{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:clip}.rc-g h4{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:0;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--fill)}
+.rc-g h4 b{font-size:15px}.rc-g h4 span{font:500 12.5px var(--ui);color:var(--muted)}
+.rc-rh,.rc-r{display:grid;grid-template-columns:7.2em 3.6em 9.5em minmax(0,1.3fr) minmax(0,1fr) minmax(0,.8fr) minmax(0,1.4fr) 9em;gap:10px;padding:9px 14px;align-items:center}
+.rc-rh.multi,.rc-r.multi{grid-template-columns:7.2em 3.6em 9.5em minmax(0,1.3fr) minmax(0,1fr) minmax(0,.8fr) minmax(0,1.4fr) minmax(0,.9fr) 9em}
+.rc-rh{font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-block:6px}
+.rc-r{width:100%;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;font-size:14px;text-align:left;cursor:pointer}.rc-r:last-child{border-bottom:0}.rc-r:hover{background:var(--fill)}
+.rc-r .d{color:var(--muted);font-size:13px}.rc-r .no{font-weight:700;font-variant-numeric:tabular-nums}.rc-r .pt,.rc-r .it,.rc-r .cr,.rc-r .po,.rc-r .wn{overflow-wrap:anywhere}.rc-r .pt,.rc-r .it{font-weight:600}
+.rc-r small{display:block;color:var(--muted);font-weight:400;font-size:12px}.rc-r .it small{display:inline}.rc-r .am{font-weight:700;text-align:right}.rc-r .cr,.rc-r .po,.rc-r .wn{color:var(--muted);font-size:13px}
+.rc-r .io-b.io-in,.rc-r .am.io-in{color:var(--good)}.rc-r .am.io-out{color:var(--bad)}.rc-r .am.io-move{color:var(--accent-fg)}
+@media (max-width:700px){.rc-bar .wh-f{flex:1 1 calc(50% - 6px);min-width:0}.rc-dir{flex:1 1 100%;display:flex}.rc-dir button{flex:1}.rc-acts{flex:1 1 100%;margin:0}.rc-acts .btn{flex:1}
+  .rc-rh{display:none}.rc-r,.rc-r.multi{grid-template-columns:auto auto minmax(0,1fr) auto;gap:3px 10px}.rc-r .pt,.rc-r .it{grid-column:1/-1}.rc-r .am{grid-row:1;grid-column:4}.rc-r .cr,.rc-r .po,.rc-r .wn{grid-column:1/-1}.rc-r .cr:empty,.rc-r .po:empty{display:none}}
 .io-form .wh-f textarea{text-transform:none}.io-nm{text-transform:uppercase}
 .io-form{display:grid;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
 .io-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}.io-doc{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .io-dir button{min-width:130px}.io-dir button[data-iodir=in][aria-pressed=true]{color:var(--good)}.io-dir button[data-iodir=out][aria-pressed=true]{color:var(--bad)}
-.io-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px;align-items:end}.io-g .io-w{grid-column:span 2}
+.io-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px;align-items:start}.io-g .io-w{grid-column:span 2}
 .io-lines{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px}.io-lines>.btn{justify-self:start}
 .io-lh{font:700 11.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .io-ln{display:grid;grid-template-columns:1.6em minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr) 2em;gap:10px;align-items:end;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--fill)}
@@ -1367,7 +1385,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap wh-wrap">
     <div class="ml-top"><h2>Warehouse</h2><span class="note" id="whSum"></span><button class="btn icon sm ghost" id="whClose" type="button" aria-label="Close">✕</button></div>
     <div class="wh-bar" id="whBar"></div>
-    <div class="wh-main" id="whMain"><div class="wh-whs" id="whWhs"></div><div class="wh-remind" id="whRemind" hidden></div><div class="seg wh-view" id="whView" role="group" aria-label="View"><button type="button" data-whview="map">Rack map</button><button type="button" data-whview="io">In &amp; Out</button></div><div class="wh-io" id="whIO"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
+    <div class="wh-main" id="whMain"><div class="wh-whs" id="whWhs"></div><div class="wh-remind" id="whRemind" hidden></div><div class="seg wh-view" id="whView" role="group" aria-label="View"><button type="button" data-whview="map">Rack map</button><button type="button" data-whview="io">In &amp; Out</button><button type="button" data-whview="rec">Records</button></div><div class="wh-io" id="whIO"></div><div class="wh-rec" id="whRec"></div><p class="wh-hint" id="whTeam" hidden></p><p class="wh-hint">Tap any spot to record what's on the skid. Spots are numbered from the bottom up; F = floor in front. Tap Layout on a rack to change its shape.</p><div class="wh-res" id="whRes" hidden></div><div id="whOrph"></div><div class="wh-racks" id="whRacks"></div></div>
     <aside class="wh-side" id="whSide" hidden aria-label="Skid"></aside>
   </div>
 </dialog>
@@ -5567,7 +5585,7 @@ $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())ret
 const whDlg=$('#whDlg');
 const RK_STD={levels:[1,2,2],floor:2},RK_PRESETS=[{name:'Standard',desc:'Bottom 1 · middle 2 · top 2 · floor 2',lay:RK_STD},{name:'Skinny',desc:'1 skid per level · 3 levels · floor 1',lay:{levels:[1,1,1],floor:1}}];
 const RK_TUNIT={boxes:'boxes',pcs:'pcs',dz:'dz'},RK_MAX=200;
-const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],adj:[],view:lsGet('ss-wh-view')==='io'?'io':'map',io:null,wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
+const RK={cfg:{rackCount:4,layouts:{},names:{},sheet:null,mainName:'',whs:[],upd:0},skids:{},deleted:[],adj:[],view:['io','rec'].includes(lsGet('ss-wh-view'))?lsGet('ss-wh-view'):'map',io:null,wh:lsGet('ss-wh-cur')||'main',q:'',edit:null,lay:null,mv:null,side:'',sheetBusy:null,sheetAt:0,sheetErr:'',sheetAgain:false,sheetNeed:''};
 const rkKey=()=>{const a=authGet();return a?`ss-racks:${a.prov}:${ck(a.email)}`:'ss-racks';};
 /* warehouses: each has its own name, racks, layouts and rack names. The first one ("main") keeps the plain spot codes (A1, B3…),
    so everything saved before warehouses existed stays where it was; the others put their id in front (w4k2q:A1). */
@@ -5684,7 +5702,7 @@ function cleanAdj(x){if(!x||typeof x!=='object'||!/^[a-z0-9]{4,16}$/.test(x.id||
   const lines=(Array.isArray(x.lines)?x.lines:[x]).slice(0,ADJ_LINES).map(l=>cleanAdjLine(l,dir)).filter(Boolean);if(!lines.length)return null;
   return{id:x.id,no:adjStr(x.no,40),at:/^\d{4}-\d{2}-\d{2}$/.test(x.at||'')?x.at:dayISO(new Date(+x.upd||Date.now())),dir,
     party:adjStr(x.party,120),carrier:adjStr(x.carrier,80),track:adjStr(x.track,80),ref:adjStr(x.ref,80),weight:adjStr(x.weight,40),note:adjStr(x.note,1000),
-    lines,upd:+x.upd||1,...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
+    lines,upd:+x.upd||1,...(dir!=='move'&&EMAIL_RE.test(String(x.cust||''))?{cust:ck(x.cust)}:{}),...(EMAIL_RE.test(String(x.by||''))?{by:ck(x.by)}:{})};}
 const fmtDay=d=>{const[y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});};
 const adjAmt=(n,u)=>u==='boxes'?plural(n,'box'):`${n} ${u}`;
 const adjWid=a=>whOf(a.lines[0].loc).wid;
@@ -5755,7 +5773,7 @@ function saveAdj(){const{io,rows}=ioState(),lines=[],dir=io.dir;
   if(!lines.length){toast('Search for an item to add');$('[data-iol="q"]')?.focus();return;}
   const no=adjStr(io.no,40)||adjNo(dir,io.date);if(RK.adj.some(a=>a.no.toLowerCase()===no.toLowerCase())){toast(`There's already a ${no}. Change the number.`,4000);$('#ioNo')?.focus();return;}
   const err=applyAdjLines(dir,lines);if(err){toast(err,5000);return;}
-  const rec=cleanAdj({id:uid(),no,at:io.date||dayISO(),dir,...(dir==='move'?{}:{party:io.party,carrier:io.carrier,track:io.track,weight:io.weight}),ref:io.ref,note:io.note,
+  const rec=cleanAdj({id:uid(),no,at:io.date||dayISO(),dir,...(dir==='move'?{}:{party:io.party,cust:(cuLoad(),custByName(io.party)?.email)||'',carrier:io.carrier,track:io.track,weight:io.weight}),ref:io.ref,note:io.note,
     lines:lines.map(l=>({loc:dir==='in'?l.to:l.from,...(dir==='move'?{to:l.to}:{}),what:l.what,n:l.n,u:l.u})),upd:Date.now(),...(meEmail()?{by:meEmail()}:{})});
   RK.adj.unshift(rec);if(RK.adj.length>ADJ_MAX)RK.adj.length=ADJ_MAX;rkSave();
   toast(`Saved ${no}: ${adjTot(rec.lines)} ${dir==='move'?'moved':dir}`,4000,{label:'View',fn:()=>openBol(rec.id)});
@@ -5795,7 +5813,7 @@ function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.inne
       <div class="wh-f"><label for="ioDate">Date</label><input class="in" id="ioDate" data-ioh="date" type="date" value="${esc(io.date)}"></div>
       ${f('ioNo','no',dir==='out'?'BOL number':dir==='in'?'Receiving number':'Transfer number','Auto','maxlength="40"')}
       ${mv?f('ioRef','ref','Reason / reference','e.g. Rearranging rack B, consolidating','io-w maxlength="80"')
-        :`${f('ioParty','party',dir==='out'?'Ship to (consignee)':'Received from (shipper)',dir==='out'?'Customer or company':'Supplier or company','io-w list="ioParties" maxlength="120"')}
+        :`<div class="wh-f io-w"><label for="ioParty">${dir==='out'?'Ship to (consignee)':'Received from (shipper)'}</label><input class="in" id="ioParty" data-ioh="party" value="${esc(io.party)}" placeholder="${dir==='out'?'Customer or company':'Supplier or company'}" list="ioParties" maxlength="120"><div class="io-pn" id="ioPartyNote">${ioPartyHTML()}</div></div>
       ${f('ioCarrier','carrier','Carrier','e.g. UPS Freight, own truck, pickup','list="ioCarriers" maxlength="80"')}
       ${f('ioTrack','track','PRO / tracking no.','Optional','maxlength="80"')}
       ${f('ioRef','ref','PO / order no.','Optional','maxlength="80"')}
@@ -5806,18 +5824,18 @@ function renderIO(){const el=$('#whIO');if(!el)return;if(RK.view!=='io'){el.inne
     <div class="wh-f"><label for="ioNote">Notes${mv?'':' / special instructions'}</label><textarea class="in" id="ioNote" data-ioh="note" rows="2" maxlength="1000" placeholder="${mv?'Optional':'e.g. Fragile, call before delivery, 2 boxes damaged…'}">${esc(io.note)}</textarea></div>
     <div class="io-go"><span class="io-sum">${ioSum(rows)}</span><button class="btn primary" type="submit"${all.length?'':' disabled'}>${dir==='out'?'Save BOL':dir==='in'?'Save receiving':'Save move'}</button></div></form>`;
   const q=RK.q,hay=a=>[a.no,a.party,a.carrier,a.track,a.ref,a.note,a.at,...a.lines.flatMap(l=>[l.what,codeOf(l.loc),l.to?codeOf(l.to):''])].join(' ').toLowerCase();
-  const recs=RK.adj.filter(a=>adjWid(a)===RK.wh&&(!q||hay(a).includes(q))).sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=recs.slice(0,300),cnt=d=>recs.filter(a=>a.dir===d).length;
-  const list=`<section class="io-log"><h3>${recs.length?`${plural(recs.length,'record')} · ${cnt('out')} out · ${cnt('in')} in · ${cnt('move')} moved${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`Nothing matches “${esc(q.toUpperCase())}”`:'No shipments yet'}</h3>
+  const recs=RK.adj.filter(a=>adjWid(a)===RK.wh&&(!q||hay(a).includes(q))).sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd),show=recs.slice(0,8),cnt=d=>recs.filter(a=>a.dir===d).length;
+  const list=`<section class="io-log"><h3>${recs.length?`Latest · ${plural(recs.length,'record')} · ${cnt('out')} out · ${cnt('in')} in · ${cnt('move')} moved${q?` matching “${esc(q.toUpperCase())}”`:''}`:q?`Nothing matches “${esc(q.toUpperCase())}”`:'No shipments yet'}</h3>
     ${show.length?`<div class="io-rh" aria-hidden="true"><span>Date</span><span></span><span>Number</span><span>From / to</span><span>Items</span><span>Amount</span></div>`:''}
     ${show.map(a=>`<button type="button" class="io-r" data-iobol="${a.id}"><span class="d">${esc(fmtDay(a.at))}</span><span class="io-b io-${a.dir}">${ADJ_TAG[a.dir]}</span><span class="no">${esc(a.no||'—')}</span><span class="pt">${a.dir==='move'?esc([...new Set(a.lines.map(lnWhere))].slice(0,2).join(', '))+(a.lines.length>2?'…':''):esc(a.party||'—')}${a.carrier?`<small>${esc(a.carrier)}</small>`:a.dir==='move'&&a.ref?`<small>${esc(a.ref)}</small>`:''}</span><span class="it">${esc(a.lines[0].what||'—')}${a.lines.length>1?` <small>+${a.lines.length-1} more</small>`:''}</span><span class="am io-${a.dir}">${ADJ_SIGN[a.dir]}${esc(adjTot(a.lines))}</span></button>`).join('')}
-    ${recs.length>show.length?`<p class="wh-hint">Showing the newest ${show.length}. Search to find older ones.</p>`:''}</section>`;
+    ${recs.length?`<div class="io-all"><button class="btn sm" type="button" data-whview="rec">${recs.length>show.length?`See all ${recs.length} records`:'Records: filter by customer, date…'} →</button></div>`:''}</section>`;
   const keep=document.activeElement?.id;el.innerHTML=form+list;if(keep&&keep.startsWith('io')&&keep!=='ioForm')$('#'+keep)?.focus();}
 /* a saved record: shown in the side panel, printed with signature lines */
 const ourName=()=>String(SET.mc?.company||SET.mc?.name||'').trim();
-function openBol(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;if(adjWid(a)!==RK.wh){setWh(adjWid(a));renderWh();}const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)),us=[ourName(),wh].filter(Boolean).join(' · ');
+function openBol(id){cuLoad();const a=RK.adj.find(x=>x.id===id);if(!a)return;if(adjWid(a)!==RK.wh){setWh(adjWid(a));renderWh();}const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)),us=[ourName(),wh].filter(Boolean).join(' · ');
   const kv=(k,v)=>v?`<div class="io-kv"><span>${k}</span><b>${esc(v)}</b></div>`:'';
   const spot=l=>`<button type="button" class="lnk" data-ioskid="${esc(l)}">${esc(codeOf(l))}</button>`;
-  const body=`${kv('Date',fmtDay(a.at))}${mv?kv('Warehouse',wh)+kv('Reason',a.ref):kv(out?'Ship from':'Shipper',out?us:a.party)+kv(out?'Ship to':'Received at',out?a.party:us)+kv('Carrier',a.carrier)+kv('PRO / tracking',a.track)+kv('PO / order',a.ref)+kv('Weight',a.weight)}
+  const body=`${kv('Date',fmtDay(a.at))}${mv?kv('Warehouse',wh)+kv('Reason',a.ref):kv(out?'Ship from':'Shipper',out?us:a.party)+kv(out?'Ship to':'Received at',out?a.party:us)+kv('Customer',(c=>c?[custName(c),c.email].filter(Boolean).join(' · '):'')(custOf(a)))+kv('Carrier',a.carrier)+kv('PRO / tracking',a.track)+kv('PO / order',a.ref)+kv('Weight',a.weight)}
     <table class="io-tbl"><thead><tr><th>#</th><th>Item</th><th>${mv?'From → to':'Spot'}</th><th>Amount</th></tr></thead><tbody>${a.lines.map((l,k)=>`<tr><td>${k+1}</td><td>${esc(l.what||'—')}</td><td>${spot(l.loc)}${l.to?` → ${spot(l.to)}`:''}</td><td class="io-${a.dir}">${ADJ_SIGN[a.dir]}${esc(adjAmt(l.n,l.u))}</td></tr>`).join('')}</tbody>
     <tfoot><tr><td></td><td colspan="2">Total</td><td>${esc(adjTot(a.lines))}</td></tr></tfoot></table>
     ${a.note?`<div class="io-kv io-nt"><span>Notes</span><b>${esc(a.note)}</b></div>`:''}
@@ -5825,8 +5843,8 @@ function openBol(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;if(adjWid(a)
   sideOpen('bol',esc(a.no||ADJ_DOC[a.dir]),`${mv?'Rack move · transfer record':out?'Outbound · bill of lading':'Inbound · receiving record'}${whMulti()?' · '+esc(wh):''}`,body,
     `<button class="btn sm primary" type="button" data-iopr="${a.id}">Print ${out?'BOL':'record'}</button>`);}
 // the printable page: parties, carrier box, the lines, totals, notes and signature lines
-function bolDoc(a){const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)),mc=SET.mc||{},e=v=>esc(v||'');
-  const us=`<b>${e(ourName()||wh)}</b>${ourName()?`<br>${e(wh)}`:''}${mc.phone?`<br>${e(mc.phone)}`:''}${mc.email?`<br>${e(mc.email)}`:''}`,them=a.party?`<b>${e(a.party)}</b>`:'<span class="blank"></span>';
+function bolDoc(a){cuLoad();const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)),mc=SET.mc||{},e=v=>esc(v||'');
+  const us=`<b>${e(ourName()||wh)}</b>${ourName()?`<br>${e(wh)}`:''}${mc.phone?`<br>${e(mc.phone)}`:''}${mc.email?`<br>${e(mc.email)}`:''}`,cl=custLines(custOf(a)),them=a.party?`<b>${e(a.party)}</b>${cl.map(x=>`<br>${e(x)}`).join('')}`:'<span class="blank"></span>';
   const sig=w=>`<div class="sig"><div class="ln"></div><div>${w} signature</div><div class="ln"></div><div>Printed name · Date</div></div>`;
   return`<!doctype html><html><head><meta charset="utf-8"><title>${e(a.no||ADJ_DOC[a.dir])}</title><style>
     @page{size:letter;margin:14mm}*{box-sizing:border-box}body{font:12px/1.4 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#111;margin:0}
@@ -5850,6 +5868,64 @@ function bolDoc(a){const out=a.dir==='out',mv=a.dir==='move',wh=whName(adjWid(a)
     <p class="lbl">Notes${mv?'':' / special instructions'}</p><div class="notes">${e(a.note)}</div>
     <div class="sigs">${mv?sig('Moved by')+sig('Checked by'):sig('Shipper')+sig('Carrier / driver')+sig('Consignee')}</div>
     <div class="ft">${mv?'':'Received in apparent good order, except as noted. '}Printed ${e(new Date().toLocaleString())}.</div></body></html>`;}
+/* customers on a BOL: the Ship to / Received from name is matched to a customer by company or name; one that isn't there yet can be added */
+function custByName(v){v=String(v||'').trim().toLowerCase();if(!v)return null;return CU.list.find(c=>String(c.company||'').trim().toLowerCase()===v||String(c.name||'').trim().toLowerCase()===v)||null;}
+// the customer on a record: the one it was saved with, or (older records) the one with that name. Call cuLoad() first
+const custOf=a=>(a.cust?CU.list.find(c=>[c.email,...altOf(c)].some(x=>ck(x)===a.cust)):null)||(a.dir!=='move'?custByName(a.party):null);
+const custName=c=>c?String(c.company||c.name||c.email):'';
+// under the name box: who it is, or the button to add them
+function ioPartyHTML(){cuLoad();const io=RK.io;if(!io||io.dir==='move')return'';const v=String(io.party||'').trim();if(!v)return'';const c=custByName(v);
+  return c?`<span class="io-pc ok">✓ Customer${c.email?': '+esc(c.email):''}</span>`:`<button type="button" class="lnk io-pc" data-ionewcust>＋ Add “${esc(v)}” as a new customer</button>`;}
+function ioPartyNote(){const el=$('#ioPartyNote');if(el)el.innerHTML=ioPartyHTML();}
+async function ioNewCust(){const v=String(RK.io?.party||'').trim().slice(0,120);if(!v)return;
+  const r=await ask({title:`Add ${v} as a customer`,body:'Customers are kept by email address. Name, phone, address and the rest can be filled in any time under Customers, and show on printed BOLs.',ok:'Add customer',input:{value:'',placeholder:'name@company.com',label:'Email address'}});
+  if(r!=='ok')return;const err=cuUpsert('new',{company:v,name:'',email:ask.value});if(err){toast(err,5000);return;}toast(`Added ${v} to your customers`);ioPartyNote();}
+// a customer's address and phone, for the printed BOL, from their saved details
+function custLines(c){if(!c)return[];const inf=infoOf(c),out=[];for(const[k,v]of Object.entries(inf))if(/address|street|suite|city|town|province|state|zip|postal|country|phone|tel/i.test(k)&&String(v).trim())out.push(...String(v).split('\n'));
+  if(c.email)out.push(c.email);return out.slice(0,8);}
+
+/* ---------- Records: every BOL, receiving and move record, to look through by customer, date, type and warehouse ---------- */
+const recF=()=>RK.rf||(RK.rf={q:'',dir:'',who:'',from:'',to:'',wh:'cur',group:'none'});
+const recWho=a=>{if(a.dir==='move')return'm:';const c=custOf(a);return c?'c:'+ck(c.email):a.party?'p:'+a.party.toLowerCase():'n:';};
+const recWhoName=a=>a.dir==='move'?'Rack moves':custName(custOf(a))||a.party||'No customer';
+function recRows(){cuLoad();const f=recF(),q=f.q.trim().toLowerCase(),hay=a=>[a.no,a.party,recWhoName(a),a.carrier,a.track,a.ref,a.note,a.at,...a.lines.flatMap(l=>[l.what,codeOf(l.loc),l.to?codeOf(l.to):''])].join(' ').toLowerCase();
+  return RK.adj.filter(a=>(f.wh==='all'||adjWid(a)===(f.wh==='cur'?RK.wh:f.wh))&&(!f.dir||a.dir===f.dir)&&(!f.who||recWho(a)===f.who)&&(!f.from||a.at>=f.from)&&(!f.to||a.at<=f.to)&&(!q||hay(a).includes(q)))
+    .sort((a,b)=>a.at<b.at?1:a.at>b.at?-1:b.upd-a.upd);}
+const recMonth=at=>{const[y,m]=at.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});};
+const recTot=rs=>['out','in','move'].map(d=>{const ls=rs.filter(a=>a.dir===d).flatMap(a=>a.lines);return ls.length?`${ADJ_TAG[d].toLowerCase()} ${adjTot(ls)}`:'';}).filter(Boolean).join(' · ');
+function recBodyHTML(){const f=recF(),rs=recRows(),show=rs.slice(0,600),multi=whMulti()&&f.wh==='all';
+  const row=a=>`<button type="button" class="rc-r${multi?' multi':''}" data-iobol="${a.id}"><span class="d">${esc(fmtDay(a.at))}</span><span class="io-b io-${a.dir}">${ADJ_TAG[a.dir]}</span><span class="no">${esc(a.no||'—')}</span>
+    <span class="pt">${a.dir==='move'?esc([...new Set(a.lines.map(lnWhere))].slice(0,2).join(', ')):esc(recWhoName(a))}${a.dir==='move'&&a.ref?`<small>${esc(a.ref)}</small>`:''}</span>
+    <span class="cr">${esc(a.carrier||'')}${a.track?`<small>${esc(a.track)}</small>`:''}</span><span class="po">${a.dir==='move'?'':esc(a.ref||'')}</span>
+    <span class="it">${esc(a.lines[0].what||'—')}${a.lines.length>1?` <small>+${a.lines.length-1} more</small>`:''}</span>${multi?`<span class="wn">${esc(whName(adjWid(a)))}</span>`:''}<span class="am io-${a.dir}">${ADJ_SIGN[a.dir]}${esc(adjTot(a.lines))}</span></button>`;
+  const head=`<div class="rc-rh${multi?' multi':''}" aria-hidden="true"><span>Date</span><span></span><span>Number</span><span>Customer / spots</span><span>Carrier · PRO</span><span>PO</span><span>Items</span>${multi?'<span>Warehouse</span>':''}<span>Amount</span></div>`;
+  let body;if(f.group==='none')body=head+show.map(row).join('');
+  else{const key=f.group==='who'?a=>recWho(a):f.group==='month'?a=>a.at.slice(0,7):a=>a.dir,name=f.group==='who'?recWhoName:f.group==='month'?a=>recMonth(a.at):a=>ADJ_DOC[a.dir]+'s',g=new Map();
+    for(const a of show){const k=key(a);if(!g.has(k))g.set(k,[]);g.get(k).push(a);}
+    const gs=[...g.values()];if(f.group==='who')gs.sort((x,y)=>recWhoName(x[0]).localeCompare(recWhoName(y[0])));
+    body=gs.map(rs=>`<section class="rc-g"><h4><b>${esc(name(rs[0]))}</b><span>${plural(rs.length,'record')} · ${esc(recTot(rs))}</span></h4>${head}${rs.map(row).join('')}</section>`).join('');}
+  return`<div class="rc-sum"><b>${plural(rs.length,'record')}</b>${rs.length?` · ${esc(recTot(rs))}`:''}${rs.length>show.length?` · showing the newest ${show.length}`:''}</div>
+    ${rs.length?`<div class="rc-list">${body}</div>`:`<p class="rc-none">${RK.adj.length?'No records match these filters.':'No records yet. Save one from the In & Out tab.'}</p>`}`;}
+function renderRec(){const el=$('#whRec');if(!el)return;if(RK.view!=='rec'){el.innerHTML='';return;}const f=recF();
+  const pool=RK.adj.filter(a=>f.wh==='all'||adjWid(a)===(f.wh==='cur'?RK.wh:f.wh)),who=new Map();for(const a of pool){const k=recWho(a);if(!who.has(k))who.set(k,recWhoName(a));}
+  if(f.who&&!who.has(f.who))f.who='';const whoOpts=[...who].sort((x,y)=>x[1].localeCompare(y[1]));
+  const keep=document.activeElement?.id;
+  el.innerHTML=`<div class="rc-bar">
+      <label class="wh-search rc-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="rcQ" data-rcf="q" type="search" value="${esc(f.q)}" placeholder="Number, customer, item, PO, carrier, spot…" aria-label="Search records" autocomplete="off"></label>
+      <div class="seg rc-dir" role="group" aria-label="Type">${[['','All'],['out','Out'],['in','In'],['move','Moves']].map(([v,n])=>`<button type="button" data-rcdir="${v}" aria-pressed="${f.dir===v}">${n}</button>`).join('')}</div>
+      <div class="wh-f"><label for="rcWho">Customer</label><select class="in" id="rcWho" data-rcf="who"><option value="">All customers</option>${whoOpts.map(([k,n])=>`<option value="${esc(k)}"${k===f.who?' selected':''}>${esc(n)}</option>`).join('')}</select></div>
+      <div class="wh-f"><label for="rcFrom">From</label><input class="in" id="rcFrom" data-rcf="from" type="date" value="${esc(f.from)}"></div>
+      <div class="wh-f"><label for="rcTo">To</label><input class="in" id="rcTo" data-rcf="to" type="date" value="${esc(f.to)}"></div>
+      ${whMulti()?`<div class="wh-f"><label for="rcWh">Warehouse</label><select class="in" id="rcWh" data-rcf="wh"><option value="cur"${f.wh==='cur'?' selected':''}>This warehouse</option><option value="all"${f.wh==='all'?' selected':''}>All warehouses</option>${whList().map(w=>`<option value="${w.id}"${f.wh===w.id?' selected':''}>${esc(w.name)}</option>`).join('')}</select></div>`:''}
+      <div class="wh-f"><label for="rcGroup">Group by</label><select class="in" id="rcGroup" data-rcf="group">${[['none','Nothing (newest first)'],['who','Customer'],['month','Month'],['dir','Type']].map(([v,n])=>`<option value="${v}"${f.group===v?' selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="rc-acts">${f.q||f.dir||f.who||f.from||f.to?'<button class="btn sm ghost" type="button" data-rcclear>Clear filters</button>':''}<button class="btn sm" type="button" data-rcexport>Export CSV</button></div>
+    </div><div id="rcBody">${recBodyHTML()}</div>`;
+  if(keep&&keep.startsWith('rc'))$('#'+keep)?.focus();}
+// one row per line, with the record's details on each
+function recExport(){const rs=recRows();if(!rs.length){toast('No records to export');return;}
+  const rows=[['Number','Date','Type','Customer','Carrier','PRO / tracking','PO / reference','Weight','Warehouse','From spot','To spot','Item','Quantity','Unit','Notes']];
+  for(const a of rs)for(const l of a.lines)rows.push([a.no,a.at,ADJ_DOC[a.dir],a.dir==='move'?'':recWhoName(a),a.carrier,a.track,a.ref,a.weight,whName(adjWid(a)),a.dir==='in'?'':codeOf(l.loc),a.dir==='in'?codeOf(l.loc):l.to?codeOf(l.to):'',l.what,l.n,U_NAME[l.u],a.note]);
+  save(`warehouse-records-${dayStr(Date.now())}.csv`,new Blob([csvText(rows)],{type:'text/csv'}));}
 function printBol(id){const a=RK.adj.find(x=>x.id===id);if(!a)return;const fr=document.createElement('iframe');fr.setAttribute('aria-hidden','true');fr.style.cssText='position:fixed;width:0;height:0;border:0;right:0;bottom:0';
   document.body.appendChild(fr);const d=fr.contentDocument;d.open();d.write(bolDoc(a));d.close();
   setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print();}catch(_){toast('Could not open the print window',4000);}setTimeout(()=>fr.remove(),60e3);},250);}
@@ -5872,7 +5948,7 @@ function renderWh(){if(!whDlg.open)return;const n=rkCount(),vis=visLocs(),orph=o
     <span class="spacer"></span><span id="whSync" class="wh-sync"></span><span id="whSheetChip"></span><button class="btn sm ghost" type="button" data-wh="import">Import CSV</button><button class="btn sm ghost" type="button" data-wh="export">Export CSV</button><input type="file" id="whFile" accept=".csv,.tsv,.txt,text/csv" hidden>`;
   {const tm=$('#whTeam'),on=teamOn(),sh=on&&TEAM.info.company.share||{};tm.hidden=!on;if(on)tm.innerHTML=sh.rack?`Shared with <b>${esc(TEAM.info.company.name)}</b>: everyone sees and changes the same racks.${TEAM.last?' Synced '+esc(agoMin(TEAM.last))+'.':''}`:!('rack' in sh)?'<span class="wh-bad">Not shared with your company yet: the company server needs the latest Worker code (Settings → Company explains how).</span>':'Not shared with your company. An admin can turn it on in Settings → Company → What\'s shared.';}
   if(document.activeElement!==$('#whCount'))$('#whCount').value=n;$('#whSheetChip').innerHTML=whSheetChip();renderWhSync();
-  renderWhs();$('#whMain').dataset.view=RK.view;$$('#whView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.whview===RK.view)));renderIO();
+  renderWhs();$('#whMain').dataset.view=RK.view;$$('#whView button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.whview===RK.view)));renderIO();renderRec();
   $('#whSum').textContent=`${whMulti()?whName()+' · ':''}${n} rack${n>1?'s':''} · ${used}/${vis.length} spots used · ${vis.reduce((t,l)=>t+skBoxes(l),0)} boxes · ${vis.reduce((t,l)=>t+skPcs(l),0)} pcs`;
   $('#whRacks').classList.toggle('searching',!!RK.q);$('#whRacks').innerHTML=visRacks().map(rackHTML).join('')+`<button class="wh-addrack" type="button" data-wh="newrack" ${n>=RK_MAX?'disabled':''}>＋ Add a rack</button>`;
   $('#whOrph').innerHTML=orph.length?`<section class="wh-orph"><h3>Not on the map</h3><p>These skids are saved, but their spot isn't on the current rack count or layout. Open one and use Move skid to put it somewhere.</p><div class="wh-og">${orph.map(slotHTML).join('')}</div></section>`:'';
@@ -6118,7 +6194,8 @@ async function linkSheet(){const id=sheetIdFrom($('#whSheetUrl').value);if(!id){
 
 /* events */
 whDlg.addEventListener('input',e=>{const t=e.target;
-  if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh){io[t.dataset.ioh]=t.value;if(t.dataset.ioh==='no')io.noSet=!!t.value.trim();if(t.dataset.ioh==='date'&&!io.noSet){io.no=adjNo(io.dir,io.date);const n=$('#ioNo');if(n)n.value=io.no;}return;}
+  if(t.dataset.rcf==='q'){recF().q=t.value;clearTimeout(RK.rcT);RK.rcT=setTimeout(()=>{const b=$('#rcBody');if(b)b.innerHTML=recBodyHTML();},120);return;}
+  if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh){io[t.dataset.ioh]=t.value;if(t.dataset.ioh==='party')ioPartyNote();if(t.dataset.ioh==='no')io.noSet=!!t.value.trim();if(t.dataset.ioh==='date'&&!io.noSet){io.no=adjNo(io.dir,io.date);const n=$('#ioNo');if(n)n.value=io.no;}return;}
     const ln=io.lines[+t.closest('.io-ln')?.dataset.li];if(ln&&t.dataset.iol==='q'){ln.q=t.value;if(ln.key){ln.key='';t.classList.remove('picked');}ioShowSug(t);}
     if(ln&&(t.dataset.iol==='n'||t.dataset.iol==='q')){if(t.dataset.iol==='n')ln.n=t.value;const sm=$('.io-sum');if(sm)sm.textContent=ioSum(ioState().rows);return;}}
   if(t.id==='whQ'){clearTimeout(RK.qT);RK.qT=setTimeout(()=>{RK.q=t.value.trim().toLowerCase();renderWh();},120);return;}
@@ -6134,6 +6211,7 @@ whDlg.addEventListener('input',e=>{const t=e.target;
   updTot();});
 whDlg.addEventListener('submit',e=>{if(e.target.id==='ioForm'){e.preventDefault();saveAdj();}});
 whDlg.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.rcf&&t.dataset.rcf!=='q'){recF()[t.dataset.rcf]=t.value;renderRec();return;}
   if(t.closest('#ioForm')&&RK.io){const io=RK.io;if(t.dataset.ioh==='date'){io.date=t.value;if(!io.noSet)io.no=adjNo(io.dir,io.date);renderIO();return;}
     const k=+t.closest('.io-ln')?.dataset.li,ln=io.lines[k],w=t.dataset.iol;if(ln&&(w==='from'||w==='to'||w==='u')){ln[w]=t.value;renderIO();return;}}if(t.id==='whCount'){setRacks(+t.value);return;}if(t.id==='whFile'){const f=t.files?.[0];t.value='';if(f)whImport(f);return;}if(t.id==='whMvTo'){mvInfo();return;}
   if(t.id==='whTu'&&RK.edit){RK.edit.tu=t.value;updTot();return;}
@@ -6155,9 +6233,13 @@ whDlg.addEventListener('focusout',e=>{if(e.target.matches('.wh-row input'))setTi
 let whEmptyArm=0;
 whDlg.addEventListener('click',async e=>{const t=e.target;
   const sg=t.closest('[data-whsug]');if(sg&&RK.edit){const inp=sg.closest('.wh-f').querySelector('input'),row=sg.closest('.wh-row');inp.value=sg.dataset.whsug;RK.edit.items[+row.dataset.ix][inp.dataset.k]=sg.dataset.whsug;sg.parentElement.hidden=true;inp.focus();updTot();return;}
-  const vw=t.closest('[data-whview]');if(vw){RK.view=vw.dataset.whview==='io'?'io':'map';lsSet('ss-wh-view',RK.view);closeSide();renderWh();return;}
+  const vw=t.closest('[data-whview]');if(vw){RK.view=['io','rec'].includes(vw.dataset.whview)?vw.dataset.whview:'map';lsSet('ss-wh-view',RK.view);closeSide();renderWh();return;}
   const dr=t.closest('[data-iodir]');if(dr&&RK.io){RK.io.dir=ADJ_DIR.includes(dr.dataset.iodir)?dr.dataset.iodir:'out';renderIO();return;}
   if(t.closest('[data-ioadd]')&&RK.io){const io=RK.io;if(io.lines.length<ADJ_LINES){io.lines.push(ioBlankLine());renderIO();$(`.io-ln[data-li="${io.lines.length-1}"] [data-iol="q"]`)?.focus();}return;}
+  if(t.closest('[data-ionewcust]')){ioNewCust();return;}
+  const rd=t.closest('[data-rcdir]');if(rd){recF().dir=rd.dataset.rcdir;renderRec();return;}
+  if(t.closest('[data-rcclear]')){Object.assign(recF(),{q:'',dir:'',who:'',from:'',to:''});renderRec();return;}
+  if(t.closest('[data-rcexport]')){recExport();return;}
   const pk=t.closest('[data-iopick]');if(pk&&RK.io){ioPick(+pk.closest('.io-ln').dataset.li,pk.dataset.iopick);return;}
   const rm=t.closest('[data-iorm]');if(rm&&RK.io){RK.io.lines.splice(+rm.dataset.iorm,1);if(!RK.io.lines.length)RK.io.lines.push(ioBlankLine());renderIO();return;}
   const ob=t.closest('[data-iobol]');if(ob){openBol(ob.dataset.iobol);return;}
