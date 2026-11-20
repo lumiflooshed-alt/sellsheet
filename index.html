@@ -477,6 +477,20 @@ textarea.np-in{display:block;overflow:hidden}
 .np-state{font-size:12.5px;color:var(--warn)}
 @media (max-width:760px){#custDlg .cp-detail{position:fixed;inset:0;width:100%;z-index:20}.np-inner{padding:22px 16px 30px}.np-prop{grid-template-columns:1fr}.np-k{padding-bottom:0}.np-v{padding-right:28px}.np-altrow.np-mailrow{grid-template-columns:minmax(0,1fr) auto 24px}.np-mailrow .np-mk{grid-column:1/-1;justify-self:start;grid-row:2}.np-mk{opacity:1}.np-title{font-size:26px}}
 .cp-t tr[data-color] td:first-child{box-shadow:inset 5px 0 0 var(--tag)}
+.cp-view{flex:none}.cp-view button{height:32px;padding:0 9px;display:grid;place-items:center}.cp-view svg{width:17px;height:17px}
+.cp-t.anim tbody>tr{animation:lgIn .32s var(--ease) both;animation-delay:calc(var(--i,0)*22ms)}
+.cp-t.tiles{display:block;min-width:0}.cp-t.tiles thead{display:none}
+.cp-t.tiles tbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding:12px}
+.cp-t.tiles tbody tr{position:relative;display:flex;flex-direction:column;gap:3px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
+.cp-t.tiles tbody tr:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(19,24,38,.10)}.cp-t.tiles tbody tr:hover td,.cp-t.tiles tbody tr.on td{background:none}
+.cp-t.tiles tbody tr.on{border-color:var(--accent);background:var(--accent-soft)}
+.lg-tile[data-color]::before,.cp-t.tiles tr[data-color]::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:5px;border-radius:12px 12px 0 0;background:var(--tag)}
+.cp-t.tiles td{display:block;border:0;padding:0;max-width:none;min-width:0;position:static;background:none}.cp-t.tiles td:empty{display:none}
+.cp-t.tiles td:first-child{position:absolute;top:8px;right:6px;left:auto;width:auto;padding:0;background:none;box-shadow:none!important}
+.cp-t.tiles td:nth-child(2){font-weight:700;font-size:15px;padding-right:96px;white-space:normal;overflow-wrap:anywhere}
+.cp-t.tiles td:nth-child(3){color:var(--ink)}.cp-t.tiles td:nth-child(4){color:var(--muted);font-size:12.5px}
+.cp-t.tiles td:nth-child(5){margin-top:4px;white-space:normal}.cp-t.tiles td:nth-child(6){font-style:italic;font-size:12.5px;margin-top:2px}.cp-t.tiles td:nth-child(n+7){display:none}
+.cp-t.tiles tr.cp-more,.cp-t.tiles tr:has(.cu-empty){grid-column:1/-1;border:0;background:none;box-shadow:none;transform:none}.cp-t.tiles tr.cp-more td:first-child{display:none}
 .cp-main{position:relative}
 #custDlg .cp-main{grid-template-columns:230px minmax(0,1fr)}
 .cp-folders{border-right:1px solid var(--line);overflow:auto;padding:10px 8px 14px;background:var(--raise);min-height:0}
@@ -508,7 +522,7 @@ textarea.np-in{display:block;overflow:hidden}
 .cpd-act{display:grid;gap:6px;font-size:13px}.cpd-act div{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--raise)}.cpd-act small{display:block;color:var(--muted)}
 .cpd-f{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line)}.cpd-f .spacer{flex:1}
 .cp-dupe{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px;background:var(--raise)}.cp-dupe ul{margin:0;padding-left:18px;font-size:13px}
-.cp-grp{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,190px) auto auto auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:6px 0}.cp-grp .in{height:34px}@media (max-width:760px){.cp-grp{grid-template-columns:auto minmax(0,1fr) auto auto}.cp-grp .cp-gpar{grid-column:2/-1;grid-row:2}}
+.cp-grp{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,190px) auto auto auto auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:6px 0}.cp-grp .in{height:34px}@media (max-width:760px){.cp-grp{grid-template-columns:auto minmax(0,1fr) auto auto}.cp-grp .cp-gpar{grid-column:2/-1;grid-row:2}}
 .lg-pal .hex{width:96px;height:30px;font-family:ui-monospace,Menlo,Consolas,monospace;text-transform:uppercase}.lg-pal .hex[aria-invalid=true]{border-color:var(--bad)}
 @media (max-width:760px){.cpd-b{grid-template-columns:1fr}.cp-detail{width:100%}}
 .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
@@ -540,6 +554,19 @@ textarea.np-in{display:block;overflow:hidden}
 .db-ic{width:22px;text-align:center;flex:none}.db-msg{color:var(--muted);padding:18px 10px;margin:0}.db-err{color:var(--bad);padding:18px 10px;margin:0}
 .ask{border:0;border-radius:16px;padding:0;width:min(440px,calc(100vw - 32px));background:var(--panel);color:var(--ink);box-shadow:0 24px 70px rgba(10,14,22,.35)}.ask::backdrop{background:rgba(10,14,22,.35)}
 .ask form{padding:20px 22px 18px;display:grid;gap:10px}.ask h3{margin:0;font-size:18px}.ask p{margin:0;color:var(--muted);font-size:14px;line-height:1.45;white-space:pre-line}
+.ask.wide{width:min(600px,calc(100vw - 32px))}.ask #askB:has(.tc-list){color:var(--ink);white-space:normal;max-height:min(60vh,520px);overflow:auto}
+.tc-list{display:grid;gap:10px}.tc{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:8px;background:var(--raise);animation:fade .25s var(--ease) both}
+.tc-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.tc-h b{font-size:15px}.tc-h small{color:var(--muted);font-size:12.5px}
+.tc-it{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:start;font-size:13.5px;line-height:1.4}.tc-it small{display:block;color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
+.tc-av{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent-fg);font:700 12px/26px var(--ui);text-align:center;font-style:normal;text-transform:uppercase}
+.tc-tip,.tc-more{margin:10px 0 0;color:var(--muted);font-size:13.5px}.cu .last.tm{color:var(--warn);font-weight:600}
+.g-sw{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}.g-sw input{position:absolute;opacity:0;width:1px;height:1px}
+.g-sw i{width:30px;height:18px;border-radius:9px;background:var(--line2);position:relative;transition:background .2s}.g-sw i::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s var(--spring)}
+.g-sw input:checked+i{background:var(--accent)}.g-sw input:checked+i::after{transform:translateX(12px)}.g-sw input:focus-visible+i{outline:2px solid var(--accent);outline-offset:2px}.g-sw input:checked~span{color:var(--accent-fg)}
+.g-lock{width:12px;height:12px;margin-left:5px;vertical-align:-1px;color:var(--muted)}.g-lk{display:inline-grid;font-style:normal}.cpf-go .g-lk .g-lock{margin-left:2px}
+.cpd-b label.g-sw{display:inline-flex;min-width:88px}.cpd-b label.g-new{display:flex;align-items:center;gap:8px;grid-column:1/-1;font-size:13.5px;color:var(--ink)}.g-new input{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.cpf-go svg.g-lock{width:12px;height:12px;fill:none;stroke:var(--muted);stroke-width:2.2}
+.tg-new{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:6px 8px}.tg-new .in{height:34px}.tg-new .check{grid-column:1/-1;font-size:13px}
 .ask-acts{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:8px}.ask .btn.danger.sm{background:var(--bad);color:#fff;border-color:var(--bad)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn svg{width:18px;height:18px}
@@ -578,6 +605,15 @@ textarea.np-in{display:block;overflow:hidden}
 .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;animation:fade .2s var(--ease)}
 .item .grow{display:grid;gap:8px;min-width:0}
 .item .acts{display:flex;flex-direction:column;gap:4px}
+.item.dr{grid-template-columns:auto minmax(0,1fr) auto;padding-left:4px;transition:box-shadow .2s var(--ease),border-color .2s,background .4s}
+.grip{width:26px;align-self:stretch;min-height:34px;border:0;border-radius:7px;background:transparent;color:var(--faint,var(--muted));display:grid;place-items:center;cursor:grab;touch-action:none;padding:0;transition:color .15s,background .15s,transform .15s var(--spring)}
+.grip svg{width:16px;height:16px}.grip:hover,.grip:focus-visible{color:var(--ink);background:var(--raise)}.grip:active{cursor:grabbing;transform:scale(.92)}
+.list.sorting>.item:not(.dragging){transition:transform .22s var(--ease)}
+.item.dragging{position:relative;z-index:5;border-color:var(--accent);box-shadow:0 16px 34px rgba(19,24,38,.18),0 2px 6px rgba(19,24,38,.08);cursor:grabbing}.item.dragging .grip{color:var(--accent-fg);background:var(--accent-soft)}
+.item.settling{transition:transform .22s var(--ease),box-shadow .22s var(--ease)!important}
+.item.dropped{animation:rowDrop .7s var(--ease)!important}
+@keyframes rowDrop{0%{background:var(--accent-soft);border-color:var(--accent)}100%{background:var(--panel)}}
+body.rdragging,body.rdragging *{cursor:grabbing!important;user-select:none!important;-webkit-user-select:none!important}
 .tiny{width:34px;height:34px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer}
 .tiny:hover{background:var(--raise);color:var(--ink);border-color:var(--line)}
 .tiny svg{width:16px;height:16px}
@@ -937,7 +973,7 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 #logDlg{width:min(1180px,calc(100vw - 24px));height:min(860px,calc(100vh - 24px))}
 .lg-wrap{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100%}#logDlg .lg-wrap{grid-template-rows:auto auto auto minmax(0,1fr) auto}
 .lg-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--raise)}
-.lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}#lgStatus,#lgSheet,#lgColor,#lgGroup{flex:0 1 190px;min-width:0}
+.lg-filters .in{height:38px}#lgQ{flex:1 1 240px;min-width:0}
 .lg-date{display:grid;gap:2px;font-size:12px;font-weight:600;color:var(--muted)}.lg-date .in{width:150px}
 .lg-list{overflow:auto;padding:12px 16px;display:grid;gap:8px;align-content:start}
 .lg-row{display:grid;grid-template-columns:auto minmax(150px,1.3fr) minmax(130px,1fr) minmax(120px,.9fr) 160px 150px auto;gap:6px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
@@ -972,6 +1008,56 @@ textarea.in{height:auto;padding:10px 12px;resize:vertical;line-height:1.45;font:
 .sent-btn{position:relative}#sentBtn{display:none!important}.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--warn);color:#fff;font:700 11.5px/20px var(--ui);font-style:normal;padding:0 5px;text-align:center}
 .cu .last{color:var(--accent-fg)}
 @media (max-width:900px){.lg-fups{grid-column:1/-1}.lg-fu{grid-template-columns:auto 1fr auto}.lg-fu>.c:nth-of-type(2){grid-column:2/-1}.lg-row{grid-template-columns:auto 1fr 1fr}.lg-row>*:nth-child(n+4){grid-column:2/-1}.lg-row .note-in{grid-column:2/-1}.lg-date .in{width:140px}}
+/* Sent: scope switch, Sort by, view switch, chips and tiles */
+.lg-bar{position:relative;z-index:6;align-items:center}
+.lg-bar .seg button{height:32px;font-size:13.5px}.lg-view button{padding:0 9px;display:grid;place-items:center}.lg-view svg{width:17px;height:17px}
+.lg-scope button:disabled{opacity:.45;cursor:not-allowed}
+.lg-sortbtn{gap:6px}.lg-sortbtn svg{width:16px;height:16px;transition:transform .3s var(--ease)}.lg-sortbtn[aria-expanded=true] svg{transform:rotate(180deg)}
+.lg-sortbtn b{min-width:18px;height:18px;border-radius:9px;background:var(--accent);color:#fff;font:700 11px/18px var(--ui);padding:0 5px;text-align:center}.lg-sortbtn b:empty{display:none}
+.lg-sortbtn.on,.lg-sortbtn[aria-expanded=true]{border-color:var(--accent);color:var(--accent-fg)}
+.lg-chips{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.lg-chips:empty{display:none}
+.lg-chip{display:inline-flex;align-items:center;gap:2px;height:28px;border-radius:14px;border:1px solid var(--line);background:var(--panel);font-size:12.5px;padding:0 4px 0 10px;color:var(--ink);animation:lgChip .25s var(--spring) both;animation-delay:calc(var(--i,0)*30ms)}
+.lg-chip.so{background:var(--accent-soft);border-color:transparent;color:var(--accent-fg)}
+.lg-chip .lc-main{border:0;background:none;font:inherit;color:inherit;padding:0 4px 0 0;cursor:default;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.lg-chip button.lc-main{cursor:pointer}
+.lc-dir{font-style:normal;display:inline-block;transition:transform .25s var(--ease)}.lc-dir.up{transform:rotate(180deg)}
+.lg-chip .lc-x{width:20px;height:20px;border-radius:50%;border:0;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;opacity:.7;padding:0}.lg-chip .lc-x:hover{opacity:1;background:rgba(0,0,0,.08)}.lg-chip .lc-x svg{width:11px;height:11px}
+.lg-chip:not(.so) .lc-x{margin-left:0}.lg-chip.fl{padding-left:8px}.lc-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.lg-clr{font-size:12.5px}
+@keyframes lgChip{from{opacity:0;transform:scale(.85)}}
+.lg-sortpop{position:absolute;z-index:20;top:calc(100% - 6px);right:16px;width:min(640px,calc(100% - 32px));max-height:min(70vh,620px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(19,24,38,.22),0 2px 6px rgba(19,24,38,.08);padding:14px 16px;display:grid;gap:10px;transform-origin:top right;animation:lpIn .2s var(--ease)}
+.lg-sortpop.out{animation:lpOut .16s ease-in forwards}
+@keyframes lpIn{from{opacity:0;transform:translateY(-6px) scale(.97)}}@keyframes lpOut{to{opacity:0;transform:translateY(-6px) scale(.97)}}
+.lp-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.lp-h b{font-size:14px}.lp-h .note{font-size:12.5px}.lp-h:not(:first-child){border-top:1px solid var(--line);padding-top:12px;margin-top:2px}
+.lp-sorts{display:grid;gap:6px}
+.lp-lvl{display:grid;grid-template-columns:58px minmax(150px,1fr) auto auto;gap:8px;align-items:center;animation:lpLvl .25s var(--ease) both;animation-delay:calc(var(--i)*35ms)}
+@keyframes lpLvl{from{opacity:0;transform:translateX(-8px)}}
+.lp-n{font-size:12.5px;font-weight:600;color:var(--muted)}.lp-lvl .in{height:34px;font-size:13.5px;min-width:0}
+.lp-dir button{height:30px;font-size:12.5px;padding:0 8px;white-space:nowrap}.lp-mv{display:flex;gap:2px}.lp-mv .tiny{width:30px;height:30px}.lp-mv .tiny:disabled{opacity:.3;pointer-events:none}
+.lp-add{justify-self:start}.lp-hd{font-size:13.5px}
+.lp-sec{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px;align-items:start}.lp-l{font-size:12.5px;font-weight:600;color:var(--muted);padding-top:6px}
+.lp-chips{display:flex;flex-wrap:wrap;gap:6px}.lp-sheets{max-height:120px;overflow:auto}
+.lp-chip{height:28px;border-radius:14px;border:1px solid var(--line);background:var(--panel);font:600 12.5px var(--ui);color:var(--ink);padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background .15s,border-color .15s,color .15s,transform .15s var(--spring);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-chip:hover{border-color:var(--line2)}.lp-chip:active{transform:scale(.94)}.lp-chip[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-fg)}
+.lp-chip[aria-pressed=true]::before{content:'✓';font-size:11px}
+.lp-dates{display:flex;gap:8px;flex-wrap:wrap}
+.lp-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:640px){.lg-sortpop{position:fixed;left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:80vh;transform-origin:bottom center}.lp-lvl{grid-template-columns:minmax(0,1fr) auto;}.lp-n{grid-column:1/-1}.lp-dir{grid-column:1/2}.lp-sec{grid-template-columns:minmax(0,1fr)}.lp-l{padding-top:0}.lg-scope{flex:1 1 auto}}
+.by-chip{display:inline-block;font:700 11px var(--ui);color:var(--accent-fg);background:var(--accent-soft);border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:1px}
+/* list entrance: each row slides in, a little after the one before */
+.lg-list.anim>.lg-row,.lg-list.anim>.lg-tile,.lg-list.anim>.lg-gh{animation:lgIn .32s var(--ease) both;animation-delay:calc(var(--i,0)*22ms)}
+@keyframes lgIn{from{opacity:0;transform:translateY(8px)}}
+.lg-list.tiles{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.lg-list.tiles>.lg-gh,.lg-list.tiles>.lg-more,.lg-list.tiles>.lg-empty{grid-column:1/-1}
+.lg-tile{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
+.lg-tile:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(19,24,38,.10)}
+.lg-tile.due{border-color:var(--warn)}.lg-tile.on{border-color:var(--accent);background:var(--accent-soft)}.lg-tile.replied.fresh{border-color:var(--accent)}
+.lt-top{display:flex;align-items:center;gap:8px}.lt-top input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin:0}.lg-tile[data-color] .lg-dot{border:2px solid var(--panel);background:var(--tag);box-shadow:0 0 0 1px var(--tag)}
+.lt-when{margin-left:auto;font-size:12.5px;color:var(--muted)}.lt-top .tiny{width:28px;height:28px;margin-right:-6px}
+.lg-tile .who{border:0;background:none;padding:0;font:700 15px var(--ui);color:var(--ink);cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lg-tile .who:hover{color:var(--accent-fg)}
+.lt-sub{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:-4px}
+.lt-sheet{background:var(--raise);border-radius:8px;padding:7px 9px;min-width:0}.lt-sheet b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lt-sheet small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lt-tags{display:flex;flex-wrap:wrap;gap:4px}.lt-tags:empty{display:none}.lt-tags>*{margin-left:0!important}.lt-tags a.rp-chip{text-decoration:none}
+.lt-note{margin:0;font-size:12.5px;color:var(--ink);font-style:italic;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lg-tile .lg-st{height:32px;font-size:13px;margin-top:auto}
 .prev-h{display:flex;align-items:center;gap:10px}.prev-h h3{margin:0;font-size:15px;white-space:nowrap}.prev-h select{flex:1;min-width:0;height:38px}
 .ml-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}.ml-pane[hidden]{display:none}
 .gr-def{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13.5px}.gr-def label{font-weight:600}.gr-def select{height:34px;width:auto}.gr-def small{flex-basis:100%;color:var(--muted)}
@@ -1246,7 +1332,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
     <div class="ml-top"><h2>Email sell sheet</h2><button class="btn icon sm ghost" id="mlClose" type="button" aria-label="Close">✕</button></div>
     <div class="ml-main">
       <section class="ml-cust" aria-label="Who gets it">
-        <div class="ml-ch"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">1</span>Who gets it</h3><span class="bgrp"><button class="lnk" id="cuAll" type="button">Select shown</button><button class="lnk" id="cuNone" type="button">Clear</button></span></div>
+        <div class="ml-ch"><h3 class="ml-sh"><span class="ml-step" aria-hidden="true">1</span>Who gets it</h3><span class="bgrp"><button class="lnk" id="cuAll" type="button">Select shown</button><button class="lnk" id="cuNone" type="button">Clear</button><button class="lnk" id="cuGrp" type="button" hidden aria-haspopup="menu" title="Put the ticked customers in a group">Group ticked</button></span></div>
         <div class="seg ml-aud" id="mlAud" role="group" aria-label="Send to"><button type="button" data-aud="cust" aria-pressed="true">Customers</button><button type="button" data-aud="lead" aria-pressed="false">Leads</button></div>
         <input class="in" id="cuSearch" type="search" placeholder="Search customers, or pick a group" aria-label="Search customers or pick a group" autocomplete="off"><small class="cu-count" id="cuCount"></small>
         <div class="cu-groups" id="cuGroups"></div>
@@ -1406,6 +1492,7 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
     <div class="lg-filters cp-tools">
       <input class="in" id="cpQ" type="search" placeholder="Search anything, or pick a group…" aria-label="Search customers or pick a group" autocomplete="off">
       <select class="in" id="cpColor" aria-label="Colour"></select>
+      <div class="seg lg-view cp-view" id="cpView" role="group" aria-label="View"><button type="button" data-cpview="list" aria-pressed="true" title="List" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></button><button type="button" data-cpview="tiles" aria-pressed="false" title="Tiles" aria-label="Tile view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button></div>
       <span class="spacer"></span>
       <button class="btn sm ghost" id="cpGroups" type="button" title="Rename, recolour or delete groups">Groups</button>
       <button class="btn sm ghost" id="cpDupes" type="button" hidden></button>
@@ -1428,15 +1515,13 @@ dialog.page[open]>.lg-wrap>:not(.ml-top){animation:pgIn .32s var(--ease) both}
   <div class="lg-wrap">
     <div class="ml-top"><h2>Sent sell sheets</h2><span class="note" id="lgSum"></span><button class="btn icon sm ghost" id="lgClose" type="button" aria-label="Close">✕</button></div>
     <div class="lg-rp" id="lgRp" role="status"></div>
-    <div class="lg-filters">
+    <div class="lg-filters lg-bar">
       <input class="in" id="lgQ" type="search" placeholder="Search customer, email, sell sheet or note" aria-label="Search">
-      <select class="in" id="lgStatus" aria-label="Status"></select>
-      <select class="in" id="lgColor" aria-label="Colour"></select>
-      <select class="in" id="lgSheet" aria-label="Sell sheet"></select>
-      <select class="in" id="lgGroup" aria-label="Group by"><option value="date">Group by date sent</option><option value="sheet">Group by sell sheet</option></select>
-      <label class="lg-date"><span>From</span><input class="in" type="date" id="lgFrom"></label>
-      <label class="lg-date"><span>To</span><input class="in" type="date" id="lgTo"></label>
-      <button class="lnk" type="button" id="lgClear">Clear filters</button>
+      <div class="seg lg-scope" id="lgScope" role="group" aria-label="Whose emails"><button type="button" data-lgscope="me" aria-pressed="true">My emails</button><button type="button" data-lgscope="all" aria-pressed="false">Whole company</button></div>
+      <button class="btn sm lg-sortbtn" id="lgSortBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="lgSortPop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg>Sort by<b id="lgSortN"></b></button>
+      <div class="seg lg-view" id="lgView" role="group" aria-label="View"><button type="button" data-lgview="list" aria-pressed="true" title="List" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></button><button type="button" data-lgview="tiles" aria-pressed="false" title="Tiles" aria-label="Tile view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button></div>
+      <div class="lg-chips" id="lgChips" aria-live="polite"></div>
+      <div class="lg-sortpop" id="lgSortPop" role="dialog" aria-label="Sort and filter" hidden></div>
     </div>
     <div class="lg-list" id="lgList"></div>
     <div class="ml-bot"><span class="note" id="lgNote"></span><div class="bgrp"><button class="btn sm ghost" type="button" id="lgExport">Export CSV</button><button class="btn sm" type="button" id="lgFollow" disabled>Follow up selected</button><button class="btn sm ghost" type="button" id="lgDone">Close</button></div></div>
@@ -1556,6 +1641,7 @@ const I={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
 const phCols=n=>n<=4?Math.max(1,n):Math.ceil(n/Math.ceil(n/4));   // photos per row
+const GRIP='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="5.5" r="1.7"/><circle cx="15" cy="5.5" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18.5" r="1.7"/><circle cx="15" cy="18.5" r="1.7"/></svg>';
 const TABS=[['product','Product'],['photos','Photos'],['colours','Colours'],['details','Details'],['contact','Contact'],['style','Style']];
 const DEF_STYLE={font:'Arial',sz:{title:23,code:22,heading:11.5,thead:10,table:14,label:10.7,value:14,contactH:17,email:13.3},phH:233,lw:166,gap:20,blocks:{header:{w:100,h:0},photos:{w:100},colours:{w:100,h:0},details:{w:100,h:0},footer:{w:100,h:0}}};
 const BLOCK_NAMES={header:'Header',photos:'Photos',colours:'Colours table',details:'Details table',footer:'Footer'};
@@ -1910,13 +1996,13 @@ function renderPanel0(){whereSet('editor',tab);
       :r.auto==='total'&&allTot()?`<label class="field" style="max-width:240px"><span>Total quantity (pcs)</span>${inp('totalQty',S.totalQty||'',{type:'number',mode:'numeric',ph:'e.g. 5000',label:'Total quantity'})}</label>${totalInTable()?'<small class="hint">Off on the sheet while the colours table shows the total; it switches on by itself when the table (or its total) is hidden.</small>':''}`
       :r.auto==='total'?`<p class="note" id="f-total"><b>${calc().T.tot} pcs</b>, worked out from the colours. ${totalInTable()?'Off on the sheet while the colours table shows the total; it switches on by itself when the table (or its total) is hidden.':'On the sheet because the colours table isn\'t showing the total.'}</p>`
       :`<label class="field"><span>Pieces per box</span>${inp('perBox',S.perBox,{type:'number',mode:'numeric',id:'f-perbox'})}</label>`;
-    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove, reorder or hide them. Price, sizes and pieces per box are entered here once and used everywhere on the sheet.</p>
+    h=`<h2>Details</h2><p class="lead">Rows in the Product details table. Add, remove or hide them, and drag the ⠿ handle to reorder. Price, sizes and pieces per box are entered here once and used everywhere on the sheet.</p>
     <div class="seg" role="group" aria-label="Details table on the sheet"><button type="button" data-hidset="details:0" aria-pressed="${!isHid('details')}">Show table</button><button type="button" data-hidset="details:1" aria-pressed="${isHid('details')}">Hide table</button></div>
     <div class="chks"><label class="chk"><input type="checkbox" data-hidc="h:details" ${isHid('h:details')?'':'checked'}><span>Show the heading</span></label></div>
-    <div class="list">${S.rows.map((r,i)=>`<div class="item${r.hidden?' off':''}"${r.auto?` data-auto="${r.auto}"`:''}><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:r.auto?AUTO_LABEL[r.auto]:'Label',label:'Row label'})}
+    <div class="list drows">${S.rows.map((r,i)=>`<div class="item dr${r.hidden?' off':''}" data-rid="${r.id}"${r.auto?` data-auto="${r.auto}"`:''}><button class="grip" type="button" data-rgrip="${r.id}" title="Drag to move this row up or down" aria-label="Move row ${esc(r.label||AUTO_LABEL[r.auto]||'')}: drag, or press the up and down arrow keys">${GRIP}</button><div class="grow">${inp(`row:${r.id}:label`,r.label,{ph:r.auto?AUTO_LABEL[r.auto]:'Label',label:'Row label'})}
       ${r.auto?autoIn(r):inp(`row:${r.id}:value`,r.value,{ph:rowHelp(r)[0],label:'Row value'})}
       ${r.hidden?`<small class="hint">Hidden on the sheet.${r.auto?' It is still used for the colours table.':''}</small>`:rowHelp(r)[1]?`<small class="hint">${rowHelp(r)[1]}</small>`:''}</div>
-      <div class="acts"><button class="tiny" data-rmove="${i}:-1" aria-label="Move up" ${i===0?'disabled':''}>${I.up}</button><button class="tiny" data-rmove="${i}:1" aria-label="Move down" ${i===S.rows.length-1?'disabled':''}>${I.down}</button><button class="tiny" data-rhide="${r.id}" aria-label="${r.hidden?'Show this row on the sheet':'Hide this row on the sheet'}" title="${r.hidden?'Show on the sheet':'Hide on the sheet'}" aria-pressed="${!r.hidden}">${r.hidden?I.eyeoff:I.eye}</button>${r.auto?'':`<button class="tiny x" data-rdel="${r.id}" aria-label="Remove row">${I.x}</button>`}</div></div>`).join('')}</div>
+      <div class="acts"><button class="tiny" data-rhide="${r.id}" aria-label="${r.hidden?'Show this row on the sheet':'Hide this row on the sheet'}" title="${r.hidden?'Show on the sheet':'Hide on the sheet'}" aria-pressed="${!r.hidden}">${r.hidden?I.eyeoff:I.eye}</button>${r.auto?'':`<button class="tiny x" data-rdel="${r.id}" aria-label="Remove row">${I.x}</button>`}</div></div>`).join('')}</div>
     <button class="add" data-radd="1">${I.plus}Add row</button>`;
   }
   else if(tab==='contact'){
@@ -2131,6 +2217,43 @@ function showFbar(el){fbEl=el;const k=el.dataset.sz,cv=$('#canvas'),r=el.getBoun
 ['fbDn','fbUp'].forEach((id,i)=>{const b=$('#'+id);b.addEventListener('pointerdown',e=>e.preventDefault());b.addEventListener('mousedown',e=>e.preventDefault());
   b.addEventListener('click',()=>{if(!fbEl)return;const k=fbEl.dataset.sz;bumpSize(k,i?1:-1);$('#paper .sheet').style.setProperty('--s-'+k,S.style.sz[k]+'px');touch();showFbar(fbEl);renderPanelIf('style');});});
 $('#canvas').addEventListener('scroll',()=>{if(fbEl)showFbar(fbEl);},{passive:true});
+/* Details rows: hold the grip and drag a row up or down (or focus the grip and use the arrow keys).
+   The other rows slide out of the way while you drag; the row settles into its new spot when you let go. */
+let rdrag=null;
+function rowsMoved(from,to,focus){if(from===to||!S.rows[from]||to<0||to>=S.rows.length)return false;const [r]=S.rows.splice(from,1);S.rows.splice(to,0,r);
+  const pn=$('#panel'),y=pn.scrollTop;renderPanel();pn.scrollTop=y;$$('#panel .list.drows>.item').forEach(x=>{x.style.animation='none';});
+  const it=$(`#panel .list.drows>.item[data-rid="${r.id}"]`);if(it){void it.offsetWidth;it.classList.add('dropped');setTimeout(()=>it.classList.remove('dropped'),700);if(focus)it.querySelector('[data-rgrip]')?.focus({preventScroll:true});}
+  renderSheet();touch();return true;}
+function rdragUpdate(){const d=rdrag;if(!d)return;const pn=$('#panel'),dy=d.y-d.y0+(pn.scrollTop-d.sc0);d.dy=dy;
+  const mid=d.rects[d.from].top+d.rects[d.from].height/2+dy;let to=d.from;
+  for(let i=d.from+1;i<d.items.length;i++)if(mid>d.rects[i].top+d.rects[i].height/2)to=i;
+  for(let i=d.from-1;i>=0;i--)if(mid<d.rects[i].top+d.rects[i].height/2)to=i;
+  d.to=to;d.it.style.transform=`translateY(${dy}px) scale(1.02)`;
+  d.items.forEach((x,i)=>{if(i===d.from)return;const s=d.from<i&&i<=to?-d.H:to<=i&&i<d.from?d.H:0;x.style.transform=s?`translateY(${s}px)`:'';});}
+function rdragTick(){const d=rdrag;if(!d)return;const pn=$('#panel'),r=pn.getBoundingClientRect(),edge=48;let v=0;
+  if(d.y<r.top+edge)v=-Math.ceil((r.top+edge-d.y)/4);else if(d.y>r.bottom-edge)v=Math.ceil((d.y-(r.bottom-edge))/4);
+  if(v){const b=pn.scrollTop;pn.scrollTop+=v;if(pn.scrollTop!==b)rdragUpdate();}d.raf=requestAnimationFrame(rdragTick);}
+function rdragEnd(cancel){const d=rdrag;if(!d)return;rdrag=null;cancelAnimationFrame(d.raf);document.body.classList.remove('rdragging');
+  const to=cancel?d.from:d.to,R=d.rects,off=to>d.from?R[to].bottom-R[d.from].bottom:to<d.from?R[to].top-R[d.from].top:0;
+  if(cancel)d.items.forEach((x,i)=>{if(i!==d.from)x.style.transform='';});
+  d.it.classList.add('settling');d.it.style.transform=`translateY(${off}px) scale(1)`;
+  let done=false;const fin=()=>{if(done)return;done=true;d.list.classList.remove('sorting');d.it.classList.remove('dragging','settling');
+    if(to===d.from||!rowsMoved(d.from,to,false)){d.items.forEach(x=>{x.style.transform='';});}};
+  d.it.addEventListener('transitionend',e=>{if(e.propertyName==='transform')fin();},{once:false});setTimeout(fin,280);}
+$('#panel').addEventListener('pointerdown',e=>{const g=e.target.closest('[data-rgrip]');if(!g||e.button>0||rdrag)return;e.preventDefault();
+  const it=g.closest('.item'),list=it.parentElement,items=[...list.children].filter(x=>x.classList.contains('item')),from=items.indexOf(it);if(from<0)return;
+  const rects=items.map(x=>x.getBoundingClientRect()),gap=parseFloat(getComputedStyle(list).rowGap)||8;
+  rdrag={g,it,list,items,rects,from,to:from,y0:e.clientY,y:e.clientY,sc0:$('#panel').scrollTop,H:rects[from].height+gap,dy:0,raf:0};
+  try{g.setPointerCapture(e.pointerId);}catch(_){}items.forEach(x=>{x.style.animation='none';});
+  list.classList.add('sorting');it.classList.add('dragging');document.body.classList.add('rdragging');rdrag.raf=requestAnimationFrame(rdragTick);});
+$('#panel').addEventListener('pointermove',e=>{if(!rdrag)return;if(!rdrag.it.isConnected){rdragEnd(true);return;}rdrag.y=e.clientY;rdragUpdate();});
+$('#panel').addEventListener('pointerup',()=>{if(rdrag)rdragEnd(false);});
+$('#panel').addEventListener('pointercancel',()=>{if(rdrag)rdragEnd(true);});
+$('#panel').addEventListener('keydown',e=>{const g=e.target.closest?.('[data-rgrip]');if(!g)return;
+  if(e.key==='Escape'&&rdrag){e.preventDefault();rdragEnd(true);return;}
+  const i=S.rows.findIndex(r=>r.id===g.dataset.rgrip);if(i<0)return;
+  const to=e.key==='ArrowUp'?i-1:e.key==='ArrowDown'?i+1:e.key==='Home'?0:e.key==='End'?S.rows.length-1:null;if(to==null)return;e.preventDefault();rowsMoved(i,to,true);});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&rdrag){e.preventDefault();e.stopPropagation();rdragEnd(true);}},true);
 function renderPanelIf(t){if(tab===t){const y=$('#panel').scrollTop;renderPanel();$('#panel').scrollTop=y;}}
 
 /* ---------- resize handles on the sheet ---------- */
@@ -2754,6 +2877,11 @@ function gPath(k){const parts=[];for(let q=k,i=0;q&&i<12;q=gParent(q),i++)parts.
 // customers in a folder or any of its subfolders
 const gCount=k=>{const d=gDesc(k);return CU.list.filter(c=>grpsOf(c).some(g=>d.has(gKey(g)))).length;};
 function gMove(k,parent){if(parent&&gDesc(k).has(parent)){toast('A folder can\'t go inside itself or one of its own subfolders.');return false;}const name=allGroups().find(g=>gKey(g.name)===k)?.name||k;setGroupMeta(name,{parent:parent||''});cuSave();return true;}
+const gLocal=n=>!!CU.gmeta[gKey(n)]?.local,gShareOn=()=>teamOn()&&teamShare('cust');
+const LOCK='<svg class="g-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+// sharing a group sends it (and who's in it) to the company; keeping it local takes it off coworkers' copies of your customers
+function setGroupLocal(name,local){const k=gKey(name),now=Date.now();setGroupMeta(name,{local:local?1:0});for(const c of CU.list)if(grpsOf(c).some(g=>gKey(g)===k))c.upd=now;cuSave();
+  toast(local?`“${gName(name)}” is now only on your account`:`“${gName(name)}” is now shared with your company`);if(teamOn())teamSync();}
 const gChip=(g,extra='')=>`<span class="gchip" style="--gc:${gColor(g)}">${esc(gName(g))}${extra}</span>`;
 function setGroupMeta(name,patch){const k=gKey(name);if(!k)return;CU.gmeta[k]={...(CU.gmeta[k]||{}),name:CU.gmeta[k]?.name||String(name).trim(),...patch,upd:Date.now()};if(!patch.del)delete CU.gmeta[k].del;}
 function renameGroup(from,to){to=String(to||'').replace(/\s+/g,' ').trim().slice(0,40);const kf=gKey(from),kt=gKey(to);if(!to||!kf)return;const now=Date.now();
@@ -2801,19 +2929,19 @@ const infoKeysRaw=()=>{const ks=[];for(const c of CU.list)for(const k of Object.
 // search text matches any field; picked groups narrow to customers in any of them
 const custMatch=(c,q,gsel)=>(!gsel.size||(gs=>grpsOf(c).some(g=>gs.has(gKey(g))))(gExpand(gsel)))&&(!q||hay(c).includes(q));
 const cuShown=()=>{const q=CU.q.trim().toLowerCase();return cuSorted().filter(c=>(!CU.nn||noName(c))&&custMatch(c,q,CU.gsel));};
-function renderCust(reset){renderAud();if(MAIL.aud==='lead'){renderLeadPick();return;}const nn=nnCount();if(!nn)CU.nn=false;
+function renderCust(reset){renderAud();if(MAIL.aud==='lead'){cuGrpBtn();renderLeadPick();return;}const nn=nnCount();if(!nn)CU.nn=false;
   $('#cuGroups').innerHTML=groupToggles(CU.gsel)
     +(nn?`<button type="button" class="nn-chip" data-nn aria-pressed="${CU.nn}" title="Show only customers without a name, so you can add one">⚠ No name (${nn})</button>`:'');
   const shown=cuShown();CU.rows=shown;CU.n=Math.min(shown.length,Math.max(60,reset?0:CU.n||0));
   $('#cuCount').textContent=CU.list.length?(shown.length===CU.list.length?`${CU.list.length} customer${CU.list.length>1?'s':''}`:`Showing ${shown.length} of ${CU.list.length}`)+(CU.sel.size?` · ${CU.sel.size} ticked`:''):'';
   const last=new Map();for(const t of threads()){const c=t.root.cust;if(c&&(!last.has(c)||last.get(c).last<t.last))last.set(c,t);}
   const row=(c,n)=>`<div class="cu${CU.sel.has(ck(c.email))?' on':''}"><input type="checkbox" id="cu-${n}" data-cu="${esc(ck(c.email))}" ${CU.sel.has(ck(c.email))?'checked':''}>
-      <label class="who" for="cu-${n}">${tagHex(c.color)?`<i class="cdot" style="background:${tagHex(c.color)}"></i>`:''}<b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${ownTag(c.owner)}${grpsOf(c).map(g=>gChip(g)).join('')}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>`<span class="last" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`)(last.get(ck(c.email))):''}${weekNote([c.email,...altOf(c)])}</small></label>
+      <label class="who" for="cu-${n}">${tagHex(c.color)?`<i class="cdot" style="background:${tagHex(c.color)}"></i>`:''}<b>${esc(c.name||c.company||c.email)}</b>${noName(c)?'<span class="nn">No name</span>':''}${ownTag(c.owner)}${grpsOf(c).map(g=>gChip(g)).join('')}<small>${esc([c.name&&c.company?c.company:'',altOf(c).length?`${altOf(c).length+1} emails`:c.email].filter(Boolean).join(' · '))}${last.has(ck(c.email))?(t=>{const lb=[t.root,...t.fups].pop().by,tm=teamOn()&&lb&&ck(lb)!==meEmail();return`<span class="last${tm?' tm':''}" style="display:block">${t.fups.length?'Followed up':'Sent'} ${esc(ago(t.last))}${tm?' by '+esc(memberName(lb)):''}: ${esc(t.root.sheet)} · ${esc(ST_NAME[t.root.status||'none'])}</span>`;})(last.get(ck(c.email))):''}${weekNote([c.email,...altOf(c)])}</small></label>
       <span class="acts"><button class="tiny" type="button" data-cuedit="${esc(ck(c.email))}" aria-label="${noName(c)?'Add a name for':'Open'} ${esc(c.name||c.company||c.email)}" title="${noName(c)?'Add a name':'Open and edit'}">✎</button><button class="tiny x" type="button" data-cudel="${esc(ck(c.email))}" aria-label="Delete ${esc(c.name||c.email)}">${I.x}</button></span>${altOf(c).length?`<select class="in cu-pick" data-use="${esc(ck(c.email))}" aria-label="Email address to send to for ${esc(c.name||c.company||c.email)}" title="Which address gets the email">${[c.email,...altOf(c)].map(a=>`<option value="${esc(a)}"${ck(a)===ck(useOf(c)[0])?' selected':''}>${esc(a)}</option>`).join('')}</select>`:''}</div>`;CU.row=row;
   const moreBtn=()=>`<button class="btn sm ghost cu-more" type="button" data-cumore>Show ${Math.min(60,shown.length-CU.n)} more</button>`;
   $('#cuList').innerHTML=shown.length?shown.slice(0,CU.n).map(row).join('')+(CU.n<shown.length?moreBtn():'')
     :`<div class="cu-empty">${CU.list.length?'No customers match.':'No customers yet. Add one here, or type email addresses in To. You can import a list on the Customers page.'}</div>`;
-  renderChips();renderSync();cuObserve();}
+  renderChips();renderSync();cuObserve();cuGrpBtn();}
 // the next 100 customers, appended when the list is scrolled near its end (or "Show more" is clicked)
 let cuIO=null;
 function cuObserve(){const mb=$('#cuList .cu-more');if(!mb)return;if(!cuIO&&'IntersectionObserver' in window)cuIO=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))cuMore();},{root:$('#cuList'),rootMargin:'200px'});if(cuIO){cuIO.disconnect();cuIO.observe(mb);}}
@@ -2841,7 +2969,8 @@ $('#cuList').addEventListener('change',e=>{const u=e.target.dataset.use;
   if(u){const c=CU.list.find(c=>ck(c.email)===u);if(!c)return;c.use=[e.target.value];c.upd=Date.now();cuSave();renderChips();return;}
   const ld=e.target.dataset.ld;if(ld){e.target.checked?LSEL.add(ld):LSEL.delete(ld);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderLeadPick();return;}
   const id=e.target.dataset.cu;if(!id)return;e.target.checked?CU.sel.add(id):CU.sel.delete(id);e.target.closest('.cu').classList.toggle('on',e.target.checked);renderCustCount();renderChips();});
-const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.replace(/ · \d+ ticked$/,'')+(CU.sel.size?` · ${CU.sel.size} ticked`:'');};
+const cuGrpBtn=()=>{const b=$('#cuGrp');if(!b)return;const on=MAIL.aud!=='lead'&&CU.sel.size>0;b.hidden=!on;if(on)b.textContent=`Group (${CU.sel.size})`;};
+const renderCustCount=()=>{const t=$('#cuCount');t.textContent=t.textContent.replace(/ · \d+ ticked$/,'')+(CU.sel.size?` · ${CU.sel.size} ticked`:'');cuGrpBtn();};
 $('#cuList').addEventListener('click',e=>{const lo=e.target.closest('[data-ldopen]');if(lo){mailDlg.close();openPerson('lead:'+lo.dataset.ldopen);return;}const ed=e.target.closest('[data-cuedit]'),del=e.target.closest('[data-cudel]');
   if(ed)openCustomer(ed.dataset.cuedit);
   if(del){const c=CU.list.find(c=>ck(c.email)===del.dataset.cudel);if(!c)return;ask({title:`Remove ${c.name||c.email}?`,body:'They\'re removed from your customer list. You can undo it for a few seconds afterwards.',ok:'Remove customer',danger:true}).then(r=>{if(r!=='ok')return;removeCustomers([c]);renderCust();});}});
@@ -3134,7 +3263,7 @@ function mergeCust(a,b){const del=new Map();for(const d of[...(a.deleted||[]),..
     deleted:[...del].filter(([,at])=>at>cutoff).map(([email,at])=>({email,at})),groups:mergeGroupMeta(a.groups,b.groups)};}
 // group colours/names: newest change wins; deleted groups are remembered
 function mergeGroupMeta(...srcs){const gm={};for(const src of srcs)if(src&&typeof src==='object'&&!Array.isArray(src))for(const[k,v]of Object.entries(src)){if(!v||typeof v!=='object')continue;const kk=gKey(k);if(!kk)continue;
-    if(!gm[kk]||(+v.upd||0)>(+gm[kk].upd||0))gm[kk]={name:String(v.name||k).slice(0,40),color:COLOR_HEX[v.color]?v.color:normHex(v.color),upd:+v.upd||0,...(v.del?{del:1}:{}),...(v.parent&&gKey(v.parent)!==kk?{parent:gKey(v.parent).slice(0,40)}:{})};}return gm;}
+    if(!gm[kk]||(+v.upd||0)>(+gm[kk].upd||0))gm[kk]={name:String(v.name||k).slice(0,40),color:COLOR_HEX[v.color]?v.color:normHex(v.color),upd:+v.upd||0,...(v.del?{del:1}:{}),...(v.parent&&gKey(v.parent)!==kk?{parent:gKey(v.parent).slice(0,40)}:{}),...(v.local?{local:1}:{})};}return gm;}
 const SYNC_FILE='sellsheet-data.json';let syncT=0,syncing=null,lastSync=0,syncErr='';
 // when this device last synced with the account (kept across reloads, per account)
 const syncAtKey=()=>{const a=authGet();return a?`ss-synced:${a.prov}:${ck(a.email)}`:'';},syncedAt=()=>{const k=syncAtKey();return k?Math.max(lastSync,+lsGet(k)||0):0;};
@@ -3395,8 +3524,9 @@ async function teamRefresh(){if(!teamKey())return;if(TEAM.loading)return TEAM.lo
 // what changed here since the last push, as items the server stores
 function teamGather(T,sh,first){const out=[],me=meEmail(),now=Date.now(),add=(kind,id,data,upd,del)=>out.push(del?{kind,id,upd:del,del}:{kind,id,data,upd:Math.max(1,+upd||0)}),fresh=u=>first||(+u||0)>T;
   if(sh.cust){cuLoad();if(first){let ch=false;for(const c of CU.list)if(!c.owner){c.owner=me;c.upd=now;ch=true;}if(ch)cuSave();}
-    for(const c of CU.list)if(fresh(c.upd))add('cust',ck(c.email),c,c.upd);for(const d of CU.deleted)if(fresh(d.at))add('cust',d.email,null,0,+d.at||now);
-    for(const[k,v]of Object.entries(CU.gmeta||{}))if(v&&fresh(v.upd))add('grp',k,v,v.upd);}
+    const strip=c=>{const g=grpsOf(c),k=g.filter(x=>!gLocal(x));return k.length===g.length?c:{...c,groups:k};};
+    for(const c of CU.list)if(fresh(c.upd))add('cust',ck(c.email),strip(c),c.upd);for(const d of CU.deleted)if(fresh(d.at))add('cust',d.email,null,0,+d.at||now);
+    for(const[k,v]of Object.entries(CU.gmeta||{}))if(v&&!v.local&&fresh(v.upd))add('grp',k,v,v.upd);}
   if(sh.lead||sh.act||sh.todo){crmLoad();if(first&&sh.lead){let ch=false;for(const l of CRM.leads)if(!l.owner){l.owner=me;touchX(l);ch=true;}if(ch)lsSet(crmKey(),JSON.stringify({leads:CRM.leads,acts:CRM.acts,todos:CRM.todos,deleted:CRM.deleted}));}
     for(const[k,kind]of[['leads','lead'],['acts','act'],['todos','todo']])if(sh[kind]){for(const x of CRM[k])if(fresh(x.upd))add(kind,x.id,x,x.upd);for(const d of CRM.deleted)if(d.k===k&&fresh(d.at))add(kind,d.id,null,0,d.at);}}
   if(sh.log){lgLoad();for(const e of LG.list)if(fresh(e.upd||e.at))add('log',e.id,e,e.upd||e.at);for(const d of LG.deleted)if(fresh(d.at))add('log',d.id,null,0,+d.at||now);}
@@ -3406,7 +3536,9 @@ function teamGather(T,sh,first){const out=[],me=meEmail(),now=Date.now(),add=(ki
 // what came from the company, merged the same way as between your own devices (the newest change of each item wins)
 function teamApply(items){if(!items.length)return false;const of=k=>items.filter(x=>x.kind===k),live=k=>of(k).filter(x=>!x.del&&x.data&&typeof x.data==='object');
   if(of('cust').length||of('grp').length){const raw=lsJ(cuKey()),loc=Array.isArray(raw)?{customers:raw,deleted:[]}:raw||{};
-    const m=mergeCust({customers:loc.customers||[],deleted:loc.deleted||[],groups:loc.groups},{customers:live('cust').map(x=>({...x.data,upd:x.upd})),deleted:of('cust').filter(x=>x.del).map(x=>({email:x.id,at:x.del})),groups:Object.fromEntries(live('grp').map(x=>[x.id,x.data]))});
+    const lg=loc.groups&&typeof loc.groups==='object'?loc.groups:{},isL=g=>!!lg[gKey(g)]?.local,locBy=new Map((loc.customers||[]).map(c=>[ck(c.email),c]));
+    const keepL=d=>{const o=locBy.get(ck(d.email||''));const mine=o?grpsOf(o).filter(isL):[];return mine.length?{...d,groups:grpsOf({groups:[...grpsOf(d),...mine]})}:d;};
+    const m=mergeCust({customers:loc.customers||[],deleted:loc.deleted||[],groups:loc.groups},{customers:live('cust').map(x=>({...keepL(x.data),upd:x.upd})),deleted:of('cust').filter(x=>x.del).map(x=>({email:x.id,at:x.del})),groups:Object.fromEntries(live('grp').filter(x=>!lg[gKey(x.id)]?.local).map(x=>[x.id,x.data]))});
     lsSet(cuKey(),JSON.stringify(m));const sel=CU.sel;cuLoad();CU.sel=new Set([...sel].filter(k=>CU.list.some(c=>ck(c.email)===k)));}
   if(of('lead').length||of('act').length||of('todo').length){const d=[];for(const[kind,k]of[['lead','leads'],['act','acts'],['todo','todos']])for(const x of of(kind))if(x.del)d.push({id:x.id,at:x.del,k});
     const m=mergeCRM(lsJ(crmKey()),{leads:live('lead').map(x=>x.data),acts:live('act').map(x=>x.data),todos:live('todo').map(x=>x.data),deleted:d});lsSet(crmKey(),JSON.stringify(m));crmLoad();}
@@ -3445,16 +3577,28 @@ async function setOwner(w,to,ask1){const i=whoInfo(w),x=i?.lead||i?.cust;if(!x)r
   x.owner=to;if(i.lead){touchX(x);crmSave();}else{x.upd=Date.now();cuSave();}toast(to?`${memberName(to)==='You'?'You are':memberName(to)+' is'} now the owner`:'Owner removed');teamSync();return true;}
 const ownTag=o=>teamOn()&&o&&ck(o)!==meEmail()?`<span class="own-tag" title="Owner">${esc(memberName(o))}</span>`:'';
 /* before sending: anyone a teammate owns, or has emailed or called lately */
-function teamClashes(plan){if(!teamOn())return[];const me=meEmail(),cut=Date.now()-14*864e5,out=[];
-  for(const m of plan){const p=m.person;if(!p)continue;const em=ck(p.email);
+function teamClashes(plan){if(!teamOn())return[];const me=meEmail(),cut=Date.now()-30*864e5,out=[],TH=threads();
+  const theirs=e=>e.by&&ck(e.by)!==me,day=t=>DTF_DAY.format(new Date(t));
+  for(const m of plan){const p=m.person;if(!p)continue;const em=ck(p.email),to=new Set([em,...(m.to||[]).map(ck)]);
     const l=p.lead?leadById(p.lead):leadByEmail(em),c=CU.list.find(c=>[c.email,...altOf(c)].some(a=>ck(a)===em)),o=ck((p.lead?l?.owner:c?.owner||l?.owner)||'');
-    const why=[];if(o&&o!==me)why.push(`${memberName(o)}'s ${p.lead||!c?'lead':'customer'}`);
-    const sent=LG.list.filter(e=>e.by&&ck(e.by)!==me&&e.at>cut&&[e.email,...(e.emails||[])].some(a=>ck(a)===em)).sort((a,b)=>b.at-a.at)[0];if(sent)why.push(`${memberName(sent.by)} emailed them ${ago(sent.at)}`);
-    const ws=new Set([l&&'lead:'+l.id,c&&'cust:'+ck(c.email)].filter(Boolean)),call=CRM.acts.filter(a=>ws.has(a.who)&&a.by&&ck(a.by)!==me&&a.at>cut&&a.type!=='note').sort((a,b)=>b.at-a.at)[0];
-    if(call&&!sent)why.push(`${memberName(call.by)} ${ACT_VERB[call.type].toLowerCase()} them ${ago(call.at)}`);
-    if(why.length)out.push({m,name:p.name||p.company||p.email,why:why.join(', ')});}
+    const why=[],items=[];if(o&&o!==me){why.push(`${memberName(o)}'s ${p.lead||!c?'lead':'customer'}`);items.push({who:o,txt:`Owner: <b>${esc(memberName(o))}</b> · this is their ${p.lead||!c?'lead':'customer'}`});}
+    // every thread a teammate is part of with this person in the last 30 days: what was sent, when, and where it stands
+    const ths=TH.filter(t=>t.last>cut&&[t.root,...t.fups].some(theirs)&&[t.root,...t.fups].some(e=>[e.email,...(e.emails||[])].some(a=>to.has(ck(a))))).sort((x,y)=>y.last-x.last);
+    for(const t of ths.slice(0,3)){const all=[t.root,...t.fups],e=all.filter(theirs).pop(),r=t.root;
+      if(!why.some(w=>w.includes('emailed')))why.push(`${memberName(e.by)} emailed them ${ago(e.at)}`);
+      items.push({who:e.by,txt:`<b>${esc(memberName(e.by))}</b> emailed them <b>${esc(ago(e.at))}</b> (${esc(day(e.at))}${all.length>1?` · ${all.length} emails in all`:''})`,
+        sub:[`“${esc(e.subj||r.subj||r.sheet)}”${(e.subj||r.subj)&&r.sheet&&!r.plain?' · '+esc(r.sheet):''}`,`Response: <b>${esc(ST_NAME[r.status||'none'])}</b>${r.reply?` · they replied ${esc(ago(r.reply.at))}${r.reply.snip?`: “${esc(r.reply.snip.slice(0,90))}”`:''}`:''}`,
+          r.follow?`Follow-up planned ${esc(DTF_DAY.format(new Date(r.follow+'T12:00')))}`:'',r.note?`Note: ${esc(r.note.slice(0,140))}`:''].filter(Boolean)});}
+    if(ths.length>3)items.push({txt:`…and ${ths.length-3} more from teammates in the last 30 days`});
+    const ws=new Set([l&&'lead:'+l.id,c&&'cust:'+ck(c.email)].filter(Boolean));
+    for(const a of CRM.acts.filter(a=>ws.has(a.who)&&a.by&&ck(a.by)!==me&&a.at>cut).sort((x,y)=>y.at-x.at).slice(0,2)){
+      if(a.type!=='note'&&!ths.length&&!why.some(w=>w.includes(' them ')))why.push(`${memberName(a.by)} ${ACT_VERB[a.type].toLowerCase()} them ${ago(a.at)}`);
+      items.push({who:a.by,txt:`<b>${esc(memberName(a.by))}</b> · ${esc(ACT_VERB[a.type]||'Logged')}${a.type==='note'?'':' them'} ${esc(ago(a.at))}`,sub:a.note?[esc(a.note.slice(0,140))]:[]});}
+    if(why.length)out.push({m,name:p.name||p.company||p.email,email:p.email,why:why.join(', '),items});}
   return out;}
-
+// the warning itself: one card per person, with what the teammate sent and where it stands
+const clashHTML=cl=>`<div class="tc-list">${cl.slice(0,6).map(c=>`<div class="tc"><div class="tc-h"><b>${esc(c.name)}</b>${c.email&&c.email!==c.name?`<small>${esc(c.email)}</small>`:''}</div>
+  ${c.items.map(it=>`<div class="tc-it">${it.who?`<i class="tc-av" aria-hidden="true">${esc((memberName(it.who)||'?')[0])}</i>`:'<i></i>'}<div><span>${it.txt}</span>${(it.sub||[]).map(x=>`<small>${x}</small>`).join('')}</div></div>`).join('')}</div>`).join('')}${cl.length>6?`<p class="tc-more">and ${cl.length-6} more</p>`:''}</div><p class="tc-tip">Check with them first so the customer doesn't get two emails.</p>`;
 /* Settings → Company */
 function teamSettingsHTML(row,card){const a=authGet(),me=meEmail();
   let h=`<h3>Company</h3><p class="st-lead">Work as a team: share customers, leads and history with your coworkers, so two people don't email the same customer.</p>`;
@@ -3588,30 +3732,86 @@ document.addEventListener('click',e=>{const x=e.target.closest('[data-tddel],[da
   if(d.tdwho){if(d.tdwho.startsWith('grp:')){const k=whoId(d.tdwho);if(plDlg.open)plDlg.close();if(homeDlg.open)homeDlg.close();openCP();CP.gsel=new Set([k]);renderCP(true);return;}openPerson(d.tdwho);return;}
   const t=CRM.todos.find(y=>y.id===d.tddel);if(!t)return;crmDel('todos',t.id);crmSave();
   toast('To-do deleted',6000,{label:'Undo',fn:()=>{CRM.deleted=CRM.deleted.filter(z=>z.id!==t.id);touchX(t);CRM.todos.push(t);crmSave();}});});
-const lgF={q:'',status:'',sheet:'',from:'',to:'',color:''};
-const lgGroupBy=()=>lsGet('ss-lggroup')==='sheet'?'sheet':'date';
-function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to);
-  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!lgF.status||(lgF.status==='follow'?needsFollow(t):lgF.status==='reply'?!!e.reply:(e.status||'none')===lgF.status))
-    &&(!lgF.sheet||(lgF.sheet==='@cur'?e.sheetId===S.id:e.sheetId===lgF.sheet))&&(!lgF.color||(lgF.color==='none'?!tagHex(e.color):e.color===lgF.color||normHex(e.color)===lgF.color))&&all.some(inRange)
-    &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort((a,b)=>b.last-a.last);}
-function renderLog(){whereSet('sent',lgF.status);const all=LG.list,th=threads(),due=th.filter(needsFollow).length,nf=all.length-th.length;
+const lgF={q:'',status:[],sheet:[],from:'',to:'',color:[]};
+// filters are lists (any of them matches); older code and links still set a single value, so read them through lgArr
+const lgArr=v=>Array.isArray(v)?v:(v?[v]:[]);
+/* Sort by: one or more levels ("then by"), each with a direction. The first level also names the headings the list is grouped under. */
+const LG_SORT={sent:['Date first sent','Newest first','Oldest first','desc'],last:['Latest activity','Newest first','Oldest first','desc'],cust:['Customer','A to Z','Z to A','asc'],sheet:['Sell sheet','A to Z','Z to A','asc'],
+  status:['Response','No reply first','Ordered first','asc'],reply:['Replied','Replied first','Not replied first','asc'],follow:['Follow-up date','Soonest first','Latest first','asc'],color:['Colour','In palette order','Reverse order','asc'],sender:['Sent by','A to Z','Z to A','asc']};
+function lgSortGet(){const v=lsJ('ss-lgsort');const ok=Array.isArray(v)?v.filter(x=>x&&LG_SORT[x.k]).map(x=>({k:x.k,d:x.d==='asc'?'asc':'desc'})):[];
+  if(ok.length)return ok.filter((x,i)=>ok.findIndex(y=>y.k===x.k)===i);return lsGet('ss-lggroup')==='sheet'?[{k:'sheet',d:'asc'},{k:'sent',d:'desc'}]:[{k:'sent',d:'desc'}];}
+const lgSortSet=v=>lsSet('ss-lgsort',JSON.stringify(v));
+const lgHeads=()=>lsGet('ss-lghead')!=='0';
+const lgViewNow=()=>lsGet('ss-lgview')==='tiles'?'tiles':'list';
+// My emails (the default) / Whole company. Without a company everything here is yours, so the switch stays on "My emails".
+const lgScope=()=>teamOn()&&lsGet('ss-lgscope')==='all'?'all':'me';
+const lgMine=t=>{const me=meEmail();return[t.root,...t.fups].some(e=>!e.by||!me||ck(e.by)===me);};
+const lgSender=t=>{const e=t.root;return e.by?memberName(e.by):'You';};
+const lgName=t=>{const e=t.root;return String(e.name||e.company||e.email||'').trim();};
+const ST_ORDER=Object.fromEntries(STATUSES.map(([v],i)=>[v,i]));
+const lgColorRank=e=>{const c=e.color;if(!tagHex(c))return null;const i=COLORS.findIndex(x=>x[0]===c);return i>=0?String(i).padStart(3,'0'):'900'+normHex(c);};
+// the value each sort level compares (null sorts last either way), and the heading it groups under
+const LG_VAL={sent:t=>t.root.at,last:t=>t.last,cust:t=>lgName(t).toLowerCase()||null,sheet:t=>String(t.root.sheet||'').toLowerCase()||null,status:t=>ST_ORDER[t.root.status||'none']??0,
+  reply:t=>t.root.reply?0:1,follow:t=>t.root.follow||null,color:t=>lgColorRank(t.root),sender:t=>lgSender(t).toLowerCase()};
+const lgDay=ts=>{const d=ago(ts);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+DTF_LONG.format(ts);};
+const LG_HEAD={sent:t=>[dayStr(t.root.at),lgDay(t.root.at)],last:t=>[dayStr(t.last),lgDay(t.last)],cust:t=>{const c=(lgName(t)[0]||'#').toUpperCase();return[c,/[A-Z]/.test(c)?c:'#'];},
+  sheet:t=>[t.root.sheetId,t.root.sheet],status:t=>[t.root.status||'none',ST_NAME[t.root.status||'none']],reply:t=>t.root.reply?['y','Replied']:['n','No reply yet'],
+  follow:t=>t.root.follow?[t.root.follow,'Follow up by '+DTF_DAY.format(new Date(t.root.follow+'T12:00'))]:['','No follow-up date'],color:t=>tagHex(t.root.color)?[t.root.color,tagName(t.root.color)]:['','No colour'],sender:t=>[lgSender(t),lgSender(t)]};
+function lgCmp(sort){return(a,b)=>{for(const{k,d}of sort){const x=LG_VAL[k](a),y=LG_VAL[k](b);if(x===y)continue;if(x==null)return 1;if(y==null)return -1;
+    const r=typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),undefined,{numeric:true});if(r)return d==='asc'?r:-r;}return b.last-a.last;};}
+function lgShown(){const q=lgF.q.trim().toLowerCase(),inRange=e=>(!lgF.from||dayStr(e.at)>=lgF.from)&&(!lgF.to||dayStr(e.at)<=lgF.to),sts=lgArr(lgF.status),shs=lgArr(lgF.sheet),cls=lgArr(lgF.color),mine=lgScope()==='me';
+  return threads().filter(t=>{const e=t.root,all=[e,...t.fups];return(!mine||lgMine(t))&&(!sts.length||sts.some(s=>s==='follow'?needsFollow(t):s==='reply'?!!e.reply:(e.status||'none')===s))
+    &&(!shs.length||shs.some(s=>s==='@cur'?e.sheetId===S.id:e.sheetId===s))&&(!cls.length||cls.some(c=>c==='none'?!tagHex(e.color):e.color===c||normHex(e.color)===c))&&all.some(inRange)
+    &&(!q||all.some(x=>[x.name,x.company,x.email,...x.emails,x.sheet,x.note,ST_NAME[x.status]].some(v=>String(v||'').toLowerCase().includes(q))));}).sort(lgCmp(lgSortGet()));}
+const lgStName=s=>s==='follow'?'⚑ Needs follow-up':s==='reply'?'↩ Has a reply':ST_NAME[s]||s;
+const lgSheetName=id=>id==='@cur'?'This sell sheet':(LG.list.find(e=>e.sheetId===id)||{}).sheet||'Sell sheet';
+const lgFilterN=()=>lgArr(lgF.status).length+lgArr(lgF.sheet).length+lgArr(lgF.color).length+(lgF.from?1:0)+(lgF.to?1:0);
+// the bar under the search: each sort level and filter as a chip you can remove
+function renderLgChips(){const so=lgSortGet(),x='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const sc=so.map((s,i)=>`<span class="lg-chip so" style="--i:${i}"><button type="button" class="lc-main" data-lgflip="${i}" title="Click to reverse">${i?'then ':''}<b>${esc(LG_SORT[s.k][0])}</b> · ${esc(LG_SORT[s.k][s.d===LG_SORT[s.k][3]?1:2])}<i class="lc-dir${s.d==='asc'?' up':''}">↓</i></button>${so.length>1?`<button type="button" class="lc-x" data-lgsortdel="${i}" aria-label="Remove sort: ${esc(LG_SORT[s.k][0])}">${x}</button>`:''}</span>`).join('');
+  const fc=[...lgArr(lgF.status).map(v=>['status',v,lgStName(v)]),...lgArr(lgF.color).map(v=>['color',v,v==='none'?'No colour':tagName(v)]),...lgArr(lgF.sheet).map(v=>['sheet',v,lgSheetName(v)]),
+    ...(lgF.from?[['from','','From '+DTF_DAY.format(new Date(lgF.from+'T12:00'))]]:[]),...(lgF.to?[['to','','To '+DTF_DAY.format(new Date(lgF.to+'T12:00'))]]:[])]
+    .map(([k,v,n],i)=>`<span class="lg-chip fl" style="--i:${so.length+i}">${k==='color'&&v!=='none'?`<i class="lc-dot" style="background:${tagHex(v)}"></i>`:''}<span class="lc-main">${esc(n)}</span><button type="button" class="lc-x" data-lgfdel="${k}" data-v="${esc(v)}" aria-label="Remove filter: ${esc(n)}">${x}</button></span>`).join('');
+  $('#lgChips').innerHTML=sc+fc+(fc?'<button class="lnk lg-clr" type="button" data-lgclear>Clear filters</button>':'');
+  const n=lgFilterN();$('#lgSortN').textContent=so.length+n>1?String(so.length+n):'';$('#lgSortBtn').classList.toggle('on',n>0||so.length>1);}
+// the Sort by pop-up: sort levels on top, "Show only" filters below
+function renderLgPop(){const pop=$('#lgSortPop');if(pop.hidden)return;const so=lgSortGet(),used=new Set(so.map(s=>s.k)),free=Object.keys(LG_SORT).filter(k=>!used.has(k)&&(k!=='sender'||teamOn()));
+  const sts=lgArr(lgF.status),cls=lgArr(lgF.color),shs=lgArr(lgF.sheet),all=LG.list,sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
+  const cus=[...new Set(all.map(e=>normHex(e.color)).filter(Boolean))].sort(),ch=(k,v,on,n,extra='')=>`<button type="button" class="lp-chip" data-lgf="${k}" data-v="${esc(v)}" aria-pressed="${on}"${extra}>${n}</button>`;
+  pop.innerHTML=`<div class="lp-h"><b>Sort by</b><span class="note">Add more to break ties: “then by”.</span></div>
+    <div class="lp-sorts">${so.map((s,i)=>`<div class="lp-lvl" style="--i:${i}"><span class="lp-n">${i?'Then by':'Sort by'}</span>
+      <select class="in" data-lgsk="${i}" aria-label="${i?'Then by':'Sort by'}">${Object.entries(LG_SORT).filter(([k])=>k===s.k||!used.has(k)).filter(([k])=>k!=='sender'||teamOn()||k===s.k).map(([k,v])=>`<option value="${k}"${k===s.k?' selected':''}>${esc(v[0])}</option>`).join('')}</select>
+      <div class="seg lp-dir" role="group" aria-label="Direction">${['asc','desc'].map(d=>{const def=LG_SORT[s.k][3];return`<button type="button" data-lgsd="${i}:${d}" aria-pressed="${s.d===d}">${esc(LG_SORT[s.k][d===def?1:2])}</button>`;}).join('')}</div>
+      <span class="lp-mv"><button class="tiny" type="button" data-lgsm="${i}:-1" aria-label="Move up" ${i?'':'disabled'}>${I.up}</button><button class="tiny x" type="button" data-lgsortdel="${i}" aria-label="Remove" ${so.length>1?'':'disabled'}>${I.x}</button></span></div>`).join('')}</div>
+    ${free.length?`<button class="add lp-add" type="button" data-lgsadd>${I.plus}Add another sort</button>`:''}
+    <label class="check lp-hd"><input type="checkbox" data-lghead ${lgHeads()?'checked':''}>Group under headings for “${esc(LG_SORT[so[0].k][0])}”</label>
+    <div class="lp-h"><b>Show only</b><span class="note">Pick any number. Nothing picked shows everything.</span></div>
+    <div class="lp-sec"><span class="lp-l">Status</span><div class="lp-chips">${[['follow','⚑ Needs follow-up'],['reply','↩ Has a reply'],...STATUSES].map(([v,n])=>ch('status',v,sts.includes(v),esc(n))).join('')}</div></div>
+    <div class="lp-sec"><span class="lp-l">Colour</span><div class="lp-chips">${[...COLORS.map(c=>c[0]),...cus].map(v=>ch('color',v,cls.includes(v),`<i class="lc-dot" style="background:${tagHex(v)}"></i>${esc(tagName(v))}`)).join('')}${ch('color','none',cls.includes('none'),'No colour')}</div></div>
+    <div class="lp-sec"><span class="lp-l">Sell sheet</span><div class="lp-chips lp-sheets">${ch('sheet','@cur',shs.includes('@cur'),'This sell sheet ('+esc(sheetName(S))+')')}${sheetsSeen.map(([id,n])=>ch('sheet',id,shs.includes(id),esc(n))).join('')}</div></div>
+    <div class="lp-sec"><span class="lp-l">Date sent</span><div class="lp-dates"><label class="lg-date"><span>From</span><input class="in" type="date" data-lgdate="from" value="${esc(lgF.from)}"></label><label class="lg-date"><span>To</span><input class="in" type="date" data-lgdate="to" value="${esc(lgF.to)}"></label></div></div>
+    <div class="lp-foot"><button class="lnk" type="button" data-lgreset>Reset sort and filters</button><button class="btn sm primary" type="button" data-lgpopdone>Done</button></div>`;}
+function lgPopOpen(on){const pop=$('#lgSortPop'),b=$('#lgSortBtn');if(on===undefined)on=pop.hidden;if(!on&&pop.hidden)return;b.setAttribute('aria-expanded',String(on));
+  if(on){pop.hidden=false;pop.classList.remove('out');renderLgPop();pop.querySelector('select,button')?.focus({preventScroll:true});}
+  else{pop.classList.add('out');setTimeout(()=>{if(pop.classList.contains('out')){pop.hidden=true;pop.classList.remove('out');}},160);}}
+// redraw after a sort, filter or view change: the list animates in again
+function lgRe(){LG.keepN=0;LG.anim=true;renderLog();renderLgPop();}
+function renderLog(){whereSet('sent',lgArr(lgF.status));const scope=lgScope(),mineOnly=scope==='me',th0=threads(),th=mineOnly?th0.filter(lgMine):th0,ids=new Set(th.flatMap(t=>[t.root.id,...t.fups.map(f=>f.id)])),all=LG.list.filter(e=>ids.has(e.id)),due=th.filter(needsFollow).length,nf=all.length-th.length;
   $('#lgSum').textContent=all.length?`${th.length} sent${nf?` · ${nf} follow-up${nf>1?'s':''}`:''} · ${due} need${due===1?'s':''} follow-up`:'';
-  const sheetsSeen=[...new Map(all.slice().reverse().map(e=>[e.sheetId,e.sheet])).entries()];
-  $('#lgStatus').innerHTML=`<option value="">All statuses</option><option value="follow">⚑ Needs follow-up</option><option value="reply">↩ Has a reply</option>${STATUSES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}`;$('#lgStatus').value=lgF.status;
-  const cus=[...new Set(LG.list.map(e=>normHex(e.color)).filter(Boolean))].sort();
-  $('#lgColor').innerHTML=`<option value="">All colours</option>${[...COLORS.map(c=>c[0]),...cus].map(v=>`<option value="${esc(v)}" style="color:${tagHex(v)}">● ${esc(tagName(v))}</option>`).join('')}<option value="none">No colour</option>`;$('#lgColor').value=[...$('#lgColor').options].some(o=>o.value===lgF.color)?lgF.color:'';
-  $('#lgSheet').innerHTML=`<option value="">All sell sheets</option><option value="@cur">This sell sheet (${esc(sheetName(S))})</option>${sheetsSeen.map(([id,n])=>`<option value="${esc(id)}">${esc(n)}</option>`).join('')}`;$('#lgSheet').value=lgF.sheet;$('#lgGroup').value=lgGroupBy();
+  const tm=teamOn();$$('#lgScope [data-lgscope]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.lgscope===scope));if(b.dataset.lgscope==='all'){b.disabled=!tm;b.title=tm?'Every email sent by anyone in your company':'Join or start a company (Settings → Company) to see your coworkers\' emails here';}});
+  $('#lgScope').dataset.on=scope;
+  const view=lgViewNow();$$('#lgView [data-lgview]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lgview===view)));$('#lgView').dataset.on=view;
+  renderLgChips();
   const shown=lgShown(),shownIds=new Set(shown.map(t=>t.root.id));LG.sel=new Set([...LG.sel].filter(id=>shownIds.has(id)));
   const sentAs=e=>e.plain?'Email only (no sell sheet)':e.ext?'Sent from Gmail (outside this site)':`${esc(HOW_NAME[e.how]||'')}${e.files.length?' · '+e.files.map(f=>f.toUpperCase()).join(', '):''}`;
-  // one listing per customer, under a heading per day (when first sent) or per sell sheet
-  const by=lgGroupBy(),groups=new Map();
-  const dk=new Map(by==='date'?shown.map(t=>[t,dayStr(t.root.at)]):[]);
-  for(const t of by==='date'?shown.slice().sort((a,b)=>(dk.get(a)<dk.get(b)?1:dk.get(a)>dk.get(b)?-1:0)||b.last-a.last):shown){const k=by==='date'?dk.get(t):t.root.sheetId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}
-  const dayName=t=>{const d=ago(t);return(d==='today'?'Today · ':d==='yesterday'?'Yesterday · ':'')+DTF_LONG.format(t);};
-  const head=ts=>`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(by==='date'?dayName(ts[0].root.at):ts[0].root.sheet)}</b><span>${ts.length} customer${ts.length>1?'s':''}${by==='sheet'?` · last sent ${esc(ago(Math.max(...ts.map(t=>t.last))))}`:''}</span></div>`;
+  const byChip=t=>scope==='all'&&t.root.by&&ck(t.root.by)!==meEmail()?`<span class="by-chip" title="Sent by ${esc(t.root.by)}">${esc(memberName(t.root.by))}</span>`:'';
+  // one listing per customer, under a heading for the first sort level (a day, a sell sheet, a status…)
+  const so=lgSortGet(),hk=LG_HEAD[so[0].k],groups=[];
+  if(lgHeads()){let cur=null;for(const t of shown){const[k,label]=hk(t);if(!cur||cur.k!==k){cur={k,label,ts:[]};groups.push(cur);}cur.ts.push(t);}}else if(shown.length)groups.push({k:'',label:'',ts:shown});
+  const head=g=>g.label===''&&!lgHeads()?'':`<div class="lg-gh" role="heading" aria-level="3"><b>${esc(g.label||'—')}</b><span>${g.ts.length} customer${g.ts.length>1?'s':''}${so[0].k==='sheet'?` · last sent ${esc(ago(Math.max(...g.ts.map(t=>t.last))))}`:''}</span></div>`;
   LG.row=t=>{const e=t.root,d=needsFollow(t),rp=e.reply,fresh=rp&&LG.fresh.has(e.id);return`<div class="lg-row${d?' due':''}${rp?' replied':''}${fresh?' fresh':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
       <span class="lg-pick"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button></span>
-      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${d?`<span class="flag" title="${e.follow?'No reply by the follow-up date':'No reply after '+FD()+' days'}">${e.follow?'No reply by '+esc(DTF_DAY.format(new Date(e.follow+'T12:00'))):'Follow up'}</span>`:''}${rp?`<span class="rp-chip${fresh?' new':''}" title="Reply found in Gmail">${fresh?'New reply':'Replied'} ${esc(ago(rp.at))}</span>`:''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small>${rp?`<span class="rp-line" title="${esc(rp.snip)}">↩ ${esc(rp.subj||'(no subject)')}${rp.snip?' · '+esc(rp.snip):''}</span><span class="rp-line"><a href="${esc(gmailLink(rp.thread,e.from))}" target="_blank" rel="noopener">Open in Gmail ↗</a>${rp.at<t.last?' <small style="display:inline">(before your latest follow-up)</small>':''}</span>`:''}</div>
+      <div class="c"><button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>${byChip(t)}${d?`<span class="flag" title="${e.follow?'No reply by the follow-up date':'No reply after '+FD()+' days'}">${e.follow?'No reply by '+esc(DTF_DAY.format(new Date(e.follow+'T12:00'))):'Follow up'}</span>`:''}${rp?`<span class="rp-chip${fresh?' new':''}" title="Reply found in Gmail">${fresh?'New reply':'Replied'} ${esc(ago(rp.at))}</span>`:''}<small>${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small>${rp?`<span class="rp-line" title="${esc(rp.snip)}">↩ ${esc(rp.subj||'(no subject)')}${rp.snip?' · '+esc(rp.snip):''}</span><span class="rp-line"><a href="${esc(gmailLink(rp.thread,e.from))}" target="_blank" rel="noopener">Open in Gmail ↗</a>${rp.at<t.last?' <small style="display:inline">(before your latest follow-up)</small>':''}</span>`:''}</div>
       <div class="c">${esc(e.sheet)}<small>${sentAs(e)}</small></div>
       <div class="c">${esc(fmtWhen(e.at))}<small>${esc(ago(e.at))}${e.from?' · from '+esc(e.from):''}</small></div>
       <select class="in lg-st" data-lst data-s="${e.status||'none'}" aria-label="Response">${STATUSES.map(([v,n])=>`<option value="${v}"${(e.status||'none')===v?' selected':''}>${n}</option>`).join('')}</select>
@@ -3620,29 +3820,61 @@ function renderLog(){whereSet('sent',lgF.status);const all=LG.list,th=threads(),
       <input class="in note-in" type="text" data-lnote value="${esc(e.note)}" placeholder="Add a note, e.g. wants 20 boxes of Navy" aria-label="Note">
       ${t.fups.length?`<div class="lg-fups">${t.fups.map((f,n)=>`<div class="lg-fu" data-id="${esc(f.id)}"><span class="fu-tag">Follow-up${t.fups.length>1?' '+(n+1):''}</span>
         <div class="c">${esc(fmtWhen(f.at))}<small>${esc(ago(f.at))}${f.from?' · from '+esc(f.from):''}</small></div><div class="c">${sentAs(f)||'&nbsp;'}<small>${esc((f.emails.length?f.emails:[f.email]).join(', '))}</small></div>
-        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;};LG.head=head;
-  LG.items=[];for(const ts of groups.values()){LG.items.push({h:ts});for(const t of ts)LG.items.push({t});}
+        <button class="tiny x" type="button" data-ldel aria-label="Delete this follow-up">${I.x}</button></div>`).join('')}</div>`:''}</div>`;};
+  // the same send as a tile: who, which sell sheet, when, and how they responded
+  LG.tile=t=>{const e=t.root,d=needsFollow(t),rp=e.reply,fresh=rp&&LG.fresh.has(e.id);return`<div class="lg-tile${d?' due':''}${rp?' replied':''}${fresh?' fresh':''}${LG.sel.has(e.id)?' on':''}" data-id="${esc(e.id)}"${tagHex(e.color)?` style="--tag:${tagHex(e.color)}" data-color="${esc(e.color)}"`:''}>
+      <div class="lt-top"><input type="checkbox" data-lsel ${LG.sel.has(e.id)?'checked':''} aria-label="Select"><button class="lg-dot" type="button" data-lcolor title="Colour: ${esc(tagName(e.color)||'none')}" aria-label="Colour code this email"></button><span class="lt-when" title="${esc(fmtWhen(e.at))}">${esc(ago(e.at))}</span><button class="tiny x" type="button" data-ldel aria-label="Delete this entry${t.fups.length?' and its follow-ups':''}">${I.x}</button></div>
+      <button class="who" type="button" data-lwho title="Show everything sent to this customer">${esc(e.name||e.company||e.email||'(Cc/Bcc only)')}</button>
+      <small class="lt-sub">${esc([e.name&&e.company?e.company:'',(e.emails.length?e.emails:[e.email]).join(', ')].filter(Boolean).join(' · '))}</small>
+      <div class="lt-sheet"><b>${esc(e.sheet)}</b><small>${sentAs(e)}${t.fups.length?` · ${t.fups.length} follow-up${t.fups.length>1?'s':''}`:''}</small></div>
+      <div class="lt-tags">${byChip(t)}${d?`<span class="flag">${e.follow?'No reply by '+esc(DTF_DAY.format(new Date(e.follow+'T12:00'))):'Follow up'}</span>`:''}${rp?`<a class="rp-chip${fresh?' new':''}" href="${esc(gmailLink(rp.thread,e.from))}" target="_blank" rel="noopener" title="${esc((rp.subj||'')+(rp.snip?' · '+rp.snip:''))}">${fresh?'New reply':'Replied'} ${esc(ago(rp.at))} ↗</a>`:''}</div>
+      ${e.note?`<p class="lt-note" title="${esc(e.note)}">${esc(e.note)}</p>`:''}
+      <select class="in lg-st" data-lst data-s="${e.status||'none'}" aria-label="Response">${STATUSES.map(([v,n])=>`<option value="${v}"${(e.status||'none')===v?' selected':''}>${n}</option>`).join('')}</select></div>`;};
+  LG.head=head;LG.item=view==='tiles'?LG.tile:LG.row;
+  LG.items=[];for(const g of groups){if(lgHeads())LG.items.push({h:g});for(const t of g.ts)LG.items.push({t});}
   LG.n=Math.min(LG.items.length,Math.max(40,LG.keepN||0));
-  $('#lgList').innerHTML=shown.length?LG.items.slice(0,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join('')+(LG.n<LG.items.length?lgMoreRow():'')
-    :`<div class="lg-empty">${all.length?'Nothing matches these filters.':'Nothing sent yet. Every sell sheet you email from here is listed automatically, with the date, who it went to and how they responded.'}</div>`;
+  const list=$('#lgList');list.classList.toggle('tiles',view==='tiles');
+  list.innerHTML=shown.length?LG.items.slice(0,LG.n).map(it=>it.h?LG.head(it.h):LG.item(it.t)).join('')+(LG.n<LG.items.length?lgMoreRow():'')
+    :`<div class="lg-empty">${all.length?'Nothing matches these filters.':mineOnly&&th0.length?'You haven\'t sent anything yet. Switch to “Whole company” to see what your coworkers have sent.':'Nothing sent yet. Every sell sheet you email from here is listed automatically, with the date, who it went to and how they responded.'}</div>`;
+  list.classList.remove('anim');if(LG.anim){LG.anim=false;[...list.children].slice(0,16).forEach((x,i)=>x.style.setProperty('--i',i));void list.offsetWidth;list.classList.add('anim');}
   $('#lgFollow').disabled=!LG.sel.size;$('#lgFollow').textContent=LG.sel.size?`Follow up selected (${LG.sel.size})`:'Follow up selected';lgObserve();
   const a=authGet();$('#lgNote').innerHTML=a?`Synced to <b>${esc(a.email||'your account')}</b>.`:'Saved in this browser. Sign in (optional) to keep it on every device.';renderBadge();}
 const lgMoreRow=()=>`<div class="lg-more"><button class="btn sm ghost" type="button" data-lgmore>Show more (${LG.items.length-LG.n} left)</button></div>`;
 let lgIO=null;
 function lgObserve(){const mr=$('#lgList .lg-more');if(!mr)return;if(!lgIO&&'IntersectionObserver' in window)lgIO=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))lgMore();},{root:$('#lgList'),rootMargin:'300px'});if(lgIO){lgIO.disconnect();lgIO.observe(mr);}}
 function lgMore(){const a=LG.n,mr=$('#lgList .lg-more');if(!mr||a>=LG.items.length)return;LG.n=Math.min(LG.items.length,a+40);LG.keepN=LG.n;
-  mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.row(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
+  mr.insertAdjacentHTML('beforebegin',LG.items.slice(a,LG.n).map(it=>it.h?LG.head(it.h):LG.item(it.t)).join(''));if(LG.n>=LG.items.length){lgIO?.disconnect();mr.remove();}else{mr.outerHTML=lgMoreRow();lgObserve();}}
 $('#lgList').addEventListener('click',e=>{if(e.target.closest('[data-lgmore]'))lgMore();});
-function openLog(){if(PG.boot&&!logDlg.open){const v=whereGet().sent;if(typeof v==='string')lgF.status=v;}pageShown('sent');LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
+function openLog(){if(PG.boot&&!logDlg.open){const v=whereGet().sent;if(typeof v==='string'||Array.isArray(v))lgF.status=lgArr(v).map(String);}pageShown('sent');LG.keepN=0;lgLoad();LG.fresh=new Set(threads().filter(t=>t.root.reply&&!t.root.reply.seen).map(t=>t.root.id));
   if(LG.fresh.size){for(const t of threads())if(LG.fresh.has(t.root.id)){t.root.reply.seen=true;t.root.upd=Date.now();}lgSave();}
-  if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;$('#lgFrom').value=lgF.from;$('#lgTo').value=lgF.to;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
+  if(Date.now()-RP.last>2*60e3)checkReplies();renderRP();if(authGet())syncNow().then(()=>{if(logDlg.open){lgLoad();renderLog();}});$('#lgQ').value=lgF.q;LG.anim=true;renderLog();if(!logDlg.open)logDlg.showModal();renderRP();}
 $('#sentBtn').onclick=()=>{if(document.activeElement?.dataset?.edit)document.activeElement.blur();openLog();};
 $('#lgClose').onclick=$('#lgDone').onclick=()=>logDlg.close();
 logDlg.addEventListener('close',()=>{LG.fresh.clear();});
 let lgQt=0;$('#lgQ').addEventListener('input',e=>{lgF.q=e.target.value;LG.keepN=0;clearTimeout(lgQt);lgQt=setTimeout(()=>{renderLog();$('#lgQ').focus();},90);});
-for(const[id,k]of[['lgStatus','status'],['lgColor','color'],['lgSheet','sheet'],['lgFrom','from'],['lgTo','to']])$('#'+id).addEventListener('change',e=>{lgF[k]=e.target.value;LG.keepN=0;renderLog();});
-$('#lgGroup').addEventListener('change',e=>{lsSet('ss-lggroup',e.target.value);LG.keepN=0;renderLog();});
-$('#lgClear').onclick=()=>{LG.keepN=0;Object.assign(lgF,{q:'',status:'',sheet:'',from:'',to:'',color:''});$('#lgQ').value='';$('#lgFrom').value='';$('#lgTo').value='';renderLog();};
+// Sort by, the scope switch, the view switch and the filter chips
+$('#lgSortBtn').onclick=e=>{e.stopPropagation();lgPopOpen();};
+logDlg.addEventListener('click',e=>{const t=e.target,pop=$('#lgSortPop');
+  if(!pop.hidden&&!t.closest('#lgSortPop,#lgSortBtn')&&t.isConnected){lgPopOpen(false);}
+  const sc=t.closest('[data-lgscope]');if(sc){if(sc.disabled)return;lsSet('ss-lgscope',sc.dataset.lgscope);LG.sel.clear();lgRe();return;}
+  const vw=t.closest('[data-lgview]');if(vw){if(lgViewNow()===vw.dataset.lgview)return;lsSet('ss-lgview',vw.dataset.lgview);lgRe();return;}
+  const so=lgSortGet();
+  const fl=t.closest('[data-lgflip]');if(fl){const s=so[+fl.dataset.lgflip];if(s){s.d=s.d==='asc'?'desc':'asc';lgSortSet(so);lgRe();}return;}
+  const sd=t.closest('[data-lgsortdel]');if(sd){if(so.length>1){so.splice(+sd.dataset.lgsortdel,1);lgSortSet(so);lgRe();}return;}
+  const dir=t.closest('[data-lgsd]');if(dir){const[i,d]=dir.dataset.lgsd.split(':');if(so[+i]&&so[+i].d!==d){so[+i].d=d;lgSortSet(so);lgRe();}return;}
+  const mv=t.closest('[data-lgsm]');if(mv){const[i,dd]=mv.dataset.lgsm.split(':').map(Number),j=i+dd;if(so[j]){[so[i],so[j]]=[so[j],so[i]];lgSortSet(so);lgRe();}return;}
+  if(t.closest('[data-lgsadd]')){const used=new Set(so.map(s=>s.k)),k=Object.keys(LG_SORT).find(k=>!used.has(k)&&(k!=='sender'||teamOn()));if(k){so.push({k,d:LG_SORT[k][3]});lgSortSet(so);lgRe();$$('#lgSortPop [data-lgsk]').pop()?.focus();}return;}
+  const f=t.closest('[data-lgf]');if(f){const k=f.dataset.lgf,v=f.dataset.v,cur=lgArr(lgF[k]);lgF[k]=cur.includes(v)?cur.filter(x=>x!==v):[...cur,v];lgRe();return;}
+  const fd=t.closest('[data-lgfdel]');if(fd){const k=fd.dataset.lgfdel;if(k==='from'||k==='to')lgF[k]='';else lgF[k]=lgArr(lgF[k]).filter(x=>x!==fd.dataset.v);lgRe();return;}
+  if(t.closest('[data-lgclear]')){Object.assign(lgF,{status:[],sheet:[],from:'',to:'',color:[]});lgRe();return;}
+  if(t.closest('[data-lgreset]')){Object.assign(lgF,{status:[],sheet:[],from:'',to:'',color:[]});lgSortSet([{k:'sent',d:'desc'}]);lsSet('ss-lghead','1');lgRe();return;}
+  if(t.closest('[data-lgpopdone]')){lgPopOpen(false);$('#lgSortBtn').focus();}});
+$('#lgSortPop').addEventListener('change',e=>{const t=e.target,so=lgSortGet();
+  if(t.dataset.lgsk!==undefined){const s=so[+t.dataset.lgsk];if(s){s.k=t.value;s.d=LG_SORT[t.value][3];lgSortSet(so);lgRe();}return;}
+  if(t.dataset.lghead!==undefined){lsSet('ss-lghead',t.checked?'1':'0');lgRe();return;}
+  if(t.dataset.lgdate){lgF[t.dataset.lgdate]=t.value;lgRe();}});
+logDlg.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#lgSortPop').hidden){e.preventDefault();e.stopPropagation();lgPopOpen(false);$('#lgSortBtn').focus();}},true);
+logDlg.addEventListener('close',()=>{const p=$('#lgSortPop');p.hidden=true;p.classList.toggle('out',false);$('#lgSortBtn').setAttribute('aria-expanded','false');});
 let lgSure={};
 // colour palette for one email (stored on the original; follow-ups share it)
 function openPalette(btn,en){let pal=$('#lgPal');if(!pal){pal=document.createElement('div');pal.id='lgPal';pal.className='lg-pal';pal.setAttribute('role','group');pal.setAttribute('aria-label','Colour');logDlg.appendChild(pal);}
@@ -4079,7 +4311,7 @@ $('#mlSend').onclick=async()=>{if(sending)return;const p=MAIL.prov;mlStatus('');
       ok:'Send anyway',alt:plan.length>td.length?(td.length>1?'Skip them':'Skip them, send the rest'):'',cancel:'Don\'t send'});
     if(!r)return;if(r==='alt'){const skip=new Set(td);plan=plan.filter(m=>!skip.has(m));toast(`Skipped ${td.length} already emailed today`);}}}
   if(teamOn()&&!teamOk){$('#mlSend').disabled=true;mlStatus('Checking with your company…');await Promise.race([teamSync(),new Promise(r=>setTimeout(r,6000))]);$('#mlSend').disabled=false;mlStatus('');
-    const cl=teamClashes(plan);if(cl.length){const r=await ask({title:cl.length>1?`${cl.length} of these are a teammate's`:'A teammate has this one',body:cl.slice(0,8).map(c=>`${c.name}: ${c.why}`).join('\n')+(cl.length>8?`\nand ${cl.length-8} more`:'')+'\n\nCheck with them first so they don\'t get two emails.',ok:'Send anyway',alt:plan.length>cl.length?'Skip those':'',cancel:'Don\'t send'});
+    const cl=teamClashes(plan);if(cl.length){const r=await ask({title:cl.length>1?`A teammate is already working with ${cl.length} of these`:`A teammate is already working with ${cl[0].name}`,html:clashHTML(cl),wide:true,ok:'Send anyway',alt:plan.length>cl.length?'Skip those':'',cancel:'Don\'t send'});
       if(!r)return;if(r==='alt'){const skip=new Set(cl.map(c=>c.m));plan=plan.filter(m=>!skip.has(m));toast(`Skipped ${cl.length}`);}}}
   sending=true;stopReq=false;$('#mlSend').disabled=true;$('#mlCancel').textContent='Stop sending';
   const fr=p==='google'?curFrom():null,fk=fr&&fr.key!=='google'?fr.key:p;
@@ -5355,7 +5587,9 @@ function cpObserve(){const mr=$('#cpTable .cp-more');if(!mr)return;if(!cpIO&&'In
 function cpMore(){const rows=CP.rows||[],a=CP.n,mr=$('#cpTable .cp-more');if(!mr||a>=rows.length)return;CP.n=Math.min(rows.length,a+CP_STEP);
   mr.insertAdjacentHTML('beforebegin',rows.slice(a,CP.n).map(cpRow).join(''));if(CP.n>=rows.length){cpIO?.disconnect();mr.remove();}else{mr.outerHTML=cpMoreRow();cpObserve();}}
 // keep=true: redraw the same number of rows (after an edit); false: start from the top (the filter changed)
+const cpViewNow=()=>lsGet('ss-cpview')==='tiles'?'tiles':'list';
 function renderCPTable(keep){const ks=infoKeys().filter(k=>k!==OTHER.name&&k!==OTHER.company),shown=cpShown();CP.ks=ks;CP.rows=shown;CP.n=Math.min(shown.length,Math.max(CP_STEP,keep?CP.n||0:0));const tb=$('#cpTable');
+  const vw=cpViewNow();tb.classList.toggle('tiles',vw==='tiles');$$('#cpView [data-cpview]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cpview===vw)));
   if(!CU.list.length){tb.innerHTML='<tbody><tr><td class="cu-empty" style="white-space:normal">No customers yet. Click <b>Import</b> to bring in an Excel or CSV list, or <b>＋ New customer</b>.</td></tr></tbody>';return;}
   tb.innerHTML=`<thead><tr><th><input type="checkbox" data-cpall aria-label="Tick all shown"></th><th>Name</th><th>Company</th><th>Email</th><th>Groups</th><th>My note</th>${ks.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
     <tbody>${shown.slice(0,CP.n).map(cpRow).join('')}${shown.length?'':`<tr><td></td><td colspan="${5+ks.length}" class="cu-empty">No customers match.</td></tr>`}${CP.n<shown.length?cpMoreRow():''}</tbody>`;
@@ -5379,11 +5613,14 @@ function renderCP(reset){cpWhere();const nn=nnCount();if(!nn)CP.nn=false;const k
   $('#cpChips').innerHTML=(nn?`<button type="button" class="nn-chip" data-cpnn aria-pressed="${CP.nn}" title="Show only customers without a name">⚠ No name (${nn})</button>`:'');
   $('#cpDupes').hidden=!dupes.length;$('#cpDupes').textContent=`⚠ ${dupes.length} possible duplicate${dupes.length>1?'s':''}`;
   renderCPTable(!reset);renderCPFoot();renderCPDetail();}
+// Customers: list or tiles. Switching plays the rows in again.
+$('#cpView').addEventListener('click',e=>{const b=e.target.closest('[data-cpview]');if(!b||cpViewNow()===b.dataset.cpview)return;lsSet('ss-cpview',b.dataset.cpview);renderCPTable(true);
+  const tb=$('#cpTable');tb.classList.remove('anim');[...tb.querySelectorAll('tbody>tr')].slice(0,16).forEach((r,i)=>r.style.setProperty('--i',i));void tb.offsetWidth;tb.classList.add('anim');setTimeout(()=>tb.classList.remove('anim'),900);});
 const G_OPEN=new Set((()=>{try{return JSON.parse(lsGet('ss-gopen')||'[]');}catch(_){return[];}})());
 const FOLDER_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.4l2 2.2h8.6A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>';
 function renderFolders(){const el=$('#cpFolders');if(!el)return;const sel=CP.gsel.size===1?[...CP.gsel][0]:'',{roots}=gTree();
   const row=(nd,d)=>{const open=G_OPEN.has(nd.k),kids=nd.kids.length;return`<div class="cpf-row${sel===nd.k?' on':''}" role="treeitem" aria-level="${d+1}" aria-selected="${sel===nd.k}"${kids?` aria-expanded="${open}"`:''} draggable="true" data-gf="${esc(nd.k)}" style="--d:${d};--gc:${gColor(nd.name)}">
-      <button type="button" class="cpf-car" data-gfopen="${esc(nd.k)}" ${kids?'':'disabled'} aria-label="${open?'Close':'Open'} ${esc(nd.name)}">${kids?'▸':''}</button><button type="button" class="cpf-go" data-gfgo="${esc(nd.k)}" title="${esc(gPath(nd.k))}">${FOLDER_SVG}<span>${esc(nd.name)}</span><small>${gCount(nd.k)}</small></button><button type="button" class="cpf-more" data-gfmore="${esc(nd.k)}" aria-label="More for ${esc(nd.name)}">⋯</button></div>${kids&&open?nd.kids.map(c=>row(c,d+1)).join(''):''}`;};
+      <button type="button" class="cpf-car" data-gfopen="${esc(nd.k)}" ${kids?'':'disabled'} aria-label="${open?'Close':'Open'} ${esc(nd.name)}">${kids?'▸':''}</button><button type="button" class="cpf-go" data-gfgo="${esc(nd.k)}" title="${esc(gPath(nd.k))}">${FOLDER_SVG}<span>${esc(nd.name)}</span>${gShareOn()&&gLocal(nd.name)?`<i class="g-lk" title="Only on your account">${LOCK}</i>`:''}<small>${gCount(nd.k)}</small></button><button type="button" class="cpf-more" data-gfmore="${esc(nd.k)}" aria-label="More for ${esc(nd.name)}">⋯</button></div>${kids&&open?nd.kids.map(c=>row(c,d+1)).join(''):''}`;};
   el.innerHTML=`<div class="cpf-h"><b>Groups</b><button type="button" class="btn icon sm ghost" data-gfnew="" title="New folder" aria-label="New folder">＋</button></div><div role="tree" aria-label="Groups">
     <div class="cpf-row cpf-all${sel?'':' on'}" data-gf="" style="--d:0"><span class="cpf-car"></span><button type="button" class="cpf-go" data-gfgo="">${FOLDER_SVG}<span>All customers</span><small>${CU.list.length}</small></button></div>
     ${roots.map(nd=>row(nd,0)).join('')}</div>${roots.length?'<p class="cpf-tip">Drag a folder onto another to put it inside. Drag customers onto a folder to add them.</p>':'<p class="cpf-tip">Make folders for your groups, with folders inside folders. Click ＋ to start.</p>'}`;}
@@ -5397,9 +5634,9 @@ custDlg.addEventListener('click',e=>{const t=e.target;
   const nw=t.closest('[data-gfnew]');if(nw){gfNew(nw.dataset.gfnew);return;}
   const mo=t.closest('[data-gfmore]');if(mo){const k=mo.dataset.gfmore,name=allGroups().find(g=>gKey(g.name)===k)?.name||k,par=gParent(k),bad=gDesc(k);
     const dests=allGroups().filter(g=>!bad.has(gKey(g.name))&&gKey(g.name)!==par);
-    popMenu(mo,`<span class="menu-h">${esc(name)}</span><button type="button" role="menuitem" data-gfa="sub"><b>New folder inside</b></button><button type="button" role="menuitem" data-gfa="edit"><b>Rename, colour or delete…</b></button>${par?'<button type="button" role="menuitem" data-gfa="top"><b>Move to the top level</b></button>':''}${dests.length?'<span class="menu-h">Move into</span>'+dests.map(g=>`<button type="button" role="menuitem" data-gfa="mv" data-to="${esc(gKey(g.name))}"><b>${esc(gPath(gKey(g.name)))}</b></button>`).join(''):''}`,
+    popMenu(mo,`<span class="menu-h">${esc(name)}</span><button type="button" role="menuitem" data-gfa="sub"><b>New folder inside</b></button><button type="button" role="menuitem" data-gfa="edit"><b>Rename, colour or delete…</b></button>${gShareOn()?(gLocal(name)?'<button type="button" role="menuitem" data-gfa="share"><b>Share with my company</b><small>Coworkers see it and who\'s in it</small></button>':'<button type="button" role="menuitem" data-gfa="local"><b>Keep to myself</b><small>Only on your account</small></button>'):''}${par?'<button type="button" role="menuitem" data-gfa="top"><b>Move to the top level</b></button>':''}${dests.length?'<span class="menu-h">Move into</span>'+dests.map(g=>`<button type="button" role="menuitem" data-gfa="mv" data-to="${esc(gKey(g.name))}"><b>${esc(gPath(gKey(g.name)))}</b></button>`).join(''):''}`,
       (ev,menu)=>{const b=ev.target.closest('[data-gfa]');if(!b)return;menu.classList.add('hide');const a=b.dataset.gfa;
-        if(a==='sub')gfNew(k);else if(a==='edit'){CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';cpSelectRow(null);renderCPDetail();}
+        if(a==='share'||a==='local'){setGroupLocal(name,a==='local');renderCP();if(mailDlg.open)renderCust();}else if(a==='sub')gfNew(k);else if(a==='edit'){CP.mode='groups';CP.open=null;CP.W=null;CP.gdel='';cpSelectRow(null);renderCPDetail();}
         else if(a==='top'){if(gMove(k,'')){renderCP();toast('Moved to the top level');}}else if(a==='mv'){if(gMove(k,b.dataset.to)){G_OPEN.add(b.dataset.to);lsSet('ss-gopen',JSON.stringify([...G_OPEN]));renderCP();toast(`Moved into ${gPath(b.dataset.to)}`);}}});return;}},true);
 // drag a folder onto a folder (or "All customers" for the top level); drag customers onto a folder to add them
 let gfDrag=null;
@@ -5479,14 +5716,15 @@ function dupesHTML(){const ds=findDupes();return`<div class="cpd-h"><h3>Possible
   <div class="cpd-b" style="grid-template-columns:1fr">${ds.length?ds.map((g,i)=>`<div class="cp-dupe"><b>${esc(g[0].name)} · ${esc(g[0].company)}</b><ul>${g.map(c=>`<li>${esc([c.email,...altOf(c)].join(', '))}${Object.keys(infoOf(c)).length?` · ${Object.keys(infoOf(c)).length} details`:''}${grpsOf(c).map(x=>gChip(x)).join('')}</li>`).join('')}</ul><button class="btn sm" type="button" data-cpd="merge" data-i="${i}" style="justify-self:start">Merge into one customer</button></div>`).join(''):'<span class="cpd-hint">No duplicates left.</span>'}</div>
   <div class="cpd-f">${ds.length>1?`<button class="btn sm primary" type="button" data-cpd="mergeall">Merge all ${ds.length}</button>`:''}<span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
 const gFlat=()=>{const out=[],walk=(nds,d)=>{for(const nd of nds){out.push({name:nd.name,n:nd.n,k:nd.k,d});walk(nd.kids,d+1);}};walk(gTree().roots,0);return out;};
+const gSwitch=n=>`<label class="g-sw" title="${gLocal(n)?'Only on your account. Coworkers don\'t see this group.':'Coworkers see this group and who\'s in it.'}"><input type="checkbox" data-gshare="${esc(n)}" ${gLocal(n)?'':'checked'}><i aria-hidden="true"></i><span>${gLocal(n)?'Only me':'Shared'}</span></label>`;
 function groupsHTML(){const gs=gFlat();return`<div class="cpd-h"><h3>Groups<small>Click a colour to change it. Rename by editing the name. Choose “Inside” to put a group in another one, like folders. A customer can be in several groups.</small></h3><button class="btn icon sm ghost" type="button" data-cpd="close" aria-label="Close">✕</button></div>
-  <div class="cpd-b" style="grid-template-columns:1fr"><div>${gs.length?gs.map(g=>`<div class="cp-grp" style="margin-left:${Math.min(g.d,6)*18}px"><button class="cpd-dot on" style="--tag:${gColor(g.name)};width:24px;height:24px" type="button" data-cpd="gcol" data-g="${esc(g.name)}" aria-label="Colour of ${esc(g.name)}"></button><input class="in" data-grename="${esc(g.name)}" value="${esc(g.name)}" aria-label="Group name"><select class="in cp-gpar" data-gparent="${esc(g.k)}" aria-label="Folder ${esc(g.name)} is inside" title="Inside"><option value="">Top level</option>${(bad=>gs.filter(o=>!bad.has(o.k)).map(o=>`<option value="${esc(o.k)}"${gParent(g.k)===o.k?' selected':''}>Inside ${esc(gPath(o.k))}</option>`).join(''))(gDesc(g.k))}</select><small>${g.n} customer${g.n===1?'':'s'}</small><button class="btn sm ghost" type="button" data-cpd="gshow" data-g="${esc(g.name)}">Show</button><button class="btn sm ghost" type="button" data-cpd="gdel" data-g="${esc(g.name)}">${'Delete'}</button></div>`).join(''):'<span class="cpd-hint">No groups yet. Open a customer and add them to a group, or tick customers and use “Add ticked to group…”.</span>'}</div>
-    <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button></div></div>
+  <div class="cpd-b" style="grid-template-columns:1fr"><div>${gs.length?gs.map(g=>`<div class="cp-grp" style="margin-left:${Math.min(g.d,6)*18}px"><button class="cpd-dot on" style="--tag:${gColor(g.name)};width:24px;height:24px" type="button" data-cpd="gcol" data-g="${esc(g.name)}" aria-label="Colour of ${esc(g.name)}"></button><input class="in" data-grename="${esc(g.name)}" value="${esc(g.name)}" aria-label="Group name"><select class="in cp-gpar" data-gparent="${esc(g.k)}" aria-label="Folder ${esc(g.name)} is inside" title="Inside"><option value="">Top level</option>${(bad=>gs.filter(o=>!bad.has(o.k)).map(o=>`<option value="${esc(o.k)}"${gParent(g.k)===o.k?' selected':''}>Inside ${esc(gPath(o.k))}</option>`).join(''))(gDesc(g.k))}</select><small>${g.n} customer${g.n===1?'':'s'}</small>${gShareOn()?gSwitch(g.name):''}<button class="btn sm ghost" type="button" data-cpd="gshow" data-g="${esc(g.name)}">Show</button><button class="btn sm ghost" type="button" data-cpd="gdel" data-g="${esc(g.name)}">${'Delete'}</button></div>`).join(''):'<span class="cpd-hint">No groups yet. Open a customer and add them to a group, or tick customers and use “Add ticked to group…”.</span>'}</div>
+    <div class="cpd-mail" style="grid-template-columns:minmax(0,1fr) auto"><input class="in" id="cpdNewGrp" placeholder="New group name" aria-label="New group name"><button class="btn sm" type="button" data-cpd="gadd">Add group</button>${gShareOn()?'<label class="g-new"><input type="checkbox" id="cpdNewShare" checked>Share this group with my company</label>':''}</div></div>
   <div class="cpd-f"><span class="spacer"></span><button class="btn sm ghost" type="button" data-cpd="close">Close</button></div>`;}
 /* a proper confirm window (instead of "click again"). Resolves 'ok', 'alt' or false (cancelled / Esc). */
 // input:{value,label,placeholder} adds a text box; what was typed is in ask.value afterwards
-function ask({title,body='',ok='OK',danger=false,alt='',cancel='Cancel',input=null}){const d=$('#askDlg');if(d.open)d.close();
-  return new Promise(res=>{$('#askT').textContent=title;$('#askB').textContent=body;$('#askB').hidden=!body;const ai=$('#askI');ai.hidden=!input;ai.value=input?.value||'';ai.placeholder=input?.placeholder||'';ai.setAttribute('aria-label',input?.label||title);
+function ask({title,body='',ok='OK',danger=false,alt='',cancel='Cancel',input=null,html='',wide=false}){const d=$('#askDlg');if(d.open)d.close();d.classList.toggle('wide',!!wide);
+  return new Promise(res=>{$('#askT').textContent=title;if(html)$('#askB').innerHTML=html;else $('#askB').textContent=body;$('#askB').hidden=!body&&!html;const ai=$('#askI');ai.hidden=!input;ai.value=input?.value||'';ai.placeholder=input?.placeholder||'';ai.setAttribute('aria-label',input?.label||title);
     $('#askA').innerHTML=`<button class="btn sm ghost" value="cancel">${esc(cancel)}</button>${alt?`<button class="btn sm" value="alt">${esc(alt)}</button>`:''}<button class="btn sm ${danger?'danger':'primary'}" value="ok">${esc(ok)}</button>`;
     d.onclose=()=>{d.onclose=null;ask.value=$('#askI').value.trim();res(d.returnValue==='ok'?'ok':d.returnValue==='alt'?'alt':false);};d.returnValue='';d.showModal();if(input){ai.focus();ai.select();}else d.querySelector(danger?'[value="cancel"]':'[value="ok"]').focus();});}
 $('#askI').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#askA [value=ok]').click();}});
@@ -5547,7 +5785,8 @@ custDlg.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-cpd]'),
   if(act==='gcol'){const g=a.dataset.g;colorPop(a,CU.gmeta[gKey(g)]?.color||'',v=>{setGroupMeta(g,{color:v||''});cuSave();renderCP();if(mailDlg.open)renderCust();});return;}
   if(act==='gshow'){CP.gsel=new Set([gKey(a.dataset.g)]);closeCPDetail(true);renderCP(true);return;}
   if(act==='gdel'){const g=a.dataset.g;ask({title:`Delete the group “${gName(g)}”?`,body:'The customers in it are kept; they just leave this group. Any folders inside it move up a level.',ok:'Delete group',danger:true}).then(r=>{if(r!=='ok')return;deleteGroup(g);renderCP();if(mailDlg.open)renderCust();toast('Group deleted. The customers are kept.');});return;}
-  if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v});cuSave();renderCP();toast('Group added');}});
+  if(act==='gadd'){const v=$('#cpdNewGrp').value.trim().replace(/\s+/g,' ').slice(0,40);if(!v)return;if(allGroups().some(g=>gKey(g.name)===gKey(v))){toast(`There's already a group called ${v}`);return;}setGroupMeta(v,{name:v,...(gShareOn()&&!$('#cpdNewShare')?.checked?{local:1}:{})});cuSave();renderCP();toast('Group added');}});
+custDlg.addEventListener('change',e=>{const g=e.target.dataset?.gshare;if(g===undefined)return;setGroupLocal(g,!e.target.checked);renderCP();if(mailDlg.open)renderCust();});
 custDlg.addEventListener('submit',e=>{const f=e.target.closest('[data-ppform=log]');if(!f)return;e.preventDefault();crmLoad();saveLogForm(f,'cust:'+CP.open,renderCustHist);});
 custDlg.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||!b.closest('#np-hist'))return;
   if(b.dataset.cpown&&b.dataset.take){if(await setOwner(b.dataset.cpown,meEmail(),true))renderCustHist();return;}
@@ -5570,12 +5809,16 @@ $('#cpImport').onclick=e=>{loadScript('jszip').catch(()=>{});custImportFrom(e.cu
 $('#cpExport').onclick=()=>$('#cuExport').click();
 $('#cpEmail').onclick=()=>{custDlg.close();if(mailDlg.open)renderCust();else openMail();};
 $('#cpTickDel').onclick=()=>{const list=CU.list.filter(c=>CU.sel.has(ck(c.email)));if(!list.length)return;ask({title:`Delete ${list.length} customer${list.length>1?'s':''}?`,body:'You can undo it for a few seconds afterwards.',ok:`Delete ${list.length}`,danger:true}).then(r=>{if(r!=='ok')return;removeCustomers(list);renderCP();});};
-$('#cpTickGrp').onclick=e=>{const btn=e.currentTarget,gs=allGroups();
-  const m=popMenu(btn,`<span class="menu-h">Add ticked customers to</span>${gs.map(g=>`<button type="button" role="menuitem" data-tg="${esc(g.name)}"><b><span class="cdot" style="background:${gColor(g.name)}"></span>${esc(g.name)}</b><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')}<div style="display:flex;gap:6px;padding:6px 8px"><input class="in" id="tgNew" placeholder="New group" style="height:34px;flex:1" aria-label="New group name"><button class="btn sm" type="button" data-tgnew>Add</button></div>`,
-    (ev,menu)=>{const b=ev.target.closest('[data-tg],[data-tgnew]');if(!b)return;const name=b.dataset.tg||$('#tgNew').value.trim().replace(/\s+/g,' ').slice(0,40);if(!name)return;
-      const now=Date.now(),list=CU.list.filter(c=>CU.sel.has(ck(c.email)));for(const c of list){c.groups=grpsOf({groups:[...grpsOf(c),name]});c.upd=now;}if(CU.gmeta[gKey(name)]?.del)setGroupMeta(name,{});
-      cuSave();menu.classList.add('hide');renderCP();if(mailDlg.open)renderCust();toast(`Added ${list.length} customer${list.length>1?'s':''} to ${name}`);});
-  if(m)m.querySelector('#tgNew').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();m.querySelector('[data-tgnew]').click();}});};
+// "Add ticked to group": an existing group, or a new one (shared with the company or kept to yourself)
+function tickGroupMenu(btn,after){const gs=allGroups();
+  const m=popMenu(btn,`<span class="menu-h">Add ${CU.sel.size} ticked customer${CU.sel.size===1?'':'s'} to</span>${gs.map(g=>`<button type="button" role="menuitem" data-tg="${esc(g.name)}"><b><span class="cdot" style="background:${gColor(g.name)}"></span>${esc(g.name)}${gShareOn()&&gLocal(g.name)?LOCK:''}</b><small>${g.n} customer${g.n===1?'':'s'}</small></button>`).join('')}<div class="tg-new"><input class="in" id="tgNew" placeholder="New group" aria-label="New group name"><button class="btn sm" type="button" data-tgnew>Add</button>${gShareOn()?'<label class="check"><input type="checkbox" id="tgShare" checked>Share with my company</label>':''}</div>`,
+    (ev,menu)=>{const b=ev.target.closest('[data-tg],[data-tgnew]');if(!b)return;const name=b.dataset.tg||$('#tgNew').value.trim().replace(/\s+/g,' ').slice(0,40);if(!name){$('#tgNew').focus();return;}
+      const isNew=!b.dataset.tg&&!allGroups().some(g=>gKey(g.name)===gKey(name)),now=Date.now(),list=CU.list.filter(c=>CU.sel.has(ck(c.email)));
+      for(const c of list){c.groups=grpsOf({groups:[...grpsOf(c),name]});c.upd=now;}if(CU.gmeta[gKey(name)]?.del)setGroupMeta(name,{});if(isNew&&gShareOn()&&!$('#tgShare')?.checked)setGroupMeta(name,{name,local:1});
+      cuSave();menu.classList.add('hide');if(custDlg.open)renderCP();if(mailDlg.open)renderCust();toast(`Added ${list.length} customer${list.length>1?'s':''} to ${name}`);after?.();});
+  if(m){const i=m.querySelector('#tgNew');i.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();m.querySelector('[data-tgnew]').click();}});}}
+$('#cpTickGrp').onclick=e=>tickGroupMenu(e.currentTarget);
+$('#cuGrp').onclick=e=>tickGroupMenu(e.currentTarget);
 $('#cpClose').onclick=$('#cpDone').onclick=()=>{if(CP.mode&&!closeCPDetail())return;custDlg.close();};
 
 /* ---------- pages and addresses ----------
@@ -6364,7 +6607,7 @@ function route(){const n=pageNow();PG.inRoute=true;try{if(n){PAGES[n][2]();retur
 window.addEventListener('popstate',route);
 document.body.insertAdjacentHTML('beforeend',TABS_HTML);document.body.classList.add('has-tabs');
 /* phones: filters fold behind a "Filters" button showing how many are set; the search box stays out */
-const FOLDS=[['#logDlg .lg-filters',['#lgStatus','#lgColor','#lgSheet','#lgGroup','.lg-date','#lgClear'],()=>[$('#lgStatus')?.value,$('#lgColor')?.value,$('#lgSheet')?.value,$('#lgFrom')?.value,$('#lgTo')?.value].filter(Boolean).length,'#lgQ'],
+const FOLDS=[
   ['#plBar',['#plDays','#plSheet','#plHot'],()=>[$('#plSheet')?.value,$('#plHot')?.getAttribute('aria-pressed')==='true'?1:'',$('#plDays')&&$('#plDays').value!=='90'?1:''].filter(Boolean).length,'#plQ']];
 const FT_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>';
 const foldCount=(b,count)=>{const n=count();b.querySelector('b').textContent=n||'';b.setAttribute('aria-label',`Filters${n?`, ${n} on`:''}`);};
