@@ -366,6 +366,10 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .ivq-h b{display:block;font:700 14px var(--ui)}.ivq-h small{color:var(--muted);font-size:12.5px}.ivq-h small.iv-oos{color:var(--bad)}
 .ivq .ivs-acts{margin:0}.ivq #ivqN{width:120px}.ivq .ivs-note{flex-basis:100%}
 .ivs-form .in{width:auto;min-width:0}
+.ivs-box{display:grid;gap:10px}.ivs-dir{justify-self:start}
+.ivs-save{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
+.ivs-save [data-ivsave]{min-width:120px}
+.ivq .ivs-dir button{display:inline-block;border-radius:0;padding:0 14px}.ivq .ivs-save .iv-sync{flex-basis:100%}
 .ivs-day{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600}
 .ivs-form .ivs-who{flex:1 1 200px}.ivs-form .ivs-inv{width:140px}
 .ivs-hist .r.void{opacity:.55}.ivs-hist .r.void b,.ivs-hist .r.void .ivs-q{text-decoration:line-through}
@@ -4555,7 +4559,8 @@ function srcMenu(btn,title,onPc,onDrive){const m=$('#srcMenu'),host=btn.closest(
   m.style.position=host===document.body?'fixed':'absolute';m.style.right='auto';m.style.left=Math.max(8,Math.min(r.left-hr.left,hr.width-mw-8))+'px';
   m.style.top=(r.bottom-hr.top+6+mh>hr.height-8?Math.max(8,r.top-hr.top-mh-6):r.bottom-hr.top+6)+'px';
   m.onclick=e=>{const b=e.target.closest('[data-src]');if(!b)return;m.classList.add('hide');(b.dataset.src==='pc'?onPc:onDrive)();};m.querySelector('button').focus();}
-document.addEventListener('pointerdown',e=>{const m=$('#srcMenu');if(!m.classList.contains('hide')&&!e.target.closest('#srcMenu')&&e.target.closest('button')?.id!==m.dataset.for)m.classList.add('hide');},true);
+document.addEventListener('pointerdown',e=>{const m=$('#srcMenu');if(!m.classList.contains('hide')&&!e.target.closest('#srcMenu')&&e.target.closest('button')?.id!==m.dataset.for){
+  if(m.querySelector('.ivq')&&ivsDirty(m)){toast('Not saved yet. Press Save to record it, or Cancel.',4000);m.querySelector('[data-ivsave]')?.focus();return;}m.classList.add('hide');}},true);
 document.addEventListener('keydown',e=>{const m=$('#srcMenu');if(e.key==='Escape'&&!m.classList.contains('hide')){e.preventDefault();e.stopPropagation();m.classList.add('hide');}},true);
 const DRIVE_OPEN={
   sheet:{title:'Open a sell sheet',mimes:['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/msword','application/vnd.google-apps.document'],what:'a PDF, Word or Google Docs file'},
@@ -4914,7 +4919,7 @@ function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;I
   renderInvDetail(!bg&&!IV.add);}
 function renderInvDetail(force){const d=$('#ivDetail');
   // a background refresh mustn't wipe a form being filled in, or a note being typed
-  const sig=IV.add?'add:'+IV.add.mode+':'+(IV.add.key||''):'item:'+IV.open;if(!force&&d.dataset.sig===sig&&!d.hidden&&(IV.add||d.contains(document.activeElement)))return;d.dataset.sig=sig;
+  const sig=IV.add?'add:'+IV.add.mode+':'+(IV.add.key||''):'item:'+IV.open;if(!force&&d.dataset.sig===sig&&!d.hidden&&(IV.add||d.contains(document.activeElement)||ivsDirty(d)))return;d.dataset.sig=sig;
   if(IV.add){d.hidden=false;d.innerHTML=ivAddHTML();return;}const x=IV.items.find(i=>i.key===IV.open);if(!x){d.hidden=true;d.innerHTML='';d.dataset.sig='';return;}d.hidden=false;
   const s=x.sum,full=IV.full.get(x.file+'|'+x.mod),sz=s?.showSizes&&s?.sizes?.length,mv=ivStock(x).io.some(m=>m.c);
   const pv=full||x.thumb||x.photo;
@@ -4945,8 +4950,8 @@ function ivsFields(x,pre){const cols=(x.sum?.colours||[]).filter(c=>c.name),ppb=
       ${ppb?`<select class="in" id="${pre}U" data-ivsf="u" aria-label="Unit"><option value="pcs">pcs</option><option value="boxes">boxes</option></select>`:'<span class="iv-sync">pcs</span>'}
       ${cols.length?`<select class="in" id="${pre}C" data-ivsf="c" aria-label="Colour"><option value="">Whole item</option>${cols.map(c=>`<option value="${esc(c.name)}">${esc(c.name)} (${ivNF.format(ivColLeft(x,c))} left)</option>`).join('')}</select>`:''}
       <label class="ivs-day"><span>Date</span><input class="in" id="${pre}Day" data-ivsf="day" type="date" value="${dayISO()}" aria-label="Date"></label>
-      <input class="in ivs-who" id="${pre}Who" data-ivsf="who" maxlength="120" list="ivWhoList" placeholder="To / from: customer or supplier" aria-label="Customer or supplier" autocomplete="off">
-      <input class="in ivs-inv" id="${pre}Inv" data-ivsf="inv" maxlength="60" placeholder="Invoice / PO #" aria-label="Invoice or PO number" autocomplete="off">
+      <input class="in ivs-who" id="${pre}Who" data-ivsf="who" maxlength="120" list="ivWhoList" placeholder="To: customer" aria-label="Customer or supplier" autocomplete="off">
+      <input class="in ivs-inv" id="${pre}Inv" data-ivsf="inv" maxlength="60" placeholder="Invoice #" aria-label="Invoice or PO number" autocomplete="off">
       <input class="in ivs-note" id="${pre}Note" data-ivsf="note" maxlength="200" placeholder="Note (optional)" aria-label="Note">`;}
 // names offered in the To / from box: your customers, and anyone used before
 function ivWhoList(){let d=$('#ivWhoList');if(!d){d=document.createElement('datalist');d.id='ivWhoList';invDlg.appendChild(d);}
@@ -4962,20 +4967,36 @@ function ivIOAct(x,act,root){const f=k=>root.querySelector(`[data-ivsf="${k}"]`)
   if(f('u')?.value==='boxes')n*=ivPpb(x,col)||1;
   if(act==='out'&&n>left){if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return false;}if(!confirm(`Only ${ivNF.format(left)} pcs${col?' of '+cn:''} left. Take all ${ivNF.format(left)} out?`))return false;n=left;}
   ivRecord(x,act,n,cn,note,false,ex);return true;}
+// the whole in & out form: Out / In, the fields, and Save (nothing is recorded until Save is pressed)
+function ivsFormHTML(x,pre,quick){const st=ivStock(x);
+  return`<div class="ivs-box"><input type="hidden" data-ivsf="d" value="out">
+      <span class="iv-seg ivs-dir" role="group" aria-label="Stock going out or coming in"><button type="button" data-ivsdir="out" aria-pressed="true">− Out</button><button type="button" data-ivsdir="in" aria-pressed="false">＋ In</button></span>
+      <div class="ivs-form">${ivsFields(x,pre)}<button class="btn sm ghost ivs-all" type="button" data-ivsall${st.left?'':' disabled'} title="Fill in everything that's left (of the chosen colour, if one is picked)">All (${ivNF.format(st.left)})</button></div>
+      <div class="ivs-save"><button class="btn primary" type="button" data-ivsave>Save · Out</button>${quick?'<button class="btn ghost" type="button" data-ivscancel>Cancel</button>':''}<span class="iv-sync">Nothing is recorded until you press Save.</span></div></div>`;}
+// something typed that isn't saved yet
+const ivsDirty=root=>[...root.querySelectorAll('[data-ivsf="n"],[data-ivsf="who"],[data-ivsf="inv"],[data-ivsf="note"]')].some(i=>i.value.trim());
+function ivsSetDir(root,d){root.querySelector('[data-ivsf="d"]').value=d;root.querySelectorAll('[data-ivsdir]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ivsdir===d));
+  const w=root.querySelector('[data-ivsf="who"]'),v=root.querySelector('[data-ivsf="inv"]');if(w)w.placeholder=d==='out'?'To: customer':'From: supplier';if(v)v.placeholder=d==='out'?'Invoice #':'PO / ref #';
+  const sb=root.querySelector('[data-ivsave]');if(sb)sb.textContent=d==='out'?'Save · Out':'Save · In';}
+// a click inside the form: 'saved', true (handled) or false (not the form's)
+function ivsClick(t,root,x){const f=k=>root.querySelector(`[data-ivsf="${k}"]`);
+  const dir=t.closest('[data-ivsdir]');if(dir){ivsSetDir(root,dir.dataset.ivsdir);return true;}
+  if(t.closest('[data-ivsall]')){const cn=f('c')?.value||'',col=cn?(x.sum?.colours||[]).find(c=>c.name===cn):null,st=ivStock(x),left=col?Math.min(st.left,ivColLeft(x,col)):st.left;
+    if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return true;}ivsSetDir(root,'out');if(f('u'))f('u').value='pcs';f('n').value=left;if(!f('note').value)f('note').value='All out';f('n').focus();return true;}
+  if(t.closest('[data-ivsave]'))return ivIOAct(x,f('d').value==='in'?'in':'out',root)?'saved':true;
+  return false;}
 // the quick In / Out form on a card or list row of the inventory page
-function ivQuickIO(btn,x){const st=ivStock(x),oos=st.moved&&st.left<=0;ivWhoList();
+function ivQuickIO(btn,x){const st=ivStock(x),oos=st.moved&&st.left<=0,m0=$('#srcMenu');
+  if(!m0.classList.contains('hide')&&m0.dataset.for===btn.id&&m0.querySelector('.ivq')&&ivsDirty(m0)){toast('Not saved yet. Press Save to record it, or Cancel.',4000);return;}ivWhoList();
   const m=popMenu(btn,`<div class="ivq" role="group" aria-label="Stock in and out of ${esc(invTitle(x))}"><div class="ivq-h"><b>${esc(invTitle(x))}</b><small class="${oos?'iv-oos':''}">${oos?'Out of stock':`${ivNF.format(st.left)} pcs left`}</small></div>
-      <div class="ivs-form">${ivsFields(x,'ivq')}</div>
-      <div class="ivs-acts"><button class="btn sm primary" type="button" data-ivq="out">− Out</button><button class="btn sm" type="button" data-ivq="in">＋ In</button><button class="btn sm" type="button" data-ivq="all"${st.left?'':' disabled'} title="Everything left (or everything left of the chosen colour) goes out">All out</button></div></div>`,
-    (e,menu)=>{e.stopPropagation();const b=e.target.closest('[data-ivq]');if(!b)return;if(ivIOAct(x,b.dataset.ivq,menu)){menu.classList.add('hide');renderInv();}});
+      ${ivsFormHTML(x,'ivq',true)}</div>`,
+    (e,menu)=>{e.stopPropagation();if(e.target.closest('[data-ivscancel]')){menu.classList.add('hide');return;}const r=ivsClick(e.target,menu,x);if(r==='saved'){menu.classList.add('hide');renderInv();}});
   if(m){m.dataset.for=btn.id;setTimeout(()=>m.querySelector('[data-ivsf="n"]')?.focus());}}
 // the in & out panel of one product: how many are left, a form for stock going out (all or part) or coming in, and the history
 function ivStockHTML(x){const s=x.sum||{},st=ivStock(x),cols=(s.colours||[]).filter(c=>c.name),ppb=ivPpb(x),oos=st.moved&&st.left<=0,hist=ioSort(st.all);setTimeout(ivWhoList);
   return`<div class="ivd-sec ivd-io"><h4>Stock in &amp; out</h4>
     <div class="ivs-now${oos?' oos':''}"><b>${ivNF.format(st.left)}</b><span>pcs left${ppb&&st.left?` · about ${ivNF.format(Math.floor(st.left/ppb))} box${Math.floor(st.left/ppb)===1?'':'es'}`:''}<small>${st.moved?`${ivNF.format(st.base)} on the sell sheet${st.inn?` · +${ivNF.format(st.inn)} in`:''}${st.out?` · −${ivNF.format(st.out)} out`:''}`:st.base?'As on the sell sheet. Nothing recorded yet.':'The sell sheet has no quantities. Record stock coming in to start.'}</small></span>${oos?'<em class="iv-oos">Out of stock</em>':''}</div>
-    <div class="ivs-form">${ivsFields(x,'ivs')}</div>
-    <div class="ivs-acts"><button class="btn sm primary" type="button" data-ivs="out">− Out</button><button class="btn sm" type="button" data-ivs="in">＋ In</button><button class="btn sm" type="button" data-ivs="all"${st.left?'':' disabled'} title="Everything left (or everything left of the chosen colour) goes out">All out</button>
-      <span class="iv-sync">Type a number for part of it, or All out for everything.</span></div>
+    ${ivsFormHTML(x,'ivs',false)}
     ${hist.length?`<div class="ivs-hist">${hist.map(m=>`<div class="r${m.void?' void':''}"><span class="ivs-q q-${m.d}">${m.d==='out'?'−':'+'}${ivNF.format(m.n)}</span><span><b>${m.d==='out'?'Out':'In'}${m.c?' · '+esc(m.c):''}${m.who?` · ${m.d==='out'?'to':'from'} ${esc(m.who)}`:''}${m.inv?` · #${esc(m.inv)}`:''}</b><small>${esc([m.void?'Undone '+DTF_DAY.format(m.void)+(m.vby?' by '+m.vby:''):'',m.note,m.by?'recorded by '+m.by:''].filter(Boolean).join(' · '))}</small></span><em class="iv-sync" title="Recorded ${esc(DTF_WHEN.format(m.at))}">${esc(ioDayTxt(m))}</em>${m.void?'<span></span>':`<button class="tiny" type="button" data-ivsdel="${esc(m.id)}" aria-label="Undo this entry" title="Undo (it stays in the records, marked undone)">✕</button>`}</div>`).join('')}</div>
       <div class="ivs-acts">${st.moved?'<button class="lnk" type="button" data-ivs="reset">Start over from the sell sheet</button>':''}<button class="lnk" type="button" data-ivrec="${esc(x.key)}">All stock records ›</button></div>`:''}</div>`;}
 /* Stock records: every in & out entry of every product (undone ones too), newest first, with filters and a CSV */
@@ -5059,15 +5080,16 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
   const pvb=t.closest('[data-ivpv]');if(pvb){const im=$('#ivDetail .ivd-pv img');if(im)im.src=pvb.dataset.ivpv==='sheet'?((x=>x&&IV.full.get(x.file+'|'+x.mod))(IV.items.find(i=>i.key===IV.open))||pvb.src):(IV.items.find(i=>i.key===IV.open)?.photo&&pvb.dataset.ivpv==='0'?IV.items.find(i=>i.key===IV.open).photo:pvb.src);return;}
   const iod=t.closest('[data-ivsdel]');if(iod){const x=IV.items.find(i=>i.key===IV.open);if(!x)return;const was=ivOos(x);ivVoid(x,[iod.dataset.ivsdel]);
     toast(was&&!ivOos(x)?`Undone. ${invTitle(x)} is back in stock.`:!was&&ivOos(x)?`Undone. ${invTitle(x)} is now out of stock.`:'Undone');renderInv();return;}
+  const ivf=t.closest('#ivDetail .ivd-io');if(ivf&&!t.closest('[data-ivs],[data-ivsdel],[data-ivrec]')){const x=IV.items.find(i=>i.key===IV.open);if(!x)return;const r=ivsClick(t,ivf,x);if(r==='saved')renderInv();if(r)return;}
   const iob=t.closest('[data-ivs]');if(iob){const x=IV.items.find(i=>i.key===IV.open);if(!x)return;const act=iob.dataset.ivs;
     if(act==='reset'){if(!confirm(`Undo every in & out entry of ${invTitle(x)}? Stock goes back to what the sell sheet says. The entries stay in Stock records, marked undone.`))return;ivVoid(x);toast('Back to the sell sheet\'s quantities');renderInv();return;}
-    if(ivIOAct(x,act,$('#ivDetail')))renderInv();return;}
+    return;}
   const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}
     else if(x&&a.dataset.ivd==='sendnew'){const l=ivSends(x),had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck)));invOpenSheet(x,true,CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m)))).map(c=>ck(c.email)));}
     else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
   const id=t.closest('button')?.id;
   if(id==='ivPick'||id==='ivChange')invPickFolder();else if(id==='ivSync')invSync(true);else if(id==='ivLinkGo')invUseLink($('#ivLink').value);});
-invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivsN'){e.preventDefault();$('#ivDetail [data-ivs="out"]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivqN'){e.preventDefault();$('#srcMenu [data-ivq="out"]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
+invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivsN'){e.preventDefault();$('#ivDetail [data-ivsave]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivqN'){e.preventDefault();$('#srcMenu [data-ivsave]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
   else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv],.iv-card[data-iv]')){e.preventDefault();e.target.click();}});
 // spreadsheet of the inventory
 function invExport(){const q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v)&&!/^-?\d[\d.,]*$/.test(v))v="'"+v;return`"${v.replace(/"/g,'""')}"`;},rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),s=x.sum||{};
