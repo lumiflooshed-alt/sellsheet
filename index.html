@@ -360,6 +360,11 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .ivs-now em{margin-left:auto;font-style:normal;font-size:12px;border:1px solid currentColor;border-radius:6px;padding:2px 7px}
 .ivs-now.oos>b{color:var(--bad)}
 .ivs-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.iv-io{justify-self:start;margin-top:8px;height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);font:600 12.5px var(--ui);cursor:pointer;white-space:nowrap}
+.iv-io:hover{background:var(--raise)}.iv-list .iv-io{margin:0}
+.ivq{display:grid;gap:10px;padding:8px;width:min(340px,calc(100vw - 48px))}
+.ivq-h b{display:block;font:700 14px var(--ui)}.ivq-h small{color:var(--muted);font-size:12.5px}.ivq-h small.iv-oos{color:var(--bad)}
+.ivq .ivs-acts{margin:0}.ivq #ivqN{width:120px}.ivq .ivs-note{flex-basis:100%}
 .ivs-form .in{width:auto;min-width:0}.ivs-form #ivsN{width:130px}.ivs-form .ivs-note{flex:1 1 200px;min-width:0}
 .ivs-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
 .ivs-hist{display:grid;gap:2px;max-height:260px;overflow:auto;margin-top:10px}
@@ -384,7 +389,13 @@ html.dark .wh-wrap{--up:#5c8de3;--beam:#f08a3a;--fill:#2a2017;--fill-line:#6b452
 .ivd-sentsum{font-size:13.5px;color:var(--muted);margin:0 0 8px}.ivd-sentsum b{color:var(--ink)}
 .iv-wrap{grid-template-rows:auto auto minmax(0,1fr)}
 .iv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--raise);font-size:13.5px}.iv-bar:empty{display:none}
-.iv-bar .spacer{flex:1 1 0}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent-fg);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
+.iv-bar .spacer{flex:1 1 0}
+.iv-bartog{height:30px;min-width:30px;padding:0 8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font:600 12.5px var(--ui);cursor:pointer}
+.iv-bartog:hover{color:var(--ink)}.iv-bartog .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.iv-bar.mini{padding:3px 16px;font-size:12.5px}
+.iv-bar.mini>:not(.iv-folder):not(.iv-prog):not(.spacer):not(.iv-bartog){display:none}
+.iv-bar.mini .iv-bartog{height:24px}
+.ivq .btn:not(.primary){border:1px solid var(--line2);display:inline-flex}.iv-folder{display:inline-flex;align-items:center;gap:8px;font-weight:600;min-width:0}.iv-folder svg{width:18px;height:18px;color:var(--accent-fg);flex:none}.iv-folder span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
 .iv-sync{color:var(--muted)}.iv-prog{display:inline-flex;align-items:center;gap:8px;color:var(--muted)}.iv-prog i{display:block;width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.iv-prog i b{display:block;height:100%;background:var(--accent);transition:width .3s}
 .iv-main{position:relative;min-height:0;display:grid}.iv-scroll{overflow:auto;min-height:0;padding:18px 18px 28px}
 .iv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
@@ -4600,7 +4611,7 @@ function ivSends(x){const m=ivSendIndex(),code=nrm(x.sum?.code),title=nrm(invTit
 const ivSendStats=x=>{const l=ivSends(x);return{n:l.length,rep:l.filter(t=>t.root.reply||['replied','interested','ordered'].includes(t.root.status)).length,ord:l.filter(t=>t.root.status==='ordered').length,last:l.length?Math.max(...l.map(t=>t.last)):0,list:l};};
 const IV={folder:(()=>{try{const f=JSON.parse(lsGet('ss-inv-folder')||'null');if(f&&f.id)return f;}catch(_){}const g=SET.inv.folder;return g&&g.id?{id:g.id,name:g.name}:null;})(),ptok:lsGet('ss-inv-ptok')||'',items:[],busy:false,prog:null,err:'',last:+lsGet('ss-inv-sync')||0,
   tree:(()=>{try{return new Map(JSON.parse(lsGet('ss-inv-tree')||'[]'));}catch(_){return new Map();}})(),add:null,
-  q:'',cat:'',type:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',open:null,full:new Map(),status:'active',star:false,sel:new Set()};
+  q:'',cat:'',type:'',sort:lsGet('ss-inv-sort')||'updated',view:lsGet('ss-inv-view')==='list'?'list':'grid',mini:lsGet('ss-inv-bar')==='min',open:null,full:new Map(),status:'active',star:false,sel:new Set()};
 const INV_MIMES={'application/pdf':'PDF','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'Word','application/vnd.google-apps.document':'Doc','image/jpeg':'JPG','image/png':'PNG'};
 const INV_RANK={PDF:0,Word:1,Doc:2,JPG:3,PNG:4};
 let invDbp=null;
@@ -4826,11 +4837,12 @@ function ivCardsHTML(shown){IVF=null;const F=ivFields().filter(f=>f.on),pic=ivOn
     return`<div class="iv-card${IV.open===x.key?' on':''}${on?'':' off'}" role="button" tabindex="0" data-iv="${esc(x.key)}" aria-label="${esc(invTitle(x))}"><input class="iv-selbox" type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}">
       ${ivOnF('star')?`<button class="iv-star${m.star?' on':''}" type="button" data-ivstar="${esc(x.key)}" aria-pressed="${!!m.star}" aria-label="${m.star?'Unstar':'Star'} ${esc(invTitle(x))}" title="${m.star?'Starred: shown first':'Star to show first'}">${m.star?'★':'☆'}</button>`:''}${!on&&ivOnF('status')?(ivOos(x)?'<span class="iv-off oos">Out of stock</span>':'<span class="iv-off">Inactive</span>'):''}
       ${pic?`<div class="iv-img">${invPicHTML(x)}${tag?`<span class="iv-tag">${esc(tag)}</span>`:''}${ivOnF('formats')?`<span class="iv-fmt">${x.files.map(f=>`<span>${esc(f.kind)}</span>`).join('')}</span>`:''}</div>`:''}
-      <div class="iv-info"><h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}${lines.map(f=>ivVal(x,f.k)).join('')}</div></div>`;}).join('')}</div>`;}
+      <div class="iv-info"><h4>${esc(invTitle(x))}</h4>${x.pending?'<span class="iv-sync">Reading…</span>':x.bad?`<span class="iv-bad">${esc(x.bad)}</span>`:''}${lines.map(f=>ivVal(x,f.k)).join('')}${x.pending?'':ivIOBtn(x)}</div></div>`;}).join('')}</div>`;}
+const ivIOBtn=x=>`<button class="iv-io" type="button" id="ivio-${esc(x.key.replace(/[^\w-]/g,'_'))}" data-ivio="${esc(x.key)}" aria-haspopup="true" title="Record stock going out or coming in">In / Out</button>`;
 function ivListHTML(shown){IVF=null;const F=ivFields().filter(f=>f.on&&!['photo','star'].includes(f.k)),pic=ivOnF('photo'),num=new Set(['sent']);
-  return`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th>${pic?'<th></th>':''}<th>Product</th>${F.map(f=>`<th${num.has(f.k)?' class="num"':''}>${esc(f.label)}</th>`).join('')}</tr></thead>
+  return`<table class="iv-list"><thead><tr><th><input type="checkbox" data-ivselall aria-label="Select all shown" ${shown.length&&shown.every(x=>IV.sel.has(x.key))?'checked':''}></th>${pic?'<th></th>':''}<th>Product</th>${F.map(f=>`<th${num.has(f.k)?' class="num"':''}>${esc(f.label)}</th>`).join('')}<th aria-label="In / Out"></th></tr></thead>
     <tbody>${shown.map(x=>{const m=ivm(mk(x));return`<tr data-iv="${esc(x.key)}"${IV.open===x.key?' class="on"':''} tabindex="0"${ivOn(x)?'':' style="opacity:.6"'}><td><input type="checkbox" data-ivsel="${esc(x.key)}" ${IV.sel.has(x.key)?'checked':''} aria-label="Select ${esc(invTitle(x))}"></td>${pic?`<td><div class="th">${invPicHTML(x)}</div></td>`:''}
-      <td><b>${ivOnF('star')&&m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td>${F.map(f=>`<td${num.has(f.k)?' class="num"':''}>${ivVal(x,f.k,1)}</td>`).join('')}</tr>`;}).join('')}</tbody></table>`;}
+      <td><b>${ivOnF('star')&&m.star?'<span style="color:#E8A600">★</span> ':''}${esc(invTitle(x))}</b>${x.bad?`<div class="iv-bad">${esc(x.bad)}</div>`:''}</td>${F.map(f=>`<td${num.has(f.k)?' class="num"':''}>${ivVal(x,f.k,1)}</td>`).join('')}<td>${x.pending?'':ivIOBtn(x)}</td></tr>`;}).join('')}</tbody></table>`;}
 // a status folder in Drive decides; otherwise what was set here
 // out of stock always counts as inactive
 const ivOn=x=>!ivOos(x)&&(x.fst?x.fst==='on':ivm(mk(x)).active!==false);
@@ -4852,6 +4864,9 @@ function renderInv(bg){if(!invDlg.open)return;const F=IV.folder,items=IV.items;I
       :IV.err==='signin'?`<span class="iv-sync">Showing what was read ${IV.last?esc(agoMin(IV.last)):''}. Sign in with Google to refresh.</span><button class="btn sm primary" type="button" id="ivSync">Refresh</button>`
       :IV.err?`<span class="iv-bad">${esc(IV.err)}</span><button class="btn sm" type="button" id="ivSync">Try again</button>`
       :`<span class="iv-sync">Updated ${IV.last?esc(agoMin(IV.last)):'never'}</span><button class="btn sm" type="button" id="ivSync">Refresh</button>`}`:'';
+  // the folder bar can be minimised to a slim strip, and opened again (remembered in this browser)
+  const bar=$('#ivBar');bar.classList.toggle('mini',!!F&&IV.mini);
+  if(F)bar.insertAdjacentHTML('beforeend',`<button class="iv-bartog" type="button" data-ivbar aria-expanded="${!IV.mini}" title="${IV.mini?'Show the folder bar':'Minimise the folder bar'}">${IV.mini?'Show ▾':'<span aria-hidden="true">▴</span><span class="vh">Minimise</span>'}</button>`);
   if(!F){$('#ivBody').innerHTML=`<div class="iv-empty">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>'}
     <h3>Your sell sheets, as an inventory</h3><p>Choose the Google Drive folder where you keep your sell sheets. Every sheet in it (PDF, Word, Google Docs or image) is shown here as a product with its picture, item code, price, colours and quantities. Subfolders become categories.</p>
     <button class="btn primary" type="button" id="ivPick">Choose folder in Google Drive</button><small class="iv-sync">or paste the folder's link</small>
@@ -4906,14 +4921,31 @@ function renderInvDetail(force){const d=$('#ivDetail');
     <div class="ivd-f"><button class="btn sm primary" type="button" data-ivd="edit"${x.kind==='image'?' disabled title="Pictures can\'t be opened in the editor"':''}>Open in editor</button><button class="btn sm" type="button" data-ivd="email"${x.kind==='image'?' disabled':''}>Email this sell sheet</button><span class="spacer"></span><button class="btn sm ghost" type="button" data-ivd="close">Close</button></div>`;
   // a sharper picture of the sell sheet for the large preview
   if(!full&&x.files[0]?.kind==='PDF'&&!x.pending&&!x._loading){x._loading=true;const fk=x.file+'|'+x.mod;invToken(false).then(async t=>{if(!t)return;const f=await invDownload(t,{id:x.files[0].id,name:x.files[0].name,mimeType:'application/pdf'});const u=await pdfPage1(await f.arrayBuffer(),900);if(u){IV.full.set(fk,u);if(IV.open===x.key){const im=$('#ivDetail .ivd-pv img');if(im)im.src=u;}}}).catch(()=>{}).finally(()=>{x._loading=false;});}}
+// the in & out form fields: how many, pcs or boxes, which colour, a note (read back by ivIOAct)
+function ivsFields(x,pre){const cols=(x.sum?.colours||[]).filter(c=>c.name),ppb=ivPpb(x);
+  return`<input class="in" id="${pre}N" data-ivsf="n" type="number" min="1" step="1" inputmode="numeric" placeholder="How many" aria-label="How many">
+      ${ppb?`<select class="in" id="${pre}U" data-ivsf="u" aria-label="Unit"><option value="pcs">pcs</option><option value="boxes">boxes</option></select>`:'<span class="iv-sync">pcs</span>'}
+      ${cols.length?`<select class="in" id="${pre}C" data-ivsf="c" aria-label="Colour"><option value="">Whole item</option>${cols.map(c=>`<option value="${esc(c.name)}">${esc(c.name)} (${ivNF.format(ivColLeft(x,c))} left)</option>`).join('')}</select>`:''}
+      <input class="in ivs-note" id="${pre}Note" data-ivsf="note" maxlength="200" placeholder="Note: customer, PO… (optional)" aria-label="Note">`;}
+// record out / in / all out for one product from the form fields inside root; true when something was recorded
+function ivIOAct(x,act,root){const f=k=>root.querySelector(`[data-ivsf="${k}"]`),cn=f('c')?.value||'',col=cn?(x.sum?.colours||[]).find(c=>c.name===cn):null,st=ivStock(x),left=col?Math.min(st.left,ivColLeft(x,col)):st.left,note=(f('note')?.value||'').trim().slice(0,200);
+  if(act==='all'){if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return false;}ivRecord(x,'out',left,cn,note||'All out');return true;}
+  let n=Math.round(+(f('n')?.value||0));if(!(n>0)){toast('Type how many first.');f('n')?.focus();return false;}
+  if(f('u')?.value==='boxes')n*=ivPpb(x,col)||1;
+  if(act==='out'&&n>left){if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return false;}if(!confirm(`Only ${ivNF.format(left)} pcs${col?' of '+cn:''} left. Take all ${ivNF.format(left)} out?`))return false;n=left;}
+  ivRecord(x,act,n,cn,note);return true;}
+// the quick In / Out form on a card or list row of the inventory page
+function ivQuickIO(btn,x){const st=ivStock(x),oos=st.moved&&st.left<=0;
+  const m=popMenu(btn,`<div class="ivq" role="group" aria-label="Stock in and out of ${esc(invTitle(x))}"><div class="ivq-h"><b>${esc(invTitle(x))}</b><small class="${oos?'iv-oos':''}">${oos?'Out of stock':`${ivNF.format(st.left)} pcs left`}</small></div>
+      <div class="ivs-form">${ivsFields(x,'ivq')}</div>
+      <div class="ivs-acts"><button class="btn sm primary" type="button" data-ivq="out">− Out</button><button class="btn sm" type="button" data-ivq="in">＋ In</button><button class="btn sm" type="button" data-ivq="all"${st.left?'':' disabled'} title="Everything left (or everything left of the chosen colour) goes out">All out</button></div></div>`,
+    (e,menu)=>{e.stopPropagation();const b=e.target.closest('[data-ivq]');if(!b)return;if(ivIOAct(x,b.dataset.ivq,menu)){menu.classList.add('hide');renderInv();}});
+  if(m){m.dataset.for=btn.id;setTimeout(()=>m.querySelector('[data-ivsf="n"]')?.focus());}}
 // the in & out panel of one product: how many are left, a form for stock going out (all or part) or coming in, and the history
 function ivStockHTML(x){const s=x.sum||{},st=ivStock(x),cols=(s.colours||[]).filter(c=>c.name),ppb=ivPpb(x),oos=st.moved&&st.left<=0,hist=st.io.slice().reverse();
   return`<div class="ivd-sec ivd-io"><h4>Stock in &amp; out</h4>
     <div class="ivs-now${oos?' oos':''}"><b>${ivNF.format(st.left)}</b><span>pcs left${ppb&&st.left?` · about ${ivNF.format(Math.floor(st.left/ppb))} box${Math.floor(st.left/ppb)===1?'':'es'}`:''}<small>${st.moved?`${ivNF.format(st.base)} on the sell sheet${st.inn?` · +${ivNF.format(st.inn)} in`:''}${st.out?` · −${ivNF.format(st.out)} out`:''}`:st.base?'As on the sell sheet. Nothing recorded yet.':'The sell sheet has no quantities. Record stock coming in to start.'}</small></span>${oos?'<em class="iv-oos">Out of stock</em>':''}</div>
-    <div class="ivs-form"><input class="in" id="ivsN" type="number" min="1" step="1" inputmode="numeric" placeholder="How many" aria-label="How many">
-      ${ppb?'<select class="in" id="ivsU" aria-label="Unit"><option value="pcs">pcs</option><option value="boxes">boxes</option></select>':'<span class="iv-sync">pcs</span>'}
-      ${cols.length?`<select class="in" id="ivsC" aria-label="Colour"><option value="">Whole item</option>${cols.map(c=>`<option value="${esc(c.name)}">${esc(c.name)} (${ivNF.format(ivColLeft(x,c))} left)</option>`).join('')}</select>`:''}
-      <input class="in ivs-note" id="ivsNote" maxlength="200" placeholder="Note: customer, PO… (optional)" aria-label="Note"></div>
+    <div class="ivs-form">${ivsFields(x,'ivs')}</div>
     <div class="ivs-acts"><button class="btn sm primary" type="button" data-ivs="out">− Out</button><button class="btn sm" type="button" data-ivs="in">＋ In</button><button class="btn sm" type="button" data-ivs="all"${st.left?'':' disabled'} title="Everything left (or everything left of the chosen colour) goes out">All out</button>
       <span class="iv-sync">Type a number for part of it, or All out for everything.</span></div>
     ${hist.length?`<div class="ivs-hist">${hist.map(m=>`<div class="r"><span class="ivs-q ${m.d}">${m.d==='out'?'−':'+'}${ivNF.format(m.n)}</span><span><b>${m.d==='out'?'Out':'In'}${m.c?' · '+esc(m.c):''}</b><small>${esc([m.note,m.by].filter(Boolean).join(' · '))}</small></span><em class="iv-sync" title="${esc(DTF_WHEN.format(m.at))}">${esc(ago(m.at))}</em><button class="tiny" type="button" data-ivsdel="${esc(m.id)}" aria-label="Undo this entry" title="Undo">✕</button></div>`).join('')}</div>
@@ -4927,6 +4959,8 @@ async function openInv(){pageShown('inventory');if(!invDlg.open){invDlg.showModa
 invDlg.addEventListener('click',async e=>{const t=e.target;
   const sb=t.closest('[data-ivsel]');if(sb){sb.checked?IV.sel.add(sb.dataset.ivsel):IV.sel.delete(sb.dataset.ivsel);renderInv();return;}
   if(t.closest('[data-ivselall]')){const sh=invShown(),all=sh.every(x=>IV.sel.has(x.key));sh.forEach(x=>all?IV.sel.delete(x.key):IV.sel.add(x.key));renderInv();return;}
+  if(t.closest('[data-ivbar]')){IV.mini=!IV.mini;lsSet('ss-inv-bar',IV.mini?'min':'');renderInv(true);$('#ivBar [data-ivbar]')?.focus();return;}
+  const qio=t.closest('[data-ivio]');if(qio){const x=IV.items.find(i=>i.key===qio.dataset.ivio);if(x)ivQuickIO(qio,x);return;}
   const sr=t.closest('[data-ivstar]');if(sr){const k=mkOf(sr.dataset.ivstar);ivmSet([k],{star:!ivm(k).star});renderInv();return;}
   if(t.closest('[data-ivstar-f]')){IV.star=!IV.star;renderInv();return;}
   const ty=t.closest('[data-ivtype]');if(ty){IV.type=ty.dataset.ivtype;renderInv();return;}
@@ -4967,18 +5001,13 @@ invDlg.addEventListener('click',async e=>{const t=e.target;
     toast(was&&!ivOos(x)?`Undone. ${invTitle(x)} is back in stock.`:!was&&ivOos(x)?`Undone. ${invTitle(x)} is now out of stock.`:'Undone');renderInv();return;}
   const iob=t.closest('[data-ivs]');if(iob){const x=IV.items.find(i=>i.key===IV.open);if(!x)return;const act=iob.dataset.ivs;
     if(act==='reset'){if(!confirm(`Clear the in & out history of ${invTitle(x)}? Stock goes back to what the sell sheet says.`))return;ivmSet([mk(x)],{io:[]});toast('Back to the sell sheet\'s quantities');renderInv();return;}
-    const cn=$('#ivsC')?.value||'',col=cn?(x.sum?.colours||[]).find(c=>c.name===cn):null,st=ivStock(x),left=col?Math.min(st.left,ivColLeft(x,col)):st.left,note=($('#ivsNote')?.value||'').trim().slice(0,200);
-    if(act==='all'){if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return;}ivRecord(x,'out',left,cn,note||'All out');renderInv();return;}
-    let n=Math.round(+($('#ivsN')?.value||0));if(!(n>0)){toast('Type how many first.');$('#ivsN')?.focus();return;}
-    if($('#ivsU')?.value==='boxes')n*=ivPpb(x,col)||1;
-    if(act==='out'&&n>left){if(!left){toast(`Nothing left${col?' in '+cn:''} to take out.`);return;}if(!confirm(`Only ${ivNF.format(left)} pcs${col?' of '+cn:''} left. Take all ${ivNF.format(left)} out?`))return;n=left;}
-    ivRecord(x,act,n,cn,note);renderInv();return;}
+    if(ivIOAct(x,act,$('#ivDetail')))renderInv();return;}
   const a=t.closest('[data-ivd]');if(a){const x=IV.items.find(i=>i.key===IV.open);if(a.dataset.ivd==='close'){IV.open=null;renderInv();}
     else if(x&&a.dataset.ivd==='sendnew'){const l=ivSends(x),had=new Set(l.flatMap(t=>[t.root.cust,t.root.email,...(t.root.emails||[])].map(ck)));invOpenSheet(x,true,CU.list.filter(c=>![c.email,...altOf(c)].some(m=>had.has(ck(m)))).map(c=>ck(c.email)));}
     else if(x)invOpenSheet(x,a.dataset.ivd==='email');return;}
   const id=t.closest('button')?.id;
   if(id==='ivPick'||id==='ivChange')invPickFolder();else if(id==='ivSync')invSync(true);else if(id==='ivLinkGo')invUseLink($('#ivLink').value);});
-invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivsN'){e.preventDefault();$('#ivDetail [data-ivs="out"]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
+invDlg.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ivNewName'){e.preventDefault();ivAddGo();return;}if(e.key==='Enter'&&e.target.id==='ivsN'){e.preventDefault();$('#ivDetail [data-ivs="out"]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivqN'){e.preventDefault();$('#srcMenu [data-ivq="out"]')?.click();return;}if(e.key==='Enter'&&e.target.id==='ivLink'){e.preventDefault();invUseLink(e.target.value);}
   else if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr[data-iv],.iv-card[data-iv]')){e.preventDefault();e.target.click();}});
 // spreadsheet of the inventory
 function invExport(){const q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v)&&!/^-?\d[\d.,]*$/.test(v))v="'"+v;return`"${v.replace(/"/g,'""')}"`;},rows=invShown().map(x=>{const z=ivSendStats(x),m=ivm(mk(x)),s=x.sum||{};
